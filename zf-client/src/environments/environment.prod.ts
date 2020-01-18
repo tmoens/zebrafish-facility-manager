@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  configServerPrefix: "http://localhost/zfm/config"
 };
