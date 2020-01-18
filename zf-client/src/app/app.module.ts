@@ -5,6 +5,8 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {ConfigService} from "./config.service";
 import {HttpClientModule} from "@angular/common/http";
+import {LocationStrategy, PathLocationStrategy} from "@angular/common";
+import {AuthService} from "./auth/auth.service";
 
 export function configProviderFactory(provider: ConfigService) {
   return () => provider.load();
@@ -12,7 +14,7 @@ export function configProviderFactory(provider: ConfigService) {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -20,7 +22,8 @@ export function configProviderFactory(provider: ConfigService) {
     HttpClientModule,
   ],
   providers: [
-    {provide: APP_INITIALIZER, useFactory: configProviderFactory, deps: [ConfigService], multi: true}
+    {provide: APP_INITIALIZER, useFactory: configProviderFactory, deps: [ConfigService], multi: true},
+    {provide: LocationStrategy, useClass: PathLocationStrategy},
   ],
   bootstrap: [AppComponent]
 })
