@@ -1,0 +1,29 @@
+{
+  "facilityName": "FHCRC",
+  "facilityAbbrv": "fhcrc",
+
+  "auth0ClientId": "zMZwc4fmzjysGmPizSe7jNpbgMqLFxu9",
+  "auth0Domain": "dev-8hdwaaeq.auth0.com",
+  "zfServerPrefix": "http://localhost:3013",
+
+  "tankNumberingHint": "Legal tank numbers run from blah blahblah",
+  "tankLabelConfig": {
+    "fontPointSize": 14,
+    "layout": [
+      [
+        "STOCK_NUMBER",
+        "STOCK_RESEARCHER_INITIALS",
+        "STOCK_FERTILIZATION_DATE"
+      ],
+      [
+        "STOCK_DESCRIPTION"
+      ],
+      [
+        "STOCK_MUTATIONS"
+      ],
+      [
+        "STOCK_TRANSGENES"
+      ]
+    ]
+  }
+}

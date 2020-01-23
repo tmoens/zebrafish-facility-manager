@@ -1,0 +1,8 @@
+<div fxLayout="column" fxLayoutAlign="space-between" *ngFor="let label of tankLabels.labels"
+     [ngStyle]="{ 'font-size.pt': 12 }"
+     class="tankLabel">
+  <div fxLayout="row" fxLayoutAlign="space-between"
+       *ngFor="let row of label.rows">
+    <div *ngFor="let s of row" >{{s}}</div>
+  </div>
+</div>

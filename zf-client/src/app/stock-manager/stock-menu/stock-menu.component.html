@@ -1,0 +1,19 @@
+<button mat-icon-button [matMenuTriggerFor]="menu">
+  <mat-icon>menu</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="onCreateStock()" *ngIf="stockService.selected !== null">
+    <mat-icon>add</mat-icon>
+    <span>Create Stock {{stockService.likelyNextStockNumber}}</span>
+  </button>
+  <button mat-menu-item (click)="onStockReport()"
+          matTooltip="A spreadsheet containing stocks meeting the current filter.">
+    <mat-icon>cloud_download</mat-icon>
+    <span>Stock Report</span>
+  </button>
+  <button mat-menu-item (click)="onFacilityAudit()"
+          matTooltip="A spreadsheet ordered by tank name to enable a facility audit.">
+    <mat-icon>cloud_download</mat-icon>
+    <span>Audit Report</span>
+  </button>
+</mat-menu>

@@ -1,0 +1,70 @@
+<div fxLayout="column" class="zf-container" *ngIf="stockService.selected" fxLayoutGap="10px">
+  <div fxLayout="column" class="zf-container">
+
+    <!------------------- Add a Swimmer ---------------------------------->
+    <div class="zf-title">Add a Swimmer for {{stockService.selected.name}}</div>
+    <div fxLayout="row" fxLayoutGap="20px">
+        <form [formGroup]="addSwimmerForm" fxLayout="column" fxFlex>
+          <mat-form-field>
+            <input matInput type="string" placeholder="Tank" required formControlName="tankName"
+                   validateTankName
+                   matTooltip="{{configService.getConfig().tankNumberingHint}}" matTooltipClass="ttnl">
+            <mat-error *ngIf="tankNameFC.invalid && (tankNameFC.dirty || tankNameFC.touched)">
+              {{getTankNameErrorMessage()}}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="number" placeholder="Count" required min="12" formControlName="swimmerCount">
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput placeholder="Comment" cdkTextareaAutosize="true" formControlName="comment"></textarea>
+          </mat-form-field>
+          <div fxLayout="row">
+            <div class="fill-remaining-space"> </div>
+            <button mat-button color="primary" (click)="clearNewSwimmer()">Clear</button>
+            <button mat-button color="primary" (click)="addNewSwimmer()"
+                    [disabled]="!addSwimmerForm.valid">Add</button>
+          </div>
+        </form>
+      <div fxFlex="30" *ngIf="cohabitants.length > 0">
+        <p>The following stock(s) are already in tank {{tankNameFC.value}}:</p>
+        <p *ngFor="let swimmer of cohabitants">{{swimmer.stock.name}} - {{swimmer.stock.description}}</p>
+        <p>You can add stock {{stockService.selected.name}} as well (usually for companionship) but please add a comment.</p>
+      </div>
+    </div>
+  </div>
+
+  <!------------------- Edit/Delete Swimmers ---------------------------------->
+  <div fxLayout="column" class="zf-container" *ngIf="originalSwimmers.length > 0">
+    <div class="zf-title">Edit Swimmers for {{stockService.selected.name}}</div>
+    <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center" *ngFor="let s of swimmers | keyvalue">
+      <div fxFlex="80px">{{s.value.state}}</div>
+      <button fxFlex="60px" mat-icon-button color="primary">
+        <mat-icon matListIcon (click)="onSwimmerDelete(s.key)">delete</mat-icon>
+      </button>
+      <mat-form-field fxFlex="60px" disabled=true >
+        <input matInput placeholder="Tank" [(ngModel)]="s.value.swimmer.tank.name" disabled
+          [class.to-be-deleted]="s.value.state===SwimmerState.DELETED">
+      </mat-form-field>
+      <mat-form-field fxFlex="60px">
+        <input matInput placeholder="Count" type="number" min="1" [(ngModel)]="s.value.swimmer.number"
+               (ngModelChange)="onSwimmerChange(s.key)"
+               [disabled]="s.value.state === SwimmerState.DELETED"
+               [class.to-be-deleted]="s.value.state===SwimmerState.DELETED">
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <textarea matInput placeholder="Comment" [(ngModel)]="s.value.swimmer.comment" cdkTextareaAutosize="true"
+                  (ngModelChange)="onSwimmerChange(s.key)"
+                  [disabled]="s.value.state === SwimmerState.DELETED"
+                  [class.to-be-deleted]="s.value.state===SwimmerState.DELETED"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+  <div fxLayout="row">
+    <div class="fill-remaining-space"></div>
+    <button mat-button color="primary" (click)="cancel()">Cancel</button>
+    <button mat-button color="primary" (click)="revert()" [disabled]="!this.needsSaving">Revert</button>
+    <button mat-button color="primary" (click)="save()" [disabled]="!this.needsSaving">Save Changes</button>
+  </div>
+</div>
+

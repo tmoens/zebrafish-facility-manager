@@ -1,0 +1,94 @@
+<div fxLayout="column" class="zf-container">
+
+  <!-- The Filter Part -->
+  <form [formGroup]="mfForm">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <mat-checkbox  formControlName="liveStocksOnly" color="primary">Live Stocks Only</mat-checkbox>
+      <!--      <H4>Stock Filter</H4>-->
+      <span class="fill-remaining-space"></span>
+      <button mat-button (click)="onClearFilters()" color="primary">Clear Filters</button>
+    </div>
+    <div fxLayout="row" fxLayoutGap="10px" >
+      <div fxLayout="column" fxFlex="45">
+
+        <mat-form-field>
+          <input matInput type="text" placeholder="Stock Number" formControlName="number">
+          <button mat-button matSuffix mat-icon-button *ngIf="getFC('number').value"
+                  (click)="clearFormControl('number')"><mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field >
+          <input matInput type="text" placeholder="Researcher" formControlName="researcher" [matAutocomplete]="autoResearcher">
+          <button mat-button matSuffix mat-icon-button *ngIf="getFC('researcher').value"
+                  (click)="clearFormControl('researcher')"><mat-icon>close</mat-icon></button>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="text" placeholder="Search Text" formControlName="text">
+          <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
+                  (click)="clearFormControl('text')"><mat-icon>close</mat-icon></button>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="text" placeholder="Tank Name" formControlName="tankName">
+          <button mat-button matSuffix mat-icon-button *ngIf="getFC('tankName').value"
+                  (click)="clearFormControl('tankName')"><mat-icon>close</mat-icon></button>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" fxFlex>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Mutation" formControlName="mutation">
+          <button mat-button matSuffix mat-icon-button *ngIf="getFC('mutation').value"
+                  (click)="clearFormControl('mutation')"><mat-icon>close</mat-icon></button>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Transgene" formControlName="transgene">
+          <button mat-button matSuffix mat-icon-button *ngIf="getFC('transgene').value"
+                  (click)="clearFormControl('transgene')"><mat-icon>close</mat-icon></button>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="number" placeholder="Age (in days)" formControlName="age"
+                 min="0" step="20">
+          <button mat-button matSuffix mat-icon-button *ngIf="getFC('age').value"
+                  (click)="clearFormControl('age')"><mat-icon>close</mat-icon></button>
+        </mat-form-field>
+        <mat-form-field *ngIf="getFC('age').value > 0">
+          <mat-select placeholder="Type" formControlName="ageModifier">
+            <mat-option value="or_older">Or older</mat-option>
+            <mat-option value="or_younger">Or younger</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+  <mat-divider></mat-divider>
+
+  <!-- The Filtered List part -->
+  <div style="padding-right: 2px">
+    <div *ngIf="service.filteredList.length > 0" >
+      <h4>Filtered List</h4>
+      <mat-list role="list" class="zf-selection-list" dense style="max-height: 450px">
+        <mat-list-item class="zf-selection-item" role="listitem" *ngFor="let s of service.filteredList"
+                       [class.selected]="service.selected && s.id == service.selected.id"
+                       matTooltip="{{s.tooltip}}" matTooltipClass="ttnl"
+                       style="height: 30px">
+          <button mat-button color="primary" (click)="onSelect(s)">{{s.name}}</button>
+          <span>{{s.description}}</span>
+        </mat-list-item>
+      </mat-list>
+    </div>
+    <div *ngIf="service.filteredList.length == 0">
+      <P>No stocks match the current filter, try relaxing the filter criteria. </P>
+    </div>
+  </div>
+</div>
+
+
+<!-- Auto completes grouped for easier reading of code-->
+<mat-autocomplete #autoResearcher="matAutocomplete">
+  <mat-option *ngFor="let option of filteredResearcherOptions | async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>

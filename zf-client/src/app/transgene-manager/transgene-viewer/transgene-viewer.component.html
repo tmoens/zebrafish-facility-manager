@@ -1,0 +1,50 @@
+<div fxFlex class="zf-container" *ngIf="service.selected">
+  <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" >
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item color="primary" (click)="edit()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit {{service.selected.allele}}</span>
+      </button>
+      <button mat-menu-item color="primary" (click)="delete()" [disabled]="!service.selected.isDeletable">
+        <mat-icon>delete</mat-icon>
+        <span>Delete {{service.selected.allele}}</span>
+      </button>
+      <button mat-menu-item color="primary" (click)="createNext()">
+        <mat-icon>add</mat-icon>
+        <span>Create Owned Transgene {{service.likelyNextName}}</span>
+      </button>
+      <button mat-menu-item (click)="create()">
+        <mat-icon>add</mat-icon>
+        <span>Create Transgene</span>
+      </button>
+    </mat-menu>
+    <span class="zf-title">Transgene Details</span>
+    <button mat-icon-button color="primary" (click)="edit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+  <form fxLayout="column" [formGroup]="mfForm">
+    <mat-form-field *ngIf="service.selected.allele">
+      <input required matInput placeholder="Allele" formControlName="allele">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.descriptor">
+      <input matInput type="text" placeholder="Descriptor" formControlName="descriptor">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.plasmid">
+      <input matInput placeholder="Plasmid" formControlName="plasmid">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.source">
+      <input matInput type="text" placeholder="Source" formControlName="source">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.comment">
+      <textarea matInput placeholder="Comment" formControlName="comment" cdkTextareaAutosize="true" ></textarea>
+    </mat-form-field>
+  </form>
+</div>

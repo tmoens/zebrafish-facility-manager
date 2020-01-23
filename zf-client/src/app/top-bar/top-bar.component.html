@@ -1,0 +1,30 @@
+<mat-toolbar fxLayoutGap="10px">
+  <app-stock-menu *ngIf="appState.activeTool === zfTool.STOCK_MANAGER"></app-stock-menu>
+  <app-mutation-menu *ngIf="appState.activeTool === zfTool.MUTATION_MANAGER"></app-mutation-menu>
+  <app-transgene-menu *ngIf="appState.activeTool === zfTool.TRANSGENE_MANAGER"></app-transgene-menu>
+  <span>{{appState.activeTool.display_name}} for
+    {{configService.getConfig().facilityName}}</span>
+  <span class="fill-remaining-space"></span>
+  <div *ngIf="authService.loggedIn">
+    <button mat-button [disabled]="appState.activeTool === zfTool.STOCK_MANAGER"
+            [routerLink]="zfTool.STOCK_MANAGER.route" color="primary">
+      {{zfTool.STOCK_MANAGER.display_name}}
+    </button>
+    <button mat-button [disabled]="appState.activeTool === zfTool.MUTATION_MANAGER"
+            [routerLink]="zfTool.MUTATION_MANAGER.route" color="primary">
+      {{zfTool.MUTATION_MANAGER.display_name}}
+    </button>
+    <button mat-button [disabled]="appState.activeTool === zfTool.TRANSGENE_MANAGER"
+            [routerLink]="zfTool.TRANSGENE_MANAGER.route" color="primary">
+      {{zfTool.TRANSGENE_MANAGER.display_name}}
+    </button>
+    <button mat-button (click)="authService.logout()">
+      Logout
+    </button>
+  </div>
+  <div *ngIf="!authService.loggedIn">
+    <button mat-button  (click)="authService.login()">
+    Login
+  </button>
+  </div>
+</mat-toolbar>

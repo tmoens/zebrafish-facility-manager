@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,UAAW;EACT,MAAM,EAAE,GAAG;EACX,YAAY,EAAE,IAAI;EAClB,aAAa,EAAE,GAAG;EAClB,gBAAgB,EAAE,MAAM;;AAE1B,qBAAsB;EACpB,gBAAgB,EAAE,IAAI",
+"sources": ["tank-label.component.scss"],
+"names": [],
+"file": "tank-label.component.css"
+}

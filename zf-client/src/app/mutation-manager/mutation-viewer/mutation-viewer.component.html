@@ -1,0 +1,95 @@
+<div fxLayout="column" class="zf-container" *ngIf="service.selected">
+  <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" >
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item color="primary" (click)="edit()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit {{service.selected.fullName}}</span>
+      </button>
+      <button mat-menu-item color="primary" (click)="delete()"
+              [disabled]="!service.selected.isDeletable">
+        <mat-icon>delete</mat-icon>
+        <span>Delete {{service.selected.fullName}}</span>
+      </button>
+      <button mat-menu-item color="primary" (click)="createNext()">
+        <mat-icon>add</mat-icon>
+        <span>Create Owned Mutation {{service.likelyNextName}}</span>
+      </button>
+      <button mat-menu-item (click)="create()">
+        <mat-icon>add</mat-icon>
+        <span>Create Mutation</span>
+      </button>
+    </mat-menu>
+    <span class="zf-title">Mutation Details</span>
+    <button mat-icon-button color="primary" (click)="edit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+  <form fxLayout="column" [formGroup]="mfForm">
+    <div fxLayout="row" fxFlex="200" fxLayoutGap="20px" *ngIf="service.selected">
+
+      <div fxLayout="column" fxFlex="30">
+        <mat-form-field *ngIf="service.selected.name">
+          <input required matInput placeholder="Allele" formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.gene">
+          <input matInput type="text" placeholder="Gene" formControlName="gene">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.alternateGeneName">
+          <input matInput placeholder="Alternate Gene Name" formControlName="alternateGeneName">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.researcher">
+          <input required matInput type="text" placeholder="Researcher" formControlName="researcher">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.mutationType">
+          <input matInput type="text" placeholder="Mutation Type" formControlName="mutationType">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.actgChange">
+          <input matInput placeholder="Nucleotide Change" formControlName="actgChange">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.aaChange">
+          <input matInput placeholder="Amino Acid Change" formControlName="aaChange">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.screenType">
+          <input matInput type="text" placeholder="Screen Type" formControlName="screenType">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.thawDate">
+          <input matInput type="text" placeholder="Thaw Date" formControlName="thawDate">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.spermFreezePlan">
+          <input matInput type="text" placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.vialsFrozen">
+          <input matInput type="text" placeholder="Number of vials frozen" formControlName="vialsFrozen">
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="column" fxLayoutGap="20px" fxFlex>
+        <mat-form-field *ngIf="service.selected.comment">
+          <textarea matInput placeholder="Comment" formControlName="comment" cdkTextareaAutosize="true" ></textarea>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.phenotype">
+          <textarea matInput placeholder="Phenotype" formControlName="phenotype" cdkTextareaAutosize="true" ></textarea>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.morphantPhenotype">
+          <textarea matInput placeholder="Morphant Phenotype" formControlName="morphantPhenotype" cdkTextareaAutosize="true" ></textarea>
+        </mat-form-field>
+
+      </div>
+    </div>
+  </form>
+</div>

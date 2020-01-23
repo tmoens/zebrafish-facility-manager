@@ -1,12 +1,15 @@
 import {Injectable} from '@angular/core';
 import {ConfigModel} from "./config-model";
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../environments/environment";
+import {environment} from "../../environments/environment";
 
 /*
  * This service loads configuration information for a particular zebrafish facility.
- * This allows a single build to of the zf_client to service multiple facilities
- * in a single deployment.
+ * This allows a single build of the zf_client to service multiple facilities
+ * in a single build/deployment.
+ *
+ * That is, facility configuration is *not* compiled in through the environment.ts,
+ * but is rather pulled in from the server at run-time.
  *
  * In particular, this service is used to provide an APP_INITIALIZER which
  * runs before Angular starts up.
@@ -33,7 +36,6 @@ export class ConfigService {
       this.http
         .get(environment.configServerPrefix + "/fhcrc.json")
         .subscribe(response => {
-          console.log(JSON.stringify(response));
           this.config = response as ConfigModel;
           resolve(true);
         })

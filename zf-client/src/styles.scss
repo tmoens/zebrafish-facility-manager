@@ -1,1 +1,59 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+@include mat-core();
+@import "zf-theme.scss";
+
+@include angular-material-theme($zf-app-theme);
+
+.fill-remaining-space {
+  // This fills the remaining space, by using flexbox.
+  // Every toolbar row uses a flexbox row layout.
+  flex: 1 1 auto;
+}
+
+// To make tooltips show separate lines for /n
+.ttnl {
+  white-space: pre-line;
+}
+
+.mat-radio-button{
+  margin-left: 16px;
+}
+
+.zf-container {
+  padding: 16px;
+  margin-bottom: 16px;
+  margin-top: 5px;
+  @include mat-elevation(3);
+}
+
+.zf-selection-list {
+  overflow: auto;
+}
+
+.zf-selection-item {
+  &:hover, &:active, &:focus {
+    background-color: mat-color(map-get($zf-app-theme, background), hover);
+  }
+
+  &.selected {
+    background-color: mat-color(map-get($zf-app-theme, primary), lighter, 0.5);
+  }
+}
+
+
+// I really should build a typography configuration for the app and then base this
+// size relative to some existing typography style, but I is lazy.
+.zf-title {
+  font-size: 14pt;
+}
+.zf-sub-title {
+  font-size: 12pt;
+}
+
+@media print {
+  app-root > * { display: none; }
+  app-root app-tank-label {
+    display: block;
+  }
+}
+

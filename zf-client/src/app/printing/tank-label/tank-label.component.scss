@@ -1,0 +1,9 @@
+.tankLabel {
+  margin: 0px;
+  padding-left: 25px;
+  padding-right: 5px;
+  page-break-after: always;
+}
+.tankLabel:last-child {
+  page-break-after: auto;
+}

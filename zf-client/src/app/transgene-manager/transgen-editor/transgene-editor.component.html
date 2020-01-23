@@ -1,0 +1,60 @@
+<div fxLayout="column" class="zf-container" *ngIf="item">
+  <div class="zf-title">Transgene Editor</div>
+  <form [formGroup]="mfForm">
+
+    <div fxLayout="column">
+      <mat-form-field >
+        <input matInput type="text" placeholder="Allele" formControlName="allele">
+        <button mat-button matSuffix mat-icon-button *ngIf="getFC('allele').value"
+                (click)="clearFormControl('allele')">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error *ngIf="!mfForm.valid">{{getUniquenessError()}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input required matInput placeholder="Descriptor" formControlName="descriptor">
+        <mat-error *ngIf="!mfForm.valid">{{getUniquenessError()}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Plasmid" formControlName="plasmid" (emptied)="clearFormControl('plasmid')">
+        <button mat-button matSuffix mat-icon-button *ngIf="getFC('plasmid').value"
+                (click)="clearFormControl('plasmid')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field >
+        <input matInput type="text" placeholder="Source" formControlName="source" [matAutocomplete]="autoSource">
+        <button mat-button matSuffix mat-icon-button *ngIf="getFC('source').value"
+                (click)="clearFormControl('source')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field>
+        <textarea matInput placeholder="Comment" formControlName="comment" cdkTextareaAutosize="true" ></textarea>
+        <button mat-button matSuffix mat-icon-button *ngIf="getFC('comment').value"
+                (click)="clearFormControl('comment')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+    </div>
+  </form>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <div class="fill-remaining-space"></div>
+    <button mat-button color="primary" (click)="cancel()">Cancel</button>
+    <button mat-button color="primary" [disabled]='mfForm.pristine' (click)="revert()">Revert</button>
+    <button mat-button type="submit" color="primary" [disabled]='!mfForm.valid || mfForm.pristine'
+            (click)="save()">Save</button>
+  </div>
+</div>
+
+<!-- All the auto-completes gathered together to make the form easier to read. -->
+<mat-autocomplete #autoSource="matAutocomplete">
+  <mat-option *ngFor="let option of filteredSourceOptions| async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>

@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,cAAe;EACb,eAAe,EAAE,YAAY",
+"sources": ["stock-swimers-editor.component.scss"],
+"names": [],
+"file": "stock-swimers-editor.component.css"
+}

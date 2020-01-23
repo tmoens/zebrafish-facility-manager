@@ -1,0 +1,110 @@
+<div fxLayout="column" class="zf-container" *ngIf="item">
+  <div class="zf-title">Mutation Editor {{test}}</div>
+  <form fxLayout="column" [formGroup]="mfForm">
+      <div fxLayout="row" fxFlex="50" fxLayoutGap="20px">
+
+        <div fxLayout="column">
+          <mat-form-field>
+            <input required matInput placeholder="Allele" formControlName="name">
+            <mat-error *ngIf="nameControl.touched && nameControl.invalid">{{getNameError()}}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field >
+            <input matInput type="text" placeholder="Gene" formControlName="gene" [matAutocomplete]="autoGene">
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Alternate Gene Name" formControlName="alternateGeneName">
+          </mat-form-field>
+
+          <mat-form-field >
+            <input required matInput type="text" placeholder="Researcher" formControlName="researcher" [matAutocomplete]="autoResearcher">
+          </mat-form-field>
+
+          <mat-form-field >
+            <input matInput type="text" placeholder="Mutation Type" formControlName="mutationType" [matAutocomplete]="autoMutationType">
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Nucleotide Change" formControlName="actgChange">
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Amino Acid Change" formControlName="aaChange">
+          </mat-form-field>
+
+          <mat-form-field >
+            <input matInput type="text" placeholder="Screen Type" formControlName="screenType" [matAutocomplete]="autoScreenType">
+          </mat-form-field>
+
+          <mat-form-field >
+            <input matInput [matDatepicker]="picker" placeholder="Thaw Date" formControlName="thawDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-select placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">
+              <mat-option [value]=null>--Any--</mat-option>
+              <mat-option *ngFor="let i of spermFreezeOptions" [value]="i">{{i}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field >
+            <input matInput type="number" placeholder="Vials Frozen" formControlName="vialsFrozen"
+                   min="0">
+          </mat-form-field>
+        </div>
+
+        <div fxLayout="column" fxLayoutGap="20px" fxFlex>
+          <mat-form-field>
+            <textarea matInput placeholder="Comment" formControlName="comment" cdkTextareaAutosize="true" ></textarea>
+          </mat-form-field>
+
+          <mat-form-field>
+            <textarea matInput placeholder="Phenotype" formControlName="phenotype" cdkTextareaAutosize="true" ></textarea>
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput placeholder="Morphant Phenotype" formControlName="morphantPhenotype" cdkTextareaAutosize="true" ></textarea>
+          </mat-form-field>
+          <div class="fill-remaining-space"></div>
+          <div fxLayout="row" fxLayoutGap="20px">
+            <div class="fill-remaining-space"></div>
+          </div>
+
+        </div>
+      </div>
+  </form>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <div class="fill-remaining-space"></div>
+    <button mat-button color="primary" (click)="cancel()">Cancel</button>
+    <button mat-button color="primary" [disabled]='mfForm.pristine' (click)="revert()">Revert</button>
+    <button mat-button color="primary" [disabled]='!mfForm.valid || mfForm.pristine' (click)="save()">Save</button>
+  </div>
+
+</div>
+
+<!-- All the auto-completes gathered together to make the form easier to read. -->
+<mat-autocomplete #autoGene="matAutocomplete">
+  <mat-option *ngFor="let option of filteredGeneOptions | async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete #autoResearcher="matAutocomplete">
+  <mat-option *ngFor="let option of filteredResearcherOptions | async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete #autoMutationType="matAutocomplete">
+  <mat-option *ngFor="let option of filteredMutationTypeOptions | async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete #autoScreenType="matAutocomplete">
+  <mat-option *ngFor="let option of filteredScreenTypeOptions | async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>

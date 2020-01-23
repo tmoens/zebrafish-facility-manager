@@ -1,0 +1,127 @@
+<div fxLayout="column" class="zf-container" *ngIf="stock" fxLayoutGap="10px">
+  <span class="zf-title">{{title}}</span>
+  <form #stockEditForm="ngForm">
+    <div fxLayout="row" fxLayoutGap="10px">
+      <div fxFlex="45" fxLayout="column">
+        <mat-form-field>
+          <input matInput placeholder="Stock Number" name="sn" [(ngModel)]="stock.name" disabled>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Description" name="desc" [(ngModel)]="stock.description" required>
+        </mat-form-field>
+        <mat-form-field >
+          <input matInput [matDatepicker]="picker" placeholder="Fertilization Date" name="fertDate"
+                 [(ngModel)]="stock.fertilizationDate" [disabled]="!stock.fertilizationDateEditable()" required>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Primary Investigator" (keyup)="onPIChange()" name="pi"
+                 [(ngModel)]="stock.pi" [matAutocomplete]="autoPI">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Researcher" (keyup)="onResearcherChange()" name="researcher"
+                 [(ngModel)]="stock.researcher" [matAutocomplete]="autoResearcher">
+        </mat-form-field>
+        <mat-form-field>
+        <textarea matInput placeholder="Comment" name="comment"
+                  [(ngModel)]="stock.comment"
+                  cdkTextareaAutosize="true"></textarea>
+        </mat-form-field>
+      </div>
+      <mat-divider [vertical]="true"></mat-divider>
+      <div fxFlex fxLayout="column">
+
+        <!--  Mother --------------------------------------->
+        <div fxLayout="row">
+          <h4>Mom</h4>
+          <mat-radio-group [(ngModel)]="momInternal" color="primary" name="mom"
+                           [disabled]="!stock.parentsEditable">
+            <mat-radio-button [value]=true>Internal</mat-radio-button>
+            <mat-radio-button [value]=false>External</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div *ngIf="momInternal" fxLayout="column">
+          <mat-form-field>
+            <input matInput placeholder="Stock Number"
+                   (keyup)="onSetMatStock()"
+                   name="matStockNameF" #matStockNameF="ngModel" stockNameCheck
+                   [(ngModel)]="stock.matStock.name" [disabled]="!stock.parentsEditable">
+            <mat-error *ngIf="matStockNameF.errors">Stock name does not exist</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Description" name="msd"
+                   [(ngModel)]="stock.matStock.description" disabled>
+          </mat-form-field>
+        </div>
+        <div *ngIf="!momInternal" fxLayout="column">
+          <mat-form-field>
+            <input matInput placeholder="External Mother Identifier" name="extMomId"
+                   [(ngModel)]="stock.externalMatId" [disabled]="!stock.parentsEditable">
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput placeholder="External Mother Description" name="extMomDesc"
+                      cdkTextareaAutosize="true"
+                      [(ngModel)]="stock.externalMatDescription" [disabled]="!stock.parentsEditable">
+            </textarea>
+          </mat-form-field>
+        </div>
+
+        <!--  Father --------------------------------------->
+        <div fxLayout="row">
+          <h4>Dad</h4>
+          <mat-radio-group [(ngModel)]="dadInternal" color="primary" name="dad"
+                           [disabled]="!stock.parentsEditable">
+            <mat-radio-button [value]=true>Internal</mat-radio-button>
+            <mat-radio-button [value]=false>External</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div *ngIf="dadInternal"  fxLayout="column">
+          <mat-form-field>
+            <input matInput placeholder="Stock Number"
+                   name="patStockNameF" #patStockNameF="ngModel" stockNameCheck
+                   (keyup)="onSetPatStock()"
+                   [(ngModel)]="stock.patStock.name" [disabled]="!stock.parentsEditable">
+            <mat-error *ngIf="patStockNameF.errors">Stock name does not exist</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Description" name="psd"
+                   [(ngModel)]="stock.patStock.description" disabled>
+          </mat-form-field>
+        </div>
+        <div *ngIf="!dadInternal" fxLayout="column">
+          <mat-form-field>
+            <input matInput placeholder="External Father Identifier" name="extPatId"
+                   [(ngModel)]="stock.externalPatId" [disabled]="!stock.parentsEditable">
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput placeholder="External Father Description" name="extMatId"
+                      cdkTextareaAutosize="true"
+                      [(ngModel)]="stock.externalPatDescription" [disabled]="!stock.parentsEditable">
+            </textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="fill-remaining-space"></div>
+    <div fxLayout="row" fxLayoutGap="20px">
+      <div class="fill-remaining-space"></div>
+      <button mat-button color="primary" (click)="cancel()">Cancel</button>
+      <button mat-button color="primary" [disabled]="isUnchanged()" (click)="revert()">Revert</button>
+      <button mat-button color="primary" [disabled]="isUnchanged() || !stockEditForm.valid" (click)="save()">Save</button>
+    </div>
+  </form>
+</div>
+
+<mat-autocomplete #autoResearcher="matAutocomplete">
+  <mat-option *ngFor="let option of filteredResearcherOptions" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete #autoPI="matAutocomplete">
+  <mat-option *ngFor="let option of filteredPIOptions" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>

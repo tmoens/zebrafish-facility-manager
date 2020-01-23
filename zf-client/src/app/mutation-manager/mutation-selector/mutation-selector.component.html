@@ -1,0 +1,98 @@
+<div fxFlex fxLayout="column" class="zf-container">
+
+  <!-- The Filter part  -->
+  <div>
+    <form fxLayout="column" [formGroup]="mfForm">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <mat-checkbox formControlName="ownedMutationsOnly" color="primary">Owned mutations only</mat-checkbox>
+        <span class="fill-remaining-space"></span>
+        <button mat-button color="accent" (click)="onClearFilters()" color="primary">Clear Filters</button>
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <div fxLayout="column" fxFlex="45">
+
+          <mat-form-field>
+            <input matInput type="text" placeholder="Search" formControlName="freeText">
+            <button mat-button matSuffix mat-icon-button *ngIf="mfForm.get('freeText').value"
+                    (click)="mfForm.get('freeText').setValue('')"><mat-icon>close</mat-icon></button>
+          </mat-form-field>
+
+          <mat-form-field >
+            <input matInput type="text" placeholder="Researcher" formControlName="researcher" [matAutocomplete]="autoResearcher">
+            <button mat-button matSuffix mat-icon-button *ngIf="mfForm.get('researcher').value"
+                    (click)="mfForm.get('researcher').setValue('')"><mat-icon>close</mat-icon></button>
+          </mat-form-field>
+
+          <mat-form-field >
+            <input matInput type="text" placeholder="Mutation Type" formControlName="mutationType" [matAutocomplete]="autoMT">
+            <button mat-button matSuffix mat-icon-button *ngIf="mfForm.get('mutationType').value"
+                    (click)="mfForm.get('mutationType').setValue('')"><mat-icon>close</mat-icon></button>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex>
+          <mat-form-field >
+            <input matInput type="text" placeholder="Gene" formControlName="gene" [matAutocomplete]="autoGene">
+            <button mat-button matSuffix mat-icon-button *ngIf="mfForm.get('gene').value"
+                    (click)="clearFormControl('gene')"><mat-icon>close</mat-icon></button>
+          </mat-form-field>
+
+          <mat-form-field >
+            <input matInput type="text" placeholder="Screen Type" formControlName="screenType" [matAutocomplete]="autoST">
+            <button mat-button matSuffix mat-icon-button *ngIf="mfForm.get('screenType').value"
+                    (click)="mfForm.get('screenType').setValue('')"><mat-icon>close</mat-icon></button>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-select placeholder="Sperm Freeze State" formControlName="spermFreeze">
+              <mat-option [value]=null>--Any--</mat-option>
+              <mat-option *ngFor="let i of service.spermFreezeOptions" [value]="i">{{i}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- The filtered List part -->
+  <div style="padding-right: 2px">
+    <div *ngIf="service.filteredList.length > 0" >
+      <h4>Filtered List</h4>
+      <mat-list role="list" class="zf-selection-list" dense style="max-height: 500px">
+        <mat-list-item class="zf-selection-item" role="listitem"
+                       *ngFor="let item of service.filteredList"
+                       [class.selected]="service.selected && item.id === service.selected.id"
+                       (click)="onSelect(item)"
+                       matTooltip="{{item.tooltip}}" matTooltipClass="ttnl"
+                       style="height: 30px">
+          {{item.fullName}}
+        </mat-list-item>
+      </mat-list>
+    </div>
+    <div *ngIf="service.filteredList.length == 0">
+      <P>No mutations match the current filter, try relaxing the filter criteria. </P>
+    </div>
+  </div>
+</div>
+
+<!-- Auto completes grouped outside of main code for easier reading -->
+<mat-autocomplete #autoGene="matAutocomplete">
+  <mat-option *ngFor="let option of filteredGeneOptions | async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>
+<mat-autocomplete #autoResearcher="matAutocomplete">
+  <mat-option *ngFor="let option of filteredResearcherOptions | async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>
+<mat-autocomplete #autoMT="matAutocomplete">
+  <mat-option *ngFor="let option of filteredMutationTypeOptions | async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>
+<mat-autocomplete #autoST="matAutocomplete">
+  <mat-option *ngFor="let option of filteredScreenTypeOptions | async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>

@@ -1,0 +1,88 @@
+<section class="mat-typography"
+         fxLayout="column" fxLayoutAlign="stretch stretch"
+         style="height: 700px; width:600px">
+  <mat-toolbar>
+    {{data.type}} Editor for {{data.stock.name}}
+  </mat-toolbar>
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start start">
+    <div fxFlex="45" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start stretch">
+
+      <!-- The stock's own mutations/transgenes -->
+      <div class="zf-container">
+        <mat-card-subtitle>{{data.stock.name}} {{data.type}}s</mat-card-subtitle>
+        <mat-list dense>
+          <mat-list-item *ngIf="ownSelectionList.count === 0">
+            --None--
+          </mat-list-item>
+          <mat-list-item *ngFor="let m of ownSelectionList.items | keyvalue"
+                         matTooltip="{{m.value.item.tooltip}}" matTooltipClass="ttnl"
+                         style="height: 30px">
+            <!--              <mat-icon matListIcon>delete</mat-icon>-->
+            {{m.value.item.name}}
+            <span *ngIf="isInherited(m.value.item)"> (parental)</span>
+            <span *ngIf="!isInherited(m.value.item)"> (novel)</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+
+      <!-- The stock's parent's mutations/transgenes -->
+      <div class="zf-container">
+        <mat-card-subtitle>Parental {{data.type}}s</mat-card-subtitle>
+        <mat-list dense class="zf-selection-list">
+          <mat-list-item *ngIf="parentalSelectionList.count === 0">
+            --None--
+          </mat-list-item>
+          <mat-list-item *ngFor="let mm of parentalSelectionList.items | keyvalue" class="zf-selection-item">
+            <mat-checkbox (change)="onCheckParentalItem(mm.value.item)" [(ngModel)]="mm.value.selected"
+                          matTooltip="{{mm.value.item.tooltip}}" matTooltipClass="ttnl"
+                          color="primary">
+              {{mm.value.item.name}}
+            </mat-checkbox>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+
+    <!-- All non-parental mutations/transgenes. With a filter. -->
+    <div fxLayout="column" fxFlex class="zf-container">
+      <mat-card-subtitle>Other {{data.type}}s</mat-card-subtitle>
+      <mat-form-field>
+        <label>
+          <input matInput type="text" placeholder="Search" [(ngModel)]="filterString">
+        </label>
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      <mat-list dense class="zf-selection-list" style="max-height: 510px">
+
+        <!-- Put selected ones at the top of the list -->
+        <ng-container *ngFor="let mm of fullSelectionList.items | keyvalue">
+          <mat-list-item  *ngIf="mm.value.selected" class="zf-selection-item">
+            <mat-checkbox (change)="onCheckFilteredItem(mm.value.item)" [(ngModel)]="mm.value.selected"
+                          matTooltip="{{mm.value.item.tooltip}}" matTooltipClass="ttnl"
+                          color="primary">
+              {{mm.value.item.name}}
+            </mat-checkbox>
+          </mat-list-item>
+        </ng-container>
+
+        <!-- Put the rest below. -->
+        <ng-container *ngFor="let mm of fullSelectionList.items | keyvalue">
+          <mat-list-item  *ngIf="mm.value.item.containsString(filterString) && !mm.value.selected" class="zf-selection-item">
+            <mat-checkbox (change)="onCheckFilteredItem(mm.value.item)" [(ngModel)]="mm.value.selected"
+                          matTooltip="{{mm.value.item.tooltip}}" matTooltipClass="ttnl"
+                          color="primary">
+              {{mm.value.item.name}}
+            </mat-checkbox>
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+    </div>
+  </div>
+  <div fxLayout="row">
+    <div class="fill-remaining-space"></div>
+    <button mat-button color="primary" (click)="cancel()">Cancel</button>
+    <button mat-button color="primary" (click)="revert()">Revert</button>
+    <button mat-button color="primary" (click)="save()" [disabled]="!ownListChanged">Save</button>
+  </div>
+</section>
+
