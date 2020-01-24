@@ -1,0 +1,11 @@
+{
+  "keepConnectionAlive": true,
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "zf_fhcrc",
+  "password": "zf_fhcrc",
+  "database": "zf_fhcrc",
+  "entities": ["src/**/*.entity{.ts,.js}"],
+  "synchronize": true
+}

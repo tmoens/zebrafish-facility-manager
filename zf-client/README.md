@@ -1,27 +1,73 @@
 # ZfClient
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.23.
+This is the client side of the Zebrafish Stock Manager project.  In order to make use of this,
+You should first install the server side.
 
-## Development server
+## Authorization
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+For better or for worse, we chose to outsource authentication for this app to Auth0.
+Therefore, before running the app, you also need to set up a service for handling Authentication
+Even during development because I have not stubbed it out.
+Details to follow, but ya gotta do it.
 
-## Code scaffolding
+## Deployment
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Every deployment of the system needs it's own build and each build required its own
+configuration file. One deployment is capable of serving multiple facilities.
 
-## Build
+### Deployment Configuration
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+The main configuration variable tells the client where to look for further configuration
+specific to the various facilities supported by the deployment. 
 
-## Running unit tests
+The configuration file for the deployment is a copy of src/environments/environment.ts or 
+one of the other configurations. 
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+In this file you will specify the place the client goes to look for "per facility" configuration.
 
-## Running end-to-end tests
+`configServerPrefix: "http://yourhost/zf-facility-manager/facility-config`
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Then, you would need to create such a directory on your web server and later you will populate it with
+per-facility client configuration files.
 
-## Further help
+### Build & Deploy
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+`ng build --prod`
+
+The resulting build will be in zf-client/dist/zf-client
+Please note that by default, the zf-client is built with a base-href of /zfm/zf-client
+and should therefore be deployed in
+
+`/path/to/your/webserver/root/directory/zf-facility-manager/zfclient`
+
+You can, of course, change this by building with --base-href, or by changing the build
+in angular.json.  If you do, you will also need to make a corresponding change to the .htaccess
+file and you will need to adjust the URLs in the facility's Auth0 Client Application 
+configuration as described below.
+
+## Per Facility Configuration
+
+The client is customizable by configuration for each zebrafish facility.  For this to work,
+the client goes to a configuration server and gets configuration data for the facility the user
+wants to work with.  (There is a possibility that some users might work for two or more facilities.)
+
+The config server is really just a directory with one json file per facility, as described above.
+
+There are some examples one level up in the facility config directory.
+TODO put documentation in that directory and a link to that documentation here.
+
+## Per Facility Configuration on Auth0
+
+The Zebrafish Facility Manager outsources user management, authorization and authentication to Auth0.
+
+If you do not have an Auth0 account, you will have to create one.
+Because every facility has its own users and user management, we must create
+one Auth0 Application per facility. 
+
+TODO details on configuration of said application on Auth0.
+
+
+
+## Acknowledgements
+
+I used [Angular CLI](https://github.com/angular/angular-cli) to generate the project.

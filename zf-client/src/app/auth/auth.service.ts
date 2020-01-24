@@ -14,7 +14,7 @@ import {AppStateService} from "../app-state.service";
 // all the ins and outs of login, logout, auto-login on page reload and
 // all that jazz.
 // It is largely purloined from the Auth0 example with a few enhancements.
-// In particular, the example did not account for deployment of the client
+// In particular, the example did not account for facility of the client
 // anywhere other than the web server root (i.e. no base-href).
 
 @Injectable({
@@ -46,7 +46,8 @@ export class AuthService {
       createAuth0Client({
         domain: this.config.auth0Domain,
         client_id: this.config.auth0ClientId,
-        redirect_uri: `${window.location.origin}${this.locationStrategy.getBaseHref()}`
+        redirect_uri: `${window.location.origin}${this.locationStrategy.getBaseHref()}`,
+        audience: this.config.auth0Audience
       })
     ) as Observable<Auth0Client>).pipe(
       shareReplay(1), // Every subscription receives the same shared value

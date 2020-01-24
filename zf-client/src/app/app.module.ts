@@ -43,6 +43,7 @@ import {CanDeactivateComponent} from "./deactivation-guard/can-deactivate-compon
 import {StockGeneticsEditorComponent} from "./stock-manager/stock-genetics-editor/stock-genetics-editor.component";
 import {CanDeactivateGuard} from "./deactivation-guard/can-deactivate-guard";
 import {DialogService} from "./dialog.service";
+import {AuthTokenInterceptor} from "./auth/AuthTokenInterceptor";
 
 export function configProviderFactory(provider: ConfigService) {
   return () => provider.load();
@@ -101,6 +102,7 @@ export function configProviderFactory(provider: ConfigService) {
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     CanDeactivateGuard,
     DialogService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,47 @@
+webpack
+
+I tried to use it and it worked fine until I used TypeORM and then the entity loading went to hell.
+So I backed all the webpack out and went with ts-node for development.
+
+
+ClassTransformer Library
+
+You can annotate entity fields with things like @Exclude so the client does not
+get the attribute when you serialize it.  In Nest this is done by annotating
+controller routes with
+  @UseInterceptors(ClassSerializerInterceptor)
+Which really does nothing other than call the classToPlain from the
+ClassTransformer library.
+
+Controller/Service/CustomRepository
+
+I started by having the controller talk directly to the repository (for what seemed like good
+reasons at the time) but later found the value of inserting services between the two.  There
+are vestiges of this decision lying around particularly in the stockController.
+
+Rework
+Transgenes & mutations are virtually identical modulo the fields and the code should be factored out.
+Also the idea of creating a serial number that runs across the two tables was stupid.
+
+
+
+MAINTENANCE
+
+Server
+------
+
+Keeping nginx, mariadb passenger up to date
+Making sure logs are not overrunning
+Making sure db backups are working
+
+zf_server
+---------
+
+keeping npm packages (nest in particular) up to date
+npm update and npm upgrade looking for breaking changes in newer versions and testing everything.
+
+zf_client
+---------
+
+keeping everything up to date and particularly angular
+

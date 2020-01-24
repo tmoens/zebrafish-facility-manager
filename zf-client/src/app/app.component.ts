@@ -1,8 +1,5 @@
 import {Component} from '@angular/core';
-import {environment} from "../environments/environment";
-import {ConfigModel} from "./config/config-model";
 import {ConfigService} from "./config/config.service";
-import {AuthService} from "./auth/auth.service";
 
 @Component({
   selector: 'app-root',
@@ -12,5 +9,7 @@ import {AuthService} from "./auth/auth.service";
 export class AppComponent {
   title = 'zf-client';
 
-  constructor() {}
+  constructor(configService: ConfigService) {
+    console.log(configService.getConfig());
+  }
 }

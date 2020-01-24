@@ -24,8 +24,10 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": false,
+            "baseHref": "/zfm/zf-client/",
             "assets": [
-              "src/favicon.ico",
+              "src/favicon.png",
+              "src/.htaccess",
               "src/assets"
             ],
             "styles": [
@@ -90,7 +92,8 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              "src/favicon.ico",
+              "src/favicon.png",
+              "src/.htaccess",
               "src/assets"
             ],
             "styles": [

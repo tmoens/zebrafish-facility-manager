@@ -1,4 +1,3 @@
-#Zebrafish Facility Manager
 
 ## Description
 
@@ -31,18 +30,17 @@ It also provides reports to support things like auditing a zebrafish facility.
 
 ## Deployments
 
-A single facility of the system can be used to manage several zebrafish facilities.
-A facility consists of a database, one running instance of the zf_server using a
-facility specific configuration file, the zf-client served by an web-server and
-a facility specific configuration for the zf-client.
+There is a separate facility of the system for every managed Zebrafish facility.
+A facility consists of an instance of the zf_server and a corresponding database
+as well as a separate version of the zf_client customized for the particular
+Zebrafish facility.
 
-## Pre-Deployment Setup
+## Pre-Deployment setup of server environment
 
-In order to create a facility manager facility, a number of pre-requisites must be met.
+In order to create a facility manager system, a number of pre-requisites must be met.
 There are many server environments you *can* use to deploy the system and the process
 can get complicated - especially if you consider long-term maintenance and upgrades.
-However, help is provided for setting up a Debian Unix system for deploying
-the Zebrafish Facility Manager.
+However, I do provide some help for setting up a Debian Unix system for facility.
 
 On Debian, make sure everything is up to date:
 ```bash
@@ -60,21 +58,22 @@ Debian](https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-
 
 ### Web Server
 
-The system uses a web server to serve the zf_client to the end user and also to
-handle HTTP traffic between the zf_clients and the zf_servers.
+The system uses a web server to serve the zf_client to the end user
+and also to
+handle HTTP traffic between the zf_clients and the zf_server.
 
-We outline how to set up Nginx and configure it for each managed facility.
-Apache can be equally well used if you are so inclined.
+This has been successfully tested with both Apache and Nginx as the web server.
+However, we will only provide configuration guidance for configuring Nginx.
 
 Please refer to your selected web server documentation for installation
 instructions in your server environment.
 
-Here is an article on [how to install Nginx on
+Here is an article on [how to install it on
 Debian](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-debian-10)
 
-Please note that your Debian installation may already have Apache installed
+I will note here that your Debian installation may already have Apache installed
 and you may want to migrate that installation to Nginx, or leave it as Apache
-and configure Zebrafish Stock Manager through Apache instead of Nginx - it isn't hard
+and configure Zebrafish Stock Manager through Apache instead of Ngnix - it isn't hard
 if you know what you are doing. 
 
 ```bash
@@ -82,7 +81,7 @@ if you know what you are doing.
 # stop apache
 sudo systemctl stop apache2
 # don't let it restart on reboot
-sudo systemctl disable apache2
+sudo systemctl diable apache2
 ```
 
 ### Passenger
@@ -95,26 +94,65 @@ installation guides only go as far as Debian 9 (stretch). Not to worry, just cha
 the word "stretch" to the word "buster" in the install guide for Passenger and all
 is well.
 
-### Build and deploy the zf_server
-**TBD**
+### Download & build the server code
 
-### Build and deploy the zf_client
-**TBD**
+**TODO** git clone part is TDB until I get it on GitHub.
 
-## Manage a facility
 
-There is a separate setup required to customize the system for each
+```bash
+# Download npm packages for the zf_server build process
+> npm install
+# Build the zf_server
+> npm run build
+```
+
+## Deployment
+
+There is a separate facility setup required to customize the system for each
 zebrafish facility.  This section takes you through the required steps.
 
 ### Set up a database for the facility
 
-The process of setting up a database for a facility is covered [here](MariaDB.md).
+The process of setting up a database for your a facility is covered [here](MariaDB.md).
 
-### zf_server configuration
-**TBD**
+### zf_server Deployment
 
-### zf_client configuration
-**TBD**
+You will need to set up two environment variables.  Choose a DEPLOYMENT name that is short
+and reflects which facility you are deploying a system for.
+```bash 
+export NODE_ENV=production
+export DEPLOYMENT=your_short_deployment_name
+```
+
+The next thing you need to do is create a zf_server configuration file for your
+facility. Copy the sample.env file and call the copy 
+production.your_short_deployment_name.env (obviously using the name you chose)
+
+Edit your configuration file. It should be simple as the file contains
+detailed instructions.  Don't worry about configuring TANK_LABEL_LAYOUT, you
+can tune that later when it is time to tune the system.
+
+You can change the configuration file any time you want, but you will have
+to restart the zf_server for those changes to take place.
+
+### Test the server facility (optional)
+
+The testing process actually uses the database, so the facility configuration
+must be set up correctly for it to run.
+
+If the database is empty, this will create all the tables.
+```bash 
+npm run test
+```
+
+### Run the server
+
+This will change when we start to use passenger.
+
+If the database is empty, this will create all the tables.
+```bash 
+npm run start:prod
+```
 
 ## Stay in touch
 
@@ -124,8 +162,8 @@ The process of setting up a database for a facility is covered [here](MariaDB.md
 
   Zebrafish Facility Manager is [MIT licensed](LICENSE).
   
-## Thank you
+## Credit
 
-- [Nest](https://github.com/nestjs/nest) provides the zf_server application framework.
+- [Nest](https://github.com/nestjs/nest) provides the application framework.
 - [typeorm](https://typeorm.delightful.studio/) provides the orm
 - [MariaDB](https://mariadb.com/) is used by default

@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {ConfigModel} from "./config-model";
-import {HttpClient} from "@angular/common/http";
+import {HttpBackend, HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 
 /*
  * This service loads configuration information for a particular zebrafish facility.
  * This allows a single build of the zf_client to service multiple facilities
- * in a single build/deployment.
+ * in a single build/facility.
  *
  * That is, facility configuration is *not* compiled in through the environment.ts,
  * but is rather pulled in from the server at run-time.
@@ -22,8 +22,12 @@ import {environment} from "../../environments/environment";
 export class ConfigService {
 
   public config: ConfigModel = null;
+  private http: HttpClient;
 
-  constructor(private http: HttpClient) {
+  // Note that the use of HttpBackend here is done specifically to
+  // avoid the interceptor.
+  constructor(private handler: HttpBackend) {
+    this.http = new HttpClient(handler);
   }
 
   public getConfig(): ConfigModel {
