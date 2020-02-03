@@ -1,8 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { getLogger } from 'log4js';
 import { Tank } from './tank.entity';
-
-const logger = getLogger('Tank');
 
 @EntityRepository(Tank)
 export class TankRepository extends Repository<Tank> {

@@ -1,10 +1,7 @@
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
-import { getLogger } from 'log4js';
 import { classToPlain, plainToClassFromExist } from 'class-transformer';
 import { Stock2tank } from './stock-to-tank.entity';
 import { BadRequestException } from '@nestjs/common';
-
-const logger = getLogger('Stock2tank');
 
 @EntityRepository(Stock2tank)
 export class Stock2tankRepository extends Repository<Stock2tank> {

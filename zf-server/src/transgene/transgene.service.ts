@@ -1,24 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import {BadRequestException, Inject, Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
 import { ConfigService } from '../config/config.service';
 import { TransgeneRepository } from './transgene.repository';
 import { MutationRepository } from '../mutation/mutation.repository';
 import { Transgene } from './transgene.entity';
-import { getLogger } from 'log4js';
 import { plainToClassFromExist } from 'class-transformer';
 import { TransgeneFilter } from './transgene.filter';
-import { GenericService } from '../Generics/generic-service';
-
-const logger = getLogger('Transgene');
+import {GenericService} from '../Generics/generic-service';
+import {Logger} from "winston";
 
 @Injectable()
 export class TransgeneService extends GenericService{
   constructor(
     private readonly configService: ConfigService,
-    @InjectRepository(TransgeneRepository)
-    private readonly repo: TransgeneRepository,
-    @InjectRepository(MutationRepository)
-    private readonly mutationRepo: MutationRepository,
+    @Inject('winston') private readonly logger: Logger,
+    @InjectRepository(TransgeneRepository) private readonly repo: TransgeneRepository,
+    @InjectRepository(MutationRepository) private readonly mutationRepo: MutationRepository,
   ) {
     super();
   }
@@ -94,7 +91,7 @@ export class TransgeneService extends GenericService{
         '3147643 attempt to delete transgene that exists in one or more stocks.' +
         ' Transgene id: ' +
         candidate.id;
-      logger.error(msg);
+      this.logger.error(msg);
       throw new BadRequestException('Bad Request', msg);
     }
 
@@ -111,7 +108,7 @@ export class TransgeneService extends GenericService{
     const candidate: Transgene = await this.repo.findOne(id);
     if (!candidate) {
       const msg = '7684423 update a non-existent mutation.';
-      logger.error(msg);
+      this.logger.error(msg);
       throw new BadRequestException('Bad Request', msg);
     }
     return candidate;

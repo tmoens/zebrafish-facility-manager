@@ -20,10 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       issuer: `https://${configService.auth0Config.domain}/`,
       algorithms: ['RS256'],
     });
-    console.log('Extract...:' + ExtractJwt.fromAuthHeaderAsBearerToken());
-    console.log(`jwksUri: https://${configService.auth0Config.domain}/.well-known/jwks.json`);
-    console.log(`audience: ${configService.auth0Config.audience}`);
-    console.log(`issuer: https://${configService.auth0Config.domain}/`);
   }
 
   validate(payload: any) {

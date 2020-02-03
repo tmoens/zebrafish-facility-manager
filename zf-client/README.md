@@ -1,19 +1,17 @@
-# ZfClient
+# Zebrafish Facility Manager zf-client
 
-This is the client side of the Zebrafish Stock Manager project.  In order to make use of this,
-You should first install the server side.
+This is the client side of the Zebrafish Stock Manager project.
 
-## Authorization
+It is a "single-page web app" written in Angular.
 
-For better or for worse, we chose to outsource authentication for this app to Auth0.
-Therefore, before running the app, you also need to set up a service for handling Authentication
-Even during development because I have not stubbed it out.
-Details to follow, but ya gotta do it.
+You should build and test the zf-server before building and deploying the zf-client.
 
 ## Deployment
 
-Every deployment of the system needs it's own build and each build required its own
-configuration file. One deployment is capable of serving multiple facilities.
+Every deployment of the system as a whole needs only one build of the zf-client, governed by
+a configuration file.
+One deployment is capable of managing several zebrafish facilities each governed by
+a facility-specific configuration file.
 
 ### Deployment Configuration
 

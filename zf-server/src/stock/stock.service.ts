@@ -1,17 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import {BadRequestException, Inject, Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
 import { ConfigService } from '../config/config.service';
 import { StockRepository } from './stock.repository';
 import { GenericService } from '../Generics/generic-service';
 import { Stock } from './stock.entity';
-import { plainToClassFromExist } from 'class-transformer';
-import { getLogger } from 'log4js';
-
-const logger = getLogger('Stock');
+import {plainToClassFromExist} from 'class-transformer';
+import {Logger} from "winston";
 
 @Injectable()
 export class StockService extends GenericService {
   constructor(
+    @Inject('winston') private readonly logger: Logger,
     private readonly configService: ConfigService,
     @InjectRepository(StockRepository)
     private readonly repo: StockRepository,
@@ -48,7 +47,7 @@ export class StockService extends GenericService {
           'Trying to create subStock, but stock ' +
           candidate.number +
           ' does not exist.';
-        logger.error(msg);
+        this.logger.error(msg);
         throw new BadRequestException('Bad Request', msg);
       }
       candidate.subNumber = await this.repo.getNextSubStockNumber(candidate.number);
@@ -130,7 +129,7 @@ export class StockService extends GenericService {
       child.fertilizationDate <= parent.fertilizationDate) {
       const msg: string = 'Child stock (' + child.name + ') older than ' +
         'parent stock (' + parent.name + ').';
-      logger.error(msg);
+      this.logger.error(msg);
       throw new BadRequestException('Bad Request', msg);
     }
   }
@@ -165,7 +164,7 @@ export class StockService extends GenericService {
     if (!stock.isDeletable) {
       const msg = 'Attempt to delete stock that either has descendants, or is alive in ' +
         'some tank or has subStocks.';
-      logger.error(msg);
+      this.logger.error(msg);
       throw new BadRequestException('Bad Request', msg);
     }
     return await this.repo.remove(stock);

@@ -1,11 +1,8 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { getLogger } from 'log4js';
 import { BadRequestException } from '@nestjs/common';
 import { classToPlain, plainToClassFromExist } from 'class-transformer';
 import { Background } from './background.entity';
 import { BackgroundDto } from './background.dto';
-
-const logger = getLogger('Background');
 
 @EntityRepository(Background)
 export class BackgroundRepository extends Repository<Background> {

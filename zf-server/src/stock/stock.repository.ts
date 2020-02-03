@@ -1,17 +1,18 @@
-import { Brackets, EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
-import { getLogger } from 'log4js';
-import { BadRequestException } from '@nestjs/common';
-import { Stock } from './stock.entity';
+import {Brackets, EntityRepository, Repository, SelectQueryBuilder} from 'typeorm';
+import {BadRequestException, Inject} from '@nestjs/common';
+import {Stock} from './stock.entity';
 import { StockReportDto } from './dto/stock-report.dto';
 import moment = require('moment');
 import { StockFilter } from './stock-filter';
-import { StockMini } from './dto/stock.mini';
+import {StockMini} from './dto/stock.mini';
+import {Logger} from "winston";
 
-const logger = getLogger('Stock');
 
 @EntityRepository(Stock)
 export class StockRepository extends Repository<Stock> {
-  constructor() {
+  constructor(
+    @Inject('winston') private readonly logger: Logger
+  ) {
     super();
   }
 
@@ -21,7 +22,7 @@ export class StockRepository extends Repository<Stock> {
       return stock;
     } else {
       const message: string = 'Stock does not exist. id: ' + stockId;
-      logger.error(message);
+      this.logger.error(message,);
       throw new BadRequestException('Bad Request', message);
     }
   }
@@ -39,7 +40,7 @@ export class StockRepository extends Repository<Stock> {
       ]});
     if (!stock) {
       const msg = 'Stock does not exist. Id: ' + id;
-      logger.error(msg);
+      this.logger.error(msg);
       throw new BadRequestException('Bad Request', msg);
     }
     await this.computeAncillaryFields(stock);
@@ -53,7 +54,7 @@ export class StockRepository extends Repository<Stock> {
       ]});
     if (!stock) {
       const msg = 'Stock does not exist. Id: ' + id;
-      logger.error(msg);
+      this.logger.error(msg);
       throw new BadRequestException('Bad Request', msg);
     }
     return stock;

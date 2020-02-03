@@ -1,39 +1,14 @@
-
+# Zebrafish Facility Manager zf-server
 ## Description
 
-A software package for maintaining information about a zebrafish facility
-used in genetics labs.
-
-It has two parts.  The zf_client part runs in any web browser and
-presents a user interface for managing the the stocks in a facility.
-For the technically inclined, the client uses Angular.
-
-The zf_server part runs on a computer with a database and is responsible
-for storing the data for a particular facility. In case you care, it is a Node.js process.
-
-## Main Features
-
-The main purpose of the software is to track zebrafish stocks including
-- their lineage
-- their genetic markers (mutations and transgenes)
-- the lineage of their markers
-- which tank(s) the stock occupies
-- various notes and data associated with the stock (age, researchers, research notes...)
-- simple and seamless creation of new stocks from crosses
-- it provides excellent search, navigation and editing capabilities to allow users to focus
-on thier work.
-
-An ancillary aspect of the system is that it tracks the genetic markers used in a facility
-so that absolute consistency is maintained throughout the system.
-
-It also provides reports to support things like auditing a zebrafish facility.
+This is the server side of the Zebrafish Facility Manager.  It is written in
+typescript and runs in Node.js
 
 ## Deployments
 
-There is a separate facility of the system for every managed Zebrafish facility.
-A facility consists of an instance of the zf_server and a corresponding database
-as well as a separate version of the zf_client customized for the particular
-Zebrafish facility.
+Every deployment of the system as a whole needs one build of the zf-server. 
+Each zebrafish facility requires a dedicated database an a dedicated instance of the 
+zf-server along with a facility specific configuration file.
 
 ## Pre-Deployment setup of server environment
 

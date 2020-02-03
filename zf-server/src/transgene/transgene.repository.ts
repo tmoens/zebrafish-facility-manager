@@ -1,10 +1,13 @@
-import { EntityRepository, Repository } from 'typeorm';
-import { Transgene } from './transgene.entity';
-import { TransgeneFilter } from './transgene.filter';
+import {EntityRepository, Repository} from 'typeorm';
+import {Transgene} from './transgene.entity';
+import {TransgeneFilter} from './transgene.filter';
+import {Logger} from "winston";
+import {Inject} from "@nestjs/common";
 
 @EntityRepository(Transgene)
 export class TransgeneRepository extends Repository<Transgene> {
   constructor(
+    @Inject('winston') private readonly logger: Logger
   ) {
     super();
   }

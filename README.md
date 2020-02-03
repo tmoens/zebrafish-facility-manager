@@ -31,12 +31,14 @@ It also provides reports to support things like auditing a zebrafish facility.
 
 ## Deployments
 
-A single facility of the system can be used to manage several zebrafish facilities.
-A facility consists of a database, one running instance of the zf_server using a
-facility specific configuration file, the zf-client served by an web-server and
-a facility specific configuration for the zf-client.
+A single deployment of the system can be used to manage several zebrafish facilities.
 
-## Pre-Deployment Setup
+You need to set up your web server and some external systems as will be covered in this
+README.  When that is complete, you can proceed to build, deploy and configure the
+[zf-server](zf-server/README.md) and the [zf-client](zf-client/README.md).
+But that comes later.
+
+## Pre-Deployment Host Setup
 
 In order to create a facility manager facility, a number of pre-requisites must be met.
 There are many server environments you *can* use to deploy the system and the process
@@ -52,16 +54,22 @@ On Debian, make sure everything is up to date:
 
 ### MariaDB
 
-Please refer to MariaDB resources to determine how to install in your server
-environment.  Other databases are supportable in theory, but have not been tested.
+Please refer to MariaDB resources to determine how to install MariaDB in your server
+environment.  Other databases are supportable in theory by simply configuring TypeORM, but
+this has not been tried.
 
-Here is an great article for [how to install it securely on 
+Here is a friendly article for [how to install MariaDB securely on 
 Debian](https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-debian-10).
+
+You will need to set up a separate database for each facility the sytem manages.
+The process of setting up a database for a facility is covered [here](MariaDB.md).
 
 ### Web Server
 
-The system uses a web server to serve the zf_client to the end user and also to
-handle HTTP traffic between the zf_clients and the zf_servers.
+The system uses a web server to:
+1. serve the zf-client to the end user
+1. serve zebrafish facility specific files to the zf-client
+1. handle HTTP traffic between the zf_clients and the zf_servers
 
 We outline how to set up Nginx and configure it for each managed facility.
 Apache can be equally well used if you are so inclined.
@@ -69,7 +77,7 @@ Apache can be equally well used if you are so inclined.
 Please refer to your selected web server documentation for installation
 instructions in your server environment.
 
-Here is an article on [how to install Nginx on
+Here is friendly article on [how to install Nginx on
 Debian](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-debian-10)
 
 Please note that your Debian installation may already have Apache installed
@@ -77,7 +85,7 @@ and you may want to migrate that installation to Nginx, or leave it as Apache
 and configure Zebrafish Stock Manager through Apache instead of Nginx - it isn't hard
 if you know what you are doing. 
 
-```bash
+```
 # incase you want to stop using apache2...
 # stop apache
 sudo systemctl stop apache2
@@ -85,36 +93,41 @@ sudo systemctl stop apache2
 sudo systemctl disable apache2
 ```
 
+When you are satisfied that your web server is up and running you need to create
+a directory which will hold one configuration file per zebrafish facility. 
+While you *can* put this wherever you like, it may become tiresome as you go
+through this manual process to have to remember that you did and to
+adjust commands accordingly. So, for now, we recommend that you create it in
+`/path/to/webserver/root/zfm/config`
+
+TODO make this a script.
+
 ### Passenger
 
 We have chosen to use [Passenger](https://www.phusionpassenger.com/library/)
 to simplify the management of the system.
 
-At time of writing, you *can* install Passenger on Debian 10 (buster), but the on-site
+At time of writing, you *can* install Passenger on Debian 10 (buster), but the on-line
 installation guides only go as far as Debian 9 (stretch). Not to worry, just change
 the word "stretch" to the word "buster" in the install guide for Passenger and all
 is well.
 
-### Build and deploy the zf_server
-**TBD**
+## Auth0 Configuration
 
-### Build and deploy the zf_client
-**TBD**
+We have outsourced user management, authentication and authorization to Auth0.  This is by
+far more secure than a "roll your own" version.
 
-## Manage a facility
 
-There is a separate setup required to customize the system for each
-zebrafish facility.  This section takes you through the required steps.
+### zf_server set up
 
-### Set up a database for the facility
+Next step is to set up the [zf-server](zf-server/README.md).
 
-The process of setting up a database for a facility is covered [here](MariaDB.md).
+### zf_client set up
 
-### zf_server configuration
-**TBD**
+Next step is to set up the [zf-client](zf-client/README.md).
 
-### zf_client configuration
-**TBD**
+Per Facility Configuration
+
 
 ## Stay in touch
 

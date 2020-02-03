@@ -38,7 +38,6 @@ export class ConfigService implements TypeOrmOptionsFactory {
     const filePath = `environments/${this.environment}.${this.facility}.env`;
     const config = dotenv.parse(fs.readFileSync(filePath));
     this.envConfig = this.validateInput(config);
-    console.log('x' + JSON.stringify(this.envConfig));
   }
 
   /**

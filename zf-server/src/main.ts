@@ -1,29 +1,30 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { configure, getLogger } from 'log4js';
-import { mkdirSync } from 'fs';
-import { ConfigService} from './config/config.service';
+import {NestFactory} from '@nestjs/core';
+import {AppModule} from './app.module';
+import {ConfigService} from './config/config.service';
+import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
+import * as winston from "winston";
+import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger({
+      transports: [
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            nestWinstonModuleUtilities.format.nestLike(),
+          ),
+        }),
+        // other transports...
+      ],
+      // other options
+    }),
+
+  });
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app.enableCors();
 
   await app.listen(app.get('ConfigService').envConfig.PORT);
-
-  /**
-   * make several directories, just in case it is a fresh install.
-   */
-  try {
-    mkdirSync('./log');
-  } catch (e) {
-    if (e.code !== 'EEXIST') {
-      process.exit(1);
-    }
-  }
-
-  configure('log4js_config.json');
-  const logger = getLogger('main');
-  logger.info('Started.  Listening on port ' + app.get('ConfigService').envConfig.PORT + '.');
 
 }
 
