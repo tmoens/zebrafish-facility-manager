@@ -1,21 +1,32 @@
 import { Test } from '@nestjs/testing';
-import { getCustomRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '../config/config.module';
-import { ConfigService } from '../config/config.service';
-import { Connection } from 'typeorm';
-import { Transgene } from './transgene.entity';
-import { TransgeneService } from './transgene.service';
-import { MutationRepository } from '../mutation/mutation.repository';
-import { Mutation } from '../mutation/mutation.entity';
-import { TransgeneFilter } from './transgene.filter';
-import { TransgeneRepository } from './transgene.repository';
+import {getCustomRepositoryToken, TypeOrmModule} from '@nestjs/typeorm';
+import {ConfigModule} from '../config/config.module';
+import {ConfigService} from '../config/config.service';
+import {Connection} from 'typeorm';
+import {Transgene} from './transgene.entity';
+import {TransgeneService} from './transgene.service';
+import {MutationRepository} from '../mutation/mutation.repository';
+import {Mutation} from '../mutation/mutation.entity';
+import {TransgeneFilter} from './transgene.filter';
+import {TransgeneRepository} from './transgene.repository';
+import * as winston from "winston";
+import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
+import {Logger} from "winston";
+import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
 
 describe('TransgeneService testing', () => {
+  let logger: Logger;
   let service: TransgeneService;
   let mutationRepo: MutationRepository;
   let transgeneRepo: TransgeneRepository;
   let configService: ConfigService;
   let connection: Connection;
+  const consoleLog = new (winston.transports.Console)({
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      nestWinstonModuleUtilities.format.nestLike(),
+    ),
+  });
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
@@ -30,6 +41,11 @@ describe('TransgeneService testing', () => {
           Mutation,
           MutationRepository,
         ]),
+        WinstonModule.forRoot({
+          transports: [
+            consoleLog,
+          ],
+        }),
       ],
       providers: [
         TransgeneRepository,
@@ -39,11 +55,12 @@ describe('TransgeneService testing', () => {
         },
       ],
     }).compile();
+    logger = module.get(WINSTON_MODULE_NEST_PROVIDER);
     configService = new ConfigService();
     connection = module.get(Connection);
     transgeneRepo = module.get<TransgeneRepository>(TransgeneRepository);
     mutationRepo = module.get<MutationRepository>(MutationRepository);
-    service = new TransgeneService(configService, transgeneRepo, mutationRepo);
+    service = new TransgeneService(logger, configService, transgeneRepo, mutationRepo);
   });
 
   describe('4974046 creation of "owned" transgenes', () => {

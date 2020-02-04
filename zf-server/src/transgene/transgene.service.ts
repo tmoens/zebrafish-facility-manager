@@ -12,8 +12,8 @@ import {Logger} from "winston";
 @Injectable()
 export class TransgeneService extends GenericService{
   constructor(
-    private readonly configService: ConfigService,
     @Inject('winston') private readonly logger: Logger,
+    private readonly configService: ConfigService,
     @InjectRepository(TransgeneRepository) private readonly repo: TransgeneRepository,
     @InjectRepository(MutationRepository) private readonly mutationRepo: MutationRepository,
   ) {

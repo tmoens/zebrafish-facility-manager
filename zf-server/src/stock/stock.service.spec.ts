@@ -3,22 +3,33 @@ import { getCustomRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { Connection } from 'typeorm';
-import { TransgeneRepository } from '../transgene/transgene.repository';
-import { Transgene } from '../transgene/transgene.entity';
-import { Stock } from './stock.entity';
-import { StockRepository } from './stock.repository';
-import { StockService } from './stock.service';
-import { MutationRepository } from '../mutation/mutation.repository';
-import { Mutation } from '../mutation/mutation.entity';
-import { classToPlain } from 'class-transformer';
-import { StockFilter } from './stock-filter';
+import {TransgeneRepository} from '../transgene/transgene.repository';
+import {Transgene} from '../transgene/transgene.entity';
+import {Stock} from './stock.entity';
+import {StockRepository} from './stock.repository';
+import {StockService} from './stock.service';
+import {MutationRepository} from '../mutation/mutation.repository';
+import {Mutation} from '../mutation/mutation.entity';
+import {classToPlain} from 'class-transformer';
+import {StockFilter} from './stock-filter';
 import * as moment from 'moment';
+import * as winston from "winston";
+import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
+import {Logger} from "winston";
+import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
 
 describe('Stock Service testing', () => {
+  let logger: Logger;
   let stockService: StockService;
   let stockRepo: StockRepository;
   let configService: ConfigService;
   let connection: Connection;
+  const consoleLog = new (winston.transports.Console)({
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      nestWinstonModuleUtilities.format.nestLike(),
+    ),
+  });
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
@@ -29,6 +40,11 @@ describe('Stock Service testing', () => {
             useExisting: ConfigService,
           }),
         TypeOrmModule.forFeature([Stock, StockRepository, Mutation, MutationRepository, Transgene, TransgeneRepository]),
+        WinstonModule.forRoot({
+          transports: [
+            consoleLog,
+          ],
+        }),
       ],
       providers: [
         StockRepository,
@@ -37,10 +53,11 @@ describe('Stock Service testing', () => {
           useExisting: StockRepository,
         }],
     }).compile();
+    logger = module.get(WINSTON_MODULE_NEST_PROVIDER);
     configService = new ConfigService();
     connection = module.get(Connection);
     stockRepo = module.get<StockRepository>(StockRepository);
-    stockService = new StockService(configService, stockRepo);
+    stockService = new StockService(logger, configService, stockRepo);
   });
 
   describe('3019202 CRUD Stock', () => {

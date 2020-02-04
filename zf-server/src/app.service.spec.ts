@@ -3,16 +3,20 @@ import { getCustomRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { StockService } from './stock/stock.service';
 import { StockRepository } from './stock/stock.repository';
 import { ConfigService } from './config/config.service';
-import { Connection } from 'typeorm';
-import { ConfigModule } from './config/config.module';
-import { Stock } from './stock/stock.entity';
-import { Mutation } from './mutation/mutation.entity';
-import { MutationRepository } from './mutation/mutation.repository';
-import { Transgene } from './transgene/transgene.entity';
-import { TransgeneRepository } from './transgene/transgene.repository';
-import { MutationService } from './mutation/mutation.service';
-import { TransgeneService } from './transgene/transgene.service';
-import { classToClass, classToPlain } from 'class-transformer';
+import {Connection} from 'typeorm';
+import {ConfigModule} from './config/config.module';
+import {Stock} from './stock/stock.entity';
+import {Mutation} from './mutation/mutation.entity';
+import {MutationRepository} from './mutation/mutation.repository';
+import {Transgene} from './transgene/transgene.entity';
+import {TransgeneRepository} from './transgene/transgene.repository';
+import {MutationService} from './mutation/mutation.service';
+import {TransgeneService} from './transgene/transgene.service';
+import {classToClass, classToPlain} from 'class-transformer';
+import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
+import * as winston from "winston";
+import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
+import {Logger} from "winston";
 
 /**
  * This is testing that involves the relationships between the various objects
@@ -20,6 +24,7 @@ import { classToClass, classToPlain } from 'class-transformer';
  */
 
 describe('App Level testing', () => {
+  let logger: Logger;
   let stockService: StockService;
   let stockRepo: StockRepository;
   let mutationService: MutationService;
@@ -28,6 +33,12 @@ describe('App Level testing', () => {
   let transgeneRepo: TransgeneRepository;
   let configService: ConfigService;
   let connection: Connection;
+  const consoleLog = new (winston.transports.Console)({
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      nestWinstonModuleUtilities.format.nestLike(),
+    ),
+  });
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
@@ -37,7 +48,13 @@ describe('App Level testing', () => {
             imports: [ConfigModule],
             useExisting: ConfigService,
           }),
-        TypeOrmModule.forFeature([Stock, StockRepository, Mutation, MutationRepository, Transgene, TransgeneRepository]),
+        TypeOrmModule.forFeature(
+          [Stock, StockRepository, Mutation, MutationRepository, Transgene, TransgeneRepository]),
+        WinstonModule.forRoot({
+          transports: [
+            consoleLog,
+          ],
+        }),
       ],
       providers: [
         StockRepository,
@@ -46,14 +63,16 @@ describe('App Level testing', () => {
           useExisting: StockRepository,
         }],
     }).compile();
+
+    logger = module.get(WINSTON_MODULE_NEST_PROVIDER);
     configService = new ConfigService();
     connection = module.get(Connection);
     stockRepo = module.get<StockRepository>(StockRepository);
     mutationRepo = module.get<MutationRepository>(MutationRepository);
     transgeneRepo = module.get<TransgeneRepository>(TransgeneRepository);
-    stockService = new StockService(configService, stockRepo);
-    mutationService = new MutationService(configService, mutationRepo, transgeneRepo);
-    transgeneService = new TransgeneService(configService, transgeneRepo, mutationRepo);
+    stockService = new StockService(logger, configService, stockRepo);
+    mutationService = new MutationService(logger, configService, mutationRepo, transgeneRepo);
+    transgeneService = new TransgeneService(logger, configService, transgeneRepo, mutationRepo);
   });
 
   describe('6790799 Stock with relations', () => {
@@ -200,11 +219,11 @@ describe('App Level testing', () => {
     });
 
     it('7508514 create a stock with a mom, should get moms tgs and mutations', async () => {
-      const stockIndex = 3 ;
+      const stockIndex = 3;
       const stockD = {
         description: '7508514 test inheritance of maternal tg and muts',
         matIdInternal: stocks[stockIndex].id,
-      }
+      };
       const s = await stockService.validateAndCreate(stockD);
       const retrievedStock: Stock = await stockRepo.getStockWithRelations(s.id);
       expect(retrievedStock.description).toBe(stockD.description);
@@ -214,11 +233,11 @@ describe('App Level testing', () => {
     });
 
     it('4557052 create a stock with a dad, should get dads tgs and mutations', async () => {
-      const stockIndex = 3 ;
+      const stockIndex = 3;
       const stockD = {
         description: '4557052 test inheritance of paternal tg and muts',
         patIdInternal: stocks[stockIndex].id,
-      }
+      };
       const s = await stockService.validateAndCreate(stockD);
       const retrievedStock: Stock = await stockRepo.getStockWithRelations(s.id);
       expect(retrievedStock.description).toBe(stockD.description);
@@ -234,7 +253,7 @@ describe('App Level testing', () => {
         description: '2306243 test inheritance of tg and muts from both parents',
         matIdInternal: mom.id,
         patIdInternal: dad.id,
-      }
+      };
       const s = await stockService.validateAndCreate(stockD);
       const retrievedStock: Stock = await stockRepo.getStockWithRelations(s.id);
       expect(retrievedStock.description).toBe(stockD.description);
@@ -250,7 +269,7 @@ describe('App Level testing', () => {
         description: '2421246 test inheritance of tg and muts from both parents',
         matIdInternal: mom.id,
         patIdInternal: dad.id,
-      }
+      };
       const s = await stockService.validateAndCreate(stockD);
       const retrievedStock: Stock = await stockRepo.getStockWithRelations(s.id);
       expect(retrievedStock.description).toBe(stockD.description);
