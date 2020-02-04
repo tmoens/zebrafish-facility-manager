@@ -32,4 +32,4 @@ lerna-debug.log*
 
 # environment files except sample.env
 /environments/*
-/environments/!sample.env
+!/environments/sample.env
