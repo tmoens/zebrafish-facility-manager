@@ -102,7 +102,7 @@ describe('MutationService testing', () => {
   describe('5133501 CRUD for minimal Mutation', () => {
 
     it('5735594 create (and get and delete) minimal mutation', async () => {
-      const randomString1: string = String(Math.random());
+      const randomString1: string = String(Math.random()).substr(0, 19);
       const m = {
         name: randomString1,
         comment: '5735594 for mutation creation test',
@@ -194,8 +194,6 @@ describe('MutationService testing', () => {
       };
       await expect(mutationService.validateAndUpdate(m)).rejects.toThrow();
     });
-
-    it.todo('Cannot delete a mutation if there exists a stock with that mutation');
   });
 
   describe('3499897 Mutation filtering and reporting', () => {

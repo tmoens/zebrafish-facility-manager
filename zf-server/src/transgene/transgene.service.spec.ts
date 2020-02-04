@@ -208,10 +208,6 @@ describe('TransgeneService testing', () => {
       };
       await expect(service.validateAndUpdate(m)).rejects.toThrow();
     });
-
-    it.todo(
-      'Cannot delete a transgene if there exists a stock with that transgene',
-    );
   });
 
   describe('3499897 Transgene filtering and reporting', () => {

@@ -47,6 +47,7 @@ export class MutationService extends GenericService {
     this.checkNameValidity(dto.name);
     let candidate: Mutation = new Mutation();
     candidate = plainToClassFromExist(candidate, dto);
+    await this.mustNotExist(candidate.name);
     return await this.repo.save(candidate);
   }
 
@@ -109,6 +110,18 @@ export class MutationService extends GenericService {
       throw new BadRequestException('Bad Request', msg);
     }
     return candidate;
+  }
+
+  async mustNotExist(name: string): Promise<Boolean> {
+    const m: Mutation[] = await this.repo.find({
+      where: {name}
+    });
+    if (m.length > 0) {
+      const msg = '9893064 attempt to create a transgene with a name that already exists.';
+      this.logger.error(msg);
+      throw new BadRequestException('Bad Request', msg);
+    }
+    return true;
   }
 
   // for manually assigned names, make sure the name does not conflict with

@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
 import * as Joi from '@hapi/joi';
 import * as fs from 'fs';
-import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { LoggerOptions } from '../../node_modules/typeorm/logger/LoggerOptions';
+import {TypeOrmOptionsFactory, TypeOrmModuleOptions} from '@nestjs/typeorm';
+import {LoggerOptions} from 'typeorm/logger/LoggerOptions';
 
 export interface EnvConfig {
   [prop: string]: string;
@@ -22,30 +22,27 @@ class Auth0Config {
 export class ConfigService implements TypeOrmOptionsFactory {
   private readonly envConfig: EnvConfig;
   readonly facility: string; // which facility are we talking about
-  readonly environment: string; // production or development
 
   constructor() {
-    this.environment = process.env.NODE_ENV;
     this.facility = process.env.FACILITY;
-
-    if (null == this.environment) {
-      this.environment = 'production';
-    }
 
     if (!this.facility) {
       this.facility = 'test';
     }
-    const filePath = `environments/${this.environment}.${this.facility}.env`;
+
+    const filePath = `environments/${this.facility}.env`;
     const config = dotenv.parse(fs.readFileSync(filePath));
-    this.envConfig = this.validateInput(config);
+    this.envConfig = ConfigService.validateInput(config);
   }
 
   /**
    * Ensures all needed variables are set, and returns the validated JavaScript object
    * including the applied default values.
    */
-  private validateInput(envConfig: EnvConfig): EnvConfig {
+  private static validateInput(envConfig: EnvConfig): EnvConfig {
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
+      NODE_ENV: Joi.string().default('production'),
+
       FACILITY_ORG_NAME: Joi.string().required(),
       FACILITY_ORG_SHORT_NAME: Joi.string().required(),
       FACILITY_ORG_PREFIX: Joi.string().required(),
@@ -63,7 +60,7 @@ export class ConfigService implements TypeOrmOptionsFactory {
       AUTH0_AUDIENCE: Joi.string().required(),
     });
 
-    const { error, value: validatedEnvConfig } = Joi.validate(
+    const {error, value: validatedEnvConfig} = Joi.validate(
       envConfig,
       envVarsSchema,
     );
@@ -71,6 +68,10 @@ export class ConfigService implements TypeOrmOptionsFactory {
       throw new Error(`Config validation error: ${error.message}`);
     }
     return validatedEnvConfig;
+  }
+
+  get nodeEnv(): string {
+    return this.envConfig.NODE_ENV;
   }
 
   get typeORMLogQueries(): boolean {
@@ -98,7 +99,7 @@ export class ConfigService implements TypeOrmOptionsFactory {
 
   // This is used to build ORM configuration options
   createTypeOrmOptions(): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions {
-    const SOURCE_PATH = this.environment === 'production' ? 'dist' : 'src';
+    const SOURCE_PATH = this.nodeEnv === 'production' ? 'dist' : 'src';
 
     const loggingOption: LoggerOptions = ['error'];
     if (this.typeORMLogQueries) {

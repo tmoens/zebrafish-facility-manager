@@ -49,6 +49,7 @@ export class TransgeneService extends GenericService{
     this.checkAlleleValidity(dto.allele);
     let candidate: Transgene = new Transgene();
     candidate = plainToClassFromExist(candidate, dto);
+    await this.mustNotExist(candidate.allele, candidate.descriptor);
     return await this.repo.save(candidate);
   }
 
@@ -112,6 +113,18 @@ export class TransgeneService extends GenericService{
       throw new BadRequestException('Bad Request', msg);
     }
     return candidate;
+  }
+
+  async mustNotExist(allele: string, descriptor: string): Promise<Boolean> {
+    const t: Transgene[] = await this.repo.find({
+      where: {allele, descriptor}
+    });
+    if (t.length > 0) {
+      const msg = '9893064 attempt to create a transgene with a name that already exists.';
+      this.logger.error(msg);
+      throw new BadRequestException('Bad Request', msg);
+    }
+    return true;
   }
 
   // for manually assigned alleles, make sure the name does not conflict with

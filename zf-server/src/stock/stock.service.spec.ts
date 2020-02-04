@@ -255,8 +255,6 @@ describe('Stock Service testing', () => {
         await stockService.validateAndRemove(child.id);
         await stockService.validateAndRemove(parent.id);
       });
-
-      it.todo('cannot delete a stock with swimmers.');
     });
 
     describe('5465529 Update for stocks',  () => {
@@ -436,10 +434,6 @@ describe('Stock Service testing', () => {
       });
     });
 
-  });
-
-  describe('8134475 descendents', () => {
-    it.todo('9841978 descendents');
   });
 
   describe('8188099 Stock filtering and reporting', () => {
