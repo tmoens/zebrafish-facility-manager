@@ -48,8 +48,14 @@ the Zebrafish Facility Manager.
 
 On Debian, make sure everything is up to date:
 ```bash
-> sudo apt-get update
-> sudo apt-get upgrade
+sudo apt-get update
+sudo apt-get upgrade
+```
+### Node and NPM
+
+We need to use node and the node package manager
+```bash
+sudo apt install nodejs npm
 ```
 
 ### MariaDB
@@ -61,8 +67,30 @@ this has not been tried.
 Here is a friendly article for [how to install MariaDB securely on 
 Debian](https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-debian-10).
 
-You will need to set up a separate database for each facility the sytem manages.
+The "good parts" version is
+
+```bash
+# install mariadb (if it isnt already installed)
+sudo apt install mariadb-server
+
+# make the installation more secure, run this and follow the prompts
+sudo mysql_secure_installation
+
+# Create an admin account
+sudo mysql
+...
+...
+...
+MariaDB [(none)]> GRANT ALL ON *.* TO 'admin'@'localhost' IDENTIFIED BY 'password' WITH GRANT OPTION;
+MariaDB [(none)]> exit
+```
+
+You will need to set up a separate database for each facility the system manages.
 The process of setting up a database for a facility is covered [here](MariaDB.md).
+
+### Domain name
+
+you are going to need one.
 
 ### Web Server
 
@@ -71,27 +99,21 @@ The system uses a web server to:
 1. serve zebrafish facility specific files to the zf-client
 1. handle HTTP traffic between the zf_clients and the zf_servers
 
-We outline how to set up Nginx and configure it for each managed facility.
-Apache can be equally well used if you are so inclined.
+We outline how to set up Apache2 as it is usually pre-installed.
 
-Please refer to your selected web server documentation for installation
-instructions in your server environment.
+Here is friendly article on [how to install Apache on
+Debian](https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-debian-10)
 
-Here is friendly article on [how to install Nginx on
-Debian](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-debian-10)
+Create a virtual server for your domain name.
 
-Please note that your Debian installation may already have Apache installed
-and you may want to migrate that installation to Nginx, or leave it as Apache
-and configure Zebrafish Stock Manager through Apache instead of Nginx - it isn't hard
-if you know what you are doing. 
+Get an SSL certificate to secure your virtual server.
 
-```
-# incase you want to stop using apache2...
-# stop apache
-sudo systemctl stop apache2
-# don't let it restart on reboot
-sudo systemctl disable apache2
-```
+You also need to enable the server to speak https which involves installing a certificate
+and changing your firewall settings. [Here is an article you could
+use](https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-debian-10)
+
+You probably want to auto-backup (securely) the /etc/letsencrypt directory
+if you used letsEncrypt to get your certificate.
 
 When you are satisfied that your web server is up and running you need to create
 a directory which will hold one configuration file per zebrafish facility. 
@@ -116,6 +138,14 @@ is well.
 
 We have outsourced user management, authentication and authorization to Auth0.  This is by
 far more secure than a "roll your own" version.
+
+## Clone the Github repository
+
+This is where you download all zf-client and zf-server code.
+Go to a directory on the server where you plan to download the code. Then:
+```bash
+git clone https://github.com/tmoens/zebrafish-facility-manager
+```
 
 
 ### zf_server set up

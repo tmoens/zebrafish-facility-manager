@@ -28,7 +28,8 @@
             "assets": [
               "src/favicon.png",
               "src/.htaccess",
-              "src/assets"
+              "src/assets",
+              "src/facility-config"
             ],
             "styles": [
               "src/styles.scss"

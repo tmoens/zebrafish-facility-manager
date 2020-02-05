@@ -6,116 +6,63 @@ typescript and runs in Node.js
 
 ## Deployments
 
-Every deployment of the system as a whole needs one build of the zf-server. 
+Every deployment of the system as a whole needs only one build of the zf-server. 
 Each zebrafish facility requires a dedicated database an a dedicated instance of the 
 zf-server along with a facility specific configuration file.
 
-## Pre-Deployment setup of server environment
+### Build the server code
 
-In order to create a facility manager system, a number of pre-requisites must be met.
-There are many server environments you *can* use to deploy the system and the process
-can get complicated - especially if you consider long-term maintenance and upgrades.
-However, I do provide some help for setting up a Debian Unix system for facility.
-
-On Debian, make sure everything is up to date:
+You already cloned the repository into a directory.  Now:
 ```bash
-> sudo apt-get update
-> sudo apt-get upgrade
-```
+# navigate to the zf-server sub-directory
+cd path/to/zebrafish-facility-manager/zf-server
 
-### MariaDB
+# Download npm packages
+npm install
 
-Please refer to MariaDB resources to determine how to install in your server
-environment.  Other databases are supportable in theory, but have not been tested.
-
-Here is an great article for [how to install it securely on 
-Debian](https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-debian-10).
-
-### Web Server
-
-The system uses a web server to serve the zf_client to the end user
-and also to
-handle HTTP traffic between the zf_clients and the zf_server.
-
-This has been successfully tested with both Apache and Nginx as the web server.
-However, we will only provide configuration guidance for configuring Nginx.
-
-Please refer to your selected web server documentation for installation
-instructions in your server environment.
-
-Here is an article on [how to install it on
-Debian](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-debian-10)
-
-I will note here that your Debian installation may already have Apache installed
-and you may want to migrate that installation to Nginx, or leave it as Apache
-and configure Zebrafish Stock Manager through Apache instead of Ngnix - it isn't hard
-if you know what you are doing. 
-
-```bash
-# incase you want to stop using apache2...
-# stop apache
-sudo systemctl stop apache2
-# don't let it restart on reboot
-sudo systemctl diable apache2
-```
-
-### Passenger
-
-We have chosen to use [Passenger](https://www.phusionpassenger.com/library/)
-to simplify the management of the system.
-
-At time of writing, you *can* install Passenger on Debian 10 (buster), but the on-site
-installation guides only go as far as Debian 9 (stretch). Not to worry, just change
-the word "stretch" to the word "buster" in the install guide for Passenger and all
-is well.
-
-### Download & build the server code
-
-**TODO** git clone part is TDB until I get it on GitHub.
-
-
-```bash
-# Download npm packages for the zf_server build process
-> npm install
 # Build the zf_server
-> npm run build
+npm run build
 ```
 
-## Deployment
+## Facility Configuration
 
 There is a separate facility setup required to customize the system for each
 zebrafish facility.  This section takes you through the required steps.
 
+Choose a short or abbreviated name for your facility. As an example you might choose "ubc" for 
+"The University of British Columbia". 
+
 ### Set up a database for the facility
 
 The process of setting up a database for your a facility is covered [here](MariaDB.md).
+Make a note of the database, database user and password for the facility.  For the purpose
+of illustration, we will assume these are zf_ubc, zf_ubc, and zf_ubc_really_good_password.
 
-### zf_server Deployment
+### Set up Auth0 stuff
 
-You will need to set up two environment variables.  Choose a DEPLOYMENT name that is short
-and reflects which facility you are deploying a system for.
+--tbd--
+For the purpose of illustration, we will assume these are blah blah blah.
+
+### zf_server configuration file
+
+You need to create a server configuration file for each facility
 ```bash 
-export NODE_ENV=production
-export DEPLOYMENT=your_short_deployment_name
+# copy the sample configuration file
+cp environments/sample.env environments/ubc.example
 ```
 
-The next thing you need to do is create a zf_server configuration file for your
-facility. Copy the sample.env file and call the copy 
-production.your_short_deployment_name.env (obviously using the name you chose)
-
 Edit your configuration file. It should be simple as the file contains
-detailed instructions.  Don't worry about configuring TANK_LABEL_LAYOUT, you
-can tune that later when it is time to tune the system.
+detailed instructions.
 
 You can change the configuration file any time you want, but you will have
 to restart the zf_server for those changes to take place.
 
 ### Test the server facility (optional)
 
-The testing process actually uses the database, so the facility configuration
-must be set up correctly for it to run.
+The automated testing process actually uses the database and it assumes a facility
+called "test".
+Please follow all the steps above and create a facility called test.
 
-If the database is empty, this will create all the tables.
 ```bash 
 npm run test
 ```

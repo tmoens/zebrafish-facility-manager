@@ -44,6 +44,7 @@ import {StockGeneticsEditorComponent} from "./stock-manager/stock-genetics-edito
 import {CanDeactivateGuard} from "./deactivation-guard/can-deactivate-guard";
 import {DialogService} from "./dialog.service";
 import {AuthTokenInterceptor} from "./auth/AuthTokenInterceptor";
+import {Router} from "@angular/router";
 
 export function configProviderFactory(provider: ConfigService) {
   return () => provider.load();

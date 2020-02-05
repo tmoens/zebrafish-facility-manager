@@ -8,25 +8,25 @@ You should build and test the zf-server before building and deploying the zf-cli
 
 ## Deployment
 
-Every deployment of the system as a whole needs only one build of the zf-client, governed by
-a configuration file.
+Every deployment of the system as a whole needs only one build of the zf-client.
 One deployment is capable of managing several zebrafish facilities each governed by
 a facility-specific configuration file.
 
-### Deployment Configuration
+### Apache Web Server Configuration
+
+Was described in the overall installation ToDo add a link.
+
+### zf-client Deployment Configuration
 
 The main configuration variable tells the client where to look for further configuration
-specific to the various facilities supported by the deployment. 
+specific to each facility supported by the deployment. 
 
-The configuration file for the deployment is a copy of src/environments/environment.ts or 
-one of the other configurations. 
+The configuration file for the deployment is a copy of src/environments/example.environment.prod.ts
+Rename it to src/environments/environment.prod.ts and edit it. Follow the directions in the file.
+You need to know the domain name you configured earlier.
 
-In this file you will specify the place the client goes to look for "per facility" configuration.
-
-`configServerPrefix: "http://yourhost/zf-facility-manager/facility-config`
-
-Then, you would need to create such a directory on your web server and later you will populate it with
-per-facility client configuration files.
+If you are planning to run the client for debugging (i.e. running ng serve), you will also need
+to create and edit environments/environment.ts.
 
 ### Build & Deploy
 
@@ -36,7 +36,7 @@ The resulting build will be in zf-client/dist/zf-client
 Please note that by default, the zf-client is built with a base-href of /zfm/zf-client
 and should therefore be deployed in
 
-`/path/to/your/webserver/root/directory/zf-facility-manager/zfclient`
+`/path/to/your/webserver/root/directory/zfm/zf-client`
 
 You can, of course, change this by building with --base-href, or by changing the build
 in angular.json.  If you do, you will also need to make a corresponding change to the .htaccess

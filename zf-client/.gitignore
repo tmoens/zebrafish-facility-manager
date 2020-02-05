@@ -23,14 +23,6 @@ speed-measure-plugin*.json
 .settings/
 *.sublime-workspace
 
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-
 # misc
 /.sass-cache
 /connect.lock
@@ -44,3 +36,13 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# only commit example configurations
+/src/environments/*.ts
+!/src/environments/example*
+
+/src/facility-config/*.json
+!/src/facility-config/example.json
+
+
+

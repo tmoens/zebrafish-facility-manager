@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {ConfigModel} from "./config-model";
 import {HttpBackend, HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
+import {Router} from "@angular/router";
+import {Location} from "@angular/common";
 
 /*
  * This service loads configuration information for a particular zebrafish facility.
@@ -25,9 +27,13 @@ export class ConfigService {
   private http: HttpClient;
 
   // Note that the use of HttpBackend here is done specifically to
-  // avoid the interceptor.
-  constructor(private handler: HttpBackend) {
+  // avoid the interceptor being fired before configuration is loaded.
+  constructor(private handler: HttpBackend,
+              // private router: Router,
+              location: Location,
+  ) {
     this.http = new HttpClient(handler);
+    console.log(location);
   }
 
   public getConfig(): ConfigModel {
