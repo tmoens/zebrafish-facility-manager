@@ -38,9 +38,6 @@ testem.log
 Thumbs.db
 
 # only commit example configurations
-/src/environments/*.ts
-!/src/environments/example*
-
 /src/facility-config/*.json
 !/src/facility-config/example.json
 

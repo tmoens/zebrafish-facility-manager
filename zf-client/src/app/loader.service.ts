@@ -25,10 +25,11 @@ export class LoaderService {
     private http: HttpClient,
     private message: MatSnackBar,
     private configService: ConfigService,
+
   ) {
   }
 
-  serverURL = this.configService.getConfig().zfServerPrefix;
+  serverURL = location.origin + '/zf_server';
 
   getFilteredList(type: ZFTypes, filter: any): Observable<any> {
     if (!filter) {

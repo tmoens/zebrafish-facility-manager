@@ -9,5 +9,5 @@
 // configuration information for a particular zebrafish facility.
 export const environment = {
   production: false,
-  configServerPrefix: "http://localhost:4200/zfm/zf-client/facility-config"
 };
+

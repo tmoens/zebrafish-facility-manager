@@ -1,18 +1,33 @@
 
-## MariaDB setup
+## MariaDB For a single facility
 
-This guide assumes you have MariaDB installed and running.
+If you followed the instructions when installing MariaDB (securely), you will not 
+be able to log in as as the database root user, but you will have created an admin
+user with sufficient privileges to create new databases and you will know that the
+admin user's password.  If you did not it is ok, but you have to do equivalent
+operations to what is presented here.
+
+Following the running example, 
+1. you are setting up a database for the the Example University of Examples
+1. you plan to use _eue_ as an abbreviation for the university.
 
 ## Database Creation
 
-If you followed the Debian installation instructions
-when you installed MariaDB (securely), you will not be able to log in as
-as the database root user, but you will have created an admin user with sufficient
-privileges to create new databases.
+Choose a good name for the database and the corresponding database user.
+Following the example, let's call them both _zf_eue_
+ 
+Chose a very good password - probably generated from LastPass or some other
+service.  Please do not skimp on this.
+Strictly for illustration, we will use _very_bad_eue_password_.
 
-```bash
+**You will need to know this password to configure the zf_server for this facility.**
+
+Log in to MariaDB, create the user and the corresponding database.  Obviously,
+you would use your own values instead of _zf_eue_ and _very_bad_eue_password_.
+
+```bash 
 # Log into the MariaDB server
-> mysql -u admin -p
+mysql -u admin -p
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
 Your MariaDB connection id is 90
 Server version: 10.2.10-MariaDB mariadb.org binary distribution
@@ -22,28 +37,18 @@ Copyright (c) 2000, 2017, Oracle, MariaDB Corporation Ab and others.
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 MariaDB [(none)]>
-```
-
-Choose a good name for the database and the user. I usually use the same name for
-both and it reflects something about the facility you are creating a facility for.
- 
-Chose a very good password - probably generated from LastPass or wherever.
-
-**You will need to keep  a copy of the password to configure the
-zf_server for this facility.**
-
-Edit the script below and replace the obvious zf_good_name and 
-some_really_good_password with your chosen values.  Then run the 
-edited script in your MariaDB terminal.
-
-```bash 
-CREATE USER 'zf_good_name'@'localhost' IDENTIFIED BY 'some_really_good_password';
-GRANT USAGE ON *.* TO 'zf_good_name'@'localhost'
+CREATE USER 'zf_eue'@'localhost' IDENTIFIED BY 'very_bad_eue_password';
+GRANT USAGE ON *.* TO 'zf_eue'@'localhost'
 REQUIRE NONE
 WITH MAX_QUERIES_PER_HOUR 0
 MAX_CONNECTIONS_PER_HOUR 0
 MAX_UPDATES_PER_HOUR 0
 MAX_USER_CONNECTIONS 0;
-CREATE DATABASE IF NOT EXISTS `zf_good_name`;
-GRANT ALL PRIVILEGES ON `zf\_good\_name`.* TO 'zf_good_name'@'localhost';
+CREATE DATABASE IF NOT EXISTS `zf_eue`;
+GRANT ALL PRIVILEGES ON `zf\_eue`.* TO 'zf_eue'@'localhost';
 ```
+
+You now have a database.  There are no tables in it, but they will be created automatically
+when the zf_server is run for the first time.
+
+ToDo, make this a script?

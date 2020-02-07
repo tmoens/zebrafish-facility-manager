@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ConfigModel} from "./config-model";
 import {HttpBackend, HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environment";
-import {Router} from "@angular/router";
 import {Location} from "@angular/common";
 
 /*
@@ -29,11 +27,13 @@ export class ConfigService {
   // Note that the use of HttpBackend here is done specifically to
   // avoid the interceptor being fired before configuration is loaded.
   constructor(private handler: HttpBackend,
-              // private router: Router,
-              location: Location,
+              private location: Location,
   ) {
     this.http = new HttpClient(handler);
+    console.log("location:");
     console.log(location);
+    console.log("this.location:");
+    console.log(this.location);
   }
 
   public getConfig(): ConfigModel {
@@ -41,10 +41,11 @@ export class ConfigService {
   }
 
   load() {
+    console.log("location.origin:");
+    console.log(location.origin);
     return new Promise((resolve, reject) => {
-      // TODO Figure out how to get the org name to append to the configServerPrefix
       this.http
-        .get(environment.configServerPrefix + "/fhcrc.json")
+        .get(location.origin + "/facility-config/" + location.origin)
         .subscribe(response => {
           this.config = response as ConfigModel;
           resolve(true);

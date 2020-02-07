@@ -5,7 +5,6 @@
   "auth0ClientId": "zMZwc4fmzjysGmPizSe7jNpbgMqLFxu9",
   "auth0Domain": "dev-8hdwaaeq.auth0.com",
   "auth0Audience": "https://fhcrc.zfserver.com",
-  "zfServerPrefix": "http://localhost:3003",
 
   "tankNumberingHint": "Legal tank numbers run from blah blahblah",
   "tankLabelConfig": {
