@@ -24,7 +24,6 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": false,
-            "baseHref": "/zfm/zf-client/",
             "assets": [
               "src/favicon.png",
               "src/.htaccess",

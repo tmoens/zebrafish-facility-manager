@@ -45,7 +45,7 @@ export class ConfigService {
     console.log(location.origin);
     return new Promise((resolve, reject) => {
       this.http
-        .get(location.origin + "/facility-config/" + location.origin)
+        .get(location.origin + "/facility-config/" + location.host + ".json")
         .subscribe(response => {
           this.config = response as ConfigModel;
           resolve(true);
