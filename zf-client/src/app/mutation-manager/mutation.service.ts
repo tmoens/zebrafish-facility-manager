@@ -2,12 +2,15 @@ import {Inject, Injectable} from '@angular/core';
 import {LoaderService, ZFTypes} from '../loader.service';
 import {BehaviorSubject} from 'rxjs';
 import {MutationFilter} from './mutation-filter';
-import {MatSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {FieldOptions} from '../helpers/field-options';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
 import {Mutation} from './mutation';
 import * as XLSX from 'xlsx';
-import {AppStateService} from '../app-state.service';
+import {AppStateService, ZFStates} from '../app-state.service';
+import {plainToClass} from "class-transformer";
+import {TransgeneFilter} from "../transgene-manager/transgene-filter";
+import {Transgene} from "../transgene-manager/transgene";
 
 /**
  * This is the model for mutation information displayed in the GUI.
@@ -32,9 +35,19 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
   constructor(
     private readonly loaderForGeneric: LoaderService,
     private snackBarForGeneric: MatSnackBar,
-    private appStateServiceForGeneric: AppStateService,
+    private appStateServiceX: AppStateService,
   ) {
-    super(Mutation, Mutation, MutationFilter, ZFTypes.MUTATION, loaderForGeneric, snackBarForGeneric, appStateServiceForGeneric);
+    super(ZFTypes.MUTATION, loaderForGeneric, snackBarForGeneric, appStateServiceX);
+
+    const storedFilter  = this.appStateServiceX.getState(ZFTypes.MUTATION, ZFStates.FILTER);
+    if (storedFilter) {
+      this.setFilter(storedFilter);
+    } else {
+      const filter = plainToClass(MutationFilter, {});
+      console.log(ZFTypes.MUTATION + ' empty filter: ' + JSON.stringify(filter));
+      this.setFilter(filter);
+    }
+
     this._fieldOptions = new FieldOptions({
       'researcher': [],
       'name': [],
@@ -43,6 +56,16 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
       'mutationType': [],
     });
     this.refresh();
+  }
+
+  // Data comes from the server as a plain dto, this just converts to the corresponding class
+  convertSimpleDto2Class(dto): any {
+    return plainToClass(Mutation, dto);
+  }
+
+  // Data comes from the server as a dto, this just converts to the corresponding class
+  convertFullDto2Class(dto): any {
+    return plainToClass(Mutation, dto);
   }
 
   refresh() {

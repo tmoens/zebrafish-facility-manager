@@ -95,9 +95,9 @@ export class ZFGenericService<
     // as an argument to this constructor and save that class's constructor function.
     // So, ZFSimpleClass and ZFFullClass are functions that are able to create
     // objects of whatever class was passed in.
-    private ZFSimpleClass: { new(DTO): SIMPLE_OBJ ; },
-    private ZFFullClass: { new(DTO): FULL_OBJ ; },
-    private ZFFilterClass: { new(DTO): FILTER ; },
+    // private ZFSimpleClass: { new(DTO): SIMPLE_OBJ ; },
+    // private ZFFullClass: { new(DTO): FULL_OBJ ; },
+    // private ZFFilterClass: { new(DTO): FILTER ; },
 
     // this is used to tell the loader what type to use in server calls.
     private zfType: ZFTypes, // stock, mutation or transgene.
@@ -125,26 +125,28 @@ export class ZFGenericService<
       this.selectById(storedId);
     }
 
-    // load filter from local storage or failing that, use an empty one.
-    const storedFilter  = this.appStateService.getState(zfType, ZFStates.FILTER);
-    if (storedFilter) {
-      this.setFilter(storedFilter);
-    } else {
-      const filter = plainToClass(this.ZFFilterClass, {});
-      console.log(zfType + ' empty filter: ' + JSON.stringify(filter));
-      this.setFilter(filter);
-    }
+    // // load filter from local storage or failing that, use an empty one.
+    // const storedFilter  = this.appStateService.getState(zfType, ZFStates.FILTER);
+    // if (storedFilter) {
+    //   this.setFilter(storedFilter);
+    // } else {
+    //   const filter = plainToClass(this.ZFFilterClass, {});
+    //   console.log(zfType + ' empty filter: ' + JSON.stringify(filter));
+    //   this.setFilter(filter);
+    // }
 
   }
 
   // Data comes from the server as a dto, this just converts to the corresponding class
-  convertSimpleDto2Class(dto): SIMPLE_OBJ {
-    return plainToClass(this.ZFSimpleClass, dto);
+  // Needs to be implemented by inheritors.
+  convertSimpleDto2Class(dto): any {
+    // return plainToClass(this.ZFSimpleClass, dto);
   }
 
   // Data comes from the server as a dto, this just converts to the corresponding class
-  convertFullDto2Class(dto): FULL_OBJ {
-    return plainToClass(this.ZFFullClass, dto);
+  // Needs to be implemented by inheritors.
+  convertFullDto2Class(dto): any {
+    // return plainToClass(this.ZFFullClass, dto);
   }
 
   // load the set of currently known values for some fields

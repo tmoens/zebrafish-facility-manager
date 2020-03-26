@@ -10,7 +10,6 @@ import {TopBarComponent} from "./top-bar/top-bar.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatButtonModule} from "@angular/material/button";
 import {MatCardModule} from "@angular/material/card";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -37,7 +36,6 @@ import {TransgeneManagerModule} from "./transgene-manager/transgene-manager.modu
 import {StockManagerModule} from "./stock-manager/stock-manager.module";
 import {MutationManagerModule} from "./mutation-manager/mutation-manager.module";
 import {ZfGenericModule} from "./zf-generic/zf-generic.module";
-import {StorageServiceModule} from "angular-webstorage-service";
 import {CanDeactivateComponent} from "./deactivation-guard/can-deactivate-component";
 import {StockGeneticsEditorComponent} from "./stock-manager/stock-genetics-editor/stock-genetics-editor.component";
 import {CanDeactivateGuard} from "./deactivation-guard/can-deactivate-guard";
@@ -45,6 +43,8 @@ import {DialogService} from "./dialog.service";
 import {AuthTokenInterceptor} from "./auth/AuthTokenInterceptor";
 import {Router} from "@angular/router";
 import {LoginComponent} from "./login/login.component";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {StorageServiceModule} from "ngx-webstorage-service";
 
 export function configProviderFactory(provider: ConfigService) {
   return () => provider.load();

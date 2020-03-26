@@ -1,14 +1,14 @@
 import {Inject, Injectable} from '@angular/core';
 import {LoaderService, ZFTypes} from '../loader.service';
 import {TransgeneFilter} from './transgene-filter';
-import {MatSnackBar} from '@angular/material';
 import {FieldOptions} from '../helpers/field-options';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
 import {BehaviorSubject} from 'rxjs';
 import {Transgene} from './transgene';
 import * as XLSX from 'xlsx';
-import {LOCAL_STORAGE, StorageService} from 'angular-webstorage-service';
-import {AppStateService} from '../app-state.service';
+import {AppStateService, ZFStates} from '../app-state.service';
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {plainToClass} from "class-transformer";
 
 /**
  * This is the model for transgene information displayed in the GUI.
@@ -32,15 +32,33 @@ export class TransgeneService extends ZFGenericService<Transgene, Transgene, Tra
   constructor(
     private readonly loaderForGeneric: LoaderService,
     private snackBarForGeneric: MatSnackBar,
-    private appStateServiceForGeneric: AppStateService,
+    private appStateServiceX: AppStateService,
   ) {
-    super(Transgene, Transgene, TransgeneFilter, ZFTypes.TRANSGENE, loaderForGeneric, snackBarForGeneric, appStateServiceForGeneric);
+    super(ZFTypes.TRANSGENE, loaderForGeneric, snackBarForGeneric, appStateServiceX);
+    const storedFilter  = this.appStateServiceX.getState(ZFTypes.TRANSGENE, ZFStates.FILTER);
+    if (storedFilter) {
+      this.setFilter(storedFilter);
+    } else {
+      const filter = plainToClass(TransgeneFilter, {});
+      console.log(ZFTypes.TRANSGENE + ' empty filter: ' + JSON.stringify(filter));
+      this.setFilter(filter);
+    }
 
     this._fieldOptions = new FieldOptions({
       'nameValidation': [],
       'source': [],
     });
     this.refresh();
+  }
+
+  // Data comes from the server as a plain dto, this just converts to the corresponding class
+  convertSimpleDto2Class(dto): any {
+    return plainToClass(Transgene, dto);
+  }
+
+  // Data comes from the server as a dto, this just converts to the corresponding class
+  convertFullDto2Class(dto): any {
+    return plainToClass(Transgene, dto);
   }
 
   refresh() {

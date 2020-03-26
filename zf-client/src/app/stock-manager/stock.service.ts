@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {LoaderService, ZFTypes} from '../loader.service';
-import {MatSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {StockFilter} from './stock-selector/stock-filter';
 import {FieldOptions} from '../helpers/field-options';
 import * as moment from 'moment';
@@ -15,7 +15,9 @@ import {Mutation} from '../mutation-manager/mutation';
 import {TransgeneService} from '../transgene-manager/transgene.service';
 import {Transgene} from '../transgene-manager/transgene';
 import {CONFIRM_MESSAGE_DURATION} from '../constants';
-import {AppStateService} from '../app-state.service';
+import {AppStateService, ZFStates} from '../app-state.service';
+import {plainToClass} from "class-transformer";
+import {TransgeneFilter} from "../transgene-manager/transgene-filter";
 
 /**
  * This is the model for stock information displayed in the GUI.
@@ -39,9 +41,18 @@ export class StockService extends ZFGenericService<
     private snackBarForGeneric: MatSnackBar,
     private mutationService: MutationService,
     private transgeneService: TransgeneService,
-    private appStateServiceForGeneric: AppStateService,
+    private appStateServiceX: AppStateService,
   ) {
-    super(Stock, StockFull, StockFilter, ZFTypes.STOCK, loaderForGeneric, snackBarForGeneric, appStateServiceForGeneric);
+    super(ZFTypes.STOCK, loaderForGeneric, snackBarForGeneric, appStateServiceX);
+
+    const storedFilter  = this.appStateServiceX.getState(ZFTypes.STOCK, ZFStates.FILTER);
+    if (storedFilter) {
+      this.setFilter(storedFilter);
+    } else {
+      const filter = plainToClass(StockFilter, {});
+      console.log(ZFTypes.STOCK + ' empty filter: ' + JSON.stringify(filter));
+      this.setFilter(filter);
+    }
     this._fieldOptions = new FieldOptions({
       'researcher': [],
     });
@@ -83,6 +94,17 @@ export class StockService extends ZFGenericService<
     });
     this.refresh();
   }
+
+  // Data comes from the server as a plain dto, this just converts to the corresponding class
+  convertSimpleDto2Class(dto): any {
+    return plainToClass(Stock, dto);
+  }
+
+  // Data comes from the server as a dto, this just converts to the corresponding class
+  convertFullDto2Class(dto): any {
+    return plainToClass(StockFull, dto);
+  }
+
 
   createSubStock(item: StockFull) {
     this.loader.createSubStock(item).subscribe((result: StockFull) => {

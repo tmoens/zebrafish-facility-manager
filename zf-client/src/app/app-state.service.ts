@@ -1,9 +1,9 @@
 import {Inject, Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {LOCAL_STORAGE, StorageService} from 'angular-webstorage-service';
 import {LoaderService, ZFTypes} from "./loader.service";
 import {AccessTokenPayload} from "./common/auth/zfm-access-token-payload";
 import {plainToClass} from "class-transformer";
+import {LOCAL_STORAGE, StorageService} from "ngx-webstorage-service";
 
 // Typescript does not allow enums with values as objects.
 // The following is a clever workaround from the internet...

@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@angular/core';
 import {LoaderService, ZFTypes} from '../loader.service';
-import {MatSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {FieldOptions} from '../helpers/field-options';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
 import {BehaviorSubject, Observable, of} from 'rxjs';
@@ -9,7 +9,10 @@ import {TankDto} from './tank-dto';
 import {TankFilter} from './tank-filter';
 import {SwimmerFullDto} from './swimmer-full-dto';
 import {StockSwimmerDto} from './stock-swimmer-dto';
-import {AppStateService} from '../app-state.service';
+import {AppStateService, ZFStates} from '../app-state.service';
+import {plainToClass} from "class-transformer";
+import {TransgeneFilter} from "../transgene-manager/transgene-filter";
+import {Transgene} from "../transgene-manager/transgene";
 
 /**
  * This is the model for transgene information displayed in the GUI.
@@ -34,9 +37,18 @@ export class TankService extends ZFGenericService<Tank, Tank, TankFilter> {
   constructor(
     private readonly loaderForGeneric: LoaderService,
     private snackBarForGeneric: MatSnackBar,
-    private appStateServiceForGeneric: AppStateService,
+    private appStateServiceX: AppStateService,
   ) {
-    super(Tank, Tank, TankFilter, ZFTypes.TANK, loaderForGeneric, snackBarForGeneric, appStateServiceForGeneric);
+    super(ZFTypes.TANK, loaderForGeneric, snackBarForGeneric, appStateServiceX);
+
+    const storedFilter  = this.appStateServiceX.getState(ZFTypes.TANK, ZFStates.FILTER);
+    if (storedFilter) {
+      this.setFilter(storedFilter);
+    } else {
+      const filter = plainToClass(TankFilter, {});
+      console.log(ZFTypes.TANK + ' empty filter: ' + JSON.stringify(filter));
+      this.setFilter(filter);
+    }
 
     // not used for tanks.
     this._fieldOptions = new FieldOptions({});
@@ -48,6 +60,15 @@ export class TankService extends ZFGenericService<Tank, Tank, TankFilter> {
         this.indexedAll[tank.name] = tank;
       }
     });
+  }
+  // Data comes from the server as a plain dto, this just converts to the corresponding class
+  convertSimpleDto2Class(dto): any {
+    return plainToClass(Tank, dto);
+  }
+
+  // Data comes from the server as a dto, this just converts to the corresponding class
+  convertFullDto2Class(dto): any {
+    return plainToClass(Tank, dto);
   }
 
   loadAllTanks() {

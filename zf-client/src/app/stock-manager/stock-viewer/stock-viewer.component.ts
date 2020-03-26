@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 import {StockService} from '../stock.service';
 import {StockGeneticsEditorComponent} from '../stock-genetics-editor/stock-genetics-editor.component';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
