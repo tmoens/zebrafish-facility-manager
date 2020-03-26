@@ -6,7 +6,6 @@ import {AppComponent} from './app.component';
 import {ConfigService} from "./config/config.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {LocationStrategy, PathLocationStrategy} from "@angular/common";
-import {AuthService} from "./auth/auth.service";
 import {TopBarComponent} from "./top-bar/top-bar.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -45,6 +44,7 @@ import {CanDeactivateGuard} from "./deactivation-guard/can-deactivate-guard";
 import {DialogService} from "./dialog.service";
 import {AuthTokenInterceptor} from "./auth/AuthTokenInterceptor";
 import {Router} from "@angular/router";
+import {LoginComponent} from "./login/login.component";
 
 export function configProviderFactory(provider: ConfigService) {
   return () => provider.load();
@@ -56,6 +56,7 @@ export function configProviderFactory(provider: ConfigService) {
     CanDeactivateComponent,
     TopBarComponent,
     TankLabelComponent,
+    LoginComponent,
   ],
   imports: [
     ZfGenericModule,
@@ -97,6 +98,7 @@ export function configProviderFactory(provider: ConfigService) {
   entryComponents: [
     StockGeneticsEditorComponent,
     CanDeactivateComponent,
+    LoginComponent,
   ],
   providers: [
     {provide: APP_INITIALIZER, useFactory: configProviderFactory, deps: [ConfigService], multi: true},

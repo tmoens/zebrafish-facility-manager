@@ -2,6 +2,8 @@ import {Inject, Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {LOCAL_STORAGE, StorageService} from 'angular-webstorage-service';
 import {LoaderService, ZFTypes} from "./loader.service";
+import {AccessTokenPayload} from "./common/auth/zfm-access-token-payload";
+import {plainToClass} from "class-transformer";
 
 // Typescript does not allow enums with values as objects.
 // The following is a clever workaround from the internet...
@@ -52,6 +54,10 @@ export class AppStateService {
   public get activeTool$() { return this._activeTool$; }
   public get activeTool() { return this.activeTool$.value; }
 
+  private _accessToken: string;
+  get accessToken(): string { return this._accessToken; }
+  set accessToken(value: string) { this._accessToken = value; }
+
 
   constructor(
     public loader: LoaderService,
@@ -88,4 +94,14 @@ export class AppStateService {
   removeState(type: ZFTypes, state: ZFStates): any {
     return this.localStorage.remove(type + state);
   }
+
+  // this decodes the access token and stuffs it in typed object.
+  getAccessTokenPayload(): AccessTokenPayload {
+    return plainToClass(AccessTokenPayload, JSON.parse(atob(this._accessToken.split('.')[1])));
+  }
+
+  isAuthenticated(): boolean {
+    return !!(this.accessToken);
+  }
+
 }

@@ -6,6 +6,7 @@ import {catchError} from 'rxjs/operators';
 import {ERROR_MESSAGE_DURATION} from './constants';
 import {ConfigService} from "./config/config.service";
 import {StockFull} from "./stock-manager/stockFull";
+import {environment} from "../environments/environment"
 
 export enum ZFTypes {
   LOGIN = 'login',
@@ -20,16 +21,33 @@ export enum ZFTypes {
   providedIn: 'root'
 })
 export class LoaderService {
+  serverURL: string;
 
   constructor(
     private http: HttpClient,
     private message: MatSnackBar,
     private configService: ConfigService,
-
   ) {
+    if (environment.production) {
+      this.serverURL = location.origin + '/zf-server';
+    } else {
+      this.serverURL = 'http://localhost:3005';
+    }
   }
 
-  serverURL = location.origin + '/zf_server';
+  login(username: string, password: string) {
+    return this.http.post(this.serverURL + '/auth/login', {username, password})
+      .pipe(
+        catchError(this.handleError('Login failed', null))
+      );
+  }
+
+  logout(userId: string) {
+    return this.http.post(this.serverURL + '/auth/logout/' + userId, {})
+      .pipe(
+        catchError(this.handleError('Logout failed', null))
+      );
+  }
 
   getFilteredList(type: ZFTypes, filter: any): Observable<any> {
     if (!filter) {

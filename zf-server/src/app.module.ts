@@ -14,6 +14,7 @@ import {AuthModule} from './auth/auth.module';
 import * as winston from "winston";
 import {utilities as nestWinstonModuleUtilities, WinstonModule} from 'nest-winston';
 import * as DailyRotateFile from "winston-daily-rotate-file";
+import {UserModule} from "./user/user.module";
 
 
 const rotatingFileLog = new DailyRotateFile({
@@ -43,6 +44,7 @@ const consoleLog = new (winston.transports.Console)({
     Stock2tankModule,
     TankModule,
     TransgeneModule,
+    UserModule,
     TypeOrmModule.forRootAsync(
       {
         imports: [ConfigModule],

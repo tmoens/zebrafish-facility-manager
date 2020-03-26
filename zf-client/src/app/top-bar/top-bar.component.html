@@ -5,7 +5,7 @@
   <span>{{appState.activeTool.display_name}} for
     {{configService.getConfig().facilityName}}</span>
   <span class="fill-remaining-space"></span>
-  <div *ngIf="authService.loggedIn">
+  <div *ngIf="appState.isAuthenticated()">
     <button mat-button [disabled]="appState.activeTool === zfTool.STOCK_MANAGER"
             [routerLink]="zfTool.STOCK_MANAGER.route" color="primary">
       {{zfTool.STOCK_MANAGER.display_name}}
@@ -18,12 +18,12 @@
             [routerLink]="zfTool.TRANSGENE_MANAGER.route" color="primary">
       {{zfTool.TRANSGENE_MANAGER.display_name}}
     </button>
-    <button mat-button (click)="authService.logout()">
+    <button mat-button (click)="logout()">
       Logout
     </button>
   </div>
-  <div *ngIf="!authService.loggedIn">
-    <button mat-button  (click)="authService.login()">
+  <div *ngIf="!appState.isAuthenticated()">
+    <button mat-button  (click)="login()">
     Login
   </button>
   </div>

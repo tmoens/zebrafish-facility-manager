@@ -15,13 +15,11 @@ export class Stock2tankController {
   ) {}
 
   @Get()
-  // @UseGuards(AuthGuard('bearer'))
   async findAll(): Promise<Stock2tank[]> {
     return await this.repo.findAll();
   }
 
   @Get(':id')
-  // @UseGuards(AuthGuard('bearer'))
   async findById(@Param() params): Promise<Stock2tank> {
     return await this.repo.findOne(params.id);
   }
@@ -32,19 +30,16 @@ export class Stock2tankController {
   }
 
   @Post()
-//  @UseGuards(AuthGuard('bearer'))
   async create(@Body() newObj: Stock2tank): Promise<any> {
     return await this.repo.createSwimmer(newObj);
   }
 
   @Put()
-//  @UseGuards(AuthGuard('bearer'))
   async update(@Body() dto: Stock2tank): Promise<any> {
     return await this.repo.updateSwimmer(dto);
   }
 
   @Delete(':stockId/:tankId')
-//  @UseGuards(AuthGuard('bearer'))
   async delete(@Param() params): Promise<Stock> {
     return await this.repo.removeSwimmer(params.stockId, params.tankId);
   }

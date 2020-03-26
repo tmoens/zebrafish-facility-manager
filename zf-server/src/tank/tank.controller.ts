@@ -1,8 +1,9 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {Controller, Get, Query, UseGuards} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TankService } from './tank.service';
 import { TankRepository } from './tank.repository';
 import { Tank } from './tank.entity';
+import {AuthGuard} from "@nestjs/passport";
 
 @Controller('tank')
 export class TankController {

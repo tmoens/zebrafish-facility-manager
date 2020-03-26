@@ -1,20 +1,35 @@
 #Zebrafish Facility Manager
 
-Each deployment has includes 
+Each deployment includes:
+1. Acquiring and setting up a domain name.
+1. Setting up the server computer environment including all the software required
+by the zebrafish facility manager.
+1. Deploying the zf-server
+1. Deploying the zf-client
 
-1. Setting up the computer environment including all the software required
-by the zebrafish manager
-1. Deploying the zf_server which is the part that maintains all of the data on a server.
-1. Deploying the zf_client which is the part of the system that the the end-user runs in
-their web browser
 
-## Deployments Part 1 Setting up the deployment compute environment
+## Domain name
 
-## Host Setup
+You will need a domain name for the deployment as a whole. 
+For the purpose of illustration, this guide will assume you have 
+purchased _example-zfm.com_ and that you set up DNS records to point
+at your host's IP address.
 
+It is a good idea to set up _test.example-zfm.com_ as a an initial sub-domain.
+Later when you are configuring a system for a particular facility, you will be
+adding one sub-domain per facility.  If you happen to know that you are going set up
+managers for facilities _eue_ and _acdc_, you could create those sub-domains too.
+But you can always do that later.
+The DNS entries should all point to the ip address of your host.
+
+You can get a domain name and set up your DNS at any number of providers like
+[Namecheap.com](https://namecheap.com).
+
+## Deployment Part 1:  Setting up the server computer environment
+### Host setup
 Experienced administrators can zip through this guide quickly, but it is
 a mini site-admin guide for the benefit of less experienced people.  
-And let's face it, it's just a memory aide for me.
+And in truth, it's just a memory aide for me.
 
 **For this guide, we will deploy on a Debian 10(+) computer**.
 
@@ -32,7 +47,7 @@ We need to use node and the node package manager.
 ```bash
 sudo apt install nodejs npm
 ```
-I noticed that the default node and npm a fresh Debian 10 machine were a bit behind the times
+I noticed that the default node and npm on a fresh Debian 10 machine were a bit behind the times
 and I had to upgrade them.
 
 ### MariaDB
@@ -42,50 +57,15 @@ environment.
 
 Here is a friendly article for [how to install MariaDB securely on 
 Debian](https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-debian-10).
-Later, when you go to create individual databases for each zebrafish facility, the guid will assume
-you have followed this procedure.
-
-The "good parts" version of that article is.
-
-```bash
-# install mariadb (if it isnt already installed)
-sudo apt install mariadb-server
-
-# make the installation more secure, run this and follow the prompts
-sudo mysql_secure_installation
-
-# Create an admin account
-sudo mysql
-...
-...
-...
-MariaDB [(none)]> GRANT ALL ON *.* TO 'admin'@'localhost' IDENTIFIED BY 'password' WITH GRANT OPTION;
-MariaDB [(none)]> exit
-```
-
-### Domain name
-
-You will need a domain name for the deployment as a whole. 
-For the purpose of illustration, this guide will assume you have 
-purchased _example_zfm.com_ and that you set up DNS records to point at your host's IP address.
-
-It is a good idea to set up _test.example_zfm.com_ as a an initial sub-domain.
-Later when you are configuring a system for a particular facility, you will be
-adding one sub-domain per facility.  If you happen to know that you are going set up
-managers for facilities _eue_ and _acdc_, you could create those sub-domains too.
-But you can always do that later.
-The DNS entries should all point to the ip address of your host.
-
-You can get a domain name and set up your DNS at any number of providers like
-[Namecheap.com](https://namecheap.com).
-
+Later, when you go to create individual databases for each zebrafish facility, the guide will assume
+you have followed the good, secure procedure described there.
 
 ### Web Server
 
 The system uses a web server to:
 1. serve the zf-client to the end user
 1. serve zebrafish facility-specific configuration to the zf-client
-1. handle HTTP traffic between the facility-specific zf_clients and the facility-specific zf_servers
+1. handle HTTPS traffic between each zf-client and the correct facility-specific zf-server
 
 Apache2 as it is usually pre-installed on Linux servers, but just in case, here is friendly 
 article on [how to install Apache on
@@ -97,21 +77,24 @@ The process of setting up a virtual host for a facility is covered [here](Apache
 
 ### Set up SSL on your Web Server
 
-Before you start, you should have set up DNS for your domain (and any sub-domains you can think of
-in advance) and your apache Web Server is running.
+Before you start this section, you should have set up DNS for your domain
+(and any sub-domains you can think of
+in advance) and your Apache Web Server should be running.
 
-Here is a great article on how [how to secure Apache](https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-debian-10).
-
-When you get to the part where the tutorial says to use certbot to create your certificate,
-you can use multiple -d options, one for your domain and one for each sub-domain.  Using the example
-above, your command might look like
+Before using the procedure that follows, please note that when 
+you get to the part where the procedure says to use 
+certbot to create your certificate, you can use multiple -d options,
+one for your domain and one for each sub-domain.  Using the example above, your command might look like
 
 ```bash 
-sudo certbot --apache -d example_zfm.com -d test.example_zfc.com -d eue.example_zfc.com -d acdc.example_zfc.com
+sudo certbot --apache -d example_zfm.com -d test.example-zfc.com -d eue.example-zfc.com -d acdc.example-zfc.com
 ```
+                                                       
 
-Later when you want to add another facility, you will create a sub-domain and add
-it to your certificate.
+Here it a procedure on
+[how to secure Apache](https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-debian-10).
+
+Later when you want to add another facility, you will create a sub-domain and add it to your certificate.
 This is covered in the "Per Facility" guide.
 
 ### Passenger
@@ -124,12 +107,7 @@ installation guides only go as far as Debian 9 (stretch). Not to worry, just cha
 the word "stretch" to the word "buster" in the install guide for Passenger and all
 is well.
 
-## Auth0 Configuration
-
-We have outsourced user management, authentication and authorization to Auth0.  This is by
-far more secure than a "roll your own" version.
-
-## Server and client deployment
+## zf-server and zf-client deployment
 
 ### Clone the Github repository
 
@@ -139,7 +117,7 @@ Go to a directory on the server where you plan to download the code. Then:
 git clone https://github.com/tmoens/zebrafish-facility-manager
 ```
 
-### zf_server set up
+### zf-server set up
 
 ```bash
 # navigate to the zf-server sub-directory
@@ -148,11 +126,11 @@ cd path/to/zebrafish-facility-manager/zf-server
 # Download npm packages
 npm install
 
-# Build the zf_server
+# Build the zf-server
 npm run build
 ```
 
-### zf_client set up
+### zf-client set up
 
 ```bash 
 # navigate to the the zf-client sub-directory
@@ -164,13 +142,13 @@ npm install
 # you need to install angular-cli
 sudo npm install @angular/cli
 
-# Build the zf_server
-ng build --prod
+# Build the zf-server
+ng build --configuration=production
 ```
 
 The result of this operation will be a directory called /dist/zf-client.
 You need to deploy the directory to your Web Server.  Assuming that the
-root of your web server is _/var/www/_, just deploy the directory there.
+root of your web server is _/var/www/_, just deploy zf-client directory there.
 
 ## Wrap up
 
@@ -183,6 +161,6 @@ Here is the [Facility Configuration Guide](PerFacility.md).
   
 ## Thank you
 
-- [Nest](https://github.com/nestjs/nest) provides the zf_server application framework.
+- [Nest](https://github.com/nestjs/nest) provides the zf-server application framework.
 - [typeorm](https://typeorm.delightful.studio/) provides the orm
 - [MariaDB](https://mariadb.com/) is used by default

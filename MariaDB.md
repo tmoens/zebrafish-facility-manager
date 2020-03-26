@@ -4,7 +4,7 @@
 If you followed the instructions when installing MariaDB (securely), you will not 
 be able to log in as as the database root user, but you will have created an admin
 user with sufficient privileges to create new databases and you will know that the
-admin user's password.  If you did not it is ok, but you have to do equivalent
+admin user's password.  If you did not, it is ok but you have to do equivalent
 operations to what is presented here.
 
 Following the running example, 
@@ -20,7 +20,7 @@ Chose a very good password - probably generated from LastPass or some other
 service.  Please do not skimp on this.
 Strictly for illustration, we will use _very_bad_eue_password_.
 
-**You will need to know this password to configure the zf_server for this facility.**
+**You will need to remember whatever password you choose to configure the zf_server for this facility.**
 
 Log in to MariaDB, create the user and the corresponding database.  Obviously,
 you would use your own values instead of _zf_eue_ and _very_bad_eue_password_.
@@ -37,7 +37,7 @@ Copyright (c) 2000, 2017, Oracle, MariaDB Corporation Ab and others.
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 MariaDB [(none)]>
-CREATE USER 'zf_eue'@'localhost' IDENTIFIED BY 'very_bad_eue_password';
+CREATE USER 'zf_eue'@'localhost' IDENTIFIED BY 'zf_eue';
 GRANT USAGE ON *.* TO 'zf_eue'@'localhost'
 REQUIRE NONE
 WITH MAX_QUERIES_PER_HOUR 0
@@ -52,3 +52,4 @@ You now have a database.  There are no tables in it, but they will be created au
 when the zf_server is run for the first time.
 
 ToDo, make this a script?
+

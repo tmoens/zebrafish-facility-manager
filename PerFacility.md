@@ -21,6 +21,11 @@ propagate around the world.
 If you do not know how to do this, it is probably a capability available at
 the service you used to buy your domain.
 
+### SSL
+
+Your certificate needs to explicitly support the new sub-domain, you need to add it to your certificate.
+
+TODO tell me how.
 ## Host Setup
 
 ### Set up a database for the facility data
@@ -29,22 +34,11 @@ The process of setting up a database for your a facility is covered [here](Maria
 Once you have configured the db, in keeping with the running example, you will have:
 1. database: _zf_eue_
 1. db user: _zf_eue_
-1. db password: _zf_eue_ and _very_bad_eue_password_
+1. db password: _some_very_good_eue_password_
 
 ### Web Server
 
 You need to set up a virtual host for every facility you want to manage.
-
-The process is 
-
-### SSL
-
-Your certificate needs to explicitly support the new sub-domain, you need to add it to your certificate.
-
-### Set up Auth0 stuff
-
---tbd--
-For the purpose of illustration, we will assume these are blah blah blah.
 
 ### zf_server configuration file
 
@@ -69,10 +63,8 @@ how to send traffic to the zf_server for _eue_.
 You can change the configuration file any time you want, but you will have
 to restart the zf_server for those changes to take place.
 
-Until then, run it manually --configuration=whatever
+Until then, run it manually 
+export FACILITY=eue
+npm run start:prod
 
-## Auth0 Configuration
-
-We have outsourced user management, authentication and authorization to Auth0.  This is by
-far more secure than a "roll your own" version.
 

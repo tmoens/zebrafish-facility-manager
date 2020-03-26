@@ -6,10 +6,7 @@ export class ConfigModel {
   facilityName: string;
   facilityAbbrv: string;
   facilityPrefix: string;
-  auth0ClientId: string;
-  auth0Domain: string;
-  auth0Audience: string;
-  zfServerPrefix: string;
+
   tankNumberingHint: string;
   tankLabelConfig: TankLabelConfig;
 }

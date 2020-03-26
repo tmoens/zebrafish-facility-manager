@@ -10,7 +10,10 @@ presents a user interface for managing the the stocks in a facility.
 The zf_client uses Angular.
 
 The zf_server part runs on a computer with a database and is responsible
-for storing the data for a particular facility. The xf_server is a Node.js.
+for storing the data for a particular facility. The zf_server is a Node.js
+application written using the NestJS framework.
+
+The two communicate via an API.
 
 ## Main Features
 
@@ -22,7 +25,7 @@ The main purpose of the software is to track zebrafish stocks including
 - various notes and data associated with the stock (age, researchers, research notes...)
 - simple and seamless creation of new stocks from crosses
 - it provides excellent search, navigation and editing capabilities to allow users to focus
-on thier work.
+on their work.
 
 An ancillary aspect of the system is that it tracks the genetic markers used in a facility
 so that absolute consistency is maintained throughout the system.
@@ -49,5 +52,8 @@ for each facility.
 ## Thank you
 
 - [Nest](https://github.com/nestjs/nest) provides the zf_server application framework.
-- [typeorm](https://typeorm.delightful.studio/) provides the orm
+- [TypeORM](https://typeorm.delightful.studio/) provides the orm
 - [MariaDB](https://mariadb.com/) is used by default
+
+## TODO
+After each step add a little something to say how to verify that you did it right.

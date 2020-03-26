@@ -14,31 +14,26 @@ export class BackgroundController {
   ) {}
 
   @Get()
-  // @UseGuards(AuthGuard('bearer'))
   async findAll(): Promise<Background[]> {
     return await this.repo.findAll();
   }
 
   @Get(':id')
-  // @UseGuards(AuthGuard('bearer'))
   async findById(@Param() params): Promise<Background> {
     return await this.repo.findOne(params.id);
   }
 
   @Post()
-  // @UseGuards(AuthGuard('bearer'))
   async create(@Body() newObj: BackgroundDto): Promise<Background> {
     return await this.repo.createAndSave(newObj);
   }
 
   @Put()
-  // @UseGuards(AuthGuard('bearer'))
   async update(@Body() dto: BackgroundDto): Promise<Background> {
     return await this.repo.validateAndUpdate(dto);
   }
 
   @Delete(':id')
-  // @UseGuards(AuthGuard('bearer'))
   async delete(@Param() params): Promise<Background> {
     return await this.repo.validateAndRemove(params.id);
   }

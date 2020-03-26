@@ -14,11 +14,6 @@ class FacilityDTO {
   prefix: string;
 }
 
-class Auth0Config {
-  domain: string;
-  audience: string;
-}
-
 export class ConfigService implements TypeOrmOptionsFactory {
   private readonly envConfig: EnvConfig;
   readonly facility: string; // which facility are we talking about
@@ -56,8 +51,9 @@ export class ConfigService implements TypeOrmOptionsFactory {
       TYPEORM_SYNC_DATABASE: Joi.boolean().default(false),
       TYPEORM_LOG_QUERIES: Joi.boolean().default(false),
 
-      AUTH0_DOMAIN: Joi.string().required(),
-      AUTH0_AUDIENCE: Joi.string().required(),
+      JWT_SECRET: Joi.string().required(),
+      JWT_DURATION: Joi.string().required(),
+
     });
 
     const {error, value: validatedEnvConfig} = Joi.validate(
@@ -82,19 +78,20 @@ export class ConfigService implements TypeOrmOptionsFactory {
     return Boolean(this.envConfig.TYPEORM_SYNC_DATABASE);
   }
 
-  get auth0Config(): Auth0Config {
-    return {
-      domain: this.envConfig.AUTH0_DOMAIN,
-      audience: this.envConfig.AUTH0_AUDIENCE,
-    };
-  }
-
   get facilityInfo(): FacilityDTO {
     return {
       name: this.envConfig.FACILITY_ORG_NAME,
       short_name: this.envConfig.FACILITY_ORG_SHORT_NAME,
       prefix: this.envConfig.FACILITY_ORG_PREFIX,
     };
+  }
+
+  get jwtSecret(): string {
+    return this.envConfig.JWT_SECRET;
+  }
+
+  get jwtDuration(): string {
+    return this.envConfig.JWT_DURATION;
   }
 
   // This is used to build ORM configuration options

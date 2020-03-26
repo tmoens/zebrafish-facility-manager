@@ -9,24 +9,25 @@
  */
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor} from '@angular/common/http';
-import {Observable, from, throwError} from 'rxjs';
-import {AuthService} from "./auth.service";
-import {catchError, mergeMap} from "rxjs/operators";
-@Injectable({
-  providedIn: 'root',
-})
+import { Observable, from } from 'rxjs';
+
+@Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
-  constructor( private auth: AuthService ) {}
-  intercept(request: HttpRequest<any>, next: HttpHandler):
-    Observable<HttpEvent<any>> {
-    return this.auth.getTokenSilently$().pipe(
-      mergeMap(token => {
-        const tokenReq = request.clone({
-          setHeaders: { Authorization: `Bearer ${token}` }
-        });
-        return next.handle(tokenReq);
-      }),
-      catchError(err => throwError(err))
-    );
+
+  constructor() {
+  }
+
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return from(this.handleAccess(request, next));
+  }
+
+  private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
+    // only add tokens for requests heading to the zf-server
+    // request = request.clone({
+    //   setHeaders: {
+    //     Authorization: 'Bearer ' + accessToken
+    //   }
+    // });
+    return next.handle(request).toPromise();
   }
 }

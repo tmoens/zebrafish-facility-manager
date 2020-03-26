@@ -52,25 +52,21 @@ export class MutationController {
   }
 
   @Post()
-//  @UseGuards(AuthGuard('bearer'))
   async create(@Body() newObj: Mutation): Promise<Mutation> {
     return await this.mutationService.validateAndCreate(newObj);
   }
 
   @Post('next')
-//  @UseGuards(AuthGuard('bearer'))
   async createNext(@Body() newObj: Mutation): Promise<Mutation> {
     return await this.mutationService.validateAndCreateOwned(newObj);
   }
 
   @Put()
-//  @UseGuards(AuthGuard('bearer'))
   async update(@Body() dto: Mutation): Promise<Mutation> {
     return await this.mutationService.validateAndUpdate(dto);
   }
 
   @Delete(':id')
-//  @UseGuards(AuthGuard('bearer'))
   async delete(@Param('id', new ParseIntPipe())  id: number): Promise<Mutation> {
     return await this.mutationService.validateAndRemove(id);
   }
