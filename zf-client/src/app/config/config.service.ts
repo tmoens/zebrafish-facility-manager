@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {ConfigModel} from "./config-model";
 import {HttpBackend, HttpClient} from "@angular/common/http";
 import {Location} from "@angular/common";
+import {environment} from "../../environments/environment";
 
 /*
  * This service loads configuration information for a particular zebrafish facility.
@@ -30,10 +31,6 @@ export class ConfigService {
               private location: Location,
   ) {
     this.http = new HttpClient(handler);
-    console.log("location:");
-    console.log(location);
-    console.log("this.location:");
-    console.log(this.location);
   }
 
   public getConfig(): ConfigModel {
@@ -44,8 +41,14 @@ export class ConfigService {
     console.log("location.origin:");
     console.log(location.origin);
     return new Promise((resolve, reject) => {
+      let url: string;
+      if (environment.production) {
+        url = location.origin + '/facility-config/" + location.host + ".json"';
+      } else {
+        url = location.origin + '/facility-config/development.json';
+      }
       this.http
-        .get(location.origin + "/facility-config/" + location.host + ".json")
+        .get(url)
         .subscribe(response => {
           this.config = response as ConfigModel;
           resolve(true);

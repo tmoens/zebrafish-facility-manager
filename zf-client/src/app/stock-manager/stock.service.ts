@@ -3,7 +3,6 @@ import {LoaderService, ZFTypes} from '../loader.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {StockFilter} from './stock-selector/stock-filter';
 import {FieldOptions} from '../helpers/field-options';
-import * as moment from 'moment';
 import * as XLSX from 'xlsx';
 import {map} from 'rxjs/operators';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
@@ -137,7 +136,7 @@ export class StockService extends ZFGenericService<
   get likelyNextStockNumber(): number {
     return Number(this.likelyNextName);
   }
-
+  // TODO fix file names
   // To make the excel report happen, you gotta go get all stocks that meet the current filter
   getStockReport() {
     this.loader.getReport(ZFTypes.STOCK, this.filter)
@@ -149,10 +148,10 @@ export class StockService extends ZFGenericService<
         ws['!cols'] = [ {wch: 8}, {wch: 30}, {wch: 20}, {wch: 9},
           {wch: 9}, {wch: 10}, {wch: 20}, {wch: 30}, {wch: 30}];
         XLSX.utils.book_append_sheet(wb, ws, 'Stocks');
-        const now = moment().format('YYYY-MM-DD-HH-mm-ss');
+        // const now = moment().format('YYYY-MM-DD-HH-mm-ss');
         const ws2 = XLSX.utils.json_to_sheet([this.filter]);
         XLSX.utils.book_append_sheet(wb, ws2, 'Filter');
-        XLSX.writeFile(wb, 'Stocks-' + now + '.xlsx');
+        XLSX.writeFile(wb, 'Stocks-x' + '.xlsx');
       });
   }
 
@@ -163,11 +162,11 @@ export class StockService extends ZFGenericService<
         const ws = XLSX.utils.json_to_sheet(data);
         // Set the column widths - we just happen to know the columns (for now) are
         // TankName Rack Shelf Spigot Stock Count Comment
-        ws['!cols'] = [ {wch: 7}, {wch: 7}, {wch: 7}, {wch: 7},
+        ws['!cols'] = [{wch: 7}, {wch: 7}, {wch: 7}, {wch: 7},
           {wch: 7}, {wch: 7}, {wch: 40}];
         XLSX.utils.book_append_sheet(wb, ws, 'Stock Audit');
-        const now = moment().format('YYYY-MM-DD-HH-mm-ss');
-        XLSX.writeFile(wb, 'Facility  Audit ' + now + '.xlsx');
+        // const now = moment().format('YYYY-MM-DD-HH-mm-ss');
+        XLSX.writeFile(wb, 'Facility  Audit ' + 'now' + '.xlsx');
       });
 
   }
