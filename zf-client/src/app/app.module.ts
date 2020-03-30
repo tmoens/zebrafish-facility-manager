@@ -39,14 +39,21 @@ import {CanDeactivateComponent} from "./deactivation-guard/can-deactivate-compon
 import {StockGeneticsEditorComponent} from "./stock-manager/stock-genetics-editor/stock-genetics-editor.component";
 import {CanDeactivateGuard} from "./deactivation-guard/can-deactivate-guard";
 import {DialogService} from "./dialog.service";
-import {AuthTokenInterceptor} from "./auth/AuthTokenInterceptor";
+import {AuthTokenInterceptor} from "./auth/auth-token.interceptor";
 import {Router} from "@angular/router";
 import {LoginComponent} from "./login/login.component";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {StorageServiceModule} from "ngx-webstorage-service";
+import {LoginGuardService} from "./auth/login-guard.service";
+import {ErrorInterceptor} from "./auth/http-error.interceptor";
+import { SplashComponent } from './splash/splash.component';
+import {StockService} from "./stock-manager/stock.service";
 
 export function configProviderFactory(provider: ConfigService) {
   return () => provider.load();
+}
+export function stockServiceProviderFactory(provider: StockService) {
+  return () => provider.placeholder();
 }
 
 @NgModule({
@@ -56,6 +63,7 @@ export function configProviderFactory(provider: ConfigService) {
     TopBarComponent,
     TankLabelComponent,
     LoginComponent,
+    SplashComponent,
   ],
   imports: [
     ZfGenericModule,
@@ -100,10 +108,13 @@ export function configProviderFactory(provider: ConfigService) {
   ],
   providers: [
     {provide: APP_INITIALIZER, useFactory: configProviderFactory, deps: [ConfigService], multi: true},
+    {provide: APP_INITIALIZER, useFactory: stockServiceProviderFactory, deps: [StockService], multi: true},
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     CanDeactivateGuard,
     DialogService,
+    LoginGuardService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

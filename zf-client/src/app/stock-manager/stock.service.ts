@@ -14,9 +14,8 @@ import {Mutation} from '../mutation-manager/mutation';
 import {TransgeneService} from '../transgene-manager/transgene.service';
 import {Transgene} from '../transgene-manager/transgene';
 import {CONFIRM_MESSAGE_DURATION} from '../constants';
-import {AppStateService, ZFStates} from '../app-state.service';
+import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
-import {TransgeneFilter} from "../transgene-manager/transgene-filter";
 
 /**
  * This is the model for stock information displayed in the GUI.
@@ -43,13 +42,24 @@ export class StockService extends ZFGenericService<
     private appStateServiceX: AppStateService,
   ) {
     super(ZFTypes.STOCK, loaderForGeneric, snackBarForGeneric, appStateServiceX);
+    this.appStateServiceX.loggedIn$.subscribe( (loggedIn: boolean) => {
+      if (loggedIn) {
+        this.initialize();
+      }
+    })
+  }
 
-    const storedFilter  = this.appStateServiceX.getState(ZFTypes.STOCK, ZFStates.FILTER);
+  placeholder() {}
+
+  // We cannot really initialize until the user logs in because we will not have the
+  // authorization to go get the data we need from the server.  So we watch the login state
+  // and trigger this when the user logs in.
+  initialize() {
+    const storedFilter  = this.appStateServiceX.getToolState(ZFTypes.STOCK, ZFToolStates.FILTER);
     if (storedFilter) {
       this.setFilter(storedFilter);
     } else {
       const filter = plainToClass(StockFilter, {});
-      console.log(ZFTypes.STOCK + ' empty filter: ' + JSON.stringify(filter));
       this.setFilter(filter);
     }
     this._fieldOptions = new FieldOptions({
@@ -114,16 +124,13 @@ export class StockService extends ZFGenericService<
         // rather than make another round trip to re-fetch the object from the server.
         // BUT the object you get back from the creation call is not reliable.  For
         // example, the "is Deletable" flag is not in the value returned here.
-        this.selectById(r.id);
+        // Also the new object may or may not meet the filter criteria and
+        // therefore will or will not be in the filtered list.
+        this.setSelectedId(r.id);
         this.refresh();
       }
     });
   }
-
-  // refresh() {
-  //   super.refresh();
-  //   this.setFilter(this.filter); // reapply the filter to reload the filtered list.
-  // }
 
   getByName(stockName: string): Observable<Stock> {
     return this.loader.getByName(ZFTypes.STOCK, stockName).pipe(

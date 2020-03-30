@@ -11,9 +11,6 @@ import {Observable} from 'rxjs';
 import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {ZF_DATE_FORMATS} from "../../helpers/dateFormats";
 
-
-
-
 @Component({
   selector: 'app-stock-editor',
   templateUrl: './stock-editor.component.html',
@@ -324,7 +321,7 @@ export class StockEditorComponent implements OnInit {
         }
         return true;
       case EditMode.CREATE_SUB_STOCK:
-        // when creating a sub-stock, it is automatically deeemed to be "changed"
+        // when creating a sub-stock, it is automatically deemed to be "changed"
         // because it has a new sub-stock number.
         return false;
     }

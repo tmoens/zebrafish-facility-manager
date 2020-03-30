@@ -1,13 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {TankLabelComponent} from "./printing/tank-label/tank-label.component";
-import {StockManagerComponent} from "./stock-manager/stock-manager.component";
+import {SplashComponent} from "./splash/splash.component";
 
 
 const routes: Routes = [
   {
     path: '',
-    component: StockManagerComponent,
+    component: SplashComponent,
+  },
+  {
+    path: 'splash',
+    component: SplashComponent,
   },
   {
     path: 'print/tankLabels/:tankIds',

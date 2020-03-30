@@ -1,25 +1,26 @@
 import {Component, OnInit} from '@angular/core';
-import {AppStateService, ZFTool} from '../app-state.service';
 import {Router} from '@angular/router';
 import {ConfigService} from "../config/config.service";
 import {LoaderService} from "../loader.service";
 import {MatDialog} from "@angular/material/dialog";
 import {LoginComponent} from "../login/login.component";
+import {ZFTool} from "../helpers/zf-tool";
+import {AppStateService} from "../app-state.service";
 
 @Component({
   selector: 'app-top-bar',
   templateUrl: './top-bar.component.html',
-  styleUrls: ['./top-bar.component.scss']
+  styleUrls: ['./top-bar.component.scss'],
 })
 export class TopBarComponent implements OnInit {
   zfTool = ZFTool;
   isAuthenticated: boolean;
   constructor(
     public configService: ConfigService,
-    public appState: AppStateService,
     private router: Router,
     private loginDialog: MatDialog,
     private loaderService: LoaderService,
+    public appState: AppStateService,
   ) {
   }
 
@@ -33,16 +34,14 @@ export class TopBarComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('Logging in');
-      console.log(this.appState.getAccessTokenPayload());
     });
   }
 
   logout() {
-    if (this.appState.isAuthenticated()) {
-      console.log(this.appState.getAccessTokenPayload());
-      this.loaderService.logout(this.appState.getAccessTokenPayload().sub).subscribe( () => {
-        this.appState.accessToken = null;
+    if (this.appState.isAuthenticated) {
+      this.loaderService.logout().subscribe( () => {
+        this.appState.onLogout();
+        this.router.navigateByUrl('/splash');
       });
     }
   }

@@ -48,7 +48,7 @@ export class StockViewerComponent implements OnInit {
     this.route.paramMap.subscribe((pm: ParamMap) => {
       const id = +pm.get('id');
       if (id && (!this.service.selected || id !== this.service.selected.id)) {
-        this.service.selectById(id);
+        this.service.selectByIdAndLoad(id);
       }
     });
   }
@@ -93,7 +93,7 @@ export class StockViewerComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe((result: StockFull) => {
         if (result) {
-          this.service.selectById(result.id);
+          this.service.selectByIdAndLoad(result.id);
         }
       });
   }
@@ -113,7 +113,7 @@ export class StockViewerComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe((result: StockFull) => {
         if (result) {
-          this.service.selectById(result.id);
+          this.service.selectByIdAndLoad(result.id);
         }
       });
     // });

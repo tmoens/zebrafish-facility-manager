@@ -72,7 +72,8 @@ export class StockSwimmersEditorComponent implements OnInit {
     this.route.paramMap.subscribe((pm: ParamMap) => {
       this.stockId = +pm.get('id');
       if (this.stockId && (!this.stockService.selected || this.stockId !== this.stockService.selected.id)) {
-        this.stockService.selectById(this.stockId);
+        this.stockService.setSelectedId(this.stockId);
+        this.stockService.loadSelected();
       }
     });
 
@@ -210,7 +211,7 @@ export class StockSwimmersEditorComponent implements OnInit {
     }
 
     // after changes complete, force the reload of the updated stock by re-selecting it.
-    forkJoin(responses).subscribe(_ => this.stockService.selectById(this.stockId));
+    forkJoin(responses).subscribe(_ => this.stockService.selectByIdAndLoad(this.stockId));
     this._location.back();
   }
 

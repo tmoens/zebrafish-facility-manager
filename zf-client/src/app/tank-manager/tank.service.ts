@@ -9,7 +9,7 @@ import {TankDto} from './tank-dto';
 import {TankFilter} from './tank-filter';
 import {SwimmerFullDto} from './swimmer-full-dto';
 import {StockSwimmerDto} from './stock-swimmer-dto';
-import {AppStateService, ZFStates} from '../app-state.service';
+import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
 import {TransgeneFilter} from "../transgene-manager/transgene-filter";
 import {Transgene} from "../transgene-manager/transgene";
@@ -41,13 +41,14 @@ export class TankService extends ZFGenericService<Tank, Tank, TankFilter> {
   ) {
     super(ZFTypes.TANK, loaderForGeneric, snackBarForGeneric, appStateServiceX);
 
-    const storedFilter  = this.appStateServiceX.getState(ZFTypes.TANK, ZFStates.FILTER);
+    const storedFilter  = this.appStateServiceX.getToolState(ZFTypes.TANK, ZFToolStates.FILTER);
     if (storedFilter) {
       this.setFilter(storedFilter);
     } else {
       const filter = plainToClass(TankFilter, {});
       console.log(ZFTypes.TANK + ' empty filter: ' + JSON.stringify(filter));
       this.setFilter(filter);
+      this.applyFilter();
     }
 
     // not used for tanks.

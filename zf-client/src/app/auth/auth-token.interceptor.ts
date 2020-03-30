@@ -10,11 +10,14 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor} from '@angular/common/http';
 import { Observable, from } from 'rxjs';
+import {AppStateService} from "../app-state.service";
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
 
-  constructor() {
+  constructor(
+    private appStateService: AppStateService,
+    ) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -22,12 +25,15 @@ export class AuthTokenInterceptor implements HttpInterceptor {
   }
 
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
-    // only add tokens for requests heading to the zf-server
-    // request = request.clone({
-    //   setHeaders: {
-    //     Authorization: 'Bearer ' + accessToken
-    //   }
-    // });
+    if (this.appStateService.isAuthenticated) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: 'Bearer ' + this.appStateService.accessToken,
+        }
+      });
+    } else {
+      // console.log("No token for url: " + request.url);
+    }
     return next.handle(request).toPromise();
   }
 }

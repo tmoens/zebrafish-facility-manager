@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AppStateService, ZFTool} from '../app-state.service';
+import {AppStateService} from '../app-state.service';
 import {EditMode} from '../zf-generic/zf-edit-modes';
+import {ZFTool} from "../helpers/zf-tool";
 
 @Component({
   selector: 'app-transgene-manager',

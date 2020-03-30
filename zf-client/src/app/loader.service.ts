@@ -42,8 +42,8 @@ export class LoaderService {
       );
   }
 
-  logout(userId: string) {
-    return this.http.post(this.serverURL + '/auth/logout/' + userId, {})
+  logout() {
+    return this.http.post(this.serverURL + '/auth/logout', {})
       .pipe(
         catchError(this.handleError('Logout failed', null))
       );

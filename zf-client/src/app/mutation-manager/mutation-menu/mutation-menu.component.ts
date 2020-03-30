@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {MutationService} from '../mutation.service';
 import {Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
-import {ZFTool} from '../../app-state.service';
+import {ZFTool} from "../../helpers/zf-tool";
 
 @Component({
   selector: 'app-mutation-menu',

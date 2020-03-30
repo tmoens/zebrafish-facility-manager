@@ -7,8 +7,7 @@ import {map} from 'rxjs/operators';
 import {FieldOptions} from '../helpers/field-options';
 import {CONFIRM_MESSAGE_DURATION} from '../constants';
 import {ZfGenericFilter} from './zfgeneric-filter';
-import {plainToClass} from 'class-transformer';
-import {AppStateService, ZFStates} from '../app-state.service';
+import {AppStateService, ZFToolStates} from '../app-state.service';
 
 /**
  * There is a service for every different type of object in the system.
@@ -88,16 +87,6 @@ export class ZFGenericService<
   get fieldOptions(): FieldOptions { return this._fieldOptions; }
 
   constructor(
-    // This is very obtuse, so here is what is happening.
-    // The generic service is constantly receiving DTOs and converting them
-    // to first class objects. BUT you cannot create a generic object like
-    // SIMPLE_OBJ with new SIMPLE_OBJ() in the generic.  So instead, you pass in the class
-    // as an argument to this constructor and save that class's constructor function.
-    // So, ZFSimpleClass and ZFFullClass are functions that are able to create
-    // objects of whatever class was passed in.
-    // private ZFSimpleClass: { new(DTO): SIMPLE_OBJ ; },
-    // private ZFFullClass: { new(DTO): FULL_OBJ ; },
-    // private ZFFilterClass: { new(DTO): FILTER ; },
 
     // this is used to tell the loader what type to use in server calls.
     private zfType: ZFTypes, // stock, mutation or transgene.
@@ -117,24 +106,6 @@ export class ZFGenericService<
   ) {
     // TODO remove following kludge - work required
     if (this.zfType === ZFTypes.TANK) { return; }
-
-    // TODO dont do this if an id is supplied.
-    // If no id is supplied default to the one the user was last looking at.
-    const storedId  = this.appStateService.getState(zfType, ZFStates.SELECTED_ID);
-    if (storedId) {
-      this.selectById(storedId);
-    }
-
-    // // load filter from local storage or failing that, use an empty one.
-    // const storedFilter  = this.appStateService.getState(zfType, ZFStates.FILTER);
-    // if (storedFilter) {
-    //   this.setFilter(storedFilter);
-    // } else {
-    //   const filter = plainToClass(this.ZFFilterClass, {});
-    //   console.log(zfType + ' empty filter: ' + JSON.stringify(filter));
-    //   this.setFilter(filter);
-    // }
-
   }
 
   // Data comes from the server as a dto, this just converts to the corresponding class
@@ -160,21 +131,34 @@ export class ZFGenericService<
   // the selection operation by id.
   // go get the item from the server and select it.
   // A bad id leaves us with nothing selected.
-  selectById(id: number) {
+  setSelectedId(id: number) {
+    if (id) {
+      this.appStateService.setToolState(this.zfType, ZFToolStates.SELECTED_ID, id);
+    } else {
+      this.appStateService.removeToolState(this.zfType, ZFToolStates.SELECTED_ID);
+    }
+  }
+
+  loadSelected() {
+    const id = this.appStateService.getToolState(this.zfType, ZFToolStates.SELECTED_ID);
     if (id) {
       this.getById(id).subscribe((item: FULL_OBJ) => {
         if (item) {
-          this.appStateService.setState(this.zfType, ZFStates.SELECTED_ID, id);
           this.selected$.next(item);
         } else {
-          this.appStateService.removeState(this.zfType, ZFStates.SELECTED_ID);
+          this.appStateService.removeToolState(this.zfType, ZFToolStates.SELECTED_ID);
           this.selected$.next(null);
         }
       });
     } else {
-      this.appStateService.removeState(this.zfType, ZFStates.SELECTED_ID);
+      this.appStateService.removeToolState(this.zfType, ZFToolStates.SELECTED_ID);
       this.selected$.next(null);
     }
+  }
+
+  selectByIdAndLoad(id: number) {
+    this.setSelectedId(id);
+    this.loadSelected();
   }
 
   // fetch an instance from the server.
@@ -186,12 +170,15 @@ export class ZFGenericService<
 
   setFilter(filter: FILTER) {
     this._filter = filter;
-    this.appStateService.setState(this.zfType, ZFStates.FILTER, this.filter);
+  }
+
+  applyFilter() {
+    this.appStateService.setToolState(this.zfType, ZFToolStates.FILTER, this.filter);
     this.loader.getFilteredList(this.zfType, this.filter)
       .subscribe((dtoList: any[]) => {
         this._filteredList = dtoList.map(item => this.convertSimpleDto2Class(item));
         if (!this.selected && this.filteredList.length > 0) {
-          this.selectById(this.filteredList[0].id);
+          this.selectByIdAndLoad(this.filteredList[0].id);
         }
       });
   }
@@ -208,7 +195,7 @@ export class ZFGenericService<
     this.loader.update(this.zfType, item).subscribe((result) => {
       if (result.id) {
         this.message.open(this.zfType + ' updated.', null, {duration: CONFIRM_MESSAGE_DURATION});
-        this.selectById(result.id);
+        this.setSelectedId(result.id);
         this.refresh();
       }
     });
@@ -218,7 +205,7 @@ export class ZFGenericService<
     this.loader.create(this.zfType, item).subscribe((result) => {
       if (result.id) {
         this.message.open(result.name + ' created.', null, {duration: CONFIRM_MESSAGE_DURATION});
-        this.selectById(result.id);
+        this.setSelectedId(result.id);
         this.refresh();
       }
     });
@@ -230,7 +217,7 @@ export class ZFGenericService<
     this.loader.createNext(this.zfType, item).subscribe((result) => {
       if (result.id) {
         this.message.open(result.name + ' created.', null, {duration: CONFIRM_MESSAGE_DURATION});
-        this.selectById(item.id);
+        this.setSelectedId(item.id);
         this.refresh();
       }
     });
@@ -241,7 +228,7 @@ export class ZFGenericService<
     this.loader.delete(this.zfType, id).subscribe((result) => {
       if (result) {
         this.message.open(result.name + ' deleted.', null, {duration: CONFIRM_MESSAGE_DURATION});
-        this.selectById(0);
+        this.setSelectedId(0);
         this.refresh();
       }
     });
@@ -249,8 +236,9 @@ export class ZFGenericService<
 
   // Note: The refresh() is usually extended in services that extend this generic service.
   refresh() {
+    this.loadSelected();
     this.loadFieldOptions();
     this.getLikelyNextName();
-    this.setFilter(this.filter); // reapply the filter to reload the filtered list.
+    this.applyFilter(); // apply the filter to reload the filtered list.
   }
 }

@@ -43,7 +43,7 @@ export class ConfigService {
     return new Promise((resolve, reject) => {
       let url: string;
       if (environment.production) {
-        url = location.origin + '/facility-config/" + location.host + ".json"';
+        url = location.origin + '/facility-config/' + location.host + '.json';
       } else {
         url = location.origin + '/facility-config/development.json';
       }

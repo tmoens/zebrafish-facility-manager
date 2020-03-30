@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutGap="10px">
+<div fxLayout="row" fxLayoutGap="10px" *ngIf="appState.loggedIn$ | async">
   <div fxFlex="35"><app-transgene-selector></app-transgene-selector></div>
   <div fxFlex><router-outlet></router-outlet></div>
 </div>

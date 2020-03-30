@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {StockService} from '../stock.service';
 import {Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
-import {ZFTool} from '../../app-state.service';
+import {ZFTool} from "../../helpers/zf-tool";
 
 @Component({
   selector: 'app-stock-menu',

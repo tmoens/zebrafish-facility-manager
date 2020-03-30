@@ -1,8 +1,9 @@
 <section class="mat-typography">
-  <div style="text-align:center">
+  <div fxLayout="column" fxLayoutAlign="start" style="height: 100%">
     <app-top-bar></app-top-bar>
+    <div style="height: 100%">
+      <router-outlet></router-outlet>
+    </div>
   </div>
-  <router-outlet></router-outlet>
 </section>
-
 <router-outlet name="print"></router-outlet>

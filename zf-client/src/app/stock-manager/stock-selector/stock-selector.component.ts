@@ -39,6 +39,7 @@ export class StockSelectorComponent implements OnInit {
     // any time a filter value changes, send the changed filter to the service.
     this.mfForm.valueChanges.pipe(debounceTime(300)).subscribe(() => {
       this.service.setFilter(new StockFilter(this.mfForm.value));
+      this.service.applyFilter();
     });
 
     // when the user types something in the researcher part of the filter,

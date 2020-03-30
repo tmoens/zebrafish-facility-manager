@@ -6,7 +6,7 @@ import {ZFGenericService} from '../zf-generic/zfgeneric-service';
 import {BehaviorSubject} from 'rxjs';
 import {Transgene} from './transgene';
 import * as XLSX from 'xlsx';
-import {AppStateService, ZFStates} from '../app-state.service';
+import {AppStateService, ZFToolStates} from '../app-state.service';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {plainToClass} from "class-transformer";
 
@@ -35,7 +35,15 @@ export class TransgeneService extends ZFGenericService<Transgene, Transgene, Tra
     private appStateServiceX: AppStateService,
   ) {
     super(ZFTypes.TRANSGENE, loaderForGeneric, snackBarForGeneric, appStateServiceX);
-    const storedFilter  = this.appStateServiceX.getState(ZFTypes.TRANSGENE, ZFStates.FILTER);
+    this.appStateServiceX.loggedIn$.subscribe( (loggedIn: boolean) => {
+      if (loggedIn) {
+        this.initialize();
+      }
+    })
+  }
+
+  initialize() {
+    const storedFilter  = this.appStateServiceX.getToolState(ZFTypes.TRANSGENE, ZFToolStates.FILTER);
     if (storedFilter) {
       this.setFilter(storedFilter);
     } else {
@@ -69,7 +77,6 @@ export class TransgeneService extends ZFGenericService<Transgene, Transgene, Tra
   loadAllTransgenes() {
     this.loader.getFilteredList(ZFTypes.TRANSGENE, {}).subscribe((data) => {
       this._all$.next(data.map(m => this.convertSimpleDto2Class(m)));
-      // this.setFilter(this.filter);
     });
   }
 

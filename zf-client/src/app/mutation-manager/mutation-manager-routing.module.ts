@@ -5,6 +5,7 @@ import {MutationViewerComponent} from './mutation-viewer/mutation-viewer.compone
 import {EditMode} from '../zf-generic/zf-edit-modes';
 import {MutationEditorComponent} from './mutation-editor/mutation-editor.component';
 import {CanDeactivateGuard} from '../deactivation-guard/can-deactivate-guard';
+import {LoginGuardService as LoginGuard} from "../auth/login-guard.service";
 
 
 /**
@@ -21,34 +22,41 @@ const mutationManagerRoutes: Routes = [
       {
         path: '',
         component: MutationViewerComponent,
+        canActivate: [LoginGuard],
       },
       {
         path: 'view',
         component: MutationViewerComponent,
+        canActivate: [LoginGuard],
       },
       {
         path: 'view/:id',
         component: MutationViewerComponent,
+        canActivate: [LoginGuard],
       },
       {
         path: EditMode.CREATE,
         component: MutationEditorComponent,
         canDeactivate: [ CanDeactivateGuard ],
+        canActivate: [LoginGuard],
       },
       {
         path: EditMode.CREATE_NEXT,
         component: MutationEditorComponent,
         canDeactivate: [ CanDeactivateGuard ],
+        canActivate: [LoginGuard],
       },
       {
         path: EditMode.EDIT,
         component: MutationEditorComponent,
         canDeactivate: [ CanDeactivateGuard ],
+        canActivate: [LoginGuard],
       },
       {
         path: EditMode.EDIT + '/:id',
         component: MutationEditorComponent,
         canDeactivate: [ CanDeactivateGuard ],
+        canActivate: [LoginGuard],
       },
     ]
   }

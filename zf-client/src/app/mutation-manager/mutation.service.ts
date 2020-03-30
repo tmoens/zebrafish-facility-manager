@@ -7,7 +7,7 @@ import {FieldOptions} from '../helpers/field-options';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
 import {Mutation} from './mutation';
 import * as XLSX from 'xlsx';
-import {AppStateService, ZFStates} from '../app-state.service';
+import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
 import {TransgeneFilter} from "../transgene-manager/transgene-filter";
 import {Transgene} from "../transgene-manager/transgene";
@@ -38,8 +38,15 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
     private appStateServiceX: AppStateService,
   ) {
     super(ZFTypes.MUTATION, loaderForGeneric, snackBarForGeneric, appStateServiceX);
+    this.appStateServiceX.loggedIn$.subscribe( (loggedIn: boolean) => {
+      if (loggedIn) {
+        this.initialize();
+      }
+    })
+  }
 
-    const storedFilter  = this.appStateServiceX.getState(ZFTypes.MUTATION, ZFStates.FILTER);
+  initialize() {
+    const storedFilter  = this.appStateServiceX.getToolState(ZFTypes.MUTATION, ZFToolStates.FILTER);
     if (storedFilter) {
       this.setFilter(storedFilter);
     } else {
@@ -76,7 +83,6 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
   loadAllMutations() {
     this.loader.getFilteredList(ZFTypes.MUTATION, {}).subscribe((data) => {
       this._all$.next(data.map(m => this.convertSimpleDto2Class(m)));
-      // this.setFilter(this.filter);
     });
   }
 

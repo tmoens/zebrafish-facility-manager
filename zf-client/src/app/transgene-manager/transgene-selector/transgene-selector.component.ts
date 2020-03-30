@@ -25,6 +25,7 @@ export class TransgeneSelectorComponent implements OnInit {
     // any time a filter value changes, reapply the filter.
     this.mfForm.valueChanges.pipe(debounceTime(300)).subscribe(() => {
       this.service.setFilter(new TransgeneFilter(this.mfForm.value));
+      this.service.applyFilter();
     });
   }
 

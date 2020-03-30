@@ -52,7 +52,7 @@ export class TransgeneViewerComponent implements OnInit {
     // then we populate the form with the data from the selected item.
     this.route.paramMap.subscribe((pm: ParamMap) => {
       const id = +pm.get('id');
-      if (id) { this.service.selectById(id); }
+      if (id) { this.service.selectByIdAndLoad(id); }
     });
   }
 
