@@ -7,7 +7,7 @@ import {ConfigModule} from "../config/config.module";
 import {PassportModule} from "@nestjs/passport";
 import {UserModule} from "../user/user.module";
 import {JwtModule} from "@nestjs/jwt";
-import {AuthMiddleware} from "./auth.middleware";
+import {JwtStrategy} from "./jwt.strategy";
 
 
 @Module({
@@ -28,19 +28,10 @@ import {AuthMiddleware} from "./auth.middleware";
   providers: [
     AuthService,
     LocalStrategy,
+    JwtStrategy,
   ],
   exports: [
     AuthService,
   ],
 })
-export class AuthModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): any {
-    consumer
-      .apply(AuthMiddleware)
-      .exclude(
-        {path: 'auth/login', method: RequestMethod.POST},
-        {path: 'auth/logout/:id', method: RequestMethod.POST},
-      )
-      .forRoutes(AuthController)
-  }
-}
+export class AuthModule {}

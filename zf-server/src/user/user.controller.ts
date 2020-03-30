@@ -1,9 +1,20 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, Param, Post, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import {UserDTO} from "../common/user/UserDTO";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 @UseInterceptors(ClassSerializerInterceptor)
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(

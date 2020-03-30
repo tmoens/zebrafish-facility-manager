@@ -16,9 +16,10 @@ import { Mutation } from './mutation.entity';
 import { MutationService } from './mutation.service';
 import { plainToClass } from 'class-transformer';
 import { MutationFilter } from './mutation.filter';
-import { AuthGuard} from '@nestjs/passport';
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 @UseInterceptors(ClassSerializerInterceptor)
+@UseGuards(JwtAuthGuard)
 @Controller('mutation')
 export class MutationController {
   constructor(

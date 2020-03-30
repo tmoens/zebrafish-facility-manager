@@ -3,8 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TankService } from './tank.service';
 import { TankRepository } from './tank.repository';
 import { Tank } from './tank.entity';
-import {AuthGuard} from "@nestjs/passport";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
+@UseGuards(JwtAuthGuard)
 @Controller('tank')
 export class TankController {
   constructor(

@@ -17,8 +17,10 @@ import { TransgeneService } from './transgene.service';
 import { plainToClass } from 'class-transformer';
 import { TransgeneFilter } from './transgene.filter';
 import {AuthGuard} from "@nestjs/passport";
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 @UseInterceptors(ClassSerializerInterceptor)
+@UseGuards(JwtAuthGuard)
 @Controller('transgene')
 export class TransgeneController {
   constructor(

@@ -21,6 +21,11 @@ export class UserService {
     return this.repo.findOne(id);
   }
 
+  // TODO add "active" or "state" to the user entity and then filter on that state here.
+  findActiveUser(id: string): Promise<User> {
+    return this.repo.findOne(id);
+  }
+
   async remove(id: string): Promise<void> {
     await this.repo.delete(id);
   }

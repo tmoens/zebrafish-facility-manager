@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import {AppService} from './app.service';
@@ -15,6 +15,11 @@ import * as winston from "winston";
 import {utilities as nestWinstonModuleUtilities, WinstonModule} from 'nest-winston';
 import * as DailyRotateFile from "winston-daily-rotate-file";
 import {UserModule} from "./user/user.module";
+import {LoggerMiddleware} from "./auth/logger.middleware";
+import {StockController} from "./stock/stock.controller";
+import {AuthController} from "./auth/auth.controller";
+import {MutationController} from "./mutation/mutation.controller";
+import {TransgeneController} from "./transgene/transgene.controller";
 
 
 const rotatingFileLog = new DailyRotateFile({
@@ -62,4 +67,10 @@ const consoleLog = new (winston.transports.Console)({
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes(StockController, AuthController, MutationController, TransgeneController);
+  }
+}
