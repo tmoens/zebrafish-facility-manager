@@ -31,6 +31,7 @@ export class UserEditorComponent implements OnInit {
     id: [null],
     isActive: [true],
     name: [null],
+    passwordChangeRequired: [true],
     phone: [null],
     role: ['guest', [Validators.required]],
     username: [null, [Validators.required]],

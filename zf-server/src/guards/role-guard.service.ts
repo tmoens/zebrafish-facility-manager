@@ -4,8 +4,9 @@ import {Reflector} from "@nestjs/core";
 import {ZFRoles} from "../common/auth/zf-roles";
 
 @Injectable()
-export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+export class RoleGuard implements CanActivate {
+  constructor(private reflector: Reflector) {
+  }
 
   canActivate(context: ExecutionContext): boolean {
     const permittedRole = this.reflector.get<string>('role', context.getHandler());

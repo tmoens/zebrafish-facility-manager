@@ -1,4 +1,4 @@
-export class StockReportDto {
+export class StockReportDTO {
   Stock: string;
   Description?: string;
   DOB?: string;
@@ -9,7 +9,7 @@ export class StockReportDto {
   Transgenes?: string;
   Tanks?: string;
 
-  public constructor( init: Partial<StockReportDto>) {
+  public constructor(init: Partial<StockReportDTO>) {
     Object.assign(this, init);
   }
 }

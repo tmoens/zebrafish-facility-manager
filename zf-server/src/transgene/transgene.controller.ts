@@ -12,11 +12,14 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Transgene } from './transgene.entity';
-import { TransgeneService } from './transgene.service';
-import { plainToClass } from 'class-transformer';
-import { TransgeneFilter } from './transgene.filter';
+import {Transgene} from './transgene.entity';
+import {TransgeneService} from './transgene.service';
+import {plainToClass} from 'class-transformer';
+import {TransgeneFilter} from './transgene.filter';
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
+import {Role} from "../guards/role.decorator";
+import {USER_ROLE} from "../common/auth/zf-roles";
+import {RoleGuard} from "../guards/role-guard.service";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
@@ -24,7 +27,8 @@ import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 export class TransgeneController {
   constructor(
     private readonly transgeneService: TransgeneService,
-  ) {}
+  ) {
+  }
 
   @Get()
   async findFiltered(@Query() params): Promise<Transgene[]> {
@@ -38,7 +42,7 @@ export class TransgeneController {
   }
 
   @Get('nextName')
-  async nextName(): Promise<{name: string}> {
+  async nextName(): Promise<{ name: string }> {
     return await this.transgeneService.getNextName();
   }
 
@@ -47,21 +51,29 @@ export class TransgeneController {
     return await this.transgeneService.findById(id);
   }
 
+  @Role(USER_ROLE)
+  @UseGuards(RoleGuard)
   @Post()
   async create(@Body() newObj: any): Promise<Transgene> {
     return await this.transgeneService.validateAndCreate(newObj);
   }
 
+  @Role(USER_ROLE)
+  @UseGuards(RoleGuard)
   @Post('next')
   async createNext(@Body() newObj: any): Promise<Transgene> {
     return await this.transgeneService.validateAndCreateOwned(newObj);
   }
 
+  @Role(USER_ROLE)
+  @UseGuards(RoleGuard)
   @Put()
   async update(@Body() dto: any): Promise<Transgene> {
     return await this.transgeneService.validateAndUpdate(dto);
   }
 
+  @Role(USER_ROLE)
+  @UseGuards(RoleGuard)
   @Delete(':id')
   async delete(@Param() params): Promise<Transgene> {
     return await this.transgeneService.validateAndRemove(params.id);

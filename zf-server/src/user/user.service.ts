@@ -58,6 +58,7 @@ export class UserService {
 
   async create(dto: UserDTO): Promise<User> {
     // TODO remember this is where you were thinking of using @hapi/joi
+    delete dto.id; // a new user can not have an id.
     const u: User = plainToClass(User, dto);
     this.logger.debug('Setting random password for ' + u.username + ': ' + u.setRandomPassword());
     console.log('Setting random password for ' + u.username + ': ' + u.setRandomPassword());
@@ -91,7 +92,6 @@ export class UserService {
     }
     const u: User = await this.repo.findOneOrFail(dto.id);
     // we do not update passwords this way...
-    delete dto.password;
     Object.assign(u, dto);
     return this.repo.save(u);
   }

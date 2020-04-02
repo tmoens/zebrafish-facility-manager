@@ -7,12 +7,15 @@ import {
   Post, Put, Query, Request, UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { User } from './user.entity';
+import {UserService} from './user.service';
+import {User} from './user.entity';
 import {ResetPasswordDTO, UserDTO, UserPasswordChangeDTO} from "../common/user/UserDTO";
 import {AuthService} from "../auth/auth.service";
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {JwtAuthGuard2} from "../guards/jwt-auth.guard2";
+import {Role} from "../guards/role.decorator";
+import {ADMIN_ROLE, USER_ROLE} from "../common/auth/zf-roles";
+import {RoleGuard} from "../guards/role-guard.service";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
@@ -31,6 +34,8 @@ export class UserController {
 
 
   @UseGuards(JwtAuthGuard)
+  @Role(USER_ROLE)
+  @UseGuards(RoleGuard)
   @Post()
   async create(@Body() dto: UserDTO): Promise<User> {
     return this.service.create(dto);
@@ -52,6 +57,8 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Role(ADMIN_ROLE)
+  @UseGuards(RoleGuard)
   @Put()
   async update(@Body() dto: UserDTO): Promise<User> {
     return this.service.update(dto);
@@ -59,6 +66,8 @@ export class UserController {
 
 
   @UseGuards(JwtAuthGuard)
+  @Role(ADMIN_ROLE)
+  @UseGuards(RoleGuard)
   @Delete()
   async delete(@Body() dto: UserDTO): Promise<User> {
     return this.service.delete(dto);

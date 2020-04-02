@@ -17,6 +17,7 @@ export class UserViewerComponent implements OnInit {
     id: [{value: '', disabled: true}],
     isActive: [{value: '', disabled: true}],
     name: [{value: '', disabled: true}],
+    passwordChangeRequired: [{value: '', disabled: true}],
     phone: [{value: '', disabled: true}],
     role: [{value: '', disabled: true}],
     username: [{value: '', disabled: true}],

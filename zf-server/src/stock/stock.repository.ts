@@ -1,10 +1,10 @@
 import {Brackets, EntityRepository, Repository, SelectQueryBuilder} from 'typeorm';
 import {BadRequestException, Inject} from '@nestjs/common';
 import {Stock} from './stock.entity';
-import { StockReportDto } from './dto/stock-report.dto';
+import {StockReportDTO} from './dto/stock-report.dto';
 import moment = require('moment');
-import { StockFilter } from './stock-filter';
-import {StockMini} from './dto/stock.mini';
+import {StockFilter} from './stock-filter';
+import {StockMiniDTO} from '../common/Stock/stock.mini.dto';
 import {Logger} from "winston";
 
 
@@ -108,7 +108,7 @@ export class StockRepository extends Repository<Stock> {
   //    stock when you join, say, with hox mutations and the stock has several
   //    hox mutations.
   // b) the records are smaller and more efficient to send to the client
-  async findFiltered(filter: StockFilter): Promise<StockMini[]> {
+  async findFiltered(filter: StockFilter): Promise<StockMiniDTO[]> {
     let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
       .select('DISTINCT stock.id, stock.name, stock.description, stock.researcher, stock.comment, stock.fertilizationDate')
       .where('1');
@@ -226,8 +226,10 @@ export class StockRepository extends Repository<Stock> {
       .getCount();
   }
 
-  async getReport(params: any): Promise<StockReportDto[]> {
-    if (!params) { params = {}; }
+  async getReport(params: any): Promise<StockReportDTO[]> {
+    if (!params) {
+      params = {};
+    }
 
     let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
       .leftJoin('stock.matStock', 'mom')
@@ -295,7 +297,7 @@ export class StockRepository extends Repository<Stock> {
     const items = await q
       .getRawMany();
     return items.map(item => {
-      return new StockReportDto(item);
+      return new StockReportDTO(item);
     });
   }
 
