@@ -12,6 +12,7 @@ import {User} from "./user.entity";
 import {UserDTO, UserPasswordChangeDTO} from "../common/user/UserDTO";
 import * as winston from "winston";
 import {classToPlain} from "class-transformer";
+import {random_password_generate} from "../helpers/pasword-generator";
 
 describe('UserService', () => {
   let service: UserService;
@@ -152,17 +153,87 @@ describe('UserService', () => {
       };
       const u: User = await service.create(dto);
       const d: UserPasswordChangeDTO = {
-        id: u.id,
-        oldPassword: 'wrong',
+        currentPassword: 'wrong',
         newPassword: 'whatever',
+        repeatNewPassword: 'whatever',
       };
-      await expect(service.changePassword(d)).rejects.toThrow();
+      await expect(service.changePassword(u, d)).rejects.toThrow();
       await service.delete(classToPlain(u));
     });
 
-    // Cannot really automate testing of reset or password change because there is no
-    // way to automate the creation of a user with a known password - by design.  So
-    // need to test this through the manual reset password mechanism.
+    it('34555782 change password', async () => {
+      const dto: UserDTO = {
+        email: "34555782@gmail.com",
+        name: "fred",
+        username: "34555782",
+      };
+      const u: User = await service.create(dto);
+      // at this point we do ot know what the password is, so we have to set it
+      // but we play mucky maulers by calling the repo to do that.
+      const newPass = random_password_generate(12);
+      u.setPassword(newPass);
+      const u2: User = await repo.save(u);
+      // now check password validation
+      expect(u2.validatePassword(newPass)).toBeTruthy();
+
+      // So far so good, now that we kow the user's password, do a proper change password
+
+      const d: UserPasswordChangeDTO = {
+        currentPassword: newPass,
+        newPassword: 'whatever',
+        repeatNewPassword: 'whatever',
+      };
+      const u3: User = await (service.changePassword(u2, d));
+      expect(u3.validatePassword('whatever')).toBeTruthy();
+      await service.delete(classToPlain(u3));
+    });
+
+    it('40937122 easy reset password', async () => {
+      const dto: UserDTO = {
+        email: "40937122@gmail.com",
+        name: "fred",
+        username: "40937122",
+      };
+      const u: User = await service.create(dto);
+      const u1: User = await service.resetPassword({usernameOrEmail: '40937122'});
+      expect(u1.passwordChangeRequired).toBeTruthy();
+      const u2: User = await service.resetPassword({usernameOrEmail: '40937122@gmail.com'});
+      expect(u2.passwordChangeRequired).toBeTruthy();
+      await expect(service.resetPassword({usernameOrEmail: 'wrong'})).rejects.toThrow();
+      await service.delete(classToPlain(u2));
+    });
+
+    it('83507465 hard reset password', async () => {
+      const dto: UserDTO = {
+        email: "83507465@gmail.com",
+        name: "fred",
+        username: "83507465",
+      };
+      let u: User = await service.create(dto);
+      // The fresh user has to change it's password.  Change that.
+      u.passwordChangeRequired = false;
+      await repo.save(u);
+      expect(u.passwordChangeRequired).toBeFalsy();
+
+      // This time, we will play mucky maulers and reset the user's password going via the repo so
+      // that we can learn the new random password.
+      // this bypasses the service's check of the current password, but otherwise is the same as "reset password"
+      const randomPassword = u.setRandomPassword();
+      const u2: User = await repo.save(u);
+      expect(u2.passwordChangeRequired).toBeTruthy();
+      expect(u2.validatePassword(randomPassword)).toBeTruthy();
+
+      // now if we change the password, the user should not have the passwordChangeRequired flag on
+      const d: UserPasswordChangeDTO = {
+        currentPassword: randomPassword,
+        newPassword: 'whatever',
+        repeatNewPassword: 'whatever',
+      };
+      const u3: User = await (service.changePassword(u2, d));
+      expect(u3.validatePassword('whatever')).toBeTruthy();
+      expect(u3.passwordChangeRequired).toBeFalsy();
+      await service.delete(classToPlain(u));
+    });
 
   });
 });

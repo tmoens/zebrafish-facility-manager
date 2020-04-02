@@ -16,13 +16,12 @@ export class UserService {
   ) {
     this.makeSureAdminExists();
   }
-
   async makeSureAdminExists() {
     if (!await this.findByUserName('admin')) {
       const admin: User = await this.create({username: 'admin', role: ADMIN_ROLE, email: 'admin@admin.com'});
       admin.setPassword('admin');
       admin.passwordChangeRequired = true;
-      this.repo.save(admin);
+      await this.repo.save(admin);
     }
   }
 
@@ -68,8 +67,20 @@ export class UserService {
   // TODO convey the new password to the user.
   async resetPassword(dto: ResetPasswordDTO): Promise<User> {
     const u: User = await this.findByUsernameOrEmail(dto.usernameOrEmail);
+    if (!u) {
+      throw new UnauthorizedException('Can not reset password');
+    }
     console.log('Setting random password for ' + u.username + ': ' + u.setRandomPassword());
     return this.repo.save(u);
+  }
+
+  async findByUsernameOrEmail(usernameOrEmail: string): Promise<User | undefined> {
+    return await this.repo.findOne({
+      where: [
+        {username: usernameOrEmail},
+        {email: usernameOrEmail},
+      ],
+    });
   }
 
   async update(dto: UserDTO): Promise<User> {
@@ -113,14 +124,6 @@ export class UserService {
 
   async findByUserName(username: string): Promise<User | undefined> {
     return await this.repo.findOne({where: { username: username}});
-  }
-
-  async findByUsernameOrEmail(usernameOrEmail: string): Promise<User | undefined> {
-    return await this.repo.findOne({where: [
-        { username: usernameOrEmail},
-        {email: usernameOrEmail},
-      ],
-    });
   }
 
 }
