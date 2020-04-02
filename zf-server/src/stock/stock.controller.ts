@@ -8,7 +8,9 @@ import { StockReportDto } from './dto/stock-report.dto';
 import { StockFilter } from './stock-filter';
 import { plainToClass } from 'class-transformer';
 import { StockMini } from './dto/stock.mini';
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {JwtAuthGuard} from "../guards/jwt-auth.guard";
+import {Role} from "../guards/roles.decorator";
+import {RolesGuard} from "../guards/roles-guard";
 
 // ToDo several of these go straight to the repo bypassing the service. Should fix - low priority.
 // The following interceptor converts classes to plain objects for all responses.

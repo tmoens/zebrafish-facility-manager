@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TankService } from './tank.service';
 import { TankRepository } from './tank.repository';
 import { Tank } from './tank.entity';
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 
 @UseGuards(JwtAuthGuard)
 @Controller('tank')

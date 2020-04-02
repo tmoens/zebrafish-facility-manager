@@ -15,11 +15,17 @@ import * as winston from "winston";
 import {utilities as nestWinstonModuleUtilities, WinstonModule} from 'nest-winston';
 import * as DailyRotateFile from "winston-daily-rotate-file";
 import {UserModule} from "./user/user.module";
-import {LoggerMiddleware} from "./auth/logger.middleware";
+import {LoggerMiddleware} from "./guards/logger.middleware";
 import {StockController} from "./stock/stock.controller";
 import {AuthController} from "./auth/auth.controller";
 import {MutationController} from "./mutation/mutation.controller";
 import {TransgeneController} from "./transgene/transgene.controller";
+import {UserController} from "./user/user.controller";
+import {LocalStrategy} from "./guards/local.strategy";
+import {JwtStrategy} from "./guards/jwt.strategy";
+import {PassportModule} from "@nestjs/passport";
+import {JwtModule} from "@nestjs/jwt";
+import {JwtStrategy2} from "./guards/jwt.strategy2";
 
 
 const rotatingFileLog = new DailyRotateFile({
@@ -50,6 +56,7 @@ const consoleLog = new (winston.transports.Console)({
     TankModule,
     TransgeneModule,
     UserModule,
+    PassportModule,
     TypeOrmModule.forRootAsync(
       {
         imports: [ConfigModule],
@@ -65,12 +72,17 @@ const consoleLog = new (winston.transports.Console)({
   ],
 
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    LocalStrategy,
+    JwtStrategy,
+    JwtStrategy2,
+  ],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes(StockController, AuthController, MutationController, TransgeneController);
+      .forRoutes(StockController, AuthController, MutationController, TransgeneController, UserController);
   }
 }

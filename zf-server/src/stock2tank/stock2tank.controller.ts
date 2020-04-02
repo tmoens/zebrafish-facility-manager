@@ -4,7 +4,7 @@ import { Stock2tankRepository } from './stock2tank.repository';
 import { Stock2tank } from './stock-to-tank.entity';
 import { Stock2tankService } from './stock2tank.service';
 import { Stock } from '../stock/stock.entity';
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 
 @UseGuards(JwtAuthGuard)
 @Controller('swimmer')

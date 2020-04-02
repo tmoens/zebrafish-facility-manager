@@ -16,7 +16,7 @@ import { Mutation } from './mutation.entity';
 import { MutationService } from './mutation.service';
 import { plainToClass } from 'class-transformer';
 import { MutationFilter } from './mutation.filter';
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)

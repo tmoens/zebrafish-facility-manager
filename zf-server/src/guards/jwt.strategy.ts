@@ -2,7 +2,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import {Inject, Injectable, UnauthorizedException} from '@nestjs/common';
 import { ConfigService } from '../config/config.service';
-import {AuthService} from "./auth.service";
+import {AuthService} from "../auth/auth.service";
 import {UserService} from "../user/user.service";
 
 @Injectable()
@@ -29,10 +29,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Token does not identify an active user.');
     }
 
-    // if (user.passwordChangeRequired) {
-    //   throw new UnauthorizedException('Password change required.');
-    // }
+    if (user.passwordChangeRequired) {
+      throw new UnauthorizedException('Password change required.');
+    }
 
+    // TODO we are not actually checking the whitelist at this point, just that the user has had a token issued.
     if (!this.authService.isLoggedIn(user)) {
       throw new UnauthorizedException('Token does not identify a logged in user.');
     }

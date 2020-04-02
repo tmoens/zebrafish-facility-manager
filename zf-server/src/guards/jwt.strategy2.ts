@@ -5,8 +5,16 @@ import { ConfigService } from '../config/config.service';
 import {AuthService} from "../auth/auth.service";
 import {UserService} from "../user/user.service";
 
+// I'm so sorry. I lack understanding so I am employing a hammer.
+// The problem, the normal jwt strategy validates the jwt and checks that
+// the user is not supposed to have changed their password.
+// EXCEPT for the password change request itself.
+// The problem was that I did not see how to make that exception
+// in the jwt strategy. So I made this whole new strategy
+// that does not check the required password change state and
+// use it to make a Guard for exactly one route - the change password route.
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy2 extends PassportStrategy(Strategy, 'jwt2') {
   constructor(
     private configService: ConfigService,
     private authService: AuthService,
@@ -23,15 +31,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // At this point, the token itself and the expiry have already been checked by Passport.
 
     // However, the user may have logged out or been deactivated.
-
     const user = await this.userService.findActiveUser(payload.sub);
     if (!user) {
       throw new UnauthorizedException('Token does not identify an active user.');
     }
 
-    if (user.passwordChangeRequired) {
-      throw new UnauthorizedException('Password change required.');
-    }
+    // Here is the only difference from the normal jwt strategy.
+    // if (user.passwordChangeRequired) {
+    //   throw new UnauthorizedException('Password change required.');
+    // }
 
     if (!this.authService.isLoggedIn(user)) {
       throw new UnauthorizedException('Token does not identify a logged in user.');
