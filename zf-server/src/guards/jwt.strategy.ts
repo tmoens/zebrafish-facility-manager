@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    // The token itself and the expiry have been checked by Passport.
+    // At this point, the token itself and the expiry have already been checked by Passport.
 
     // However, the user may have logged out or been deactivated.
 
@@ -28,6 +28,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException('Token does not identify an active user.');
     }
+
+    // if (user.passwordChangeRequired) {
+    //   throw new UnauthorizedException('Password change required.');
+    // }
 
     if (!this.authService.isLoggedIn(user)) {
       throw new UnauthorizedException('Token does not identify a logged in user.');

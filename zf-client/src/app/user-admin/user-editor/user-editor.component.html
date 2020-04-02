@@ -1,0 +1,38 @@
+<div fxFlex class="zf-container" *ngIf="service.selected">
+  <div class="zf-title">Edit User {{getFC('username').value}}</div>
+  <form fxLayout="column" [formGroup]="mfForm">
+    <div fxFlex="20px"></div>
+
+    <mat-form-field>
+      <input type="text" matInput placeholder="Username" formControlName="username">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.name">
+      <input matInput type="text" placeholder="Name" formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field >
+      <input matInput type="email" placeholder="Email" formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.phone">
+      <input matInput type="text" placeholder="Phone" formControlName="phone">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Role" formControlName="roles">
+        <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="isActive" color="primary">Activated</mat-checkbox>
+
+  </form>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <div class="fill-remaining-space"></div>
+    <button mat-button color="primary" (click)="cancel()">Cancel</button>
+    <button mat-button color="primary" [disabled]='mfForm.pristine' (click)="revert()">Revert</button>
+    <button mat-button type="submit" color="primary" [disabled]='!mfForm.valid || mfForm.pristine'
+            (click)="save()">Save</button>
+  </div>
+</div>

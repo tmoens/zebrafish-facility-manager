@@ -7,6 +7,10 @@ export class ZFTool {
     'login',
     ZFTypes.LOGIN,
     'Zebrafish Facility Manager');
+  static readonly USER_MANAGER  = new ZFTool(
+    'user_admin',
+    ZFTypes.USER,
+    'User Admin');
   static readonly STOCK_MANAGER  = new ZFTool(
     'stock_manager',
     ZFTypes.STOCK,

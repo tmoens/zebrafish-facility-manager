@@ -25,7 +25,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
   }
 
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
-    if (this.appStateService.isAuthenticated) {
+    if (this.appStateService.accessToken) {
       request = request.clone({
         setHeaders: {
           Authorization: 'Bearer ' + this.appStateService.accessToken,

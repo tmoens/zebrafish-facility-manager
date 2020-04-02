@@ -1,8 +1,9 @@
-<div mat-dialog-title>Zebrafish Facility Manager Login</div>
+<section class="mat-typography">
+  <div mat-dialog-title>Login</div>
 <div mat-dialog-content>
   <div fxLayout="column">
     <mat-form-field>
-      <input matInput name="username"  type="text" placeholder="username" [(ngModel)]="username">
+      <input matInput name="username"  type="text" placeholder="Username" [(ngModel)]="username">
     </mat-form-field>
     <mat-form-field>
       <input matInput name="password" type="text"  placeholder="Password" [(ngModel)]="password">
@@ -11,6 +12,7 @@
 </div>
 <div mat-dialog-actions fxLayout="row">
   <div class="fill-remaining-space"></div>
-  <button mat-button (click)="onCancel()" color="primary">Cancel</button>
   <button mat-button (click)="onSubmit()" color="primary">Submit</button>
 </div>
+<p (click)="onForgotPassword()" class="">Forgot Password...</p>
+</section>

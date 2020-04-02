@@ -7,6 +7,7 @@ import {ERROR_MESSAGE_DURATION} from './constants';
 import {ConfigService} from "./config/config.service";
 import {StockFull} from "./stock-manager/stockFull";
 import {environment} from "../environments/environment"
+import {ResetPasswordDTO, UserPasswordChangeDTO} from "./common/user/UserDTO";
 
 export enum ZFTypes {
   LOGIN = 'login',
@@ -15,6 +16,7 @@ export enum ZFTypes {
   TANK = 'tank',
   SWIMMER = 'swimmer',
   STOCK = 'stock',
+  USER = 'user'
 }
 
 @Injectable({
@@ -49,6 +51,23 @@ export class LoaderService {
       );
   }
 
+  resetPassword(dto: ResetPasswordDTO) {
+    console.log(dto);
+    return this.http.put(this.serverURL + '/user/resetPassword', dto)
+      .pipe(
+        catchError(this.handleError('Reset Password', null))
+      );
+
+  }
+
+  passwordChange(dto: UserPasswordChangeDTO) {
+    return this.http.put(this.serverURL + '/user/changePassword', dto)
+      .pipe(
+        catchError(this.handleError('Reset Password', null))
+      );
+
+  }
+
   getFilteredList(type: ZFTypes, filter: any): Observable<any> {
     if (!filter) {
       filter = {};
@@ -79,7 +98,7 @@ export class LoaderService {
 
   }
 
-  getInstance(type: ZFTypes, id: number): Observable<any> {
+  getInstance(type: ZFTypes, id: any): Observable<any> {
     if (!id) {
       return of({});
     }

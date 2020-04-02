@@ -40,7 +40,6 @@ import {StockGeneticsEditorComponent} from "./stock-manager/stock-genetics-edito
 import {CanDeactivateGuard} from "./deactivation-guard/can-deactivate-guard";
 import {DialogService} from "./dialog.service";
 import {AuthTokenInterceptor} from "./auth/auth-token.interceptor";
-import {Router} from "@angular/router";
 import {LoginComponent} from "./login/login.component";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {StorageServiceModule} from "ngx-webstorage-service";
@@ -48,6 +47,7 @@ import {LoginGuardService} from "./auth/login-guard.service";
 import {ErrorInterceptor} from "./auth/http-error.interceptor";
 import { SplashComponent } from './splash/splash.component';
 import {StockService} from "./stock-manager/stock.service";
+import {UserAdminModule} from "./user-admin/user-admin.module";
 
 export function configProviderFactory(provider: ConfigService) {
   return () => provider.load();
@@ -70,6 +70,7 @@ export function stockServiceProviderFactory(provider: StockService) {
     MutationManagerModule,
     StockManagerModule,
     TransgeneManagerModule,
+    UserAdminModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,

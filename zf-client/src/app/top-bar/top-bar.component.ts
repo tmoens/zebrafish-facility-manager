@@ -6,6 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {LoginComponent} from "../login/login.component";
 import {ZFTool} from "../helpers/zf-tool";
 import {AppStateService} from "../app-state.service";
+import {PasswordChangeComponent} from "../login/password-change/password-change.component";
 
 @Component({
   selector: 'app-top-bar',
@@ -19,6 +20,7 @@ export class TopBarComponent implements OnInit {
     public configService: ConfigService,
     private router: Router,
     private loginDialog: MatDialog,
+    private passwordChangeDialog: MatDialog,
     private loaderService: LoaderService,
     public appState: AppStateService,
   ) {
@@ -29,12 +31,8 @@ export class TopBarComponent implements OnInit {
   }
 
   login() {
-    const dialogRef = this.loginDialog.open(LoginComponent, {
-      data: {}
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-    });
+    const dialogRef = this.loginDialog.open(LoginComponent, {data: {}});
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
   logout() {
@@ -45,4 +43,11 @@ export class TopBarComponent implements OnInit {
       });
     }
   }
+
+  onPasswordChange() {
+    const dialogRef = this.passwordChangeDialog.open(PasswordChangeComponent, {data: {}});
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
+
+
 }

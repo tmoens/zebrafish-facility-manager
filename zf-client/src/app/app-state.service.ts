@@ -5,6 +5,7 @@ import {AccessTokenPayload} from "./common/auth/zfm-access-token-payload";
 import {plainToClass} from "class-transformer";
 import {LOCAL_STORAGE, StorageService} from "ngx-webstorage-service";
 import {ZFTool} from "./helpers/zf-tool";
+import {Route, Router} from "@angular/router";
 
 
 export enum ZFToolStates {
@@ -43,6 +44,7 @@ export class AppStateService {
 
   constructor(
     public loader: LoaderService,
+    private router: Router,
     @Inject(LOCAL_STORAGE) private localStorage: StorageService,
   ) {
     // Use the stored token (if there is one) as the access token.
@@ -54,8 +56,17 @@ export class AppStateService {
           this.loggedIn$.next(false);
         } else if (this.isTokenExpired(token)) {
           this.onLogout();
+        } else if(this.getAccessTokenPayload(token).passwordChangeRequired) {
+          // kind of in limbo here, we cannot login because that will trigger many requests
+          // to the server which will fail because the password has not changed.
+          // cannot log out because that would mean that we have no authorization to
+          // make the change password call to the server.
+          // With any luck, the login process will notice the need to change password,
+          // force the user to do that, which will give a new token which will not
+          // get tripped up here and which will lead to a full login.
         } else {
           this.loggedIn$.next(true);
+          this.router.navigateByUrl(this.getDefaultURI());
         }
       });
   }
@@ -72,6 +83,10 @@ export class AppStateService {
   onLogout() {
     this.localStorage.remove('access_token');
     this.accessToken$.next(null);
+  }
+
+  isPasswordChangeRequired():boolean {
+    return !!(this.getAccessTokenPayload(this.accessToken).passwordChangeRequired);
   }
 
   // The default URI (after login) should be
@@ -138,5 +153,9 @@ export class AppStateService {
     }
   }
 
+  getLoggedInUserId(): string {
+    if (!this.accessToken) return null;
+    return this.getAccessTokenPayload(this.accessToken).sub;
+  }
 
 }

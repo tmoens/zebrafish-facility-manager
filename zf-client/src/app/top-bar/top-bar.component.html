@@ -1,4 +1,5 @@
 <mat-toolbar *ngIf="appState.loggedIn$|async" fxLayoutGap="10px">
+  <app-user-menu *ngIf="appState.activeTool === zfTool.USER_MANAGER"></app-user-menu>
   <app-stock-menu *ngIf="appState.activeTool === zfTool.STOCK_MANAGER"></app-stock-menu>
   <app-mutation-menu *ngIf="appState.activeTool === zfTool.MUTATION_MANAGER"></app-mutation-menu>
   <app-transgene-menu *ngIf="appState.activeTool === zfTool.TRANSGENE_MANAGER"></app-transgene-menu>
@@ -16,11 +17,20 @@
           [routerLink]="zfTool.TRANSGENE_MANAGER.route" color="primary">
     {{zfTool.TRANSGENE_MANAGER.display_name}}
   </button>
+  <button mat-button [disabled]="appState.activeTool === zfTool.USER_MANAGER"
+          [routerLink]="zfTool.USER_MANAGER.route" color="primary">
+    {{zfTool.USER_MANAGER.display_name}}
+  </button>
   <button mat-button (click)="logout()">
     Logout
   </button>
+  <button mat-button (click)="onPasswordChange()">
+    Change Password
+  </button>
 </mat-toolbar>
 <mat-toolbar *ngIf="!(appState.loggedIn$ | async)">
-<span>Zebrafish Facility Manager for
+  <span>Zebrafish Facility Manager for
   {{configService.getConfig().facilityName}}</span>
+  <span class="fill-remaining-space"></span>
+  <button mat-button (click)="login()">Login</button>
 </mat-toolbar>

@@ -1,0 +1,45 @@
+<div fxFlex class="zf-container" *ngIf="service.selected">
+  <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" >
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item color="primary" (click)="edit()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit {{service.selected.username}}</span>
+      </button>
+      <button mat-menu-item (click)="create()">
+        <mat-icon>add</mat-icon>
+        <span>Create User</span>
+      </button>
+    </mat-menu>
+    <span class="zf-title">User Details</span>
+    <button mat-icon-button color="primary" (click)="edit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+  <form fxLayout="column" [formGroup]="mfForm">
+    <mat-form-field>
+      <input type="text" matInput placeholder="Username" formControlName="username">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.name">
+      <input matInput type="text" placeholder="Name" formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field >
+      <input matInput type="email" placeholder="Email" formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.phone">
+      <input matInput type="text" placeholder="Phone" formControlName="phone">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="text" placeholder="Role" formControlName="roles">
+    </mat-form-field>
+
+    <mat-checkbox formControlName="isActive" color="primary">Activated</mat-checkbox>
+
+  </form>
+</div>
