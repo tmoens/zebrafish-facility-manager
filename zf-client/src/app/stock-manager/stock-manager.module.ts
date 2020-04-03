@@ -35,6 +35,7 @@ import {StockGeneticsEditorComponent} from './stock-genetics-editor/stock-geneti
 import {StockSwimmersEditorComponent} from './stock-swimmers-editor/stock-swimmers-editor.component';
 import {TankNameValidator} from './validators/tankNameValidator';
 import {StockNameCheckValidator} from './validators/stockNameCheck';
+import {AuthModule} from "../auth/auth.module";
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import {StockNameCheckValidator} from './validators/stockNameCheck';
     FormsModule,
     DragDropModule,
     MatProgressSpinnerModule,
+    AuthModule,
   ],
   exports: [
     StockMenuComponent

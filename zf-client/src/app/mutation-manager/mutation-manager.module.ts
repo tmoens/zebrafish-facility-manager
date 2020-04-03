@@ -31,6 +31,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {CommonModule} from '@angular/common';
+import {AuthModule} from "../auth/auth.module";
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import {CommonModule} from '@angular/common';
     FormsModule,
     DragDropModule,
     MatProgressSpinnerModule,
+    AuthModule,
   ],
   exports: [
     MutationMenuComponent

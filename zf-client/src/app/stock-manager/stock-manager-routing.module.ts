@@ -7,6 +7,8 @@ import {EditMode} from '../zf-generic/zf-edit-modes';
 import {StockSwimmersEditorComponent} from './stock-swimmers-editor/stock-swimmers-editor.component';
 import {CanDeactivateGuard} from '../deactivation-guard/can-deactivate-guard';
 import {LoginGuardService as LoginGuard} from "../auth/login-guard.service";
+import {RoleGuardService as RoleGuard} from "../auth/role-guard.service";
+import {USER_ROLE} from "../common/auth/zf-roles";
 
 const stockManagerRoutes: Routes = [
   {
@@ -31,38 +33,56 @@ const stockManagerRoutes: Routes = [
       {
         path: EditMode.CREATE_NEXT,
         component: StockEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: USER_ROLE
+        }
       },
       {
         path: EditMode.CREATE_SUB_STOCK,
         component: StockEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: USER_ROLE
+        }
       },
       {
         path: EditMode.EDIT + '/swimmers',
         component: StockSwimmersEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: USER_ROLE
+        }
       },
       {
         path: EditMode.EDIT + '/swimmers/:id',
         component: StockSwimmersEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: USER_ROLE
+        }
       },
       {
         path: EditMode.EDIT,
         component: StockEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: USER_ROLE
+        }
       },
       {
         path: EditMode.EDIT + '/:id',
         component: StockEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: USER_ROLE
+        }
       },
     ]
   }

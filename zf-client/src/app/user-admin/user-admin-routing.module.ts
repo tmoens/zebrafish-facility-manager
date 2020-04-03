@@ -6,7 +6,8 @@ import {UserEditorComponent} from "./user-editor/user-editor.component";
 import {EditMode} from "../zf-generic/zf-edit-modes";
 import {CanDeactivateGuard} from "../deactivation-guard/can-deactivate-guard";
 import {NgModule} from "@angular/core";
-import {TransgeneEditorComponent} from "../transgene-manager/transgen-editor/transgene-editor.component";
+import {RoleGuardService as RoleGuard} from "../auth/role-guard.service";
+import {ADMIN_ROLE} from "../common/auth/zf-roles";
 
 const userAdminRoutes: Routes = [
   {
@@ -16,35 +17,49 @@ const userAdminRoutes: Routes = [
       {
         path: '',
         component: UserViewerComponent,
-        canActivate: [LoginGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: ADMIN_ROLE
+        }
       },
       {
         path: 'view',
         component: UserViewerComponent,
-        canActivate: [LoginGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: ADMIN_ROLE
+        }
       },
       {
         path: 'view/:id',
         component: UserViewerComponent,
-        canActivate: [LoginGuard],
+        data: {
+          permittedRole: ADMIN_ROLE
+        }
       },
       {
         path: EditMode.CREATE,
         component: UserEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        data: {
+          permittedRole: ADMIN_ROLE
+        }
       },
       {
         path: EditMode.EDIT,
         component: UserEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        data: {
+          permittedRole: ADMIN_ROLE
+        }
       },
       {
         path: EditMode.EDIT + '/:id',
         component: UserEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        data: {
+          permittedRole: ADMIN_ROLE
+        }
       },
     ]
   }

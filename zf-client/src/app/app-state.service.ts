@@ -6,6 +6,7 @@ import {plainToClass} from "class-transformer";
 import {LOCAL_STORAGE, StorageService} from "ngx-webstorage-service";
 import {ZFTool} from "./helpers/zf-tool";
 import {Route, Router} from "@angular/router";
+import {ZFRoles} from "./common/auth/zf-roles";
 
 
 export enum ZFToolStates {
@@ -153,9 +154,16 @@ export class AppStateService {
     }
   }
 
-  getLoggedInUserId(): string {
-    if (!this.accessToken) return null;
-    return this.getAccessTokenPayload(this.accessToken).sub;
+  getUserRole(): string {
+    if (!this.isAuthenticated) return null;
+    return this.getAccessTokenPayload(this.accessToken).role;
+  }
+
+  canPerformRole(roleInQuestion: string): boolean {
+    if (!this.isAuthenticated) {
+      return false;
+    }
+    return ZFRoles.isAuthorized(this.getAccessTokenPayload(this.accessToken).role, roleInQuestion)
   }
 
 }

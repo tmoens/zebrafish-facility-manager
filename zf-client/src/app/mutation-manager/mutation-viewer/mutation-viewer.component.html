@@ -4,26 +4,26 @@
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item color="primary" (click)="edit()">
+      <button mat-menu-item zfmHideUnauthorized="user" (click)="edit()">
         <mat-icon>edit</mat-icon>
         <span>Edit {{service.selected.fullName}}</span>
       </button>
-      <button mat-menu-item color="primary" (click)="delete()"
+      <button mat-menu-item zfmHideUnauthorized="admin" (click)="delete()"
               [disabled]="!service.selected.isDeletable">
         <mat-icon>delete</mat-icon>
         <span>Delete {{service.selected.fullName}}</span>
       </button>
-      <button mat-menu-item color="primary" (click)="createNext()">
+      <button mat-menu-item zfmHideUnauthorized="user" (click)="createNext()">
         <mat-icon>add</mat-icon>
         <span>Create Owned Mutation {{service.likelyNextName}}</span>
       </button>
-      <button mat-menu-item (click)="create()">
+      <button mat-menu-item zfmHideUnauthorized="user" (click)="create()">
         <mat-icon>add</mat-icon>
         <span>Create Mutation</span>
       </button>
     </mat-menu>
     <span class="zf-title">Mutation Details</span>
-    <button mat-icon-button color="primary" (click)="edit()">
+    <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="edit()">
       <mat-icon>edit</mat-icon>
     </button>
   </div>

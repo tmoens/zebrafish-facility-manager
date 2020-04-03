@@ -4,12 +4,16 @@ export const ADMIN_ROLE = 'admin';
 
 export class ZFRoles {
   private static _roles: { [name: string]: number } = {
-  'admin': 0,
-  'user': 5,
-  'guest': 13,
- }
+    'admin': 3,
+    'user': 2,
+    'guest': 1,
+  };
 
- static getRoles(): string[] {
+  static getRoles(): string[] {
     return Object.keys(this._roles);
- }
+  }
+
+  static isAuthorized(userRole: string, permittedRole: string): boolean {
+    return (this._roles[userRole] >= this._roles[permittedRole]);
+  }
 }

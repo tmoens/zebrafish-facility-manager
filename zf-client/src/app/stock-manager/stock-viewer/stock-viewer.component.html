@@ -9,31 +9,31 @@
         </button>
         <mat-menu #menu="matMenu">
           <div class="fill-remaining-space"></div>
-          <button mat-menu-item color="primary" (click)="edit()">
+          <button mat-menu-item zfmHideUnauthorized="user" (click)="edit()">
             <mat-icon>edit</mat-icon>
             <span>Edit {{service.selected.name}}</span>
           </button>
-          <button mat-menu-item color="primary" (click)="createSubStock()">
+          <button mat-menu-item zfmHideUnauthorized="user" (click)="createSubStock()">
             <mat-icon>add</mat-icon>
             <span>Create Sub Stock{{service.selected.number}}.{{service.selected.nextSubStockNumber}}</span>
           </button>
-          <button mat-menu-item color="primary" (click)="delete()"
+          <button mat-menu-item zfmHideUnauthorized="admin" (click)="delete()"
                   [disabled]="!service.selected.isDeletable">
             <mat-icon>delete</mat-icon>
             <span>Delete {{service.selected.name}}</span>
           </button>
-          <button mat-menu-item color="primary" (click)="printLabels()"
+          <button mat-menu-item (click)="printLabels()"
                   [disabled]="!service.selected.swimmers || service.selected.swimmers.length < 1">
             <mat-icon>print</mat-icon>
             <span>Print Label</span>
           </button>
-          <button mat-menu-item (click)="create()">
+          <button mat-menu-item zfmHideUnauthorized="user" (click)="create()">
             <mat-icon>add</mat-icon>
             <span>Create Stock {{service.likelyNextName}}</span>
           </button>
         </mat-menu>
         <span class="zf-title">Stock {{service.selected.name}} Details</span>
-        <button mat-icon-button color="primary" (click)="edit()">
+        <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="edit()">
           <mat-icon>edit</mat-icon>
         </button>
       </div>
@@ -124,7 +124,7 @@
       <div fxLayout="column">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
           <span class="zf-title">Mutations</span>
-          <button mat-icon-button color="primary" (click)="editMutations()">
+          <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editMutations()">
             <mat-icon>edit</mat-icon>
           </button>
         </div>
@@ -147,7 +147,7 @@
       <div fxLayout="column">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
           <span class="zf-title">Transgenes</span>
-          <button mat-icon-button color="primary" (click)="editTransgenes()">
+          <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editTransgenes()">
             <mat-icon>edit</mat-icon>
           </button>
         </div>
@@ -170,7 +170,7 @@
       <div fxLayout="column" fxFlex>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
           <span class="zf-title">Swimmers</span>
-          <button mat-icon-button color="primary" (click)="editSwimmers()">
+          <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editSwimmers()">
             <mat-icon>edit</mat-icon>
           </button>
         </div>

@@ -1,9 +1,4 @@
-<button mat-icon-button [matMenuTriggerFor]="menu">
-  <mat-icon>menu</mat-icon>
-</button>
-<mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="create()">
+  <button zfmHideUnauthorized="admin" mat-menu-item (click)="create()">
     <mat-icon>add</mat-icon>
     <span>Create User</span>
   </button>
-</mat-menu>

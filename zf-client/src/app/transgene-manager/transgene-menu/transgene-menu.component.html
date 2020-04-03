@@ -1,18 +1,13 @@
-<button mat-icon-button [matMenuTriggerFor]="menu">
-  <mat-icon>menu</mat-icon>
+<button mat-menu-item zfmHideUnauthorized="user" (click)="create()">
+  <mat-icon>add</mat-icon>
+  <span>Create Transgene</span>
 </button>
-<mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="create()">
-    <mat-icon>add</mat-icon>
-    <span>Create Transgene</span>
-  </button>
-  <button mat-menu-item color="primary" (click)="createNext()">
-    <mat-icon>add</mat-icon>
-    <span>Create Owned Transgene {{service.likelyNextName}}</span>
-  </button>
-  <button mat-menu-item (click)="service.toExcel()"
-          matTooltip="A spreadsheet containing stocks meeting the current filter.">
-    <mat-icon>cloud_download</mat-icon>
-    <span>Transgene Report</span>
-  </button>
-</mat-menu>
+<button mat-menu-item zfmHideUnauthorized="user" color="primary" (click)="createNext()">
+  <mat-icon>add</mat-icon>
+  <span>Create Owned Transgene {{service.likelyNextName}}</span>
+</button>
+<button mat-menu-item zfmHideUnauthorized="user" (click)="service.toExcel()"
+        matTooltip="A spreadsheet containing stocks meeting the current filter.">
+  <mat-icon>cloud_download</mat-icon>
+  <span>Transgene Report</span>
+</button>

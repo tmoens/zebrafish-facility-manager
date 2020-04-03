@@ -31,6 +31,7 @@ import {TransgeneSelectorComponent} from './transgene-selector/transgene-selecto
 import {TransgeneViewerComponent} from './transgene-viewer/transgene-viewer.component';
 import {TransgeneManagerRoutingModule} from './transgene-manager-routing.module';
 import {TransgeneMenuComponent} from './transgene-menu/transgene-menu.component';
+import {AuthModule} from "../auth/auth.module";
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import {TransgeneMenuComponent} from './transgene-menu/transgene-menu.component'
     FormsModule,
     DragDropModule,
     MatProgressSpinnerModule,
+    AuthModule,
   ],
   exports: [
     TransgeneMenuComponent

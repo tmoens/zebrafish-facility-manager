@@ -4,15 +4,15 @@
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item color="primary" (click)="edit()">
+      <button mat-menu-item zfmHideUnauthorized="user" (click)="edit()">
         <mat-icon>edit</mat-icon>
         <span>Edit {{service.selected.allele}}</span>
       </button>
-      <button mat-menu-item color="primary" (click)="delete()" [disabled]="!service.selected.isDeletable">
+      <button mat-menu-item zfmHideUnauthorized="admin" (click)="delete()" [disabled]="!service.selected.isDeletable">
         <mat-icon>delete</mat-icon>
         <span>Delete {{service.selected.allele}}</span>
       </button>
-      <button mat-menu-item color="primary" (click)="createNext()">
+      <button mat-menu-item zfmHideUnauthorized="user" (click)="createNext()">
         <mat-icon>add</mat-icon>
         <span>Create Owned Transgene {{service.likelyNextName}}</span>
       </button>
@@ -22,7 +22,7 @@
       </button>
     </mat-menu>
     <span class="zf-title">Transgene Details</span>
-    <button mat-icon-button color="primary" (click)="edit()">
+    <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="edit()">
       <mat-icon>edit</mat-icon>
     </button>
   </div>

@@ -45,13 +45,16 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {StorageServiceModule} from "ngx-webstorage-service";
 import {LoginGuardService} from "./auth/login-guard.service";
 import {ErrorInterceptor} from "./auth/http-error.interceptor";
-import { SplashComponent } from './splash/splash.component';
+import {SplashComponent} from './splash/splash.component';
 import {StockService} from "./stock-manager/stock.service";
 import {UserAdminModule} from "./user-admin/user-admin.module";
+import {RoleGuardService} from "./auth/role-guard.service";
+import {AuthModule} from "./auth/auth.module";
 
 export function configProviderFactory(provider: ConfigService) {
   return () => provider.load();
 }
+
 export function stockServiceProviderFactory(provider: StockService) {
   return () => provider.placeholder();
 }
@@ -101,6 +104,7 @@ export function stockServiceProviderFactory(provider: StockService) {
     ReactiveFormsModule,
     AppRoutingModule,
     StorageServiceModule,
+    AuthModule,
   ],
   entryComponents: [
     StockGeneticsEditorComponent,
@@ -114,9 +118,11 @@ export function stockServiceProviderFactory(provider: StockService) {
     CanDeactivateGuard,
     DialogService,
     LoginGuardService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    RoleGuardService,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
   ],
+  exports: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

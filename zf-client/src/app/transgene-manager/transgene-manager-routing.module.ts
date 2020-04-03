@@ -6,6 +6,8 @@ import {TransgeneEditorComponent} from './transgen-editor/transgene-editor.compo
 import {EditMode} from '../zf-generic/zf-edit-modes';
 import {CanDeactivateGuard} from '../deactivation-guard/can-deactivate-guard';
 import {LoginGuardService as LoginGuard} from "../auth/login-guard.service";
+import {RoleGuardService as RoleGuard} from "../auth/role-guard.service";
+import {USER_ROLE} from "../common/auth/zf-roles";
 
 const transgeneManagerRoutes: Routes = [
   {
@@ -30,26 +32,38 @@ const transgeneManagerRoutes: Routes = [
       {
         path: EditMode.CREATE,
         component: TransgeneEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: USER_ROLE
+        }
       },
       {
         path: EditMode.CREATE_NEXT,
         component: TransgeneEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: USER_ROLE
+        }
       },
       {
         path: EditMode.EDIT,
         component: TransgeneEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: USER_ROLE
+        }
       },
       {
         path: EditMode.EDIT + '/:id',
         component: TransgeneEditorComponent,
-        canDeactivate: [ CanDeactivateGuard ],
-        canActivate: [LoginGuard],
+        canDeactivate: [CanDeactivateGuard],
+        canActivate: [RoleGuard],
+        data: {
+          permittedRole: USER_ROLE
+        }
       },
     ]
   }
