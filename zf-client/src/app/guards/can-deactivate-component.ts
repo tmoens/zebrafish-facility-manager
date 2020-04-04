@@ -6,6 +6,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
   templateUrl: './can-deactivate-component.html',
   styleUrls: ['./can-deactivate-component.scss']
 })
+
 export class CanDeactivateComponent {
 
   constructor(

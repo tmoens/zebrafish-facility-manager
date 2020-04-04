@@ -58,13 +58,8 @@ export class AppStateService {
         } else if (this.isTokenExpired(token)) {
           this.onLogout();
         } else if(this.getAccessTokenPayload(token).passwordChangeRequired) {
-          // kind of in limbo here, we cannot login because that will trigger many requests
-          // to the server which will fail because the password has not changed.
-          // cannot log out because that would mean that we have no authorization to
-          // make the change password call to the server.
-          // With any luck, the login process will notice the need to change password,
-          // force the user to do that, which will give a new token which will not
-          // get tripped up here and which will lead to a full login.
+          // If the user is meant to change their password, force that.
+          this.router.navigateByUrl('/change-password');
         } else {
           this.loggedIn$.next(true);
           this.router.navigateByUrl(this.getDefaultURI());

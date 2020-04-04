@@ -3,7 +3,6 @@ import {Router} from '@angular/router';
 import {ConfigService} from "../config/config.service";
 import {LoaderService} from "../loader.service";
 import {MatDialog} from "@angular/material/dialog";
-import {LoginComponent} from "../login/login.component";
 import {ZFTool} from "../helpers/zf-tool";
 import {AppStateService} from "../app-state.service";
 import {PasswordChangeComponent} from "../login/password-change/password-change.component";
@@ -19,7 +18,6 @@ export class TopBarComponent implements OnInit {
   constructor(
     public configService: ConfigService,
     private router: Router,
-    private loginDialog: MatDialog,
     private passwordChangeDialog: MatDialog,
     private loaderService: LoaderService,
     public appState: AppStateService,
@@ -27,12 +25,10 @@ export class TopBarComponent implements OnInit {
   }
 
   async ngOnInit() {
-    // Get the authentication state for immediate use
   }
 
   login() {
-    const dialogRef = this.loginDialog.open(LoginComponent, {data: {}});
-    dialogRef.afterClosed().subscribe((result) => {});
+    this.router.navigateByUrl('/login');
   }
 
   logout() {
@@ -45,9 +41,6 @@ export class TopBarComponent implements OnInit {
   }
 
   onPasswordChange() {
-    const dialogRef = this.passwordChangeDialog.open(PasswordChangeComponent, {data: {}});
-    dialogRef.afterClosed().subscribe((result) => {});
+    this.router.navigateByUrl('/change-password');
   }
-
-
 }

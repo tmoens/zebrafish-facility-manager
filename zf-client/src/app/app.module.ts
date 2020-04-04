@@ -35,21 +35,22 @@ import {TransgeneManagerModule} from "./transgene-manager/transgene-manager.modu
 import {StockManagerModule} from "./stock-manager/stock-manager.module";
 import {MutationManagerModule} from "./mutation-manager/mutation-manager.module";
 import {ZfGenericModule} from "./zf-generic/zf-generic.module";
-import {CanDeactivateComponent} from "./deactivation-guard/can-deactivate-component";
+import {CanDeactivateComponent} from "./guards/can-deactivate-component";
 import {StockGeneticsEditorComponent} from "./stock-manager/stock-genetics-editor/stock-genetics-editor.component";
-import {CanDeactivateGuard} from "./deactivation-guard/can-deactivate-guard";
+import {CanDeactivateGuard} from "./guards/can-deactivate-guard";
 import {DialogService} from "./dialog.service";
 import {AuthTokenInterceptor} from "./auth/auth-token.interceptor";
-import {LoginComponent} from "./login/login.component";
+import {LoginComponent} from "./login/login/login.component";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {StorageServiceModule} from "ngx-webstorage-service";
-import {LoginGuardService} from "./auth/login-guard.service";
+import {LoginGuardService} from "./guards/login-guard.service";
 import {ErrorInterceptor} from "./auth/http-error.interceptor";
 import {SplashComponent} from './splash/splash.component';
 import {StockService} from "./stock-manager/stock.service";
 import {UserAdminModule} from "./user-admin/user-admin.module";
-import {RoleGuardService} from "./auth/role-guard.service";
+import {RoleGuardService} from "./guards/role-guard.service";
 import {AuthModule} from "./auth/auth.module";
+import {LoginModule} from "./login/login.module";
 
 export function configProviderFactory(provider: ConfigService) {
   return () => provider.load();
@@ -65,10 +66,10 @@ export function stockServiceProviderFactory(provider: StockService) {
     CanDeactivateComponent,
     TopBarComponent,
     TankLabelComponent,
-    LoginComponent,
     SplashComponent,
   ],
   imports: [
+    LoginModule,
     ZfGenericModule,
     MutationManagerModule,
     StockManagerModule,
@@ -109,7 +110,6 @@ export function stockServiceProviderFactory(provider: StockService) {
   entryComponents: [
     StockGeneticsEditorComponent,
     CanDeactivateComponent,
-    LoginComponent,
   ],
   providers: [
     {provide: APP_INITIALIZER, useFactory: configProviderFactory, deps: [ConfigService], multi: true},

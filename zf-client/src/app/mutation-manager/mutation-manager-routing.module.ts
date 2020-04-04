@@ -4,9 +4,9 @@ import {MutationManagerComponent} from './mutation-manager.component';
 import {MutationViewerComponent} from './mutation-viewer/mutation-viewer.component';
 import {EditMode} from '../zf-generic/zf-edit-modes';
 import {MutationEditorComponent} from './mutation-editor/mutation-editor.component';
-import {CanDeactivateGuard} from '../deactivation-guard/can-deactivate-guard';
-import {LoginGuardService as LoginGuard} from "../auth/login-guard.service";
-import {RoleGuardService as RoleGuard} from "../auth/role-guard.service";
+import {CanDeactivateGuard} from '../guards/can-deactivate-guard';
+import {LoginGuardService as LoginGuard} from "../guards/login-guard.service";
+import {RoleGuardService as RoleGuard} from "../guards/role-guard.service";
 import {USER_ROLE} from "../common/auth/zf-roles";
 
 

@@ -31,8 +31,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatMenuModule} from "@angular/material/menu";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import { PasswordResetComponent } from '../login/password-reset/password-reset.component';
-import {PasswordChangeComponent} from '../login/password-change/password-change.component';
 import {AuthModule} from "../auth/auth.module";
 
 @NgModule({
@@ -42,8 +40,6 @@ import {AuthModule} from "../auth/auth.module";
     UserSelectorComponent,
     UserViewerComponent,
     UserEditorComponent,
-    PasswordResetComponent,
-    PasswordChangeComponent,
   ],
   imports: [
     UserAdminRoutingModule,

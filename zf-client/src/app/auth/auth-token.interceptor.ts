@@ -1,3 +1,7 @@
+import { Injectable } from '@angular/core';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor} from '@angular/common/http';
+import { Observable, from } from 'rxjs';
+import {AppStateService} from "../app-state.service";
 /**
  * This just intercepts the outbound http requests and inserts the jwt
  * More efficient than doing it in every single http request.
@@ -7,10 +11,6 @@
  * a bearer token. This is fully intended.
  *
  */
-import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor} from '@angular/common/http';
-import { Observable, from } from 'rxjs';
-import {AppStateService} from "../app-state.service";
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
@@ -32,7 +32,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
         }
       });
     } else {
-      // console.log("No token for url: " + request.url);
+      // console.log("No token available for url: " + request.url);
     }
     return next.handle(request).toPromise();
   }

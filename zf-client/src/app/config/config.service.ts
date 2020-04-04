@@ -7,7 +7,7 @@ import {environment} from "../../environments/environment";
 /*
  * This service loads configuration information for a particular zebrafish facility.
  * This allows a single build of the zf_client to service multiple facilities
- * in a single build/facility.
+ * in a single build.
  *
  * That is, facility configuration is *not* compiled in through the environment.ts,
  * but is rather pulled in from the server at run-time.
@@ -26,9 +26,10 @@ export class ConfigService {
   private http: HttpClient;
 
   // Note that the use of HttpBackend here is done specifically to
-  // avoid the interceptor being fired before configuration is loaded.
-  constructor(private handler: HttpBackend,
-              private location: Location,
+  // avoid the AuthTokenInterceptor being fired before configuration is loaded.
+  constructor(
+    private handler: HttpBackend,
+    private foo: Location,
   ) {
     this.http = new HttpClient(handler);
   }
@@ -38,8 +39,6 @@ export class ConfigService {
   }
 
   load() {
-    console.log("location.origin:");
-    console.log(location.origin);
     return new Promise((resolve, reject) => {
       let url: string;
       if (environment.production) {

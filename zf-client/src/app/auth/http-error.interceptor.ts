@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {AppStateService} from "../app-state.service";
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
-import {catchError, tap} from "rxjs/operators";
+import {catchError} from "rxjs/operators";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {

@@ -4,15 +4,13 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Injectable} from "@angular/core";
 import {CONFIRM_MESSAGE_DURATION} from "../constants";
 
-
 @Injectable()
 export class RoleGuardService implements CanActivate {
   constructor(
     public appStateService: AppStateService,
     public router: Router,
     public snackBar: MatSnackBar,
-  ) {
-  }
+  ) {  }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     // first check for login

@@ -247,7 +247,6 @@ export class StockEditorComponent implements OnInit {
   }
 
   /* To support deactivation check  */
-  /* Contrary to tsLint's perspective, this function *is* invoked by the deactivation guard */
   canDeactivate(): boolean | Observable<boolean> |Promise <boolean> {
     if (this.isUnchanged()) {
       return true;

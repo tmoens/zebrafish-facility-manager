@@ -14,7 +14,7 @@ export class LoginGuardService implements CanActivate {
   canActivate(): boolean {
     if (!this.appStateService.isAuthenticated) {
       this.appStateService.intendedPath = location.pathname;
-      this.router.navigateByUrl('/splash');
+      this.router.navigateByUrl('/login');
       return false;
     }
     return true;

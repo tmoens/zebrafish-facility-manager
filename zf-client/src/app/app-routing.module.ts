@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {TankLabelComponent} from "./printing/tank-label/tank-label.component";
 import {SplashComponent} from "./splash/splash.component";
+import {PasswordChangeContainerComponent} from "./login/password-change/password-change-container.component";
+import {LoginContainerComponent} from "./login/login/login-container.component";
 
 
 const routes: Routes = [
@@ -12,6 +14,14 @@ const routes: Routes = [
   {
     path: 'splash',
     component: SplashComponent,
+  },
+  {
+    path: 'login',
+    component: LoginContainerComponent,
+  },
+  {
+    path: 'change-password',
+    component: PasswordChangeContainerComponent,
   },
   {
     path: 'print/tankLabels/:tankIds',

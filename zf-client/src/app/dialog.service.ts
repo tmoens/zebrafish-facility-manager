@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {CanDeactivateComponent} from './deactivation-guard/can-deactivate-component';
+import {CanDeactivateComponent} from './guards/can-deactivate-component';
 
 
 @Injectable()

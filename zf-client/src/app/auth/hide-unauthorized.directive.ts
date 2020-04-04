@@ -14,7 +14,6 @@ export class HideUnauthorizedDirective {
   }
 
   ngOnInit() {
-    console.log('made it in the hide unauthorized directive. required role: ' + this.requiredRole);
     if (!this.appStateService.canPerformRole(this.requiredRole)) {
       this.el.nativeElement.style.display = 'none';
     } else {
