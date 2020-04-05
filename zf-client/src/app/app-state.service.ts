@@ -224,4 +224,8 @@ export class AppStateService {
     const d = this.getState('errorMessageDuration');
     return d ? d : 4000;
   }
+
+  getLoggedInUserName(): string {
+    return (this.isAuthenticated) ? this.getAccessTokenPayload(this.accessToken).username : null;
+  }
 }

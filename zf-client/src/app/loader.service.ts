@@ -205,7 +205,7 @@ export class LoaderService {
    */
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T | null> => {
-      this.message.open(operation + '. ' + error.error.error,
+      this.message.open(operation + '. ' + error.error.message || error.status,
         null, {duration: this.appState.confirmMessageDuration});
       // Let the app keep running by returning what we were told to.
       return of(result as T);

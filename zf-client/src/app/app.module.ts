@@ -42,7 +42,6 @@ import {AuthTokenInterceptor} from "./auth/auth-token.interceptor";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {StorageServiceModule} from "ngx-webstorage-service";
 import {LoginGuardService} from "./guards/login-guard.service";
-import {ErrorInterceptor} from "./auth/http-error.interceptor";
 import {SplashComponent} from './splash/splash.component';
 import {StockService} from "./stock-manager/stock.service";
 import {UserAdminModule} from "./user-admin/user-admin.module";
@@ -123,7 +122,6 @@ export function stockServiceProviderFactory(provider: StockService) {
     LoginGuardService,
     RoleGuardService,
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
   ],
   exports: [],
   bootstrap: [AppComponent]

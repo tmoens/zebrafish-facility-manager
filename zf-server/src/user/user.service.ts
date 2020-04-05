@@ -1,12 +1,11 @@
 import {BadRequestException, Inject, Injectable, UnauthorizedException} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from './user.entity';
-import { plainToClass } from 'class-transformer';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {User} from './user.entity';
+import {plainToClass} from 'class-transformer';
 import {ResetPasswordDTO, UserDTO, UserPasswordChangeDTO} from "../common/user/UserDTO";
 import {Logger} from "winston";
 import {ADMIN_ROLE} from "../common/auth/zf-roles";
-const crypto = require('crypto');
 
 @Injectable()
 export class UserService {
@@ -69,7 +68,7 @@ export class UserService {
   async resetPassword(dto: ResetPasswordDTO): Promise<User> {
     const u: User = await this.findByUsernameOrEmail(dto.usernameOrEmail);
     if (!u) {
-      throw new UnauthorizedException('Can not reset password');
+      throw new UnauthorizedException('No such user.');
     }
     console.log('Setting random password for ' + u.username + ': ' + u.setRandomPassword());
     return this.repo.save(u);
