@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {LoaderService, ZFTypes} from '../loader.service';
+import {LoaderService} from '../loader.service';
 import {BehaviorSubject} from 'rxjs';
 import {MutationFilter} from './mutation-filter';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -11,6 +11,7 @@ import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
 import {TransgeneFilter} from "../transgene-manager/transgene-filter";
 import {Transgene} from "../transgene-manager/transgene";
+import {ZFTypes} from "../helpers/zf-types";
 
 /**
  * This is the model for mutation information displayed in the GUI.

@@ -4,7 +4,6 @@ import {PrintService} from '../print.service';
 import {AppStateService} from '../../app-state.service';
 import {TankLabelOption} from './tank-label';
 import {StockService} from '../../stock-manager/stock.service';
-import {ConfigService} from "../../config/config.service";
 
 export class TankLabel {
   rows: string[][] = [];
@@ -41,7 +40,6 @@ export class TankLabelComponent implements OnInit {
     private stockService: StockService,
     private printService: PrintService,
     private appStateService: AppStateService,
-    private configService: ConfigService,
   ) {
     this.tankIds = route.snapshot.params['tankIds']
       .split(',');
@@ -49,7 +47,7 @@ export class TankLabelComponent implements OnInit {
 
   ngOnInit() {
     this.tankLabels.fontPointSize =
-      this.configService.getConfig().tankLabelConfig.fontPointSize;
+      this.appStateService.getState('tankLabelPointSize');
     for (const tankId of this.tankIds) {
       this.tankLabels.addLabel(this.makeLabel(tankId));
     }
@@ -59,7 +57,7 @@ export class TankLabelComponent implements OnInit {
 
   makeLabel(tankId: string): TankLabel {
     const label = new TankLabel();
-    for (const row of this.configService.getConfig().tankLabelConfig.layout) {
+    for (const row of this.appStateService.getState('tankLabelLayout')) {
       const labelRow = [];
       for (const field of row) {
         switch (field) {

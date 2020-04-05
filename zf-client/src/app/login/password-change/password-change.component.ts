@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {LoaderService} from "../../loader.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {CONFIRM_MESSAGE_DURATION} from "../../constants";
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {UserPasswordChangeDTO} from "../../common/user/UserDTO";
 import {AppStateService} from "../../app-state.service";
 
@@ -62,7 +61,7 @@ export class PasswordChangeComponent implements OnInit {
         this.appState.onLogin(token.accessToken);
         this.message.open(
           "Your password has been changed.",
-          null, {duration: CONFIRM_MESSAGE_DURATION});
+          null, {duration: this.appState.confirmMessageDuration});
       }
     });
   }

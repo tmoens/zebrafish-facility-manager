@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {LoaderService, ZFTypes} from '../loader.service';
+import {LoaderService} from '../loader.service';
 import {ZfGenericClass} from './zfgeneric-class';
 import {map} from 'rxjs/operators';
 import {FieldOptions} from '../helpers/field-options';
-import {CONFIRM_MESSAGE_DURATION} from '../constants';
 import {ZfGenericFilter} from './zfgeneric-filter';
 import {AppStateService, ZFToolStates} from '../app-state.service';
+import {ZFTypes} from "../helpers/zf-types";
 
 /**
  * There is a service for every different type of object in the system.
@@ -194,7 +194,7 @@ export class ZFGenericService<
   update(item: FULL_OBJ) {
     this.loader.update(this.zfType, item).subscribe((result) => {
       if (result.id) {
-        this.message.open(this.zfType + ' updated.', null, {duration: CONFIRM_MESSAGE_DURATION});
+        this.message.open(this.zfType + ' updated.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(result.id);
         this.refresh();
       }
@@ -204,7 +204,7 @@ export class ZFGenericService<
   create(item: FULL_OBJ) {
     this.loader.create(this.zfType, item).subscribe((result) => {
       if (result.id) {
-        this.message.open(result.name + ' created.', null, {duration: CONFIRM_MESSAGE_DURATION});
+        this.message.open(result.name + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(result.id);
         this.refresh();
       }
@@ -216,7 +216,7 @@ export class ZFGenericService<
   createNext(item: FULL_OBJ) {
     this.loader.createNext(this.zfType, item).subscribe((result) => {
       if (result.id) {
-        this.message.open(result.name + ' created.', null, {duration: CONFIRM_MESSAGE_DURATION});
+        this.message.open(result.name + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(item.id);
         this.refresh();
       }
@@ -227,7 +227,7 @@ export class ZFGenericService<
   delete(id: number) {
     this.loader.delete(this.zfType, id).subscribe((result) => {
       if (result) {
-        this.message.open(result.name + ' deleted.', null, {duration: CONFIRM_MESSAGE_DURATION});
+        this.message.open(result.name + ' deleted.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(0);
         this.refresh();
       }

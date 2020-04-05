@@ -9,7 +9,6 @@ import {ConfigService} from "./config/config.service";
 export class AppComponent {
   title = 'zf-client';
 
-  constructor(configService: ConfigService) {
-    console.log(configService.getConfig());
+  constructor() {
   }
 }

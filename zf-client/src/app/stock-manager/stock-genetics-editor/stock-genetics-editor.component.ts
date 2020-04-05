@@ -3,11 +3,11 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {StockFull} from '../stockFull';
 import {ZfGenericClass} from '../../zf-generic/zfgeneric-class';
 import {ZfSelectionList} from '../../helpers/selection-list';
-import {ZFTypes} from '../../loader.service';
 import {StockService} from '../stock.service';
 import {Mutation} from '../../mutation-manager/mutation';
 import {Transgene} from '../../transgene-manager/transgene';
 import {classToClass} from 'class-transformer';
+import {ZFTypes} from "../../helpers/zf-types";
 
 /**
  * This dialog allows the user to indicate which mutations/transgenes are present

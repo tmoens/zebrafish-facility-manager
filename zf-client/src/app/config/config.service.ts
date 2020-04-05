@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ConfigModel} from "./config-model";
 import {HttpBackend, HttpClient} from "@angular/common/http";
-import {Location} from "@angular/common";
 import {environment} from "../../environments/environment";
+import {AppStateService} from "../app-state.service";
 
 /*
  * This service loads configuration information for a particular zebrafish facility.
@@ -29,7 +29,7 @@ export class ConfigService {
   // avoid the AuthTokenInterceptor being fired before configuration is loaded.
   constructor(
     private handler: HttpBackend,
-    private foo: Location,
+    private appStateService: AppStateService,
   ) {
     this.http = new HttpClient(handler);
   }
@@ -48,8 +48,12 @@ export class ConfigService {
       }
       this.http
         .get(url)
-        .subscribe(response => {
-          this.config = response as ConfigModel;
+        .subscribe((response:ConfigModel) => {
+          // Put the configuration information into the application state
+          this.appStateService.setState('facilityName', response.facilityName);
+          this.appStateService.setState('tankNumberingHint', response.tankNumberingHint);
+          this.appStateService.setState('tankLabelLayout', response.tankLabelConfig.layout);
+          this.appStateService.setState('tankLabelPointSize', response.tankLabelConfig.fontPointSize);
           resolve(true);
         })
     })

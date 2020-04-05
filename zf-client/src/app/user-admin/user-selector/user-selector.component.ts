@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LoaderService, ZFTypes} from "../../loader.service";
+import {LoaderService} from "../../loader.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AppStateService} from "../../app-state.service";
 import {UserDTO} from "../../common/user/UserDTO";
@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
 import {UserAdminService} from "../user-admin.service";
 import {debounceTime} from "rxjs/operators";
+import {ZFTypes} from "../../helpers/zf-types";
 
 @Component({
   selector: 'app-user-selector',

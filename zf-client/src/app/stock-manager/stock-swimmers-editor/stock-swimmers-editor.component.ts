@@ -9,6 +9,7 @@ import {Location} from '@angular/common';
 import {forkJoin, Observable} from 'rxjs';
 import {DialogService} from '../../dialog.service';
 import {ConfigService} from "../../config/config.service";
+import {AppStateService} from "../../app-state.service";
 
 /**
  * This Component allows the user to indicate tanks a particular stock is in.
@@ -24,7 +25,7 @@ enum SwimmerState {
 @Component({
   selector: 'app-stock-genetics-editor',
   templateUrl: './stock-swimmers-editor.component.html',
-  styleUrls: ['./stock-swimers-editor.component.scss']
+  styleUrls: ['./stock-swimmers-editor.component.scss']
 })
 export class StockSwimmersEditorComponent implements OnInit {
   stockId: number;
@@ -58,7 +59,7 @@ export class StockSwimmersEditorComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    public configService: ConfigService,
+    public appState: AppStateService,
     public stockService: StockService,
     public tankService: TankService,
     private _location: Location,

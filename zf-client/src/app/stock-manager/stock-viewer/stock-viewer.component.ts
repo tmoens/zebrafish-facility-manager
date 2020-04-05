@@ -5,10 +5,10 @@ import {StockGeneticsEditorComponent} from '../stock-genetics-editor/stock-genet
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {StockFull} from '../stockFull';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
-import {ZFTypes} from '../../loader.service';
 import {MutationService} from '../../mutation-manager/mutation.service';
 import {TransgeneService} from '../../transgene-manager/transgene.service';
 import {PrintService} from '../../printing/print.service';
+import {ZFTypes} from "../../helpers/zf-types";
 
 /**
  * Note to future self.

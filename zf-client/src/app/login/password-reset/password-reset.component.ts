@@ -2,9 +2,9 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {LoaderService} from "../../loader.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {CONFIRM_MESSAGE_DURATION} from "../../constants";
 import {FormBuilder, Validators} from "@angular/forms";
 import {UserDTO} from "../../common/user/UserDTO";
+import {AppStateService} from "../../app-state.service";
 
 @Component({
   selector: 'app-password-reset',
@@ -33,14 +33,12 @@ export class PasswordResetComponent implements OnInit {
     public dialogRef: MatDialogRef<PasswordResetComponent>,
     private loaderService: LoaderService,
     private message: MatSnackBar,
-    private loginDialog: MatDialog,
-    private fb: FormBuilder,
+    private appState: AppStateService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     if (data && data.username) {
       this.usernameOrEmail = data.username;
     }
-
   }
 
   ngOnInit(): void {
@@ -52,7 +50,7 @@ export class PasswordResetComponent implements OnInit {
         this.message.open(
           "A new password has been sent to " + u.email +
           ". Please use it to and change your password",
-          null, {duration: CONFIRM_MESSAGE_DURATION});
+          null, {duration: this.appState.confirmMessageDuration});
         this.dialogRef.close({username: u.username});
       }
     });

@@ -1,6 +1,6 @@
 // Typescript does not allow enums with values as objects.
 // The following is a clever workaround from the internet...
-import {ZFTypes} from "../loader.service";
+import {ZFTypes} from "./zf-types";
 
 export class ZFTool {
   static readonly SPLASH_LOGIN  = new ZFTool(

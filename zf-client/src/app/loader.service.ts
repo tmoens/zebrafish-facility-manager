@@ -1,23 +1,13 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError} from 'rxjs/operators';
-import {ERROR_MESSAGE_DURATION} from './constants';
-import {ConfigService} from "./config/config.service";
 import {StockFull} from "./stock-manager/stockFull";
 import {environment} from "../environments/environment"
 import {ResetPasswordDTO, UserPasswordChangeDTO} from "./common/user/UserDTO";
-
-export enum ZFTypes {
-  LOGIN = 'login',
-  MUTATION = 'mutation',
-  TRANSGENE = 'transgene',
-  TANK = 'tank',
-  SWIMMER = 'swimmer',
-  STOCK = 'stock',
-  USER = 'user'
-}
+import {AppStateService} from "./app-state.service";
+import {ZFTypes} from "./helpers/zf-types";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +18,7 @@ export class LoaderService {
   constructor(
     private http: HttpClient,
     private message: MatSnackBar,
-    private configService: ConfigService,
+    private appState: AppStateService,
   ) {
     if (environment.production) {
       this.serverURL = location.origin + '/zf-server';
@@ -216,7 +206,7 @@ export class LoaderService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T | null> => {
       this.message.open(operation + '. ' + error.error.error,
-        null, {duration: ERROR_MESSAGE_DURATION});
+        null, {duration: this.appState.confirmMessageDuration});
       // Let the app keep running by returning what we were told to.
       return of(result as T);
     };

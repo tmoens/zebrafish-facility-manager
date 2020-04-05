@@ -51,6 +51,11 @@ import {UserAdminModule} from "./user-admin/user-admin.module";
 import {RoleGuardService} from "./guards/role-guard.service";
 import {AuthModule} from "./auth/auth.module";
 import {LoginModule} from "./login/login.module";
+import {AppStateService} from "./app-state.service";
+
+export function appStateProviderFactory(provider: AppStateService) {
+  return () => provider.initialize();
+}
 
 export function configProviderFactory(provider: ConfigService) {
   return () => provider.load();
@@ -112,7 +117,8 @@ export function stockServiceProviderFactory(provider: StockService) {
     CanDeactivateComponent,
   ],
   providers: [
-    {provide: APP_INITIALIZER, useFactory: configProviderFactory, deps: [ConfigService], multi: true},
+    {provide: APP_INITIALIZER, useFactory: appStateProviderFactory, deps: [AppStateService], multi: true},
+    {provide: APP_INITIALIZER, useFactory: configProviderFactory, deps: [ConfigService, AppStateService], multi: true},
     {provide: APP_INITIALIZER, useFactory: stockServiceProviderFactory, deps: [StockService], multi: true},
     {provide: LocationStrategy, useClass: PathLocationStrategy},
     CanDeactivateGuard,

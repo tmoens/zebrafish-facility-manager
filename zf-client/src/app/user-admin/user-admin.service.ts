@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
-import {LoaderService, ZFTypes} from "../loader.service";
+import {LoaderService} from "../loader.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AppStateService} from "../app-state.service";
 import {UserDTO} from "../common/user/UserDTO";
 import {UserFilter} from "./user-filter";
 import {BehaviorSubject, Observable} from "rxjs";
+import {ZFTypes} from "../helpers/zf-types";
 
 @Injectable({
   providedIn: 'root'

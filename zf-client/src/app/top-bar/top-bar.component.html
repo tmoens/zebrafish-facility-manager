@@ -1,4 +1,4 @@
-<mat-toolbar *ngIf="appState.loggedIn$|async" fxLayoutGap="10px">
+<mat-toolbar *ngIf="appState.loggedIn$ | async" fxLayoutGap="10px">
   <button mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>menu</mat-icon>
   </button>
@@ -15,7 +15,7 @@
     <app-mutation-menu *ngIf="appState.activeTool === zfTool.MUTATION_MANAGER"></app-mutation-menu>
     <app-stock-menu *ngIf="appState.activeTool === zfTool.STOCK_MANAGER"></app-stock-menu>
   </mat-menu>
-  <span>{{appState.activeTool.display_name}} for {{configService.getConfig().facilityName}}</span>
+  <span>{{appState.activeTool.display_name}} for {{appState.getState('facilityName')}}</span>
   <span class="fill-remaining-space"></span>
   <button mat-button [disabled]="appState.activeTool === zfTool.STOCK_MANAGER"
           [routerLink]="zfTool.STOCK_MANAGER.route" color="primary">
@@ -42,7 +42,7 @@
 </mat-toolbar>
 <mat-toolbar *ngIf="!(appState.loggedIn$ | async)">
   <span>Zebrafish Facility Manager for
-    {{configService.getConfig().facilityName}}</span>
+    {{appState.getState('facilityName')}}</span>
   <span class="fill-remaining-space"></span>
   <button mat-button (click)="login()">Login</button>
 </mat-toolbar>

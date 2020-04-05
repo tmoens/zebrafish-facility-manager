@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {LoaderService, ZFTypes} from '../loader.service';
+import {LoaderService} from '../loader.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {StockFilter} from './stock-selector/stock-filter';
 import {FieldOptions} from '../helpers/field-options';
@@ -13,9 +13,9 @@ import {MutationService} from '../mutation-manager/mutation.service';
 import {Mutation} from '../mutation-manager/mutation';
 import {TransgeneService} from '../transgene-manager/transgene.service';
 import {Transgene} from '../transgene-manager/transgene';
-import {CONFIRM_MESSAGE_DURATION} from '../constants';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
+import {ZFTypes} from "../helpers/zf-types";
 
 /**
  * This is the model for stock information displayed in the GUI.
@@ -119,7 +119,7 @@ export class StockService extends ZFGenericService<
     this.loader.createSubStock(item).subscribe((result: StockFull) => {
       if (result.id) {
         const r = this.convertFullDto2Class(result as StockFull);
-        this.message.open(r.name + ' created.', null, {duration: CONFIRM_MESSAGE_DURATION});
+        this.message.open(r.name + ' created.', null, {duration: this.appStateServiceX.confirmMessageDuration});
         // It might seem right just to select the object you get back from the create call
         // rather than make another round trip to re-fetch the object from the server.
         // BUT the object you get back from the creation call is not reliable.  For

@@ -25,7 +25,6 @@ export class LoginContainerComponent implements OnInit {
   }
 
   openLoginDialog(username = null) {
-    console.log('wtf: ' + JSON.stringify({data: (username) ? {username: username} : {} }));
     const dialogRef = this.loginDialog.open(LoginComponent, {data: (username) ? {username: username} : {} });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result.reset) {

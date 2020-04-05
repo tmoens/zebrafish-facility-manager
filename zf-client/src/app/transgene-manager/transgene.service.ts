@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {LoaderService, ZFTypes} from '../loader.service';
+import {LoaderService} from '../loader.service';
 import {TransgeneFilter} from './transgene-filter';
 import {FieldOptions} from '../helpers/field-options';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {plainToClass} from "class-transformer";
+import {ZFTypes} from "../helpers/zf-types";
 
 /**
  * This is the model for transgene information displayed in the GUI.
