@@ -22,8 +22,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatMenuModule} from '@angular/material/menu';
-import {DragDropModule} from '@angular/cdk/drag-drop';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {CommonModule} from '@angular/common';
 
 @NgModule({
@@ -55,8 +53,6 @@ import {CommonModule} from '@angular/common';
     ReactiveFormsModule,
     MatMenuModule,
     FormsModule,
-    DragDropModule,
-    MatProgressSpinnerModule,
   ],
   exports: [
 

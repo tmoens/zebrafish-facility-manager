@@ -22,7 +22,6 @@ import {MatInputModule} from "@angular/material/input";
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatNativeDateModule} from "@angular/material/core";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatSelectModule} from "@angular/material/select";
 import {MatSidenavModule} from "@angular/material/sidenav";
@@ -40,7 +39,6 @@ import {StockGeneticsEditorComponent} from "./stock-manager/stock-genetics-edito
 import {CanDeactivateGuard} from "./guards/can-deactivate-guard";
 import {DialogService} from "./dialog.service";
 import {AuthTokenInterceptor} from "./auth/auth-token.interceptor";
-import {LoginComponent} from "./login/login/login.component";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {StorageServiceModule} from "ngx-webstorage-service";
 import {LoginGuardService} from "./guards/login-guard.service";
@@ -99,7 +97,6 @@ export function stockServiceProviderFactory(provider: StockService) {
     MatListModule,
     MatMenuModule,
     MatNativeDateModule,
-    MatProgressSpinnerModule,
     MatRadioModule,
     MatSelectModule,
     MatSidenavModule,
