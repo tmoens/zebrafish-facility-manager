@@ -14,7 +14,7 @@ import {AuthService} from "../auth/auth.service";
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {JwtAuthGuard2} from "../guards/jwt-auth.guard2";
 import {Role} from "../guards/role.decorator";
-import {ADMIN_ROLE, USER_ROLE} from "../common/auth/zf-roles";
+import {ADMIN_ROLE} from "../common/auth/zf-roles";
 import {RoleGuard} from "../guards/role-guard.service";
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -26,22 +26,23 @@ export class UserController {
   ) {
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Role(ADMIN_ROLE)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Get()
   async findFiltered(@Query('filter') filter): Promise<User[]> {
     return await this.service.findFiltered(filter);
   }
 
 
-  @UseGuards(JwtAuthGuard)
-  @Role(USER_ROLE)
-  @UseGuards(RoleGuard)
+  @Role(ADMIN_ROLE)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Post()
   async create(@Body() dto: UserDTO): Promise<User> {
+    console.log(JSON.stringify(dto));
     return this.service.create(dto);
   }
 
-  // Note the special AuthGuard, it doe not check for the "requiresPasswordChange" state.
+  // Note the special AuthGuard, it does not check for the "requiresPasswordChange" state.
   @UseGuards(JwtAuthGuard2)
   @Put('changePassword')
   async changePassword(@Request() req, @Body() dto: UserPasswordChangeDTO): Promise<any> {
@@ -56,24 +57,23 @@ export class UserController {
     return this.service.resetPassword(dto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Role(ADMIN_ROLE)
-  @UseGuards(RoleGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Put()
   async update(@Body() dto: UserDTO): Promise<User> {
     return this.service.update(dto);
   }
 
 
-  @UseGuards(JwtAuthGuard)
   @Role(ADMIN_ROLE)
-  @UseGuards(RoleGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Delete()
   async delete(@Body() dto: UserDTO): Promise<User> {
     return this.service.delete(dto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Role(ADMIN_ROLE)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Get(':id')
   async getById(@Param('id')  id: string): Promise<User> {
     return await this.service.findOne(id);
