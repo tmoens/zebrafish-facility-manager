@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {EditMode} from "../../zf-generic/zf-edit-modes";
 import {UserDTO} from "../../common/user/UserDTO";
 import {AbstractControl, FormBuilder, Validators} from "@angular/forms";
@@ -31,7 +31,7 @@ export class UserEditorComponent implements OnInit {
     id: [null],
     isActive: [true],
     name: [null],
-    passwordChangeRequired: [true],
+    passwordChangeRequired: [{value: '', disabled: true}],
     phone: [null],
     role: ['guest', [Validators.required]],
     username: [null, [Validators.required]],

@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import { LoaderService } from '../../loader.service';
-import { AppStateService } from '../../app-state.service';
+import {LoaderService} from '../../loader.service';
+import {AppStateService} from '../../app-state.service';
 
 @Component({
   selector: 'zfm-login',
@@ -15,7 +15,7 @@ import { AppStateService } from '../../app-state.service';
               <input matInput name="username"  type="text" placeholder="Username" [(ngModel)]="username">
             </mat-form-field>
             <mat-form-field>
-              <input matInput name="password" type="text"  placeholder="Password" [(ngModel)]="password">
+              <input matInput name="password" type="text" placeholder="Password" [(ngModel)]="password">
             </mat-form-field>
           </div>
         </div>
@@ -23,8 +23,10 @@ import { AppStateService } from '../../app-state.service';
           <div class="fill-remaining-space"></div>
           <button mat-button type="submit" color="primary">Submit</button>
         </div>
-        <p (click)="onForgotPassword()">Forgot Password...</p>
       </form>
+      <div style="height: 20px"></div>
+      <button mat-button (click)="onForgotPassword()" style="text-align: right; font-size: 12px">Forgot Password...
+      </button>
     </section>
 `,
 })

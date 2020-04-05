@@ -7,12 +7,43 @@ import {Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
 import {UserAdminService} from "../user-admin.service";
 import {debounceTime} from "rxjs/operators";
-import {ZFTypes} from "../../helpers/zf-types";
 
 @Component({
   selector: 'app-user-selector',
-  templateUrl: './user-selector.component.html',
-  styleUrls: ['./user-selector.component.scss']
+  template: `
+    <div fxFlex fxLayout="column" class="zf-container">
+      <!-- The Filter Part -->
+      <div>
+        <H4>User Filter</H4>
+        <form fxLayout="column" [formGroup]="mfForm">
+          <mat-form-field>
+            <input matInput type="text" placeholder="Search all fields" formControlName="filter">
+            <button mat-button matSuffix mat-icon-button (click)="clearFormControl('filter')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </form>
+      </div>
+
+      <!-- The Filtered List part -->
+      <div fxFlex style="padding-right: 2px">
+        <div *ngIf="service.users.length > 0">
+          <h4>Filtered List</h4>
+          <mat-list role="list" class="zf-selection-list" dense style="max-height: 550px">
+            <mat-list-item class="zf-selection-item" role="listitem" style="height: 30px"
+                           *ngFor="let item of service.users"
+                           [class.selected]="service.selected && item.id === this.service.selected.id"
+                           (click)="onSelect(item)">
+              {{item.email}}
+            </mat-list-item>
+          </mat-list>
+        </div>
+        <div *ngIf="service.users.length == 0">
+          <P>No users match the current filter, try relaxing the filter criteria. </P>
+        </div>
+      </div>
+    </div>
+  `,
 })
 export class UserSelectorComponent implements OnInit {
   filter = { filter: null};

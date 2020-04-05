@@ -21,6 +21,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatMenuModule} from '@angular/material/menu';
 import {CommonModule} from '@angular/common';
 import {AuthModule} from "../auth/auth.module";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import {AuthModule} from "../auth/auth.module";
     MatMenuModule,
     FormsModule,
     AuthModule,
+    MatCheckboxModule,
   ],
   exports: [
     MutationMenuComponent

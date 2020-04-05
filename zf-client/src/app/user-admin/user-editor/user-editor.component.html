@@ -1,6 +1,6 @@
 <div fxFlex class="zf-container" *ngIf="service.selected">
   <div class="zf-title">Edit User {{getFC('username').value}}</div>
-  <form fxLayout="column" [formGroup]="mfForm">
+  <form (ngSubmit)="save()" [formGroup]="mfForm" fxLayout="column">
     <div fxFlex="20px"></div>
 
     <mat-form-field>
@@ -27,12 +27,13 @@
 
     <mat-checkbox formControlName="isActive" color="primary">Activated</mat-checkbox>
 
+    <mat-checkbox color="primary" formControlName="passwordChangeRequired">Requires password change</mat-checkbox>
+
+    <div fxLayout="row" fxLayoutGap="10px">
+      <div class="fill-remaining-space"></div>
+      <button (click)="cancel()" color="primary" mat-button>Cancel</button>
+      <button (click)="revert()" [disabled]='mfForm.pristine' color="primary" mat-button>Revert</button>
+      <button [disabled]='!mfForm.valid || mfForm.pristine' color="primary" mat-button type="submit">Save</button>
+    </div>
   </form>
-  <div fxLayout="row" fxLayoutGap="10px">
-    <div class="fill-remaining-space"></div>
-    <button mat-button color="primary" (click)="cancel()">Cancel</button>
-    <button mat-button color="primary" [disabled]='mfForm.pristine' (click)="revert()">Revert</button>
-    <button mat-button type="submit" color="primary" [disabled]='!mfForm.valid || mfForm.pristine'
-            (click)="save()">Save</button>
-  </div>
 </div>

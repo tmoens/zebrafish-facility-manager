@@ -70,12 +70,13 @@
     <div *ngIf="service.filteredList.length > 0" >
       <h4>Filtered List</h4>
       <mat-list role="list" class="zf-selection-list" dense style="max-height: 450px">
-        <mat-list-item class="zf-selection-item" role="listitem" *ngFor="let s of service.filteredList"
-                       [class.selected]="service.selected && s.id == service.selected.id"
-                       matTooltip="{{s.tooltip}}" matTooltipClass="ttnl"
+        <mat-list-item (click)="onSelect(item)" *ngFor="let item of service.filteredList"
+                       [class.selected]="service.selected && item.id === service.selected.id"
+                       class="zf-selection-item"
+                       matTooltip="{{item.tooltip}}"
+                       matTooltipClass="ttnl" role="listitem"
                        style="height: 30px">
-          <button mat-button color="primary" (click)="onSelect(s)">{{s.name}}</button>
-          <span>{{s.description}}</span>
+          <span style="width:60px">{{item.name}}</span> {{item.description}}
         </mat-list-item>
       </mat-list>
     </div>

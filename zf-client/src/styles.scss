@@ -31,6 +31,8 @@
 }
 
 .zf-selection-item {
+  cursor: pointer;
+
   &:hover, &:active, &:focus {
     background-color: mat-color(map-get($zf-app-theme, background), hover);
   }

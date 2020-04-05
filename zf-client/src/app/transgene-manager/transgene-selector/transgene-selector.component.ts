@@ -8,8 +8,42 @@ import {Transgene} from '../transgene';
 
 @Component({
   selector: 'app-transgene-selector',
-  templateUrl: './transgene-selector.component.html',
-  styleUrls: ['./transgene-selector.component.scss']
+  template: `
+    <div fxFlex fxLayout="column" class="zf-container">
+      <!-- The Filter Part -->
+      <div>
+        <H4>Transgene Filter</H4>
+        <form fxLayout="column" [formGroup]="mfForm">
+          <mat-form-field>
+            <input matInput type="text" placeholder="Search all fields" formControlName="text">
+            <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
+                    (click)="clearFormControl('text')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </form>
+      </div>
+
+      <!-- The Filtered List part -->
+      <div fxFlex style="padding-right: 2px">
+        <div *ngIf="service.filteredList.length > 0">
+          <h4>Filtered List</h4>
+          <mat-list role="list" class="zf-selection-list" dense style="max-height: 550px">
+            <mat-list-item class="zf-selection-item" role="listitem" style="height: 30px"
+                           *ngFor="let item of service.filteredList"
+                           [class.selected]="service.selected && item.id === service.selected.id"
+                           matTooltip="{{item.tooltip}}" matTooltipClass="ttnl"
+                           (click)="onSelect(item)">
+              {{item.fullName}}
+            </mat-list-item>
+          </mat-list>
+        </div>
+        <div *ngIf="service.filteredList.length == 0">
+          <P>No transgenes match the current filter, try relaxing the filter criteria. </P>
+        </div>
+      </div>
+    </div>
+  `,
 })
 export class TransgeneSelectorComponent implements OnInit {
   // Build the filter form.
