@@ -1,12 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {EditMode} from "../../zf-generic/zf-edit-modes";
 import {UserDTO} from "../../common/user/UserDTO";
-import {AbstractControl, FormBuilder, Validators} from "@angular/forms";
+import {AbstractControl, AsyncValidatorFn, FormBuilder, ValidationErrors, Validators} from "@angular/forms";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {DialogService} from "../../dialog.service";
 import {UserAdminService} from "../user-admin.service";
 import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
 import {ZFRoles} from "../../common/auth/zf-roles";
+import {AppStateService} from "../../app-state.service";
 
 @Component({
   selector: 'app-user-editor',
@@ -27,14 +29,15 @@ export class UserEditorComponent implements OnInit {
   // but that is not automatically supplied as sync field validators
   // are typically context free.
   mfForm = this.fb.group({
-    email: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email], [existingEmailValidatorFn(this.service)]],
     id: [null],
-    isActive: [true],
+    isActive: [{value: true, disabled: true}],
+    isLoggedIn: [{value: false, disabled: true}],
     name: [null],
-    passwordChangeRequired: [{value: '', disabled: true}],
+    passwordChangeRequired: [{value: false, disabled: true}],
     phone: [null],
     role: ['guest', [Validators.required]],
-    username: [null, [Validators.required]],
+    username: [null, [Validators.required], [existingUsernameValidatorFn(this.service)]],
   } );
 
   constructor(
@@ -43,6 +46,7 @@ export class UserEditorComponent implements OnInit {
     private fb: FormBuilder,
     public service: UserAdminService,
     private deactivationDialogService: DialogService,
+    private appState: AppStateService,
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +63,9 @@ export class UserEditorComponent implements OnInit {
           break;
         case EditMode.CREATE:
           this.item = new UserDTO();
+          this.item.isActive = true;
+          this.item.isLoggedIn = false;
+          this.item.passwordChangeRequired = true;
           this.editMode = EditMode.CREATE;
           this.initialize();
           break;
@@ -69,6 +76,11 @@ export class UserEditorComponent implements OnInit {
 
   initialize() {
     this.mfForm.setValue(this.item);
+    // We do not want the admin user to degrade their own role in case there is
+    // no one left to administer the site.
+    if (this.item.id === this.appState.loggedInUserId()) {
+      this.getFC('role').disable();
+    }
   };
 
   save() {
@@ -113,4 +125,46 @@ export class UserEditorComponent implements OnInit {
     this.getFC(name).setValue(null);
   }
 
+  emailErrorMessage(): string {
+    const eFC = this.getFC('email');
+    if (eFC.hasError('required')) {
+      return 'email is required';
+    }
+    if (eFC.hasError('email')) {
+      return 'Invalid email';
+    }
+    if (eFC.hasError('inUse')) {
+      return 'Another user is using that e-mail';
+    }
+  }
+
+  usernameErrorMessage(): string {
+    const eFC = this.getFC('username');
+    if (eFC.hasError('required')) {
+      return 'email is required';
+    }
+    if (eFC.hasError('inUse')) {
+      return 'That username is taken';
+    }
+  }
+}
+
+function existingEmailValidatorFn(service: UserAdminService): AsyncValidatorFn {
+  return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+    return service.isEmailInUse(control.value).pipe(
+      map((result: boolean) => {
+        return result ? {inUse: true} : null;
+      })
+    )
+  };
+}
+
+function existingUsernameValidatorFn(service: UserAdminService): AsyncValidatorFn {
+  return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+    return service.isUsernameInUse(control.value).pipe(
+      map((result: boolean) => {
+        return result ? {inUse: true} : null;
+      })
+    )
+  };
 }

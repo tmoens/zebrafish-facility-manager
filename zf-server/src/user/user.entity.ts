@@ -1,8 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Exclude } from 'class-transformer';
-import {raw} from "@hapi/joi";
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Exclude} from 'class-transformer';
 import {GUEST_ROLE} from "../common/auth/zf-roles";
 import {random_password_generate} from "../helpers/pasword-generator";
+
 const crypto = require('crypto');
 
 @Entity()
@@ -16,7 +16,6 @@ export class User {
   username: string;
 
   @Column({
-    nullable: true,
     unique: true,
   })
   email: string;
@@ -36,10 +35,10 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column({ default: true })
+  @Column({default: true})
   passwordChangeRequired: boolean;
 
-  @Exclude({ toPlainOnly: true })
+  @Exclude({toPlainOnly: true})
   @Column({
     comment: ' stored encrypted'
   })
@@ -50,6 +49,11 @@ export class User {
     comment: 'salt differs for each user.'
   })
   salt: string;
+
+  @Column({
+    default: false,
+  })
+  isLoggedIn: boolean;
 
   initializeSalt() {
     this.salt = crypto.randomBytes(16).toString('hex');
@@ -68,7 +72,7 @@ export class User {
   }
 
   validatePassword(rawPassword: string): boolean {
-    return !!(this.password === this.encryptPassword(rawPassword));
+    return (this.password === this.encryptPassword(rawPassword));
   }
 
   encryptPassword(rawPassword: string) {

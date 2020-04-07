@@ -1,20 +1,26 @@
 import {BadRequestException, Inject, Injectable, UnauthorizedException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
 import {User} from './user.entity';
 import {plainToClass} from 'class-transformer';
 import {ResetPasswordDTO, UserDTO, UserPasswordChangeDTO} from "../common/user/UserDTO";
 import {Logger} from "winston";
 import {ADMIN_ROLE} from "../common/auth/zf-roles";
+import {JwtService} from "@nestjs/jwt";
+import {UserRepository} from "./user.repository";
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private repo: Repository<User>,
+    @InjectRepository(UserRepository) private readonly repo: UserRepository,
     @Inject('winston') private readonly logger: Logger,
+    private jwtService: JwtService,
   ) {
     this.makeSureAdminExists();
   }
+
+  // when a system starts up, it needs at least one user, in this case the admin user
+  // with the password admin and set up so that the user must change her password when
+  // they first log in.
   async makeSureAdminExists() {
     if (!await this.findByUserName('admin')) {
       const admin: User = await this.create({username: 'admin', role: ADMIN_ROLE, email: 'admin@admin.com'});
@@ -24,13 +30,27 @@ export class UserService {
     }
   }
 
+  async login(user: User): Promise<string> {
+    const token = this.buildToken(user);
+    user.isLoggedIn = true;
+    await this.repo.save(user);
+    return token;
+  }
+
+  async logout(user: User): Promise<boolean> {
+    user.isLoggedIn = false;
+    await this.repo.save(user);
+    return true;
+  }
 
   async findAll(): Promise<User[]> {
     return this.repo.find();
   }
 
   async findFiltered(filter: string): Promise<User[]> {
-    if (!filter) { return await this.findAll(); }
+    if (!filter) {
+      return await this.findAll();
+    }
     const f = "%" + filter + "%";
     return await this.repo.createQueryBuilder("u")
       .where("u.name LIKE :f", {f: f})
@@ -46,9 +66,18 @@ export class UserService {
     return this.repo.findOne(id);
   }
 
-  // TODO add "active" or "state" to the user entity and then filter on that state here.
-  findActiveUser(id: string): Promise<User> {
-    return this.repo.findOne(id);
+  async doesUsernameExist(username: string): Promise<boolean> {
+    const u: User = await this.repo.findOne({where: {username: username}});
+    return !!(u);
+  }
+
+  async doesEmailExist(email: string): Promise<boolean> {
+    const u: User = await this.repo.findOne({where: {email: email}});
+    return !!(u);
+  }
+
+  async findActiveUser(id: string): Promise<User> {
+    return this.repo.findActive(id);
   }
 
   async remove(id: string): Promise<void> {
@@ -85,7 +114,7 @@ export class UserService {
 
   async update(dto: UserDTO): Promise<User> {
     if (!dto.id) {
-      const message = "Something is fishy, received a user update without a user id!";
+      const message = "Received a user update without a user id!";
       this.logger.error(message);
       throw new BadRequestException(message);
     }
@@ -95,9 +124,43 @@ export class UserService {
     return this.repo.save(u);
   }
 
+  async activate(dto: UserDTO): Promise<User> {
+    if (!dto.id) {
+      const message = "Received a user update without a user id!";
+      this.logger.error(message);
+      throw new BadRequestException(message);
+    }
+    const u: User = await this.repo.findOneOrFail(dto.id);
+    u.isActive = true;
+    return this.repo.save(u);
+  }
+
+  async deactivate(dto: UserDTO): Promise<User> {
+    if (!dto.id) {
+      const message = "Received a user update without a user id!";
+      this.logger.error(message);
+      throw new BadRequestException(message);
+    }
+    const u: User = await this.repo.findOneOrFail(dto.id);
+    u.isActive = false;
+    u.isLoggedIn = false;
+    return this.repo.save(u);
+  }
+
+  async forceLogout(dto: UserDTO): Promise<User> {
+    if (!dto.id) {
+      const message = "Received a user update without a user id!";
+      this.logger.error(message);
+      throw new BadRequestException(message);
+    }
+    const u: User = await this.repo.findOneOrFail(dto.id);
+    u.isLoggedIn = false;
+    return this.repo.save(u);
+  }
+
   async validateUserByPassword(username: string, pass: string): Promise<User> {
     const user = await this.findByUserName(username);
-    if (user && user.isActive && user.validatePassword(pass)) {
+    if (user && user.validatePassword(pass)) {
       // Note we return the user with encrypted password and salt. We could remove those here.
       // However, the user is ultimately returned with ClassSerializerInterceptor which applies
       // the @Exclude annotation on these fields.  So bottom line, they do not get exported.
@@ -106,14 +169,15 @@ export class UserService {
     return null;
   }
 
-  async changePassword(u: User, dto: UserPasswordChangeDTO): Promise<User> {
+  async changePassword(u: User, dto: UserPasswordChangeDTO): Promise<string> {
     if (!u.validatePassword(dto.currentPassword)) {
-      const message = 'password change for ' + u.username + ' with incorrect old password';
+      const message = 'Attempted password change for ' + u.username + ' with incorrect current password';
       this.logger.error(message);
-      throw new BadRequestException("Incorrect old password");
+      throw new BadRequestException(message);
     }
     u.setPassword(dto.newPassword);
-    return this.repo.save(u);
+    await this.repo.save(u);
+    return this.buildToken(u);
   }
 
   async delete(id: string): Promise<any> {
@@ -123,6 +187,16 @@ export class UserService {
 
   async findByUserName(username: string): Promise<User | undefined> {
     return await this.repo.findOne({where: {username: username}});
+  }
+
+  buildToken(user: User): string {
+    const payload = {
+      username: user.username,
+      sub: user.id,
+      role: user.role,
+      passwordChangeRequired: user.passwordChangeRequired
+    };
+    return this.jwtService.sign(payload);
   }
 
 }

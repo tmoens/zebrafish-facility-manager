@@ -258,4 +258,10 @@ export class AppStateService {
   getLoggedInUserName(): string {
     return (this.isAuthenticated) ? this.getAccessTokenPayload(this.accessToken).username : null;
   }
+
+  loggedInUserId(): string {
+    return (this.isAuthenticated) ? this.getAccessTokenPayload(this.accessToken).sub : null;
+  }
+
+
 }

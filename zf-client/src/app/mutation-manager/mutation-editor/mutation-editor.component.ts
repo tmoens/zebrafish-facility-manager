@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {MutationDto} from '../mutation-dto';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {AbstractControl, FormBuilder, ValidationErrors, Validators} from '@angular/forms';
 import {MutationService} from '../mutation.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {serialize, classToPlain, plainToClass} from 'class-transformer';
+import {classToPlain} from 'class-transformer';
 import {map, startWith} from 'rxjs/operators';
 import {Mutation} from '../mutation';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
@@ -25,7 +25,6 @@ export class MutationEditorComponent implements OnInit {
   item: MutationDto;
   editMode: EditMode;
   id: number;
-  test: number = Math.random();
   saved = false;
 
   // Build the edit form.

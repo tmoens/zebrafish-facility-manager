@@ -120,4 +120,36 @@ export class UserAdminService {
         this.applyFilter();
       })
   }
+
+  activate(u: UserDTO) {
+    this.loader.activate(u)
+      .subscribe((u: UserDTO) => {
+        this.select(u);
+        this.applyFilter();
+      })
+  }
+
+  deactivate(u: UserDTO) {
+    this.loader.deactivate(u)
+      .subscribe((u: UserDTO) => {
+        this.select(u);
+        this.applyFilter();
+      })
+  }
+
+  forceLogout(u: UserDTO) {
+    this.loader.forceLogout(u)
+      .subscribe((u: UserDTO) => {
+        this.select(u);
+        this.applyFilter();
+      })
+  }
+
+  isEmailInUse(email: string): Observable<boolean> {
+    return this.loader.isEmailInUse(email);
+  }
+
+  isUsernameInUse(email: string): Observable<boolean> {
+    return this.loader.isUsernameInUse(email);
+  }
 }

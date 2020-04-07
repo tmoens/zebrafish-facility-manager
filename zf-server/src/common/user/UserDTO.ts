@@ -2,6 +2,7 @@ export class UserDTO {
   id?: string;
   email?: string;
   isActive?: boolean;
+  isLoggedIn?: boolean;
   name?: string;
   passwordChangeRequired?: boolean;
   phone?: string;

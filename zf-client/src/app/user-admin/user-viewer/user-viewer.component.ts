@@ -4,6 +4,7 @@ import {FormBuilder} from "@angular/forms";
 import {EditMode} from "../../zf-generic/zf-edit-modes";
 import {UserAdminService} from "../user-admin.service";
 import {UserDTO} from "../../common/user/UserDTO";
+import {AppStateService} from "../../app-state.service";
 
 @Component({
   selector: 'app-user-viewer',
@@ -16,6 +17,7 @@ export class UserViewerComponent implements OnInit {
     email: [{value: '', disabled: true}],
     id: [{value: '', disabled: true}],
     isActive: [{value: '', disabled: true}],
+    isLoggedIn: [{value: '', disabled: true}],
     name: [{value: '', disabled: true}],
     passwordChangeRequired: [{value: '', disabled: true}],
     phone: [{value: '', disabled: true}],
@@ -23,16 +25,19 @@ export class UserViewerComponent implements OnInit {
     username: [{value: '', disabled: true}],
   });
 
+  user: UserDTO = null;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     public service: UserAdminService,
     private fb: FormBuilder,
+    public appState: AppStateService,
   ) { }
 
   ngOnInit(): void {
     this.service.selected$.subscribe((u: UserDTO) => {
       if (u) {
+        this.user = u;
         this.mfForm.setValue(u);
       }
     });
@@ -68,4 +73,5 @@ export class UserViewerComponent implements OnInit {
       mode: EditMode.EDIT,
     }]);
   }
+
 }

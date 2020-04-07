@@ -5,9 +5,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError} from 'rxjs/operators';
 import {StockFull} from "./stock-manager/stockFull";
 import {environment} from "../environments/environment"
-import {ResetPasswordDTO, UserPasswordChangeDTO} from "./common/user/UserDTO";
+import {ResetPasswordDTO, UserDTO, UserPasswordChangeDTO} from "./common/user/UserDTO";
 import {AppStateService} from "./app-state.service";
 import {ZFTypes} from "./helpers/zf-types";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ export class LoaderService {
     private http: HttpClient,
     private message: MatSnackBar,
     private appState: AppStateService,
+    private router: Router,
   ) {
     if (environment.production) {
       this.serverURL = location.origin + '/zf-server';
@@ -28,20 +30,41 @@ export class LoaderService {
   }
 
   login(username: string, password: string) {
-    return this.http.post(this.serverURL + '/auth/login', {username, password})
+    return this.http.post(this.serverURL + '/user/login', {username, password})
       .pipe(
         catchError(this.handleError('Login failed', null))
       );
   }
 
   logout() {
-    return this.http.post(this.serverURL + '/auth/logout', {})
+    return this.http.post(this.serverURL + '/user/logout', {})
       .pipe(
         catchError(this.handleError('Logout failed', null))
       );
   }
 
-  resetPassword(dto: ResetPasswordDTO) {
+  activate(user: UserDTO): Observable<UserDTO> {
+    return this.http.put(this.serverURL + '/user/activate', user)
+      .pipe(
+        catchError(this.handleError('activate user', null))
+      );
+  }
+
+  deactivate(user: UserDTO): Observable<UserDTO> {
+    return this.http.put(this.serverURL + '/user/deactivate', user)
+      .pipe(
+        catchError(this.handleError('deactivate user', null))
+      );
+  }
+
+  forceLogout(user: UserDTO): Observable<UserDTO> {
+    return this.http.put(this.serverURL + '/user/forceLogout', user)
+      .pipe(
+        catchError(this.handleError('force logout', null))
+      );
+  }
+
+  resetPassword(dto: ResetPasswordDTO): Observable<any> {
     console.log(dto);
     return this.http.put(this.serverURL + '/user/resetPassword', dto)
       .pipe(
@@ -50,12 +73,26 @@ export class LoaderService {
 
   }
 
-  passwordChange(dto: UserPasswordChangeDTO) {
+  passwordChange(dto: UserPasswordChangeDTO): Observable<UserDTO> {
     return this.http.put(this.serverURL + '/user/changePassword', dto)
       .pipe(
-        catchError(this.handleError('Reset Password', null))
+        catchError(this.handleError('Change Password', null))
       );
 
+  }
+
+  isEmailInUse(email: string): Observable<any> {
+    return this.http.get(this.serverURL + '/user/isEmailInUse/' + email)
+      .pipe(
+        catchError(this.handleError('check email uniqueness', null))
+      );
+  }
+
+  isUsernameInUse(email: string): Observable<any> {
+    return this.http.get(this.serverURL + '/user/isUsernameInUse/' + email)
+      .pipe(
+        catchError(this.handleError('check username uniqueness', null))
+      );
   }
 
   getFilteredList(type: ZFTypes, filter: any): Observable<any> {
@@ -206,8 +243,15 @@ export class LoaderService {
    */
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T | null> => {
-      this.message.open(operation + '. ' + error.error.message || error.status,
-        null, {duration: this.appState.confirmMessageDuration});
+      if (401 === error.status && this.appState.isAuthenticated) {
+        this.message.open('Your session has ended unexpectedly',
+          null, {duration: this.appState.confirmMessageDuration});
+        this.appState.onLogout();
+        this.router.navigateByUrl('/login')
+      } else {
+        this.message.open(operation + '. ' + error.error.message || error.status,
+          null, {duration: this.appState.confirmMessageDuration});
+      }
       // Let the app keep running by returning what we were told to.
       return of(result as T);
     };

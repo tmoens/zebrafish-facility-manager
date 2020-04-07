@@ -4,16 +4,15 @@
     <div fxFlex="20px"></div>
 
     <mat-form-field>
-      <input type="text" matInput placeholder="Username" formControlName="username">
+      <input formControlName="username" matInput placeholder="Username" required type="text">
+      <mat-error *ngIf="getFC('email').invalid">{{usernameErrorMessage()}}</mat-error>
     </mat-form-field>
 
-    <mat-form-field *ngIf="service.selected.name">
-      <input matInput type="text" placeholder="Name" formControlName="name">
+    <mat-form-field>
+      <input formControlName="email" matInput placeholder="Email" required type="email">
+      <mat-error *ngIf="getFC('email').invalid">{{emailErrorMessage()}}</mat-error>
     </mat-form-field>
 
-    <mat-form-field >
-      <input matInput type="email" placeholder="Email" formControlName="email">
-    </mat-form-field>
 
     <mat-form-field *ngIf="service.selected.phone">
       <input matInput type="text" placeholder="Phone" formControlName="phone">
@@ -24,10 +23,6 @@
         <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
       </mat-select>
     </mat-form-field>
-
-    <mat-checkbox formControlName="isActive" color="primary">Activated</mat-checkbox>
-
-    <mat-checkbox color="primary" formControlName="passwordChangeRequired">Requires password change</mat-checkbox>
 
     <div fxLayout="row" fxLayoutGap="10px">
       <div class="fill-remaining-space"></div>
