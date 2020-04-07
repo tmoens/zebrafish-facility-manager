@@ -116,13 +116,13 @@ export class UserService {
     return this.repo.save(u);
   }
 
-  async delete(dto: UserDTO): Promise<any> {
-    const u: User = await this.repo.findOneOrFail(dto.id);
+  async delete(id: string): Promise<any> {
+    const u: User = await this.repo.findOneOrFail(id);
     return await this.repo.remove(u);
   }
 
   async findByUserName(username: string): Promise<User | undefined> {
-    return await this.repo.findOne({where: { username: username}});
+    return await this.repo.findOne({where: {username: username}});
   }
 
 }

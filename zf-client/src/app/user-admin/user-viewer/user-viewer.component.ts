@@ -42,7 +42,7 @@ export class UserViewerComponent implements OnInit {
       // if there is an id in the route, tell the service to select it.
       const id = pm.get('id');
       if (id) {
-        this.service.selectById(id);
+        this.service.selectByIdAndLoad(id);
       } else {
         // if not, lets see if there is one already selected and if so, navigate to it.
         if (this.service.selected) {
@@ -50,13 +50,16 @@ export class UserViewerComponent implements OnInit {
         }
       }
     });
-
   }
 
   create() {
     this.router.navigate(['user_admin/' + EditMode.CREATE, {
       mode: EditMode.CREATE,
     }]);
+  }
+
+  delete(id: string) {
+    this.service.delete(id)
   }
 
   edit() {

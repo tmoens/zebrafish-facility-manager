@@ -105,7 +105,7 @@ export class LoaderService {
       );
   }
 
-  delete(type: ZFTypes, id: number) {
+  delete(type: ZFTypes, id: number | string) {
     return this.http.delete(this.serverURL + '/' + type + '/' + id)
       .pipe(
         catchError(this.handleError('Delete ' + type + '.', null))

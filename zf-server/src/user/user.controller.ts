@@ -1,10 +1,15 @@
 import {
   Body,
   ClassSerializerInterceptor,
-  Controller, Delete,
+  Controller,
+  Delete,
   Get,
   Param,
-  Post, Put, Query, Request, UseGuards,
+  Post,
+  Put,
+  Query,
+  Request,
+  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import {UserService} from './user.service';
@@ -67,9 +72,9 @@ export class UserController {
 
   @Role(ADMIN_ROLE)
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Delete()
-  async delete(@Body() dto: UserDTO): Promise<User> {
-    return this.service.delete(dto);
+  @Delete(':id')
+  async delete(@Param('id')  id: string): Promise<User> {
+    return this.service.delete(id);
   }
 
   @Role(ADMIN_ROLE)

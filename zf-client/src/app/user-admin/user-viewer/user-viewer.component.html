@@ -6,11 +6,15 @@
     <mat-menu #menu="matMenu">
       <button mat-menu-item color="primary" (click)="edit()">
         <mat-icon>edit</mat-icon>
-        <span>Edit {{service.selected.username}}</span>
+        <span>Edit {{service.selected.email}}</span>
       </button>
-      <button mat-menu-item (click)="create()">
+      <button (click)="create()" mat-menu-item>
         <mat-icon>add</mat-icon>
         <span>Create User</span>
+      </button>
+      <button (click)="delete(service.selected.id)" mat-menu-item>
+        <mat-icon>delete</mat-icon>
+        <span>Delete {{service.selected.email}}</span>
       </button>
     </mat-menu>
     <span class="zf-title">User Details</span>

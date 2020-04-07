@@ -147,7 +147,6 @@ export class ZFGenericService<
   }
 
   // the selection operation by id.
-  // go get the item from the server and select it.
   // A bad id leaves us with nothing selected.
   setSelectedId(id: number) {
     if (id) {

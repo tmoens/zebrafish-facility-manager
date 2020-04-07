@@ -51,6 +51,7 @@ export class ConfigService {
         .subscribe((response:ConfigModel) => {
           // Put the configuration information into the application state
           this.appStateService.setState('facilityName', response.facilityName);
+          this.appStateService.setState('facilityAbbrv', response.facilityAbbrv);
           this.appStateService.setState('tankNumberingHint', response.tankNumberingHint);
           this.appStateService.setState('tankLabelLayout', response.tankLabelConfig.layout);
           this.appStateService.setState('tankLabelPointSize', response.tankLabelConfig.fontPointSize);
