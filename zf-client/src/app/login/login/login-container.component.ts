@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {LoginComponent} from "./login.component";
 import {PasswordResetComponent} from "../password-reset/password-reset.component";
@@ -12,8 +12,12 @@ import {PasswordResetComponent} from "../password-reset/password-reset.component
 
 @Component({
   selector: 'app-login-container',
-  template: ``,
+  template: `
+    <div class="scary-fish-bg"></div>
+  `,
+  styleUrls: ['./login-container.scss']
 })
+
 export class LoginContainerComponent implements OnInit {
 
   constructor(
