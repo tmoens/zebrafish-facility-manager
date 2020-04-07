@@ -1,4 +1,5 @@
 import {Inject, Injectable} from "@nestjs/common";
+import {Request, Response} from 'express';
 import {Logger} from "winston";
 
 @Injectable()
@@ -7,8 +8,7 @@ export class LoggerMiddleware {
     @Inject('winston') private readonly logger: Logger,
   ) {}
 
-  use(req, res, next) {
-    this.logger.info(req.url);
+  use(req: Request, res: Response, next) {
     next();
   }
 }

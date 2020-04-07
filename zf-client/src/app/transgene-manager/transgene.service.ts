@@ -1,9 +1,8 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {LoaderService} from '../loader.service';
 import {TransgeneFilter} from './transgene-filter';
 import {FieldOptions} from '../helpers/field-options';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
-import {BehaviorSubject} from 'rxjs';
 import {Transgene} from './transgene';
 import * as XLSX from 'xlsx';
 import {AppStateService, ZFToolStates} from '../app-state.service';
@@ -22,21 +21,13 @@ import {ZFTypes} from "../helpers/zf-types";
 })
 export class TransgeneService extends ZFGenericService<Transgene, Transgene, TransgeneFilter> {
 
-  // This is a cache that is used in several places.
-  // It is only refreshed when the user performs some operation that will
-  // change the content of the cache.
-  // TODO it probably should refresh automatically periodically.
-  private _all$: BehaviorSubject<Transgene[]> = new BehaviorSubject<Transgene[]>([]);
-  get all(): Transgene[] { return this._all$.value; }
-
-  // Note that initialization is done in the constructor here as ngOnInit is not called for services
   constructor(
-    private readonly loaderForGeneric: LoaderService,
-    private snackBarForGeneric: MatSnackBar,
-    private appStateServiceX: AppStateService,
+    private readonly loader: LoaderService,
+    private snackBar: MatSnackBar,
+    private appState: AppStateService,
   ) {
-    super(ZFTypes.TRANSGENE, loaderForGeneric, snackBarForGeneric, appStateServiceX);
-    this.appStateServiceX.loggedIn$.subscribe( (loggedIn: boolean) => {
+    super(ZFTypes.TRANSGENE, loader, snackBar, appState);
+    this.appState.loggedIn$.subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.initialize();
       }
@@ -44,12 +35,11 @@ export class TransgeneService extends ZFGenericService<Transgene, Transgene, Tra
   }
 
   initialize() {
-    const storedFilter  = this.appStateServiceX.getToolState(ZFTypes.TRANSGENE, ZFToolStates.FILTER);
+    const storedFilter = this.appState.getToolState(ZFTypes.TRANSGENE, ZFToolStates.FILTER);
     if (storedFilter) {
       this.setFilter(storedFilter);
     } else {
       const filter = plainToClass(TransgeneFilter, {});
-      console.log(ZFTypes.TRANSGENE + ' empty filter: ' + JSON.stringify(filter));
       this.setFilter(filter);
     }
 
@@ -68,17 +58,6 @@ export class TransgeneService extends ZFGenericService<Transgene, Transgene, Tra
   // Data comes from the server as a dto, this just converts to the corresponding class
   convertFullDto2Class(dto): any {
     return plainToClass(Transgene, dto);
-  }
-
-  refresh() {
-    super.refresh();
-    this.loadAllTransgenes();
-  }
-
-  loadAllTransgenes() {
-    this.loader.getFilteredList(ZFTypes.TRANSGENE, {}).subscribe((data) => {
-      this._all$.next(data.map(m => this.convertSimpleDto2Class(m)));
-    });
   }
 
   uniquenessValidator(name: string): boolean {

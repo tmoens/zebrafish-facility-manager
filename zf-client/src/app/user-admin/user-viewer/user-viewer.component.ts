@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
 import {EditMode} from "../../zf-generic/zf-edit-modes";
@@ -37,11 +37,17 @@ export class UserViewerComponent implements OnInit {
       }
     });
 
-
+    // use the route's paramMap to figure out the id of the item we are supposed to view.
     this.route.paramMap.subscribe((pm: ParamMap) => {
+      // if there is an id in the route, tell the service to select it.
       const id = pm.get('id');
       if (id) {
         this.service.selectById(id);
+      } else {
+        // if not, lets see if there is one already selected and if so, navigate to it.
+        if (this.service.selected) {
+          this.router.navigateByUrl('user_admin/view/' + this.service.selected.id, {replaceUrl: true});
+        }
       }
     });
 

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, interval, Observable} from 'rxjs';
 import {LoaderService} from '../loader.service';
 import {ZfGenericClass} from './zfgeneric-class';
 import {map} from 'rxjs/operators';
@@ -47,7 +47,6 @@ export class ZFGenericService<
   // It is FULL because it *does* (or can) contain related objects.  So, it is used
   // for things like the selectedObject.
   FULL_OBJ extends ZfGenericClass,
-
   // Note to future self: for Transgenes and Mutations the simple and full classes
   // are the same. For Stocks, they are not even close.
 
@@ -55,18 +54,27 @@ export class ZFGenericService<
   FILTER extends ZfGenericFilter> {
 
   // Some extensions like transgeneService and mutationService will cache all instances and
-  // make them available.  This dummy implementation is for others.
-  get all(): ZfGenericClass[] { return []; }
+  // make them available.
+  private _all$: BehaviorSubject<SIMPLE_OBJ[]> = new BehaviorSubject<SIMPLE_OBJ[]>([]);
+  // Flag indicating that the service is meant to cache all instances of this type.
+  private cacheAll: boolean;
+  // get all(): ZfGenericClass[] { return []; }
 
   // This is the currently selected item.
   // It is in focus as far as the GUI is concerned.
   protected _selected$: BehaviorSubject<FULL_OBJ> = new BehaviorSubject<FULL_OBJ>(null);
-  get selected$(): BehaviorSubject<FULL_OBJ> { return this._selected$; }
-  get selected(): FULL_OBJ { return this.selected$.value; }
+  get selected$(): BehaviorSubject<FULL_OBJ> {
+    return this._selected$;
+  }
 
+  get selected(): FULL_OBJ {
+    return this.selected$.value;
+  }
 
   private _filter: FILTER;
-  get filter(): FILTER { return this._filter; }
+  get filter(): FILTER {
+    return this._filter;
+  }
 
   // private _filteredList$: BehaviorSubject<SIMPLE_OBJ[]> = new BehaviorSubject<SIMPLE_OBJ[]>([]);
   // private get filteredList$(): BehaviorSubject<SIMPLE_OBJ[]> { return this._filteredList$; }
@@ -87,25 +95,34 @@ export class ZFGenericService<
   get fieldOptions(): FieldOptions { return this._fieldOptions; }
 
   constructor(
-
-    // this is used to tell the loader what type to use in server calls.
+    // this is used to tell the loaderService what type to use in server calls.
     private zfType: ZFTypes, // stock, mutation or transgene.
 
     // The loaderService is used in all instances of the generic service
     // but I cannot figure out how to inject it into the generic service.
     // So, instead every instance does the injection and passes it to
     // the generic service in it's super call.
-    protected readonly loader: LoaderService,
-
+    protected readonly loaderService: LoaderService,
     // The snackbar is used to give quick progress messages and like the
-    // loader, I cannot figure out how to inject one in this generic class.
-    protected message: MatSnackBar,
-
+    // loaderService, I cannot figure out how to inject one in this generic class.
+    protected messageService: MatSnackBar,
     private appStateService: AppStateService,
-
   ) {
-    // TODO remove following kludge - work required
-    if (this.zfType === ZFTypes.TANK) { return; }
+    // problem: I want to pass to the constructor a flag indicating whether or not the
+    // service is meant to cache the full list of instances of this zfType.
+    // However if I use: private cacheAll: boolean = false, of course angular tries
+    // to inject cacheAll, which it cannot do. at least I know for now that only
+    // transgenes and mutations want to cache all, so...
+    // TODO Remove this kludge
+    this.cacheAll = (this.zfType === ZFTypes.TRANSGENE || this.zfType === ZFTypes.MUTATION);
+
+    // auto-refresh the service's data every so often
+    const source: Observable<any> = interval(appStateService.backgroundDataRefreshInterval);
+    source.subscribe(_ => this.refresh());
+  }
+
+  get all(): SIMPLE_OBJ[] {
+    return this._all$.value;
   }
 
   // Data comes from the server as a dto, this just converts to the corresponding class
@@ -121,9 +138,10 @@ export class ZFGenericService<
   }
 
   // load the set of currently known values for some fields
+
   // These are used primarily for auto-complete fields in the GUI
   loadFieldOptions() {
-    this.loader.getFieldOptions(this.zfType).subscribe((data:  {[key: string]: string[]}) => {
+    this.loaderService.getFieldOptions(this.zfType).subscribe((data: { [key: string]: string[] }) => {
       this._fieldOptions.fillFromPlain(data);
     });
   }
@@ -161,9 +179,19 @@ export class ZFGenericService<
     this.loadSelected();
   }
 
+  getFirstFiltered(): number {
+    return (this.filteredList.length > 0) ? this.filteredList[0].id : 0;
+  }
+
+  loadAll() {
+    this.loaderService.getFilteredList(this.zfType, {}).subscribe((data) => {
+      this._all$.next(data.map(item => this.convertSimpleDto2Class(item)));
+    })
+  }
+
   // fetch an instance from the server.
   getById(id: number): Observable<FULL_OBJ> {
-    return this.loader.getInstance(this.zfType, id).pipe(
+    return this.loaderService.getInstance(this.zfType, id).pipe(
       map(m => this.convertFullDto2Class(m))
     );
   }
@@ -174,17 +202,14 @@ export class ZFGenericService<
 
   applyFilter() {
     this.appStateService.setToolState(this.zfType, ZFToolStates.FILTER, this.filter);
-    this.loader.getFilteredList(this.zfType, this.filter)
+    this.loaderService.getFilteredList(this.zfType, this.filter)
       .subscribe((dtoList: any[]) => {
         this._filteredList = dtoList.map(item => this.convertSimpleDto2Class(item));
-        if (!this.selected && this.filteredList.length > 0) {
-          this.selectByIdAndLoad(this.filteredList[0].id);
-        }
       });
   }
 
   getLikelyNextName() {
-    this.loader.getLikelyNextName(this.zfType).subscribe(data => {
+    this.loaderService.getLikelyNextName(this.zfType).subscribe(data => {
       if (data['name'] !== this.likelyNextName) {
         this.likelyNextName$.next(data['name']);
       }
@@ -192,9 +217,9 @@ export class ZFGenericService<
   }
 
   update(item: FULL_OBJ) {
-    this.loader.update(this.zfType, item).subscribe((result) => {
+    this.loaderService.update(this.zfType, item).subscribe((result) => {
       if (result.id) {
-        this.message.open(this.zfType + ' updated.', null, {duration: this.appStateService.confirmMessageDuration});
+        this.messageService.open(this.zfType + ' updated.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(result.id);
         this.refresh();
       }
@@ -202,9 +227,9 @@ export class ZFGenericService<
   }
 
   create(item: FULL_OBJ) {
-    this.loader.create(this.zfType, item).subscribe((result) => {
+    this.loaderService.create(this.zfType, item).subscribe((result) => {
       if (result.id) {
-        this.message.open(result.name + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
+        this.messageService.open(result.name + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(result.id);
         this.refresh();
       }
@@ -214,31 +239,37 @@ export class ZFGenericService<
   // just like create except it tells the server to use the server assigned name
   // and not some user chosen name
   createNext(item: FULL_OBJ) {
-    this.loader.createNext(this.zfType, item).subscribe((result) => {
+    this.loaderService.createNext(this.zfType, item).subscribe((result) => {
       if (result.id) {
-        this.message.open(result.name + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
+        this.messageService.open(result.name + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(item.id);
         this.refresh();
       }
     });
   }
 
-
   delete(id: number) {
-    this.loader.delete(this.zfType, id).subscribe((result) => {
+    this.loaderService.delete(this.zfType, id).subscribe((result) => {
       if (result) {
-        this.message.open(result.name + ' deleted.', null, {duration: this.appStateService.confirmMessageDuration});
+        this.messageService.open(result.name + ' deleted.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(0);
         this.refresh();
       }
     });
   }
 
-  // Note: The refresh() is usually extended in services that extend this generic service.
+  // load up all the cache info this service needs.  This is done
+  // a) when a client of this service changes something that invalidates the cache such as:
+  //    i) an item changes so it now does or does not match the filter,
+  //    ii) an item is added
+  //    iii) and item is deleted
+  // b) periodic reload of the cache.
   refresh() {
-    this.loadSelected();
-    this.loadFieldOptions();
-    this.getLikelyNextName();
-    this.applyFilter(); // apply the filter to reload the filtered list.
+    if (this.appStateService.isAuthenticated) {
+      if (this.cacheAll) this.loadAll();
+      this.loadFieldOptions();
+      this.getLikelyNextName();
+      this.applyFilter(); // apply the filter to reload the filtered list.
+    }
   }
 }

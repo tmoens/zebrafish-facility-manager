@@ -35,14 +35,14 @@ export class StockService extends ZFGenericService<
   Stock, StockFull, StockFilter> {
 
   constructor(
-    private readonly loaderForGeneric: LoaderService,
-    private snackBarForGeneric: MatSnackBar,
+    private readonly loader: LoaderService,
+    private message: MatSnackBar,
+    private appState: AppStateService,
     private mutationService: MutationService,
     private transgeneService: TransgeneService,
-    private appStateServiceX: AppStateService,
   ) {
-    super(ZFTypes.STOCK, loaderForGeneric, snackBarForGeneric, appStateServiceX);
-    this.appStateServiceX.loggedIn$.subscribe( (loggedIn: boolean) => {
+    super(ZFTypes.STOCK, loader, message, appState);
+    this.appState.loggedIn$.subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.initialize();
       }
@@ -55,7 +55,7 @@ export class StockService extends ZFGenericService<
   // authorization to go get the data we need from the server.  So we watch the login state
   // and trigger this when the user logs in.
   initialize() {
-    const storedFilter  = this.appStateServiceX.getToolState(ZFTypes.STOCK, ZFToolStates.FILTER);
+    const storedFilter = this.appState.getToolState(ZFTypes.STOCK, ZFToolStates.FILTER);
     if (storedFilter) {
       this.setFilter(storedFilter);
     } else {
@@ -119,7 +119,7 @@ export class StockService extends ZFGenericService<
     this.loader.createSubStock(item).subscribe((result: StockFull) => {
       if (result.id) {
         const r = this.convertFullDto2Class(result as StockFull);
-        this.message.open(r.name + ' created.', null, {duration: this.appStateServiceX.confirmMessageDuration});
+        this.message.open(r.name + ' created.', null, {duration: this.appState.confirmMessageDuration});
         // It might seem right just to select the object you get back from the create call
         // rather than make another round trip to re-fetch the object from the server.
         // BUT the object you get back from the creation call is not reliable.  For
@@ -143,6 +143,7 @@ export class StockService extends ZFGenericService<
   get likelyNextStockNumber(): number {
     return Number(this.likelyNextName);
   }
+
   // TODO fix file names
   // To make the excel report happen, you gotta go get all stocks that meet the current filter
   getStockReport() {

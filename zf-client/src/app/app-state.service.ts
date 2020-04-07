@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, interval} from 'rxjs';
 import {AccessTokenPayload} from "./common/auth/zfm-access-token-payload";
 import {plainToClass} from "class-transformer";
 import {LOCAL_STORAGE, StorageService} from "ngx-webstorage-service";
@@ -48,47 +48,25 @@ export class AppStateService {
   // login or change password.  After the login or password change is complete, it gets
   // fetched and navigated to.
   private _intendedPath: string = null;
-  get intendedPath() { return this._intendedPath; }
-  set intendedPath(path: string) { this._intendedPath = path; }
+  get intendedPath() {
+    return this._intendedPath;
+  }
+
+  set intendedPath(path: string) {
+    this._intendedPath = path;
+  }
 
   // other state information is just held in an indexed array
   constructor(
     private router: Router,
     @Inject(LOCAL_STORAGE) private localStorage: StorageService,
-  ) { }
+  ) {
+  }
 
-  initialize() {
-    // On startup, use the token from local storage token (if there is one) as the access token.
-    this.accessToken$.next(this.localStorage.get('access_token'));
-
-    // load up the persistentState
-    if (this.localStorage.get('persistentState')) {
-      this.persistentState = this.localStorage.get('persistentState');
-    }
-
-    // Whenever the access token changes, do some work
-    this.accessToken$.subscribe(
-      (token: string) => {
-        // Put a copy in local storage.
-        this.localStorage.set('access_token', token);
-
-        if (!token) {
-          // if there is no token clear whatever was in local storage and broadcast the fact
-          // that the user has logged out.
-          this.loggedIn$.next(false);
-        } else if (this.isTokenExpired(token)) {
-          // if the token is expired, reset it to null, effectively logging the user out.
-          this.accessToken$.next(null);
-        } else if(this.getAccessTokenPayload(token).passwordChangeRequired) {
-          // If the user is meant to change their password, force that.
-          this.router.navigateByUrl('/change-password');
-        } else {
-          // well, finally this looks like a good access token, so mark the user as logged in
-          // and then navigate to wherever we were meant to navigate to.
-          this.loggedIn$.next(true);
-          this.router.navigateByUrl(this.getDefaultURI());
-        }
-      });
+  // we introduce a random stagger of 2 to 7 seconds so that all the services don;t refresh simultaneously
+  get backgroundDataRefreshInterval(): number {
+    let d = this.getState('backgroundDataRefresh') || 300000;
+    return d + Math.floor(Math.random() * 5000 + 2000);
   }
 
   onLogin(token) {
@@ -218,6 +196,58 @@ export class AppStateService {
     } else {
       this.setState('errorMessageDuration', ms, true);
     }
+  }
+
+  set backgroundDataRefresh(ms: number) {
+    if (ms < 0) {
+      this.deleteState('backgroundDataRefresh');
+    } else {
+      this.setState('backgroundDataRefresh', ms, true);
+    }
+  }
+
+  initialize() {
+    // tight loop, every 5 seconds check if the access token has expired and if so,
+    // redirect to login page. Prevents the user from trying something and then finding out that
+    // their session has effectively timed out.
+    const checkExpiry = interval(5000);
+    checkExpiry.subscribe(_ => {
+      if (this.isAuthenticated && this.isTokenExpired(this.accessToken)) {
+        this.router.navigateByUrl('/login');
+      }
+    });
+
+    // On startup, use the token from local storage token (if there is one) as the access token.
+    this.accessToken$.next(this.localStorage.get('access_token'));
+
+    // load up the persistentState
+    if (this.localStorage.get('persistentState')) {
+      this.persistentState = this.localStorage.get('persistentState');
+    }
+
+    // Whenever the access token changes, do some work
+    this.accessToken$.subscribe(
+      (token: string) => {
+        // Put a copy in local storage.
+        this.localStorage.set('access_token', token);
+        if (!token) {
+          // if there is no token, clear whatever was in local storage and broadcast the fact
+          // that the user has logged out.
+          this.loggedIn$.next(false);
+        } else if (this.isTokenExpired(token)) {
+          // if the token is expired, (this could happen when a session is restarted and the token is read
+          // from local storage) reset it to null, effectively logging the user out.
+          this.accessToken$.next(null);
+        } else if (this.getAccessTokenPayload(token).passwordChangeRequired) {
+          // If the user is meant to change their password, force that.
+          this.router.navigateByUrl('/change-password');
+        } else {
+          // well, finally this looks like a good access token, so mark the user as logged in
+          // and then navigate to wherever we were meant to navigate to.
+          this.loggedIn$.next(true);
+          this.router.navigateByUrl(this.getDefaultURI());
+        }
+      });
   }
 
   get errorMessageDuration(): number {

@@ -42,13 +42,23 @@ export class StockViewerComponent implements OnInit {
     // and vice versa.
 
     // use the route's paramMap to figure out the id of the item we are supposed to view.
-    // Select it.
-    // Then let nature take it's course.  We will notice when it becomes selected and
-    // then we populate the form with the data from the selected item.
     this.route.paramMap.subscribe((pm: ParamMap) => {
+      // if there is an id in the route, tell the service to select it.
       const id = +pm.get('id');
-      if (id && (!this.service.selected || id !== this.service.selected.id)) {
+      if (id) {
         this.service.selectByIdAndLoad(id);
+      } else {
+        // if there is no id in the route, lets see a stock is already selected and if so, navigate to it.
+        if (this.service.selected) {
+          this.router.navigateByUrl('stock_manager/view/' + this.service.selected.id, {replaceUrl: true});
+        } else {
+          // we were not given an id to view and there is no "selected" id, final try is to
+          // navigate to the first iem in the list...
+          const firstId = this.service.getFirstFiltered();
+          if (firstId) {
+            this.router.navigateByUrl('stock_manager/view/' + firstId, {replaceUrl: true});
+          }
+        }
       }
     });
   }
@@ -97,7 +107,6 @@ export class StockViewerComponent implements OnInit {
         }
       });
   }
-
 
   editTransgenes() {
     // this.service.getParentalTransgenes().subscribe((parentalTransgenes: Transgene[]) => {

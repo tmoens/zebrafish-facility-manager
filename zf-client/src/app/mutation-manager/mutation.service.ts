@@ -1,6 +1,5 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {LoaderService} from '../loader.service';
-import {BehaviorSubject} from 'rxjs';
 import {MutationFilter} from './mutation-filter';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {FieldOptions} from '../helpers/field-options';
@@ -9,8 +8,6 @@ import {Mutation} from './mutation';
 import * as XLSX from 'xlsx';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
-import {TransgeneFilter} from "../transgene-manager/transgene-filter";
-import {Transgene} from "../transgene-manager/transgene";
 import {ZFTypes} from "../helpers/zf-types";
 
 /**
@@ -26,20 +23,13 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
 
   public spermFreezeOptions = ['DONE', 'NEVER', 'TODO'];
 
-  // This is a cache that is used in several places.
-  // It is only refreshed when the user performs some operation that will
-  // change the content of the cache.
-  // TODO it probably should refresh automatically periodically.
-  private _all$: BehaviorSubject<Mutation[]> = new BehaviorSubject<Mutation[]>([]);
-  get all(): Mutation[] { return this._all$.value; }
-
   constructor(
-    private readonly loaderForGeneric: LoaderService,
-    private snackBarForGeneric: MatSnackBar,
-    private appStateServiceX: AppStateService,
+    private readonly loader: LoaderService,
+    private snackBar: MatSnackBar,
+    private appState: AppStateService,
   ) {
-    super(ZFTypes.MUTATION, loaderForGeneric, snackBarForGeneric, appStateServiceX);
-    this.appStateServiceX.loggedIn$.subscribe( (loggedIn: boolean) => {
+    super(ZFTypes.MUTATION, loader, snackBar, appState);
+    this.appState.loggedIn$.subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.initialize();
       }
@@ -47,7 +37,7 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
   }
 
   initialize() {
-    const storedFilter  = this.appStateServiceX.getToolState(ZFTypes.MUTATION, ZFToolStates.FILTER);
+    const storedFilter = this.appState.getToolState(ZFTypes.MUTATION, ZFToolStates.FILTER);
     if (storedFilter) {
       this.setFilter(storedFilter);
     } else {
@@ -74,17 +64,6 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
   // Data comes from the server as a dto, this just converts to the corresponding class
   convertFullDto2Class(dto): any {
     return plainToClass(Mutation, dto);
-  }
-
-  refresh() {
-    super.refresh();
-    this.loadAllMutations();
-  }
-
-  loadAllMutations() {
-    this.loader.getFilteredList(ZFTypes.MUTATION, {}).subscribe((data) => {
-      this._all$.next(data.map(m => this.convertSimpleDto2Class(m)));
-    });
   }
 
   nameIsInUse(name: string): boolean {

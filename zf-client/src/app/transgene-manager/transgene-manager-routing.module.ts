@@ -20,12 +20,12 @@ const transgeneManagerRoutes: Routes = [
         canActivate: [LoginGuard],
       },
       {
-        path: '',
+        path: 'view',
         component: TransgeneViewerComponent,
         canActivate: [LoginGuard],
       },
       {
-        path: 'view',
+        path: '',
         component: TransgeneViewerComponent,
         canActivate: [LoginGuard],
       },
