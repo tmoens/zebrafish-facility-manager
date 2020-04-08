@@ -16,6 +16,7 @@ import {Transgene} from '../transgene-manager/transgene';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
 import {ZFTypes} from "../helpers/zf-types";
+import {Router} from "@angular/router";
 
 /**
  * This is the model for stock information displayed in the GUI.
@@ -38,10 +39,11 @@ export class StockService extends ZFGenericService<
     private readonly loader: LoaderService,
     private message: MatSnackBar,
     private appState: AppStateService,
+    private router: Router,
     private mutationService: MutationService,
     private transgeneService: TransgeneService,
   ) {
-    super(ZFTypes.STOCK, loader, message, appState);
+    super(ZFTypes.STOCK, loader, message, appState, router);
     this.appState.loggedIn$.subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.initialize();

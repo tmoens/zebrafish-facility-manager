@@ -8,6 +8,7 @@ import {FieldOptions} from '../helpers/field-options';
 import {ZfGenericFilter} from './zfgeneric-filter';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {ZFTypes} from "../helpers/zf-types";
+import {Router} from "@angular/router";
 
 /**
  * There is a service for every different type of object in the system.
@@ -107,6 +108,7 @@ export class ZFGenericService<
     // loaderService, I cannot figure out how to inject one in this generic class.
     protected messageService: MatSnackBar,
     private appStateService: AppStateService,
+    private routerService: Router,
   ) {
     // problem: I want to pass to the constructor a flag indicating whether or not the
     // service is meant to cache the full list of instances of this zfType.
@@ -221,6 +223,7 @@ export class ZFGenericService<
         this.messageService.open(this.zfType + ' updated.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(result.id);
         this.refresh();
+        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id);
       }
     });
   }
@@ -231,6 +234,7 @@ export class ZFGenericService<
         this.messageService.open(result.name + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(result.id);
         this.refresh();
+        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id)
       }
     });
   }
@@ -243,6 +247,7 @@ export class ZFGenericService<
         this.messageService.open(result.name + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(item.id);
         this.refresh();
+        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id)
       }
     });
   }
@@ -253,6 +258,8 @@ export class ZFGenericService<
         this.messageService.open(result.name + ' deleted.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(0);
         this.refresh();
+        // TODO the refresh may not be done by the time the
+        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/0')
       }
     });
   }

@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
 import {ZFTypes} from "../helpers/zf-types";
+import {Router} from "@angular/router";
 
 /**
  * This is the model for mutation information displayed in the GUI.
@@ -27,8 +28,9 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
     private readonly loader: LoaderService,
     private snackBar: MatSnackBar,
     private appState: AppStateService,
+    private router: Router,
   ) {
-    super(ZFTypes.MUTATION, loader, snackBar, appState);
+    super(ZFTypes.MUTATION, loader, snackBar, appState, router);
     this.appState.loggedIn$.subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.initialize();

@@ -109,7 +109,6 @@ export class TransgeneEditorComponent implements OnInit {
         this.service.update(editedDTO);
         break;
     }
-    this.router.navigate(['transgene_manager/view']);
   }
 
   cancel() {

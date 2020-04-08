@@ -109,7 +109,9 @@
       <div class="fill-remaining-space"></div>
       <button mat-button color="primary" (click)="cancel()">Cancel</button>
       <button mat-button color="primary" [disabled]="isUnchanged()" (click)="revert()">Revert</button>
-      <button mat-button color="primary" [disabled]="isUnchanged() || !stockEditForm.valid" (click)="save()">Save</button>
+      <button (click)="save()" [disabled]="isUnchanged() || !stockEditForm.valid" color="primary" mat-button
+              type=submit>Save
+      </button>
     </div>
   </form>
 </div>

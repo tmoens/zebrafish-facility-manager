@@ -8,7 +8,6 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {forkJoin, Observable} from 'rxjs';
 import {DialogService} from '../../dialog.service';
-import {ConfigService} from "../../config/config.service";
 import {AppStateService} from "../../app-state.service";
 
 /**
@@ -213,7 +212,7 @@ export class StockSwimmersEditorComponent implements OnInit {
 
     // after changes complete, force the reload of the updated stock by re-selecting it.
     forkJoin(responses).subscribe(_ => this.stockService.selectByIdAndLoad(this.stockId));
-    this._location.back();
+    this.router.navigateByUrl('stock_manager/view');
   }
 
   cancel() {

@@ -1,9 +1,9 @@
 import {BadRequestException, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import { ConfigService } from '../config/config.service';
-import { StockRepository } from './stock.repository';
-import { GenericService } from '../Generics/generic-service';
-import { Stock } from './stock.entity';
+import {ConfigService} from '../config/config.service';
+import {StockRepository} from './stock.repository';
+import {GenericService} from '../Generics/generic-service';
+import {Stock} from './stock.entity';
 import {plainToClassFromExist} from 'class-transformer';
 import {Logger} from "winston";
 
@@ -154,7 +154,7 @@ export class StockService extends GenericService {
     await this.setParents(candidate);
     await this.validateAges(candidate);
 
-    delete candidate.swimmers;
+    await delete candidate.swimmers;
     return await this.repo.save(candidate);
   }
 

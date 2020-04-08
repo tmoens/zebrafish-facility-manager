@@ -9,6 +9,7 @@ import {AppStateService, ZFToolStates} from '../app-state.service';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {plainToClass} from "class-transformer";
 import {ZFTypes} from "../helpers/zf-types";
+import {Router} from "@angular/router";
 
 /**
  * This is the model for transgene information displayed in the GUI.
@@ -25,8 +26,9 @@ export class TransgeneService extends ZFGenericService<Transgene, Transgene, Tra
     private readonly loader: LoaderService,
     private snackBar: MatSnackBar,
     private appState: AppStateService,
+    private router: Router,
   ) {
-    super(ZFTypes.TRANSGENE, loader, snackBar, appState);
+    super(ZFTypes.TRANSGENE, loader, snackBar, appState, router);
     this.appState.loggedIn$.subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.initialize();

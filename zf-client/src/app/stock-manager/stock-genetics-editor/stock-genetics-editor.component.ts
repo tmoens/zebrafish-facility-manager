@@ -8,6 +8,7 @@ import {Mutation} from '../../mutation-manager/mutation';
 import {Transgene} from '../../transgene-manager/transgene';
 import {classToClass} from 'class-transformer';
 import {ZFTypes} from "../../helpers/zf-types";
+import {Router} from "@angular/router";
 
 /**
  * This dialog allows the user to indicate which mutations/transgenes are present
@@ -32,7 +33,8 @@ export class StockGeneticsEditorComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<StockGeneticsEditorComponent>,
     public service: StockService,
-  @Inject(MAT_DIALOG_DATA)
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA)
     public data: {
       // Are we dealing with Mutations or Transgenes
       type: ZFTypes;

@@ -162,11 +162,10 @@ export class MutationEditorComponent implements OnInit {
         this.service.update(editedDTO);
         break;
     }
-    this.router.navigate(['mutation_manager/view']);
   }
 
   cancel() {
-    this.router.navigate(['mutation_manager/view']);
+    this.router.navigateByUrl('mutation_manager/view');
   }
 
   revert() {

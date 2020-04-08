@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {StockService} from '../stock.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {Location} from '@angular/common';
 import {Stock} from '../stock';
 import {StockFull} from '../stockFull';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
@@ -56,7 +55,6 @@ export class StockEditorComponent implements OnInit {
     public service: StockService,
     private route: ActivatedRoute,
     private router: Router,
-    private _location: Location,
     private deactivationDialogService: DialogService,
 
   ) {}
@@ -223,13 +221,10 @@ export class StockEditorComponent implements OnInit {
         this.service.update(this.stock);
         break;
     }
-    // this.router.navigate(['stock_manager/view']);
-    this._location.back();
   }
 
   cancel() {
-    // this.router.navigate(['stock_manager/view']);
-    this._location.back();
+    this.router.navigateByUrl('stock_manager/view');
   }
 
   revert() {
