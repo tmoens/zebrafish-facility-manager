@@ -8,56 +8,43 @@ In this case we are going to create a virtual host for the the Example Universit
 Prerequisites: 
 1. you have purchased the domain _example_zfm.com_
 1. you have set up a sub-domain for the Example University of Examples called _eue.example_zfm.com_
-1. you have already set up the zf-server for _eue_ and it is running on port 3003.
+1. you have already set up the zf-server for _eue_ and it is running on port 3004.
 1. you have built the zf-client and installed it in the appropriate directory.  Likely /var/www/zf-client.
 
 You are now ready to create your host for eue.example_zfm.com.
 
+**Note** - this is what the file looks like _before_ you do the SSL configuration.  That process will update this file.
+
 1. go to your apache configuration for example_zfm.com. On Debian this is in /etc/apache2/sites-available.
 1. make a make a copy to a file by the same name, except prefaced by eue.
-1. edit the file appropriately.  You
+1. edit the file appropriately. 
 
 ```bash 
-<IfModule mod_ssl.c>
-<VirtualHost *:443>
-    ServerAdmin your.email@somewhere.com
-    ServerName eue.example_zfm.com
-    DocumentRoot /var/www/zf-client
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-
-    # The client will automatically send all server requests to
-    # <ServerName>/zf_server, we have to redirect those requests
-    # to the appropriate zf-server instance identified by the
-    # port the zf-server is running on.
-    ProxyPreserveHost On
-    ProxyPass /zf_server http://localhost:3003
-    ProxyPassReverse /zf_server http://localhost:3003
-
-    # This is where the SSL certificate is referenced.
-    # All virtual hosts use the same certificate.
-    # Make sure the server name is added to the certificate.
-    Include /etc/letsencrypt/options-ssl-apache.conf
-    SSLCertificateFile /etc/letsencrypt/live/testzfc.tk/fullchain.pem
-    SSLCertificateKeyFile /etc/letsencrypt/live/testzfc.tk/privkey.pem
-</VirtualHost>
-</IfModule>
-<IfModule mod_ssl.c>
-
-# Automatically redirect insecure traffic (http) trafic to the secure site (https)
 <VirtualHost *:80>
     ServerAdmin ted.moens@gmail.com
-    ServerName fhcrc.testzfc.tk
-    ServerAlias www.fhcrc.testzfc.tk
-    Redirect / https://fhcrc.testzfc.tk/
-</VirtualHost>
+    ServerName eue.zebrafishfacilitymanager.com
+    #ServerAlias 
+    DocumentRoot /var/www/zf-client
+    ErrorLog ${APACHE_LOG_DIR}/eue.error.log
+    CustomLog ${APACHE_LOG_DIR}/eue.access.log combined
 
-# Allow .htaccess file in the zf-client directory
-</IfModule>
-<Directory /var/www/zf-client>
-    AllowOverride All
-    Require all granted
-</Directory>
+    # This section is required to deploy the zf-client to an apache server
+    RewriteEngine On
+
+    # If the request is aimed at the server, proxy to the port the server is running on.
+    # Check the zf-server configuration file to see which port the server for
+    # a particular facility is using.
+    RewriteRule ^/zf-server/(.*) http://localhost:3004/$1 [P]
+
+    # If there is an existing asset or directory in the request, then route to it.
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+    RewriteRule ^ - [L]
+
+    # Otherwise links like /stock_manager (for which there is no static file)
+    # are all written to /index.html where the angular app will handle the route.
+    RewriteRule ^ /index.html
+</VirtualHost>
 ```
 
 After editing the file, in the shell you need to:

@@ -12,14 +12,16 @@ For the purpose of a running example we will assume that
 
 ## Sub-domain setup
 
-You need to add a sub-domain for ths facility. 
+You need to create a sub-domain for ths facility. 
 In the example this would be called _eue.example_zfm.com_.
-It points to your host's IP address.
+The main thing you need to do is create a DNS record that points from your
+sub-domain to your host's IP address.
 After you add the sub-domain it usually takes an hour or so for it to
 propagate around the world.
 
 If you do not know how to do this, it is probably a capability available at
-the service you used to buy your domain.
+the service you used to buy your domain.  Alternately your web hosting service
+probably has a DNS you can use to set up your DNS record.
 
 ### SSL
 
@@ -36,10 +38,6 @@ Once you have configured the db, in keeping with the running example, you will h
 1. db user: _zf_eue_
 1. db password: _some_very_good_eue_password_
 
-### Web Server
-
-You need to set up a virtual host for every facility you want to manage.
-
 ### zf_server configuration file
 
 You need to create a server configuration file for each facility.
@@ -55,6 +53,36 @@ In the file, there is a PORT entry. You need to choose one that is not otherwise
 For the moment we will assume you have chosen port 3004.
 You will need to remember this port number later when you tell your web server
 how to send traffic to the zf_server for _eue_.
+
+### zf_client configuration file
+
+This file contains configuration the client needs to customize the interface for a particular facility.
+The file must go in the directory zf-client/src/facility-config.
+The file is named by the facility's subdomain followed by .json.
+So for eue.examplezfm.com, the file would live in:
+```
+zf-client/src/facility-config/eue.examplezfm.com.json
+```
+
+This file automatically gets copied to the 'dist/zf-client' when you build the client ann then
+copied to your hosting service's directory when you deploy the client.
+
+You do not need to rebuild and redeploy the client when you add a new client config file.  Just add
+it in the directory as described above and copy it to the deployment directory
+which might be /var/www/zf-client/facility-config
+
+Detailed instructions for the file have not been written yet.  The only non obvious part
+is creating the label layout.  The label layout is just an array of array of tags.
+Each tag indicates what bit of information you can put on a tank label.  Each row of the array
+gets printed out as a separate line on the label.  The items within the row are spread out
+across the width of the label.
+
+The set of supported tags are found here: zf-client/src/app/printing/tank-label/tank-label.ts
+
+### Web Server
+
+You need to set up a virtual host for every facility you want to manage. 
+Here is a [Guide](Apache.md);
 
 ### running the server
 

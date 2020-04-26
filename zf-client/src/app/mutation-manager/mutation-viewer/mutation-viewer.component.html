@@ -63,9 +63,10 @@
           <input matInput type="text" placeholder="Screen Type" formControlName="screenType">
         </mat-form-field>
 
-        <mat-form-field *ngIf="service.selected.thawDate">
-          <input matInput type="text" placeholder="Thaw Date" formControlName="thawDate">
-        </mat-form-field>
+        // 2020-04-26 hidden as per request from fhcrc lab.  not used in others.
+<!--        <mat-form-field *ngIf="service.selected.thawDate">-->
+<!--          <input matInput type="text" placeholder="Thaw Date" formControlName="thawDate">-->
+<!--        </mat-form-field>-->
 
         <mat-form-field *ngIf="service.selected.spermFreezePlan">
           <input matInput type="text" placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">

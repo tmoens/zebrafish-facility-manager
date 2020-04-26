@@ -14,14 +14,14 @@ import {AppStateService} from "../../app-state.service";
       <form [formGroup]="mfForm" (ngSubmit)="onSubmit()">
         <div fxLayout="column" mat-dialog-content>
           <mat-form-field>
-            <input type="text" matInput placeholder="Current Password" formControlName="currentPassword" >
+            <input type="password" matInput placeholder="Current Password" formControlName="currentPassword" >
           </mat-form-field>
           <mat-form-field>
-            <input type="text" matInput placeholder="New Password" formControlName="newPassword" >
+            <input type="password" matInput placeholder="New Password" formControlName="newPassword" >
             <mat-error *ngIf="mfForm.get('newPassword').invalid"></mat-error>
           </mat-form-field>
           <mat-form-field>
-            <input type="text" matInput placeholder="Repeat New Password" formControlName="repeatNewPassword" >
+            <input type="password" matInput placeholder="Repeat New Password" formControlName="repeatNewPassword" >
             <mat-error *ngIf="mfForm.get('repeatNewPassword').invalid"></mat-error>
           </mat-form-field>
       </div>

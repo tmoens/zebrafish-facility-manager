@@ -12,10 +12,10 @@ by the zebrafish facility manager.
 
 You will need a domain name for the deployment as a whole. 
 For the purpose of illustration, this guide will assume you have 
-purchased _example-zfm.com_ and that you set up DNS records to point
+purchased _examplezfm.com_ and that you set up DNS records to point
 at your host's IP address.
 
-It is a good idea to set up _test.example-zfm.com_ as a an initial sub-domain.
+It is a good idea to set up _test.examplezfm.com_ as a an initial sub-domain.
 Later when you are configuring a system for a particular facility, you will be
 adding one sub-domain per facility.  If you happen to know that you are going set up
 managers for facilities _eue_ and _acdc_, you could create those sub-domains too.
@@ -71,15 +71,23 @@ Apache2 as it is usually pre-installed on Linux servers, but just in case, here 
 article on [how to install Apache on
 Debian](https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-debian-10)
 
-Set up a virtual host for your domain.
-Later, you will need to set up a separate virtual host for each facility the system manages.
+Set up a virtual host for your domain (in this case examplezfm.com).  You can put anything you want in
+in the root directory, it is a base website you can use to welcome folks.  You might want
+to include links to whatever whatever facility managers you have running.
+
+You will need to set up a separate virtual host for each zebrafish facility the system manages.
+It is a good idea to set up an example one now.
 The process of setting up a virtual host for a facility is covered [here](Apache.md).
 
 ### Set up SSL on your Web Server
 
 Before you start this section, you should have set up DNS for your domain
-(and any sub-domains you can think of
-in advance) and your Apache Web Server should be running.
+(and any sub-domains you can think of in advance). Unfortunately you also need to also have at least one
+virtual host set up for this to work.
+So you probably want to go ahead with the rest of your deployment and then creat a deployment
+for one or two facilities and **then** come back and set up SSL.
+
+The good news is that this is mercifully fast to do.
 
 Before using the procedure that follows, please note that when 
 you get to the part where the procedure says to use 
@@ -90,22 +98,11 @@ one for your domain and one for each sub-domain.  Using the example above, your 
 sudo certbot --apache -d example_zfm.com -d test.example-zfc.com -d eue.example-zfc.com -d acdc.example-zfc.com
 ```
                                                        
-
 Here it a procedure on
 [how to secure Apache](https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-debian-10).
 
 Later when you want to add another facility, you will create a sub-domain and add it to your certificate.
 This is covered in the "Per Facility" guide.
-
-### Passenger
-
-We have chosen to use [Passenger](https://www.phusionpassenger.com/library/)
-to simplify the management of the system.
-
-At time of writing, you *can* install Passenger on Debian 10 (buster), but the on-line
-installation guides only go as far as Debian 9 (stretch). Not to worry, just change
-the word "stretch" to the word "buster" in the install guide for Passenger and all
-is well.
 
 ## zf-server and zf-client deployment
 
@@ -142,7 +139,7 @@ npm install
 # you need to install angular-cli
 sudo npm install @angular/cli
 
-# Build the zf-server
+# Build the zf-client
 ng build --configuration=production
 ```
 

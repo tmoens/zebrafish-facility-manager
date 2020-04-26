@@ -15,7 +15,7 @@ import {AppStateService} from '../../app-state.service';
               <input matInput name="username"  type="text" placeholder="Username" [(ngModel)]="username">
             </mat-form-field>
             <mat-form-field>
-              <input matInput name="password" type="text" placeholder="Password" [(ngModel)]="password">
+              <input matInput name="password" type="password" placeholder="Password" [(ngModel)]="password">
             </mat-form-field>
           </div>
         </div>

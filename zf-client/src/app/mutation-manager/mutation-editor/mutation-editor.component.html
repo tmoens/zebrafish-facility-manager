@@ -37,11 +37,12 @@
             <input matInput type="text" placeholder="Screen Type" formControlName="screenType" [matAutocomplete]="autoScreenType">
           </mat-form-field>
 
-          <mat-form-field >
-            <input matInput [matDatepicker]="picker" placeholder="Thaw Date" formControlName="thawDate">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
+          // 2020-04-26 hidden as per request from fhcrc lab.  not used in others.
+<!--          <mat-form-field >-->
+<!--            <input matInput [matDatepicker]="picker" placeholder="Thaw Date" formControlName="thawDate">-->
+<!--            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
+<!--            <mat-datepicker #picker></mat-datepicker>-->
+<!--          </mat-form-field>-->
 
           <mat-form-field>
             <mat-select placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">

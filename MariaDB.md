@@ -1,4 +1,4 @@
-
+m
 ## MariaDB For a single facility
 
 If you followed the instructions when installing MariaDB (securely), you will not 
@@ -37,7 +37,7 @@ Copyright (c) 2000, 2017, Oracle, MariaDB Corporation Ab and others.
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 MariaDB [(none)]>
-CREATE USER 'zf_eue'@'localhost' IDENTIFIED BY 'zf_eue';
+CREATE USER 'zf_eue'@'localhost' IDENTIFIED BY 'very_bad_eue_password';
 GRANT USAGE ON *.* TO 'zf_eue'@'localhost'
 REQUIRE NONE
 WITH MAX_QUERIES_PER_HOUR 0
@@ -50,6 +50,4 @@ GRANT ALL PRIVILEGES ON `zf\_eue`.* TO 'zf_eue'@'localhost';
 
 You now have a database.  There are no tables in it, but they will be created automatically
 when the zf_server is run for the first time.
-
-ToDo, make this a script?
 
