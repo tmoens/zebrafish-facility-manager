@@ -35,7 +35,7 @@ export class Transgene extends ZfGenericClass {
       strings.push('plasmid: ' + this.plasmid);
     }
     if (this.comment) {
-      strings.push('comment: ' + this.comment);
+      strings.push('comment: ' + this.comment.substr(0, 50));
     }
     // this is how we get linebreaks in the text.
     // BUT you have to create a global style (.ttnl) to see the linebreaks and then

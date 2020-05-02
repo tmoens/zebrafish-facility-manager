@@ -31,19 +31,19 @@ export class Mutation extends ZfGenericClass {
   @computed get tooltip(): string {
     const strings: string[] = [];
     if (this.alternateGeneName) {
-      strings.push('alternate gene name: ' + this.alternateGeneName);
+      strings.push('alt gene name: ' + this.alternateGeneName);
     }
     if (this.researcher) {
       strings.push('researcher: ' + this.researcher);
     }
     if (this.phenotype) {
-      strings.push('phenotype: ' + this.phenotype);
+      strings.push('phenotype: ' + this.phenotype.substr(0, 50));
     }
     if (this.morphantPhenotype) {
-      strings.push('morphant phenotype: ' + this.morphantPhenotype);
+      strings.push('morphant phenotype: ' + this.morphantPhenotype.substr(0, 50));
     }
     if (this.comment) {
-      strings.push('comment: ' + this.comment);
+      strings.push('comment: ' + this.comment.substr(0, 50));
     }
     // this is how we get linebreaks in the text.
     // BUT you have to create a global style (.ttnl) to see the linebreaks and then

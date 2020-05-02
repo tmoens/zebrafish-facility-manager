@@ -41,6 +41,7 @@ export class TransgeneViewerComponent implements OnInit {
 
   ngOnInit() {
     this.service.selected$.subscribe((selected: Transgene) => {
+      this.service.enterBrowseMode();
       if (selected) {
         this.mfForm.setValue(classToPlain(selected));
       }

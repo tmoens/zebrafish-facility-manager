@@ -1,15 +1,15 @@
-<div fxLayout="column" class="zf-container" *ngIf="item">
-  <div class="zf-title">Transgene Editor</div>
+<div fxLayout="column" *ngIf="item">
+
+  <mat-toolbar class="zf-mini-toolbar">
+    <span class="zf-title">Transgene Editor</span>
+  </mat-toolbar>
+
   <form [formGroup]="mfForm">
 
     <div fxLayout="column">
       <mat-form-field >
         <input required matInput type="text" placeholder="Allele" formControlName="allele"
                maxlength="20">
-        <button mat-button matSuffix mat-icon-button *ngIf="getFC('allele').value"
-                (click)="clearFormControl('allele')">
-          <mat-icon>close</mat-icon>
-        </button>
         <mat-error *ngIf="!mfForm.valid">{{getUniquenessError()}}</mat-error>
       </mat-form-field>
 
@@ -23,15 +23,12 @@
         <input matInput type="text" placeholder="Plasmid" formControlName="plasmid"
                (emptied)="clearFormControl('plasmid')"
                maxlength="250">
-        <button mat-button matSuffix mat-icon-button *ngIf="getFC('plasmid').value"
-                (click)="clearFormControl('plasmid')">
-          <mat-icon>close</mat-icon>
-        </button>
       </mat-form-field>
 
       <mat-form-field >
         <input matInput type="text" placeholder="Source" formControlName="source"
-               maxlength="40" [matAutocomplete]="autoSource">
+                [matAutocomplete]="autoSource"
+               maxlength="40">
         <button mat-button matSuffix mat-icon-button *ngIf="getFC('source').value"
                 (click)="clearFormControl('source')">
           <mat-icon>close</mat-icon>
@@ -42,10 +39,6 @@
         <textarea matInput placeholder="Comment" formControlName="comment"
                   maxlength="3000" cdkTextareaAutosize="true"  cdkAutosizeMaxRows="7">
         </textarea>
-        <button mat-button matSuffix mat-icon-button *ngIf="getFC('comment').value"
-                (click)="clearFormControl('comment')">
-          <mat-icon>close</mat-icon>
-        </button>
       </mat-form-field>
 
     </div>

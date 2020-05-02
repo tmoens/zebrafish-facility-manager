@@ -1,8 +1,8 @@
-<div fxFlex fxLayout="column" class="zf-nav">
+<div fxFlex fxLayout="column" class="zf-selector">
 
   <!-- The Filter Part -->
   <span class="zf-title">Transgene Filter</span>
-  <form fxLayout="column" [formGroup]="mfForm">
+  <form [formGroup]="mfForm">
     <mat-form-field>
       <input matInput type="text" placeholder="Search all fields" formControlName="text">
       <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
