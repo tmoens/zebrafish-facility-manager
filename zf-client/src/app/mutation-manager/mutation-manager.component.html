@@ -1,4 +1,32 @@
-<div fxLayout="row" fxLayoutGap="10px" *ngIf="appState.loggedIn$ | async">
-  <div fxFlex="35"><app-mutation-selector></app-mutation-selector></div>
-  <div fxFlex><router-outlet></router-outlet></div>
+<div fxLayout="row" fxLayoutAlign="center" *ngIf="appState.loggedIn$ | async">
+  <div class="zf-container">
+
+    <!-- The toolbar specific to Mutation manager -->
+    <mat-toolbar  color="primary">
+      <!-- The button to toggle the sidenav is disabled while an item is being edited -->
+      <button mat-icon-button (click)="selector.toggle()" *ngIf="!(selectorFixed$ | async)"
+              [disabled]="service.isEditing$ | async">
+        <mat-icon>menu</mat-icon>
+      </button>
+      Mutation Manager {{(service.isEditing$ | async) ? 'Edit Mode' : 'Browse Mode'}}
+      <span class="fill-remaining-space"></span>
+      <app-mutation-menu></app-mutation-menu>
+    </mat-toolbar>
+
+    <mat-sidenav-container style="height: 100%">
+
+      <!-- The sidenav should collapse when editing an item  or when the screen is small -->
+      <mat-sidenav #selector fixedInViewport
+                   fixedTopGap="120"
+                   [mode]="(selectorFixed$ | async) ? 'side' : 'over'"
+                   [opened]="(selectorFixed$ | async) && !(service.isEditing$ | async)"
+                   style="background: inherit; border: none">
+        <app-mutation-selector></app-mutation-selector>
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
 </div>

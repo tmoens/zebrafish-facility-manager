@@ -1,127 +1,91 @@
-<div fxLayout="column" class="zf-container" *ngIf="service.selected">
-  <div fxLayout="row" fxLayoutGap="10px">
-    <div fxFlex="45" fxLayout="column">
+<div fxLayout="column" class="zf-nav-content" *ngIf="service.selected">
+  <div fxLayout="column">
 
-      <!--------------- Title and menu --------------------->
-      <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" >
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <div class="fill-remaining-space"></div>
-          <button mat-menu-item zfmHideUnauthorized="user" (click)="edit()">
-            <mat-icon>edit</mat-icon>
-            <span>Edit {{service.selected.name}}</span>
-          </button>
-          <button mat-menu-item zfmHideUnauthorized="user" (click)="createSubStock()">
-            <mat-icon>add</mat-icon>
-            <span>Create Sub Stock{{service.selected.number}}.{{service.selected.nextSubStockNumber}}</span>
-          </button>
-          <button mat-menu-item zfmHideUnauthorized="admin" (click)="delete()"
-                  [disabled]="!service.selected.isDeletable">
-            <mat-icon>delete</mat-icon>
-            <span>Delete {{service.selected.name}}</span>
-          </button>
-          <button mat-menu-item (click)="printLabels()"
-                  [disabled]="!service.selected.swimmers || service.selected.swimmers.length < 1">
-            <mat-icon>print</mat-icon>
-            <span>Print Label</span>
-          </button>
-          <button mat-menu-item zfmHideUnauthorized="user" (click)="create()">
-            <mat-icon>add</mat-icon>
-            <span>Create Stock {{service.likelyNextName}}</span>
-          </button>
-        </mat-menu>
-        <span class="zf-title">Stock {{service.selected.name}} Details</span>
-        <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="edit()">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
+    <!--------------- Title and menu --------------------->
+    <mat-toolbar class="zf-mini-toolbar">
+      Stock {{service.selected.name}} Details
+      <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editStock()">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-toolbar>
 
-      <!-- Main stock information-->
-      <mat-form-field>
-        <input matInput placeholder="Description"
-               [value]="service.selected.description" disabled>
-      </mat-form-field>
-      <mat-form-field *ngIf="service.selected.fertilizationDate">
-        <input matInput placeholder="Fertilization Date"
-               [value]="service.selected.fertilizationDate" disabled>
-      </mat-form-field>
-      <mat-form-field *ngIf="service.selected.pi">
-        <input matInput placeholder="Primary Investigator"
-               [value]="service.selected.pi" disabled>
-      </mat-form-field>
-      <mat-form-field *ngIf="service.selected.researcher">
-        <input matInput placeholder="Researcher"
-               [value]="service.selected.researcher" disabled>
-      </mat-form-field>
-      <mat-form-field *ngIf="service.selected.comment">
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px" >
+      <div fxLayout="column" fxFlex="45" >
+        <!-- Main stock information-->
+        <mat-form-field>
+          <input matInput placeholder="Description"
+                 [value]="service.selected.description" disabled>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Fertilization Date"
+                 [value]="service.selected.fertilizationDate" disabled>
+        </mat-form-field>
+        <mat-form-field *ngIf="!appState.getState('hidePI') && service.selected.pi">
+          <input matInput placeholder="Primary Investigator"
+                 [value]="service.selected.pi" disabled>
+        </mat-form-field>
+        <mat-form-field *ngIf="service.selected.researcher">
+          <input matInput placeholder="Researcher"
+                 [value]="service.selected.researcher" disabled>
+        </mat-form-field>
+        <mat-form-field *ngIf="service.selected.comment">
         <textarea matInput placeholder="Comment"
                   [value]="service.selected.comment"
-                  cdkTextareaAutosize="true" disabled></textarea>
-      </mat-form-field>
+                  cdkTextareaAutosize="true" cdkAutosizeMaxRows="7" disabled></textarea>
+        </mat-form-field>
 
-      <!-- Mom   -->
-      <h4>Mom
-        <button *ngIf="service.selected.matStock" mat-button color="primary"
-                matTooltip="{{service.selected.matStock.tooltip}}" matTooltipClass="ttnl"
-                (click)="goTo(service.selected.matStock.id)">{{service.selected.matStock.name}}</button>
-      </h4>
-      <div *ngIf="service.selected.matStock" fxLayout="column">
-        <mat-form-field>
+        <!-- Mom   -->
+        <h4>Mom
+          <button *ngIf="service.selected.matStock" mat-button color="primary"
+                  matTooltip="{{service.selected.matStock.tooltip}}" matTooltipClass="ttnl"
+                  (click)="goTo(service.selected.matStock.id)">{{service.selected.matStock.name}}</button>
+        </h4>
+        <mat-form-field *ngIf="service.selected.matStock">
           <input matInput placeholder="Description"
                  [value]="service.selected.matStock.description" disabled>
         </mat-form-field>
-      </div>
-      <div *ngIf="!service.selected.matStock" fxLayout="column">
-        <mat-form-field>
+        <mat-form-field *ngIf="!service.selected.matStock">
           <textarea matInput placeholder="External Mother Description"
                     cdkTextareaAutosize="true"
                     [value]="service.selected.externalMatDescription" disabled>
           </textarea>
         </mat-form-field>
-      </div>
 
-      <!-- Dad   -->
-      <h4>Dad
-        <button *ngIf="service.selected.patStock" mat-button color="primary"
-                matTooltip="{{service.selected.patStock.tooltip}}" matTooltipClass="ttnl"
-                (click)="goTo(service.selected.patStock.id)">{{service.selected.patStock.name}}</button>
-      </h4>
-      <div *ngIf="service.selected.patStock" fxLayout="column">
-        <mat-form-field>
+        <!-- Dad   -->
+        <h4>Dad
+          <button *ngIf="service.selected.patStock" mat-button color="primary"
+                  matTooltip="{{service.selected.patStock.tooltip}}" matTooltipClass="ttnl"
+                  (click)="goTo(service.selected.patStock.id)">{{service.selected.patStock.name}}</button>
+        </h4>
+        <mat-form-field *ngIf="service.selected.patStock">
           <input matInput placeholder="Description"
                  [value]="service.selected.patStock.description" disabled>
         </mat-form-field>
-      </div>
-      <div *ngIf="!service.selected.patStock" fxLayout="column">
-        <mat-form-field>
+        <mat-form-field  *ngIf="!service.selected.patStock">
           <textarea matInput placeholder="External Father Description"
                     cdkTextareaAutosize="true"
-                 [value]="service.selected.externalPatDescription" disabled>
+                    [value]="service.selected.externalPatDescription" disabled>
           </textarea>
         </mat-form-field>
+
+        <!-- Offspring   -->
+        <h4>Offspring</h4>
+        <mat-list *ngIf="service.selected.offspringCount < 1" dense>
+          <mat-list-item>None</mat-list-item>
+        </mat-list>
+        <mat-list *ngIf="service.selected.offspringCount > 0" dense>
+          <mat-list-item *ngFor="let kid of service.selected.offspring" style="height: 30px"
+                         matTooltip="{{kid.tooltip}}" matTooltipClass="ttnl">
+            <button mat-button color="primary" (click)="goTo(kid.id)">{{kid.name}}</button>
+            <span>{{kid.description}}</span>
+          </mat-list-item>
+        </mat-list>
       </div>
+      <mat-divider vertical="true" fxHide.lt-sm></mat-divider>
 
-      <!-- Offspring   -->
-      <h4>Offspring</h4>
-      <mat-list *ngIf="service.selected.offspringCount < 1" dense>
-        <mat-list-item>None</mat-list-item>
-      </mat-list>
-      <mat-list *ngIf="service.selected.offspringCount > 0" dense>
-        <mat-list-item *ngFor="let kid of service.selected.offspring" style="height: 30px"
-                       matTooltip="{{kid.tooltip}}" matTooltipClass="ttnl">
-          <button mat-button color="primary" (click)="goTo(kid.id)">{{kid.name}}</button>
-          <span>{{kid.description}}</span>
-        </mat-list-item>
-      </mat-list>
-    </div>
-    <mat-divider vertical="true"></mat-divider>
+      <div fxFlex=45 fxLayout="column" fxLayoutGap="10px">
 
-    <div fxLayout="column" fxLayoutGap="10px">
-
-      <!-- Information about mutations -->
-      <div fxLayout="column">
+        <!-- Information about mutations -->
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
           <span class="zf-title">Mutations</span>
           <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editMutations()">
@@ -133,18 +97,16 @@
                          matTooltip="{{m.tooltip}}" matTooltipClass="ttnl"
                          style="height: 30px">
             {{m.fullName}}
-            <span *ngIf="service.selected.matStock && service.selected.matStock.hasMutation(m.id)"> , (mat)</span>
-            <span *ngIf="service.selected.patStock && service.selected.patStock.hasMutation(m.id)"> , (pat)</span>
+            <span *ngIf="service.selected.matStock && service.selected.matStock.hasMutation(m.id)"> , (mom)</span>
+            <span *ngIf="service.selected.patStock && service.selected.patStock.hasMutation(m.id)"> , (dad)</span>
           </mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.mutations.length < 1" dense>
           <mat-list-item>None</mat-list-item>
         </mat-list>
-      </div>
-      <mat-divider></mat-divider>
+        <mat-divider></mat-divider>
 
-      <!-- Information about transgenes -->
-      <div fxLayout="column">
+        <!-- Information about transgenes -->
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
           <span class="zf-title">Transgenes</span>
           <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editTransgenes()">
@@ -156,18 +118,16 @@
                          matTooltip="{{t.tooltip}}" matTooltipClass="ttnl"
                          style="height: 30px">
             {{t.fullName}}
-            <div *ngIf="service.selected.matStock && service.selected.matStock.hasTransgene(t.id)"> , (mat)</div>
-            <div *ngIf="service.selected.patStock && service.selected.patStock.hasTransgene(t.id)"> , (pat)</div>
+            <div *ngIf="service.selected.matStock && service.selected.matStock.hasTransgene(t.id)"> , (mom)</div>
+            <div *ngIf="service.selected.patStock && service.selected.patStock.hasTransgene(t.id)"> , (dad)</div>
           </mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.transgenes.length < 1" dense>
           <mat-list-item>None</mat-list-item>
         </mat-list>
-      </div>
-      <mat-divider></mat-divider>
+        <mat-divider></mat-divider>
 
-      <!-- Information about swimmers -->
-      <div fxLayout="column" fxFlex>
+        <!-- Information about swimmers -->
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
           <span class="zf-title">Swimmers</span>
           <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editSwimmers()">

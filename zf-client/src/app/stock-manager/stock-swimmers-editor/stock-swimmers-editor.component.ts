@@ -22,7 +22,7 @@ enum SwimmerState {
 }
 
 @Component({
-  selector: 'app-stock-genetics-editor',
+  selector: 'app-stock-swimmer-editor',
   templateUrl: './stock-swimmers-editor.component.html',
   styleUrls: ['./stock-swimmers-editor.component.scss']
 })

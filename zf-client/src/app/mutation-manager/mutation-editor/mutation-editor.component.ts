@@ -71,6 +71,7 @@ export class MutationEditorComponent implements OnInit {
   ngOnInit() {
     // watch for changes to the paramMap (i.e. changes to the route)
     this.route.paramMap.subscribe((pm: ParamMap) => {
+      this.service.enterEditMode();
       switch (pm.get('mode')) {
         case EditMode.EDIT:
           this.editMode = EditMode.EDIT;
@@ -170,6 +171,7 @@ export class MutationEditorComponent implements OnInit {
 
   revert() {
     this.initialize();
+    this.mfForm.markAsPristine();
   }
 
   nameValidator(control: AbstractControl): ValidationErrors | null {

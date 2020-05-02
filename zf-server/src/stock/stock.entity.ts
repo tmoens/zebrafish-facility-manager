@@ -157,7 +157,7 @@ export class Stock {
   @Column({
     type: 'varchar',
     nullable: true,
-    length: 400,
+    length: 5000,
   })
   comment: string;
 

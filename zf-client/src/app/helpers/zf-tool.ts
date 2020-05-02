@@ -14,15 +14,15 @@ export class ZFTool {
   static readonly STOCK_MANAGER  = new ZFTool(
     'stock_manager',
     ZFTypes.STOCK,
-    'Stock Manager');
+    'Stocks');
   static readonly MUTATION_MANAGER = new ZFTool(
     'mutation_manager',
     ZFTypes.MUTATION,
-    'Mutation Manager');
+    'Mutations');
   static readonly TRANSGENE_MANAGER  = new ZFTool(
     'transgene_manager',
     ZFTypes.TRANSGENE,
-    'Transgene Manager');
+    'Transgenes');
 
   // private to disallow creating other instances than the static ones above.
   private constructor(

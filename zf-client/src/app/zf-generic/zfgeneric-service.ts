@@ -95,6 +95,10 @@ export class ZFGenericService<
   protected _fieldOptions: FieldOptions;
   get fieldOptions(): FieldOptions { return this._fieldOptions; }
 
+  // This keeps track of whether the user is editing or browsing
+  private _isEditing$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  get isEditing$(): BehaviorSubject<boolean> { return this._isEditing$; }
+
   constructor(
     // this is used to tell the loaderService what type to use in server calls.
     private zfType: ZFTypes, // stock, mutation or transgene.
@@ -231,7 +235,7 @@ export class ZFGenericService<
   create(item: FULL_OBJ) {
     this.loaderService.create(this.zfType, item).subscribe((result) => {
       if (result.id) {
-        this.messageService.open(result.name + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
+        this.messageService.open(this.zfType + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(result.id);
         this.refresh();
         this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id)
@@ -244,7 +248,7 @@ export class ZFGenericService<
   createNext(item: FULL_OBJ) {
     this.loaderService.createNext(this.zfType, item).subscribe((result) => {
       if (result.id) {
-        this.messageService.open(result.name + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
+        this.messageService.open(this.zfType + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(item.id);
         this.refresh();
         this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id)
@@ -255,11 +259,12 @@ export class ZFGenericService<
   delete(id: number) {
     this.loaderService.delete(this.zfType, id).subscribe((result) => {
       if (result) {
-        this.messageService.open(result.name + ' deleted.', null, {duration: this.appStateService.confirmMessageDuration});
+        this.messageService.open(this.zfType + ' deleted.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(0);
+        this.selected$.next(null);
         this.refresh();
-        // TODO the refresh may not be done by the time the
-        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/0')
+        // TODO the refresh may not be done by the time the viewer tries to select
+        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view')
       }
     });
   }
@@ -277,5 +282,12 @@ export class ZFGenericService<
       this.getLikelyNextName();
       this.applyFilter(); // apply the filter to reload the filtered list.
     }
+  }
+
+  enterEditMode() {
+    this.isEditing$.next(true);
+  }
+  enterBrowseMode() {
+    this.isEditing$.next(false);
   }
 }

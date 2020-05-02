@@ -1,16 +1,20 @@
-<div fxLayout="column" class="zf-container">
+<div fxLayout="column" class="zf-nav">
 
   <!-- The Filter Part -->
   <form [formGroup]="mfForm">
-    <div fxLayout="row" fxLayoutAlign="start center">
-      <mat-checkbox  formControlName="liveStocksOnly" color="primary">Live Stocks Only</mat-checkbox>
-      <!--      <H4>Stock Filter</H4>-->
-      <span class="fill-remaining-space"></span>
-      <button mat-button (click)="onClearFilters()" color="primary">Clear Filters</button>
-    </div>
-    <div fxLayout="row" fxLayoutGap="10px" >
-      <div fxLayout="column" fxFlex="45">
 
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <mat-checkbox  formControlName="liveStocksOnly" color="primary">
+        Live Stocks Only
+      </mat-checkbox>
+      <button mat-button (click)="onClearFilters()" color="primary">
+        Clear Filters
+      </button>
+    </div>
+
+    <div fxLayout="row">
+      <div fxLayout="column" fxFlex="50%">
+        <!-- First group of filter fields -->
         <mat-form-field>
           <input matInput type="text" placeholder="Stock Number" formControlName="number">
           <button mat-button matSuffix mat-icon-button *ngIf="getFC('number').value"
@@ -36,12 +40,15 @@
                   (click)="clearFormControl('tankName')"><mat-icon>close</mat-icon></button>
         </mat-form-field>
       </div>
-      <div fxLayout="column" fxFlex>
+
+      <!-- Second group of filter fields -->
+      <div fxLayout="column" fxFlex="50%">
         <mat-form-field>
           <input matInput type="text" placeholder="Mutation" formControlName="mutation">
           <button mat-button matSuffix mat-icon-button *ngIf="getFC('mutation').value"
                   (click)="clearFormControl('mutation')"><mat-icon>close</mat-icon></button>
         </mat-form-field>
+
         <mat-form-field>
           <input matInput type="text" placeholder="Transgene" formControlName="transgene">
           <button mat-button matSuffix mat-icon-button *ngIf="getFC('transgene').value"
@@ -54,6 +61,7 @@
           <button mat-button matSuffix mat-icon-button *ngIf="getFC('age').value"
                   (click)="clearFormControl('age')"><mat-icon>close</mat-icon></button>
         </mat-form-field>
+
         <mat-form-field *ngIf="getFC('age').value > 0">
           <mat-select placeholder="Type" formControlName="ageModifier">
             <mat-option value="or_older">Or older</mat-option>
@@ -66,23 +74,21 @@
   <mat-divider></mat-divider>
 
   <!-- The Filtered List part -->
-  <div style="padding-right: 2px">
-    <div *ngIf="service.filteredList.length > 0" >
-      <h4>Filtered List</h4>
-      <mat-list role="list" class="zf-selection-list" dense style="max-height: 450px">
-        <mat-list-item (click)="onSelect(item)" *ngFor="let item of service.filteredList"
-                       [class.selected]="service.selected && item.id === service.selected.id"
-                       class="zf-selection-item"
-                       matTooltip="{{item.tooltip}}"
-                       matTooltipClass="ttnl" role="listitem"
-                       style="height: 30px">
-          <span style="width:60px">{{item.name}}</span> {{item.description}}
-        </mat-list-item>
-      </mat-list>
-    </div>
-    <div *ngIf="service.filteredList.length == 0">
-      <P>No stocks match the current filter, try relaxing the filter criteria. </P>
-    </div>
+  <div *ngIf="service.filteredList.length > 0" >
+    <span class="zf-title">Filtered List</span>
+    <mat-list role="list" dense>
+      <mat-list-item
+        *ngFor="let item of service.filteredList"
+        [class.selected]="service.selected && item.id === service.selected.id"
+        class="zf-selection-item truncate" role="listitem"
+        matTooltip="{{item.tooltip}}" matTooltipClass="ttnl"
+        (click)="onSelect(item)">
+        {{item.name}} {{item.description}}
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div *ngIf="service.filteredList.length == 0">
+    <P>No stocks match the current filter, try relaxing the filter criteria. </P>
   </div>
 </div>
 

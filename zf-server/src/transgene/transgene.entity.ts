@@ -42,7 +42,7 @@ export class Transgene {
   @Column({
     type: 'varchar',
     nullable: true,
-    length: 300,
+    length: 3000,
     comment: 'Notes pertaining to this transgene.',
   })
   comment: string;

@@ -68,18 +68,6 @@ export class TransgeneViewerComponent implements OnInit {
     });
   }
 
-  create() {
-    this.router.navigate(['transgene_manager/' + EditMode.CREATE, {
-      mode: EditMode.CREATE,
-    }]);
-  }
-
-  createNext() {
-    this.router.navigate(['transgene_manager/' + EditMode.CREATE_NEXT, {
-      mode: EditMode.CREATE_NEXT,
-    }]);
-  }
-
   edit() {
     this.router.navigate(['transgene_manager/' + EditMode.EDIT, {
       id: this.service.selected.id,
@@ -87,7 +75,4 @@ export class TransgeneViewerComponent implements OnInit {
     }]);
   }
 
-  delete() {
-    this.service.delete(this.service.selected.id);
-  }
 }

@@ -20,6 +20,7 @@ import {TransgeneViewerComponent} from './transgene-viewer/transgene-viewer.comp
 import {TransgeneManagerRoutingModule} from './transgene-manager-routing.module';
 import {TransgeneMenuComponent} from './transgene-menu/transgene-menu.component';
 import {AuthModule} from "../auth/auth.module";
+import {MatSidenavModule} from "@angular/material/sidenav";
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {AuthModule} from "../auth/auth.module";
     MatMenuModule,
     FormsModule,
     AuthModule,
+    MatSidenavModule,
   ],
   exports: [
     TransgeneMenuComponent

@@ -1,0 +1,32 @@
+<div fxFlex fxLayout="column" class="zf-nav">
+
+  <!-- The Filter Part -->
+  <span class="zf-title">Transgene Filter</span>
+  <form fxLayout="column" [formGroup]="mfForm">
+    <mat-form-field>
+      <input matInput type="text" placeholder="Search all fields" formControlName="text">
+      <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
+              (click)="clearFormControl('text')">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+
+  <!-- The Filtered List part -->
+  <div fxFlex *ngIf="service.filteredList.length > 0">
+    <span class="zf-title">Filtered List</span>
+    <mat-list role="list" dense>
+      <mat-list-item
+        *ngFor="let item of service.filteredList"
+        [class.selected]="service.selected && item.id === service.selected.id"
+        class="zf-selection-item truncate" role="listitem"
+        matTooltip="{{item.tooltip}}" matTooltipClass="ttnl"
+        (click)="onSelect(item)">
+        {{item.fullName}}
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div *ngIf="service.filteredList.length == 0">
+    <P>No transgenes match the current filter, try relaxing the filter criteria. </P>
+  </div>
+</div>

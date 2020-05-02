@@ -55,6 +55,7 @@ export class ConfigService {
           this.appStateService.setState('tankNumberingHint', response.tankNumberingHint);
           this.appStateService.setState('tankLabelLayout', response.tankLabelConfig.layout);
           this.appStateService.setState('tankLabelPointSize', response.tankLabelConfig.fontPointSize);
+          this.appStateService.setState('hidePI', !!(response.hidePI));
           resolve(true);
         })
     })

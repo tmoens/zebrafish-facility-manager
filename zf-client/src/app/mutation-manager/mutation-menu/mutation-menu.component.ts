@@ -32,6 +32,17 @@ export class MutationMenuComponent implements OnInit {
       mode: EditMode.CREATE_NEXT,
     }]);
   }
+
+  edit() {
+    this.router.navigate(['mutation_manager/' + EditMode.EDIT, {
+      id: this.service.selected.id,
+      mode: EditMode.EDIT,
+    }]);
+  }
+
+  delete() {
+    this.service.delete(this.service.selected.id);
+  }
 }
 
 

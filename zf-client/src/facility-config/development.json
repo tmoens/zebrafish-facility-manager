@@ -2,6 +2,8 @@
   "facilityName": "development",
   "facilityAbbrv": "dev",
 
+  "hidePI": true,
+
   "tankNumberingHint": "Legal tank numbers run from blah blahblah",
   "tankLabelConfig": {
     "fontPointSize": 14,

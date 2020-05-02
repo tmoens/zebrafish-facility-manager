@@ -4,7 +4,8 @@
 
     <div fxLayout="column">
       <mat-form-field >
-        <input matInput type="text" placeholder="Allele" formControlName="allele">
+        <input required matInput type="text" placeholder="Allele" formControlName="allele"
+               maxlength="20">
         <button mat-button matSuffix mat-icon-button *ngIf="getFC('allele').value"
                 (click)="clearFormControl('allele')">
           <mat-icon>close</mat-icon>
@@ -13,12 +14,15 @@
       </mat-form-field>
 
       <mat-form-field>
-        <input required matInput placeholder="Descriptor" formControlName="descriptor">
+        <input required matInput type="text" placeholder="Descriptor" formControlName="descriptor"
+               maxlength="50">
         <mat-error *ngIf="!mfForm.valid">{{getUniquenessError()}}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="Plasmid" formControlName="plasmid" (emptied)="clearFormControl('plasmid')">
+        <input matInput type="text" placeholder="Plasmid" formControlName="plasmid"
+               (emptied)="clearFormControl('plasmid')"
+               maxlength="250">
         <button mat-button matSuffix mat-icon-button *ngIf="getFC('plasmid').value"
                 (click)="clearFormControl('plasmid')">
           <mat-icon>close</mat-icon>
@@ -26,7 +30,8 @@
       </mat-form-field>
 
       <mat-form-field >
-        <input matInput type="text" placeholder="Source" formControlName="source" [matAutocomplete]="autoSource">
+        <input matInput type="text" placeholder="Source" formControlName="source"
+               maxlength="40" [matAutocomplete]="autoSource">
         <button mat-button matSuffix mat-icon-button *ngIf="getFC('source').value"
                 (click)="clearFormControl('source')">
           <mat-icon>close</mat-icon>
@@ -34,7 +39,9 @@
       </mat-form-field>
 
       <mat-form-field>
-        <textarea matInput placeholder="Comment" formControlName="comment" cdkTextareaAutosize="true" ></textarea>
+        <textarea matInput placeholder="Comment" formControlName="comment"
+                  maxlength="3000" cdkTextareaAutosize="true"  cdkAutosizeMaxRows="7">
+        </textarea>
         <button mat-button matSuffix mat-icon-button *ngIf="getFC('comment').value"
                 (click)="clearFormControl('comment')">
           <mat-icon>close</mat-icon>

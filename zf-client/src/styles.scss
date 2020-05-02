@@ -4,10 +4,24 @@
 
 @include angular-material-theme($zf-app-theme);
 
+// push everything after this in flexLayout to the end of the layout
+// So, use this in a toolbar to push the login button to the right.
 .fill-remaining-space {
-  // This fills the remaining space, by using flexbox.
-  // Every toolbar row uses a flexbox row layout.
   flex: 1 1 auto;
+}
+
+// used to limit presentation of a field to the available space
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content {
+  width:100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // To make tooltips show separate lines for /n
@@ -19,19 +33,91 @@
   margin-left: 16px;
 }
 
+// Abusing the toolbar to allow a title with a nicely aligned adjacent icon
+// Solves the problem that <h2>...</h2><button mat-icon-button>...</...> do not
+// align horizontally.
+.zf-mini-toolbar {
+  background: inherit;
+  padding: 0 !important;
+}
+
+.zf-tool {
+  position: absolute;
+  top: 56px;
+  bottom: 0;
+  right: 10px;
+  left: 10px;
+}
+
+.zf-full-width {
+  width: 100%;
+  max-width: 1000px;
+}
+
 .zf-container {
-  padding: 16px;
-  margin-bottom: 16px;
-  margin-top: 5px;
-  @include mat-elevation(3);
+  width: 100%;
+  max-width: 1000px;
 }
 
 .zf-selection-list {
+  height: 100%;
   overflow: auto;
+}
+
+.zf-nav-content {
+  margin: 25px;
+}
+
+.zf-nav {
+  margin: 25px;
+  height: 70vh;
+  overflow: auto;
+}
+
+.zf-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+.zf-nav::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+.zf-nav::-webkit-scrollbar-thumb {
+  background: darkslategrey;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.zf-nav::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
+}
+.zf-selection-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+.zf-selection-list::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+.zf-selection-list::-webkit-scrollbar-thumb {
+  background: darkslategrey;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.zf-selection-list::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
 }
 
 .zf-selection-item {
   cursor: pointer;
+  height: 30px;
 
   &:hover, &:active, &:focus {
     background-color: mat-color(map-get($zf-app-theme, background), hover);
@@ -47,10 +133,15 @@
 // size relative to some existing typography style, but I is lazy.
 .zf-title {
   font-size: 14pt;
+  font-weight: 500;
+  margin: 0 0 4px;
+  color: darkorchid;
 }
 .zf-sub-title {
   font-size: 12pt;
+  color: deepskyblue;
 }
+
 
 @media print {
   app-root > * { display: none; }

@@ -1,4 +1,38 @@
-<div fxLayout="row" fxLayoutGap="10px" *ngIf="appState.loggedIn$ | async">
-  <div fxFlex="35"><app-stock-selector></app-stock-selector></div>
-  <div fxFlex><router-outlet></router-outlet></div>
+<div fxLayout="row" fxLayoutAlign="center" *ngIf="appState.loggedIn$ | async">
+  <mat-sidenav-container class="zf-container">
+    <!--  We only use the sidenav on small screens. -->
+    <!--  On medium+ screens, the navigator will be part of the sidenav-content
+          WHAT? I hear you cry. In my defence this is how they do it on in the
+          Angular documentation pages.  It solves the problems
+          Angular has with resizing the sidenav when open.
+          -->
+    <mat-sidenav #sidenav fixedInViewport="true" fixedTopGap="112" fxHide.gt-sm>
+      <app-stock-selector></app-stock-selector>
+    </mat-sidenav>
+    <mat-sidenav-content>
+    <div fxLayout="column">
+      <mat-toolbar>
+        <button mat-icon-button (click)="sidenav.toggle()"
+                fxHide.gt-sm>
+          <mat-icon>menu</mat-icon>
+        </button>
+        Stock Manager
+        <span class="fill-remaining-space"></span>
+        <app-stock-menu></app-stock-menu>
+      </mat-toolbar>
+      <div fxLayout="row" >
+        <div fxFlex="35" fxHide.lt-md>
+          <app-stock-selector></app-stock-selector>
+        </div>
+        <div fxFlex>
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+  <!--    <div fxFlex="35"><app-stock-selector></app-stock-selector></div>-->
+  <!--    <div fxFlex><router-outlet></router-outlet></div>-->
 </div>

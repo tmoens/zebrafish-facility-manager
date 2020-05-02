@@ -31,6 +31,18 @@ export class TransgeneMenuComponent implements OnInit {
       mode: EditMode.CREATE_NEXT,
     }]);
   }
+
+  edit() {
+    this.router.navigate(['transgene_manager/' + EditMode.EDIT, {
+      id: this.service.selected.id,
+      mode: EditMode.EDIT,
+    }]);
+  }
+
+  delete() {
+    this.service.delete(this.service.selected.id);
+  }
+
 }
 
 

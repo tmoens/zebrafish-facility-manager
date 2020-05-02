@@ -9,6 +9,10 @@ import {DialogService} from '../../dialog.service';
 import {Observable} from 'rxjs';
 import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {ZF_DATE_FORMATS} from "../../helpers/dateFormats";
+import * as moment from 'moment';
+import {FormControl} from "@angular/forms";
+import {AppStateService} from "../../app-state.service";
+
 
 @Component({
   selector: 'app-stock-editor',
@@ -18,6 +22,7 @@ import {ZF_DATE_FORMATS} from "../../helpers/dateFormats";
     {provide: MAT_DATE_FORMATS, useValue: ZF_DATE_FORMATS},
   ],
 })
+
 
 export class StockEditorComponent implements OnInit {
   // EDIT the stock, CREATE the stock, or CREATE a sub-stock from the stock
@@ -52,6 +57,7 @@ export class StockEditorComponent implements OnInit {
   saved = false;
 
   constructor(
+    public appState: AppStateService,
     public service: StockService,
     private route: ActivatedRoute,
     private router: Router,
@@ -71,17 +77,19 @@ export class StockEditorComponent implements OnInit {
           });
           break;
         case EditMode.CREATE_NEXT:
-          // Make a guess that both parents are the stock that was selected at the time the
-          // editor was initially invoked.
-          // It's gonna be a bad guess fairly often, at least for one of the parents,
-          // but it is better than nothing and it could be dead right pretty often too.
-          // Corner case note. If the user reloads the browser during a CREATE_NEXT,
-          // there will be no selected stock, so no putative parent can be filled in.
-          if (this.service.selected) {
-            this.putativeParentalStock = classToClass(this.service.selected);
-          } else {
-            this.putativeParentalStock = null;
-          }
+          // 2020-04-26 The below proved to be just plain wrong.  So, no putative parent.
+          // // Make a guess that both parents are the stock that was selected at the time the
+          // // editor was initially invoked.
+          // // It's gonna be a bad guess fairly often, at least for one of the parents,
+          // // but it is better than nothing and it could be dead right pretty often too.
+          // // Corner case note. If the user reloads the browser during a CREATE_NEXT,
+          // // there will be no selected stock, so no putative parent can be filled in.
+          // if (this.service.selected) {
+          //   this.putativeParentalStock = classToClass(this.service.selected);
+          // } else {
+          //   this.putativeParentalStock = null;
+          // }
+          this.putativeParentalStock = null;
           this.initializeForCreate();
           break;
         case EditMode.CREATE_SUB_STOCK:
@@ -117,13 +125,13 @@ export class StockEditorComponent implements OnInit {
     this.stock.number = Number(this.service.likelyNextStockNumber);
     this.stock.subNumber = 0;
     this.stock.name = String(this.stock.number);
-    if (this.putativeParentalStock) {
-      const temp = classToPlain(this.putativeParentalStock);
-      this.stock.matIdInternal = this.putativeParentalStock.id;
-      this.stock.matStock = plainToClass(Stock, temp);
-      this.stock.patIdInternal = this.putativeParentalStock.id;
-      this.stock.patStock = plainToClass(Stock, temp);
-    }
+    // if (this.putativeParentalStock) {
+    //   const temp = classToPlain(this.putativeParentalStock);
+    //   this.stock.matIdInternal = this.putativeParentalStock.id;
+    //   this.stock.matStock = plainToClass(Stock, temp);
+    //   this.stock.patIdInternal = this.putativeParentalStock.id;
+    //   this.stock.patStock = plainToClass(Stock, temp);
+    // }
 
     this.title = 'Creating Stock ' + this.stock.name;
     this.prepParents();
@@ -134,7 +142,6 @@ export class StockEditorComponent implements OnInit {
   initializeForCreateSubStock() {
     this.editMode = EditMode.CREATE_SUB_STOCK;
     this.stock = classToClass(this.baseStock);
-    // this.stock = new StockFullDto(this.baseStock);
     this.stock.id = null; // can't reuse the initial selected's id.
     this.stock.subNumber = this.baseStock.nextSubStockNumber;
     this.stock.nextSubStockNumber++; // required: ensures parents and fertilizationDate not editable.

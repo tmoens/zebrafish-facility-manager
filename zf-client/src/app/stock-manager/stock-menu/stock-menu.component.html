@@ -1,14 +1,57 @@
-<button zfmHideUnauthorized="user" mat-menu-item (click)="onCreateStock()" *ngIf="stockService.selected !== null">
-  <mat-icon>add</mat-icon>
-  <span>Create Stock {{stockService.likelyNextStockNumber}}</span>
+<button mat-button [matMenuTriggerFor]="stockMenu">
+  <mat-icon>more_vert</mat-icon>
+  Actions
 </button>
-<button zfmHideUnauthorized="user" mat-menu-item (click)="onStockReport()"
-        matTooltip="A spreadsheet containing stocks meeting the current filter.">
-  <mat-icon>cloud_download</mat-icon>
-  <span>Stock Report</span>
-</button>
-<button zfmHideUnauthorized="user" mat-menu-item (click)="onFacilityAudit()"
-        matTooltip="A spreadsheet ordered by tank name to enable a facility audit.">
-  <mat-icon>cloud_download</mat-icon>
-  <span>Audit Report</span>
-</button>
+<mat-menu #stockMenu="matMenu" >
+
+  <div *ngIf="service.selected">
+    <!--  Create a new stock-->
+    <button zfmHideUnauthorized="user" mat-menu-item (click)="onCreate()">
+      <mat-icon>add</mat-icon>
+      <span>Create Stock {{service.likelyNextStockNumber}}</span>
+    </button>
+
+    <!--  Create a sub-stock of the currently selected stock -->
+    <button mat-menu-item zfmHideUnauthorized="user" (click)="createSubStock()">
+      <mat-icon>add</mat-icon>
+      <span>Create Sub Stock {{service.selected.number}}.{{service.selected.nextSubStockNumber}}</span>
+    </button>
+
+    <!-- Edit selected stock -->
+    <button mat-menu-item zfmHideUnauthorized="user" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      <span>Edit {{service.selected.name}}</span>
+    </button>
+
+    <!-- Delete currently selected stock -->
+    <button mat-menu-item zfmHideUnauthorized="admin" (click)="onDelete()"
+            [disabled]="!service.selected.isDeletable">
+      <mat-icon>delete</mat-icon>
+      <span>Delete {{service.selected.name}}</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <!--  Print labels for this stock-->
+    <button mat-menu-item (click)="printLabels()"
+            matTooltip="One label for each tank holding this stock."
+            [disabled]="!service.selected.swimmers || service.selected.swimmers.length < 1">
+      <mat-icon>print</mat-icon>
+      <span>Print Label(s)</span>
+    </button>
+
+    <!--  Download Stock Report-->
+    <button zfmHideUnauthorized="user" mat-menu-item (click)="onStockReport()"
+            matTooltip="A spreadsheet containing stocks meeting the current filter.">
+      <mat-icon>cloud_download</mat-icon>
+      <span>Stock Report</span>
+    </button>
+
+    <!-- Download a facility audit report -->
+    <button zfmHideUnauthorized="user" mat-menu-item (click)="onFacilityAudit()"
+            matTooltip="A spreadsheet ordered by tank name to enable a facility audit.">
+      <mat-icon>cloud_download</mat-icon>
+      <span>Audit Report</span>
+    </button>
+  </div>
+</mat-menu>

@@ -116,6 +116,7 @@ export class TransgeneEditorComponent implements OnInit {
   }
   revert() {
     this.initialize();
+    this.mfForm.markAsPristine();
   }
 
   // Tell the user it the descriptor/allele pair they have chosen is already in use.
@@ -158,6 +159,7 @@ export class TransgeneEditorComponent implements OnInit {
 
   clearFormControl(name: string) {
     this.getFC(name).setValue(null);
+    this.getFC(name).markAsDirty();
   }
 
   /* To support deactivation check  */

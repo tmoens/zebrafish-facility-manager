@@ -29,6 +29,7 @@ import {TankNameValidator} from './validators/tankNameValidator';
 import {StockNameCheckValidator} from './validators/stockNameCheck';
 import {AuthModule} from "../auth/auth.module";
 import {MatCardModule} from "@angular/material/card";
+import {MatSidenavModule} from "@angular/material/sidenav";
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import {MatCardModule} from "@angular/material/card";
     MatMenuModule,
     FormsModule,
     AuthModule,
+    MatSidenavModule,
   ],
   exports: [
     StockMenuComponent

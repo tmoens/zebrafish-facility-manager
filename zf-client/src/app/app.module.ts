@@ -21,7 +21,6 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
-import {MatNativeDateModule} from "@angular/material/core";
 import {MatRadioModule} from "@angular/material/radio";
 import {MatSelectModule} from "@angular/material/select";
 import {MatSidenavModule} from "@angular/material/sidenav";
@@ -49,6 +48,9 @@ import {RoleGuardService} from "./guards/role-guard.service";
 import {AuthModule} from "./auth/auth.module";
 import {LoginModule} from "./login/login.module";
 import {AppStateService} from "./app-state.service";
+import {MatMomentDateModule} from "@angular/material-moment-adapter";
+import { TestnavComponent } from './testnav/testnav.component';
+import { LayoutModule } from '@angular/cdk/layout';
 
 export function appStateProviderFactory(provider: AppStateService) {
   return () => provider.initialize();
@@ -69,8 +71,10 @@ export function stockServiceProviderFactory(provider: StockService) {
     TopBarComponent,
     TankLabelComponent,
     SplashComponent,
+    TestnavComponent,
   ],
   imports: [
+    AuthModule,
     LoginModule,
     ZfGenericModule,
     MutationManagerModule,
@@ -95,7 +99,7 @@ export function stockServiceProviderFactory(provider: StockService) {
     MatInputModule,
     MatListModule,
     MatMenuModule,
-    MatNativeDateModule,
+    MatMomentDateModule,
     MatRadioModule,
     MatSelectModule,
     MatSidenavModule,
@@ -106,7 +110,7 @@ export function stockServiceProviderFactory(provider: StockService) {
     ReactiveFormsModule,
     AppRoutingModule,
     StorageServiceModule,
-    AuthModule,
+    LayoutModule,
   ],
   entryComponents: [
     StockGeneticsEditorComponent,
@@ -123,7 +127,9 @@ export function stockServiceProviderFactory(provider: StockService) {
     RoleGuardService,
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true},
   ],
-  exports: [],
+  exports: [
+    TopBarComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

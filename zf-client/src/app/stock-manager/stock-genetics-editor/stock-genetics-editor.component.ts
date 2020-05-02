@@ -36,7 +36,7 @@ export class StockGeneticsEditorComponent implements OnInit {
     private router: Router,
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      // Are we dealing with Mutations or Transgenes
+      // Are we dealing with (Mutations or Transgenes)
       type: ZFTypes;
 
       // the stock whose mutations/transgenes we are editing
@@ -49,7 +49,7 @@ export class StockGeneticsEditorComponent implements OnInit {
       fullList: ZfGenericClass[];
 
       // the list of mutations/transgenes contained in this stock.
-      // This component is strictly about editing this list.
+      // This component is specifically about editing this list.
       ownList: ZfGenericClass[];
     },
   ) {
@@ -60,8 +60,12 @@ export class StockGeneticsEditorComponent implements OnInit {
   }
 
   initialize() {
+    // working copy so we can revert
     this.stock = classToClass(this.data.stock);
+
     this.ownSelectionList = new ZfSelectionList<ZfGenericClass>();
+
+    // all the parental mutations/transgenes
     this.parentalSelectionList = new ZfSelectionList<ZfGenericClass>();
     this.fullSelectionList = new ZfSelectionList<ZfGenericClass>();
 

@@ -41,11 +41,9 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
   initialize() {
     const storedFilter = this.appState.getToolState(ZFTypes.MUTATION, ZFToolStates.FILTER);
     if (storedFilter) {
-      this.setFilter(storedFilter);
+      this.setFilter(plainToClass(MutationFilter, storedFilter));
     } else {
-      const filter = plainToClass(MutationFilter, {});
-      console.log(ZFTypes.MUTATION + ' empty filter: ' + JSON.stringify(filter));
-      this.setFilter(filter);
+      this.setFilter(plainToClass(MutationFilter, {}));
     }
 
     this._fieldOptions = new FieldOptions({

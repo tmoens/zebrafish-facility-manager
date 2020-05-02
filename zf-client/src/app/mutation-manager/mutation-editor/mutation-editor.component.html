@@ -1,48 +1,65 @@
-<div fxLayout="column" class="zf-container" *ngIf="item">
-  <div class="zf-title">Mutation Editor</div>
-  <form fxLayout="column" [formGroup]="mfForm">
-      <div fxLayout="row" fxFlex="50" fxLayoutGap="20px">
+<div fxLayout="column" class="zf-nav-content" *ngIf="item">
+  <div fxLayout="column">
 
-        <div fxLayout="column">
+    <mat-toolbar class="zf-mini-toolbar">
+      <span class="zf-title">Mutation Editor</span>
+    </mat-toolbar>
+
+    <form fxLayout="column" [formGroup]="mfForm">
+      <div fxLayout="row" fxLayoutGap="20px">
+
+        <div fxLayout="column" fxFlex="30%">
           <mat-form-field>
-            <input required matInput placeholder="Allele" formControlName="name">
+            <input required type="text"  matInput placeholder="Allele" formControlName="name"
+                   maxlength="20">
             <mat-error *ngIf="nameControl.touched && nameControl.invalid">{{getNameError()}}</mat-error>
           </mat-form-field>
 
           <mat-form-field >
-            <input matInput type="text" placeholder="Gene" formControlName="gene" [matAutocomplete]="autoGene">
+            <input matInput type="text" placeholder="Gene" formControlName="gene"
+                   [matAutocomplete]="autoGene"
+                   maxlength="20">
           </mat-form-field>
 
           <mat-form-field>
-            <input matInput placeholder="Alternate Gene Name" formControlName="alternateGeneName">
+            <input matInput placeholder="Alternate Gene Name" formControlName="alternateGeneName"
+                   maxlength="100">
           </mat-form-field>
 
           <mat-form-field >
-            <input required matInput type="text" placeholder="Researcher" formControlName="researcher" [matAutocomplete]="autoResearcher">
+            <input required matInput type="text" placeholder="Researcher" formControlName="researcher"
+                   [matAutocomplete]="autoResearcher"
+                   maxlength="20">
           </mat-form-field>
 
           <mat-form-field >
-            <input matInput type="text" placeholder="Mutation Type" formControlName="mutationType" [matAutocomplete]="autoMutationType">
+            <input matInput type="text" placeholder="Mutation Type" formControlName="mutationType"
+                   [matAutocomplete]="autoMutationType"
+                   maxlength="15">
           </mat-form-field>
 
           <mat-form-field>
-            <input matInput placeholder="Nucleotide Change" formControlName="actgChange">
+            <input matInput placeholder="Nucleotide Change" formControlName="actgChange"
+                   maxlength="10">
           </mat-form-field>
 
           <mat-form-field>
-            <input matInput placeholder="Amino Acid Change" formControlName="aaChange">
+            <input matInput placeholder="Amino Acid Change" formControlName="aaChange"
+                   maxlength="10">
           </mat-form-field>
 
           <mat-form-field >
-            <input matInput type="text" placeholder="Screen Type" formControlName="screenType" [matAutocomplete]="autoScreenType">
+            <input matInput type="text" placeholder="Screen Type" formControlName="screenType"
+                   [matAutocomplete]="autoScreenType"
+                   maxlength="25">
           </mat-form-field>
 
-          // 2020-04-26 hidden as per request from fhcrc lab.  not used in others.
-<!--          <mat-form-field >-->
-<!--            <input matInput [matDatepicker]="picker" placeholder="Thaw Date" formControlName="thawDate">-->
-<!--            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
-<!--            <mat-datepicker #picker></mat-datepicker>-->
-<!--          </mat-form-field>-->
+          <!--          2020-04-26 hidden as per request from fhcrc lab.  not used in others.-->
+          <!--          <mat-form-field >-->
+          <!--            <input matInput [matDatepicker]="picker" placeholder="Thaw Date" formControlName="thawDate">-->
+          <!--            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
+          <!--            <mat-datepicker #picker></mat-datepicker>-->
+          <!--          </mat-form-field>-->
 
           <mat-form-field>
             <mat-select placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">
@@ -59,14 +76,20 @@
 
         <div fxLayout="column" fxLayoutGap="20px" fxFlex>
           <mat-form-field>
-            <textarea matInput placeholder="Comment" formControlName="comment" cdkTextareaAutosize="true" ></textarea>
+            <textarea matInput placeholder="Comment" formControlName="comment"
+                      maxlength="3000"
+                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
           </mat-form-field>
 
           <mat-form-field>
-            <textarea matInput placeholder="Phenotype" formControlName="phenotype" cdkTextareaAutosize="true" ></textarea>
+            <textarea matInput placeholder="Phenotype" formControlName="phenotype"
+                      maxlength="3000"
+                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
           </mat-form-field>
           <mat-form-field>
-            <textarea matInput placeholder="Morphant Phenotype" formControlName="morphantPhenotype" cdkTextareaAutosize="true" ></textarea>
+            <textarea matInput placeholder="Morphant Phenotype" formControlName="morphantPhenotype"
+                      maxlength="3000"
+                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
           </mat-form-field>
           <div class="fill-remaining-space"></div>
           <div fxLayout="row" fxLayoutGap="20px">
@@ -75,14 +98,14 @@
 
         </div>
       </div>
-  </form>
-  <div fxLayout="row" fxLayoutGap="10px">
-    <div class="fill-remaining-space"></div>
-    <button mat-button color="primary" (click)="cancel()">Cancel</button>
-    <button mat-button color="primary" [disabled]='mfForm.pristine' (click)="revert()">Revert</button>
-    <button mat-button color="primary" [disabled]='!mfForm.valid || mfForm.pristine' (click)="save()">Save</button>
+    </form>
+    <div fxLayout="row" fxLayoutGap="10px">
+      <div class="fill-remaining-space"></div>
+      <button mat-button color="primary" (click)="cancel()">Cancel</button>
+      <button mat-button color="primary" [disabled]='mfForm.pristine' (click)="revert()">Revert</button>
+      <button mat-button color="primary" [disabled]='!mfForm.valid || mfForm.pristine' (click)="save()">Save</button>
+    </div>
   </div>
-
 </div>
 
 <!-- All the auto-completes gathered together to make the form easier to read. -->

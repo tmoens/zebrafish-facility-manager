@@ -1,34 +1,17 @@
-<div fxFlex class="zf-container" *ngIf="service.selected">
-  <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" >
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item zfmHideUnauthorized="user" (click)="edit()">
-        <mat-icon>edit</mat-icon>
-        <span>Edit {{service.selected.allele}}</span>
-      </button>
-      <button mat-menu-item zfmHideUnauthorized="admin" (click)="delete()" [disabled]="!service.selected.isDeletable">
-        <mat-icon>delete</mat-icon>
-        <span>Delete {{service.selected.allele}}</span>
-      </button>
-      <button mat-menu-item zfmHideUnauthorized="user" (click)="createNext()">
-        <mat-icon>add</mat-icon>
-        <span>Create Owned Transgene {{service.likelyNextName}}</span>
-      </button>
-      <button mat-menu-item (click)="create()">
-        <mat-icon>add</mat-icon>
-        <span>Create Transgene</span>
-      </button>
-    </mat-menu>
+<div fxFlex class="zf-nav-content" *ngIf="service.selected">
+  <div fxLayout="column">
+
+  <mat-toolbar class="zf-mini-toolbar">
     <span class="zf-title">Transgene Details</span>
     <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="edit()">
       <mat-icon>edit</mat-icon>
     </button>
-  </div>
+  </mat-toolbar>
+
+
   <form fxLayout="column" [formGroup]="mfForm">
     <mat-form-field *ngIf="service.selected.allele">
-      <input required matInput placeholder="Allele" formControlName="allele">
+      <input matInput type="text"  placeholder="Allele" formControlName="allele">
     </mat-form-field>
 
     <mat-form-field *ngIf="service.selected.descriptor">
@@ -36,7 +19,7 @@
     </mat-form-field>
 
     <mat-form-field *ngIf="service.selected.plasmid">
-      <input matInput placeholder="Plasmid" formControlName="plasmid">
+      <input matInput type="text" placeholder="Plasmid" formControlName="plasmid">
     </mat-form-field>
 
     <mat-form-field *ngIf="service.selected.source">
@@ -44,7 +27,10 @@
     </mat-form-field>
 
     <mat-form-field *ngIf="service.selected.comment">
-      <textarea matInput placeholder="Comment" formControlName="comment" cdkTextareaAutosize="true" ></textarea>
+      <textarea matInput placeholder="Comment" formControlName="comment"
+                cdkTextareaAutosize="true"  cdkAutosizeMaxRows="7">
+      </textarea>
     </mat-form-field>
   </form>
+  </div>
 </div>

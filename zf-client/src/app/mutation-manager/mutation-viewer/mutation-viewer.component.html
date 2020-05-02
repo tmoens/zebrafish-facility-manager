@@ -1,36 +1,16 @@
-<div fxLayout="column" class="zf-container" *ngIf="service.selected">
-  <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" >
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item zfmHideUnauthorized="user" (click)="edit()">
-        <mat-icon>edit</mat-icon>
-        <span>Edit {{service.selected.fullName}}</span>
-      </button>
-      <button mat-menu-item zfmHideUnauthorized="admin" (click)="delete()"
-              [disabled]="!service.selected.isDeletable">
-        <mat-icon>delete</mat-icon>
-        <span>Delete {{service.selected.fullName}}</span>
-      </button>
-      <button mat-menu-item zfmHideUnauthorized="user" (click)="createNext()">
-        <mat-icon>add</mat-icon>
-        <span>Create Owned Mutation {{service.likelyNextName}}</span>
-      </button>
-      <button mat-menu-item zfmHideUnauthorized="user" (click)="create()">
-        <mat-icon>add</mat-icon>
-        <span>Create Mutation</span>
-      </button>
-    </mat-menu>
-    <span class="zf-title">Mutation Details</span>
-    <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="edit()">
-      <mat-icon>edit</mat-icon>
-    </button>
-  </div>
-  <form fxLayout="column" [formGroup]="mfForm">
-    <div fxLayout="row" fxFlex="200" fxLayoutGap="20px" *ngIf="service.selected">
+<div fxLayout="column" class="zf-nav-content" *ngIf="service.selected">
+  <div fxLayout="column">
 
-      <div fxLayout="column" fxFlex="30">
+    <mat-toolbar class="zf-mini-toolbar">
+      <span class="zf-title">Mutation Details</span>
+      <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="edit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <form fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px" [formGroup]="mfForm">
+
+      <div fxLayout="column" fxFlex="40%">
         <mat-form-field *ngIf="service.selected.name">
           <input required matInput placeholder="Allele" formControlName="name">
         </mat-form-field>
@@ -63,10 +43,10 @@
           <input matInput type="text" placeholder="Screen Type" formControlName="screenType">
         </mat-form-field>
 
-        // 2020-04-26 hidden as per request from fhcrc lab.  not used in others.
-<!--        <mat-form-field *ngIf="service.selected.thawDate">-->
-<!--          <input matInput type="text" placeholder="Thaw Date" formControlName="thawDate">-->
-<!--        </mat-form-field>-->
+        <!--        2020-04-26 hidden as per request from fhcrc lab.  not used in others.-->
+        <!--        <mat-form-field *ngIf="service.selected.thawDate">-->
+        <!--          <input matInput type="text" placeholder="Thaw Date" formControlName="thawDate">-->
+        <!--        </mat-form-field>-->
 
         <mat-form-field *ngIf="service.selected.spermFreezePlan">
           <input matInput type="text" placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">
@@ -77,20 +57,25 @@
         </mat-form-field>
       </div>
 
-      <div fxLayout="column" fxLayoutGap="20px" fxFlex>
+      <mat-divider vertical="true" fxHide.lt-md></mat-divider>
+
+      <div fxLayout="column"  fxFlex fxLayoutGap="20px">
         <mat-form-field *ngIf="service.selected.comment">
-          <textarea matInput placeholder="Comment" formControlName="comment" cdkTextareaAutosize="true" ></textarea>
+            <textarea matInput placeholder="Comment" formControlName="comment"
+                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
         </mat-form-field>
 
         <mat-form-field *ngIf="service.selected.phenotype">
-          <textarea matInput placeholder="Phenotype" formControlName="phenotype" cdkTextareaAutosize="true" ></textarea>
+            <textarea matInput placeholder="Phenotype" formControlName="phenotype"
+                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
         </mat-form-field>
 
         <mat-form-field *ngIf="service.selected.morphantPhenotype">
-          <textarea matInput placeholder="Morphant Phenotype" formControlName="morphantPhenotype" cdkTextareaAutosize="true" ></textarea>
+            <textarea matInput placeholder="Morphant Phenotype" formControlName="morphantPhenotype"
+                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
         </mat-form-field>
 
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>

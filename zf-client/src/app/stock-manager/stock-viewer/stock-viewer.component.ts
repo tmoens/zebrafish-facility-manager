@@ -9,6 +9,7 @@ import {MutationService} from '../../mutation-manager/mutation.service';
 import {TransgeneService} from '../../transgene-manager/transgene.service';
 import {PrintService} from '../../printing/print.service';
 import {ZFTypes} from "../../helpers/zf-types";
+import {AppStateService} from "../../app-state.service";
 
 /**
  * Note to future self.
@@ -26,6 +27,7 @@ export class StockViewerComponent implements OnInit {
   id: number = null;
 
   constructor(
+    public appState: AppStateService,
     private router: Router,
     private route: ActivatedRoute,
     public service: StockService,
@@ -37,7 +39,7 @@ export class StockViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    // We have to do a little mucky maulers here to ensure that the selected we
+    // We have to do a little mucky maulers here to ensure that the stock we
     // were asked to view is the same as the "selected" stock in stock service
     // and vice versa.
 
@@ -48,7 +50,7 @@ export class StockViewerComponent implements OnInit {
       if (id) {
         this.service.selectByIdAndLoad(id);
       } else {
-        // if there is no id in the route, lets see a stock is already selected and if so, navigate to it.
+        // if there is no id in the route, see if a stock is already selected and if so, navigate to it.
         if (this.service.selected) {
           this.router.navigateByUrl('stock_manager/view/' + this.service.selected.id, {replaceUrl: true});
         } else {
@@ -67,27 +69,11 @@ export class StockViewerComponent implements OnInit {
     this.router.navigate(['stock_manager/view/' + id]);
   }
 
-  create(): void {
-    this.router.navigate(['stock_manager/' + EditMode.CREATE_NEXT, {
-      mode: EditMode.CREATE_NEXT,
-    }]);
-  }
-
-  createSubStock() {
-    this.router.navigate(['stock_manager/' + EditMode.CREATE_SUB_STOCK, {
-      mode: EditMode.CREATE_SUB_STOCK,
-    }]);
-  }
-
-  edit(): void {
+  editStock() {
     this.router.navigate(['stock_manager/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
     }]);
-  }
-
-  delete() {
-    this.service.delete(this.service.selected.id);
   }
 
   editMutations() {
@@ -135,13 +121,5 @@ export class StockViewerComponent implements OnInit {
   /* print a tank label for this tank */
   printLabel(tankId) {
     this.printService.printDocument('tankLabels', [tankId]);
-  }
-
-  /* print labels for all the tanks this stock is in */
-  printLabels() {
-    if (this.service.selected.swimmers && this.service.selected.swimmers.length > 0) {
-      const tanks = this.service.selected.swimmers.map( swimmer => String(swimmer.tankId) );
-      this.printService.printDocument('tankLabels', tanks);
-    }
   }
 }

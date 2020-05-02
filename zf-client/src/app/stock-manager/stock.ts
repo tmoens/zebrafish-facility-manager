@@ -2,6 +2,7 @@ import {ZfGenericClass} from '../zf-generic/zfgeneric-class';
 import {computed, observable} from 'mobx';
 import {Mutation} from '../mutation-manager/mutation';
 import {Transgene} from '../transgene-manager/transgene';
+import * as moment from 'moment';
 
 export class Stock extends ZfGenericClass {
   // id: number = null; // from generic
@@ -38,7 +39,7 @@ export class Stock extends ZfGenericClass {
       strings.push('researcher: ' + this.researcher);
     }
     if (this.fertilizationDate) {
-      strings.push('fertilized: ' + this.fertilizationDate);
+      strings.push('fertilized: ' + moment(this.fertilizationDate).format("YYYY-MM-DD"));
     }
     if (this.comment) {
       strings.push('comment: ' + this.comment);

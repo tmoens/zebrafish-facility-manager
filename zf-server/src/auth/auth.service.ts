@@ -9,7 +9,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-
   login(user: User): string {
     const token = this.buildToken(user);
     return token;

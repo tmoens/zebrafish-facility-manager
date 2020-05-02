@@ -1,13 +1,41 @@
-<button mat-menu-item zfmHideUnauthorized="user" (click)="create()">
-  <mat-icon>add</mat-icon>
-  <span>Create Transgene</span>
+<button mat-button [matMenuTriggerFor]="tgMenu">
+  <mat-icon>more_vert</mat-icon>
+  Actions
 </button>
-<button mat-menu-item zfmHideUnauthorized="user" color="primary" (click)="createNext()">
-  <mat-icon>add</mat-icon>
-  <span>Create Owned Transgene {{service.likelyNextName}}</span>
-</button>
-<button mat-menu-item zfmHideUnauthorized="user" (click)="service.toExcel()"
-        matTooltip="A spreadsheet containing stocks meeting the current filter.">
-  <mat-icon>cloud_download</mat-icon>
-  <span>Transgene Report</span>
-</button>
+
+<!--Create a new Transgene-->
+<mat-menu #tgMenu="matMenu" >
+  <div *ngIf="service.selected">
+    <button mat-menu-item zfmHideUnauthorized="user" (click)="create()">
+      <mat-icon>add</mat-icon>
+      <span>Create Transgene</span>
+    </button>
+
+    <!--Create a transgene "owned" by this facility  -->
+    <button mat-menu-item zfmHideUnauthorized="user"(click)="createNext()">
+      <mat-icon>add</mat-icon>
+      <span>Create Owned Transgene {{service.likelyNextName}}</span>
+    </button>
+
+    <!--  Edit a transgene-->
+    <button mat-menu-item zfmHideUnauthorized="user" (click)="edit()">
+      <mat-icon>edit</mat-icon>
+      <span>Edit {{service.selected.allele}}</span>
+    </button>
+
+    <!--  Delete a Transgene-->
+    <button mat-menu-item zfmHideUnauthorized="admin" (click)="delete()" [disabled]="!service.selected.isDeletable">
+      <mat-icon>delete</mat-icon>
+      <span>Delete {{service.selected.allele}}</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+
+    <button mat-menu-item zfmHideUnauthorized="user" (click)="service.toExcel()"
+            matTooltip="A spreadsheet of transgenes known in this facility.">
+      <mat-icon>cloud_download</mat-icon>
+      <span>Transgene Report</span>
+    </button>
+  </div>
+</mat-menu>

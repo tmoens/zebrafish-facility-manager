@@ -39,10 +39,9 @@ export class TransgeneService extends ZFGenericService<Transgene, Transgene, Tra
   initialize() {
     const storedFilter = this.appState.getToolState(ZFTypes.TRANSGENE, ZFToolStates.FILTER);
     if (storedFilter) {
-      this.setFilter(storedFilter);
+      this.setFilter(plainToClass(TransgeneFilter, storedFilter));
     } else {
-      const filter = plainToClass(TransgeneFilter, {});
-      this.setFilter(filter);
+      this.setFilter(plainToClass(TransgeneFilter, {}));
     }
 
     this._fieldOptions = new FieldOptions({

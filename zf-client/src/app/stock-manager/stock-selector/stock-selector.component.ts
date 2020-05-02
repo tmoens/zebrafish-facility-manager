@@ -6,6 +6,7 @@ import {StockFilter} from './stock-filter';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {Stock} from '../stock';
+import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/layout";
 
 /**
  * A two-part component: a filter for stocks and a list of filtered stocks.
@@ -32,6 +33,7 @@ export class StockSelectorComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     public service: StockService,
+    public breakpointObserver: BreakpointObserver,
   ) {
   }
 
@@ -48,6 +50,16 @@ export class StockSelectorComponent implements OnInit {
       startWith(''),
       map(value => this.service.fieldOptions.filterOptionsContaining('researcher', value))
     );
+
+    this.breakpointObserver
+      .observe([Breakpoints.Small, Breakpoints.HandsetPortrait])
+      .subscribe((state: BreakpointState) => {
+        if (state.matches) {
+          console.log(
+            'Matches small viewport or handset in portrait mode'
+          );
+        }
+      });
   }
 
   getFC(name: string): AbstractControl {

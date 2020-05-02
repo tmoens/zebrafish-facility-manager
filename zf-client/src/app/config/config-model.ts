@@ -7,6 +7,8 @@ export class ConfigModel {
   facilityAbbrv: string;
   facilityPrefix: string;
 
+  hidePI?: boolean;
+
   tankNumberingHint: string;
   tankLabelConfig: TankLabelConfig;
 }
