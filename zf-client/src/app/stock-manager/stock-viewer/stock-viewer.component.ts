@@ -45,7 +45,8 @@ export class StockViewerComponent implements OnInit {
 
     // use the route's paramMap to figure out the id of the item we are supposed to view.
     this.route.paramMap.subscribe((pm: ParamMap) => {
-      // if there is an id in the route, tell the service to select it.
+      this.service.enterBrowseMode();
+// if there is an id in the route, tell the service to select it.
       const id = +pm.get('id');
       if (id) {
         this.service.selectByIdAndLoad(id);
@@ -77,41 +78,11 @@ export class StockViewerComponent implements OnInit {
   }
 
   editMutations() {
-      const dialogRef = this.subEditor.open(StockGeneticsEditorComponent, {
-        data: {
-          type: ZFTypes.MUTATION,
-          stock: this.service.selected,
-          parentalList: this.service.getParentalMutations(),
-          fullList: this.mutationService.all,
-          ownList: this.service.selected.mutations,
-        }
-      });
-
-      dialogRef.afterClosed().subscribe((result: StockFull) => {
-        if (result) {
-          this.service.selectByIdAndLoad(result.id);
-        }
-      });
+    this.router.navigate(['stock_manager/edit/genetics/mutation/' + this.service.selected.id]);
   }
 
   editTransgenes() {
-    // this.service.getParentalTransgenes().subscribe((parentalTransgenes: Transgene[]) => {
-      const dialogRef = this.subEditor.open(StockGeneticsEditorComponent, {
-        data: {
-          type: ZFTypes.TRANSGENE,
-          stock: this.service.selected,
-          parentalList: this.service.getParentalTransgenes(),
-          fullList: this.transgeneService.all,
-          ownList: this.service.selected.transgenes,
-        }
-      });
-
-      dialogRef.afterClosed().subscribe((result: StockFull) => {
-        if (result) {
-          this.service.selectByIdAndLoad(result.id);
-        }
-      });
-    // });
+    this.router.navigate(['stock_manager/edit/genetics/transgene/' + this.service.selected.id]);
   }
 
   editSwimmers() {

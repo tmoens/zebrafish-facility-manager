@@ -29,6 +29,12 @@
   white-space: pre-line;
 }
 
+// mat-radio buttons come out squished for some reason.
+// so deal with it like this...
+.zf-radio-button {
+  margin: 6px 10px 12px 0;
+}
+
 // Abusing the toolbar to allow a title with a nicely aligned adjacent icon
 // Solves the problem that <h2>...</h2><button mat-icon-button>...</...> do not
 // align horizontally.
@@ -47,12 +53,7 @@
 
 .zf-full-width {
   width: 100%;
-  max-width: 1000px;
-}
-
-.zf-container {
-  width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
 }
 
 .zf-selection-list {
@@ -136,7 +137,10 @@
   margin: 0 0 4px;
   color: darkorchid;
 }
+
 .zf-sub-title {
+  font-weight: 500;
+  margin: 5px 0;
   font-size: 12pt;
   color: deepskyblue;
 }

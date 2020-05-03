@@ -3,7 +3,7 @@
 
     <!--------------- Title and menu --------------------->
     <mat-toolbar class="zf-mini-toolbar">
-      Stock {{service.selected.name}} Details
+      <span class="zf-title">Stock {{service.selected.name}} Details</span>
       <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editStock()">
         <mat-icon>edit</mat-icon>
       </button>
@@ -18,7 +18,7 @@
         </mat-form-field>
         <mat-form-field>
           <input matInput placeholder="Fertilization Date"
-                 [value]="service.selected.fertilizationDate" disabled>
+                 [value]="service.selected.fertilizationDate + ' (' + service.selected.age() + ' days)'" disabled>
         </mat-form-field>
         <mat-form-field *ngIf="!appState.getState('hidePI') && service.selected.pi">
           <input matInput placeholder="Primary Investigator"
@@ -35,11 +35,11 @@
         </mat-form-field>
 
         <!-- Mom   -->
-        <h4>Mom
+        <span class="zf-sub-title">Mom
           <button *ngIf="service.selected.matStock" mat-button color="primary"
                   matTooltip="{{service.selected.matStock.tooltip}}" matTooltipClass="ttnl"
                   (click)="goTo(service.selected.matStock.id)">{{service.selected.matStock.name}}</button>
-        </h4>
+        </span>
         <mat-form-field *ngIf="service.selected.matStock">
           <input matInput placeholder="Description"
                  [value]="service.selected.matStock.description" disabled>
@@ -52,11 +52,11 @@
         </mat-form-field>
 
         <!-- Dad   -->
-        <h4>Dad
+        <span class="zf-sub-title">Dad
           <button *ngIf="service.selected.patStock" mat-button color="primary"
                   matTooltip="{{service.selected.patStock.tooltip}}" matTooltipClass="ttnl"
                   (click)="goTo(service.selected.patStock.id)">{{service.selected.patStock.name}}</button>
-        </h4>
+        </span>
         <mat-form-field *ngIf="service.selected.patStock">
           <input matInput placeholder="Description"
                  [value]="service.selected.patStock.description" disabled>
@@ -69,7 +69,7 @@
         </mat-form-field>
 
         <!-- Offspring   -->
-        <h4>Offspring</h4>
+        <span class="zf-sub-title">Offspring</span>
         <mat-list *ngIf="service.selected.offspringCount < 1" dense>
           <mat-list-item>None</mat-list-item>
         </mat-list>
@@ -87,7 +87,7 @@
 
         <!-- Information about mutations -->
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-          <span class="zf-title">Mutations</span>
+          <span class="zf-sub-title">Mutations</span>
           <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editMutations()">
             <mat-icon>edit</mat-icon>
           </button>
@@ -97,8 +97,6 @@
                          matTooltip="{{m.tooltip}}" matTooltipClass="ttnl"
                          style="height: 30px">
             {{m.fullName}}
-            <span *ngIf="service.selected.matStock && service.selected.matStock.hasMutation(m.id)"> , (mom)</span>
-            <span *ngIf="service.selected.patStock && service.selected.patStock.hasMutation(m.id)"> , (dad)</span>
           </mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.mutations.length < 1" dense>
@@ -108,7 +106,7 @@
 
         <!-- Information about transgenes -->
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-          <span class="zf-title">Transgenes</span>
+          <span class="zf-sub-title">Transgenes</span>
           <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editTransgenes()">
             <mat-icon>edit</mat-icon>
           </button>
@@ -118,8 +116,6 @@
                          matTooltip="{{t.tooltip}}" matTooltipClass="ttnl"
                          style="height: 30px">
             {{t.fullName}}
-            <div *ngIf="service.selected.matStock && service.selected.matStock.hasTransgene(t.id)"> , (mom)</div>
-            <div *ngIf="service.selected.patStock && service.selected.patStock.hasTransgene(t.id)"> , (dad)</div>
           </mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.transgenes.length < 1" dense>
@@ -129,7 +125,7 @@
 
         <!-- Information about swimmers -->
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-          <span class="zf-title">Swimmers</span>
+          <span class="zf-sub-title">Swimmers</span>
           <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editSwimmers()">
             <mat-icon>edit</mat-icon>
           </button>

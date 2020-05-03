@@ -4,15 +4,12 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Stock} from '../stock';
 import {StockFull} from '../stockFull';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
-import {classToClass, classToPlain, plainToClass} from 'class-transformer';
+import {classToClass} from 'class-transformer';
 import {DialogService} from '../../dialog.service';
 import {Observable} from 'rxjs';
 import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {ZF_DATE_FORMATS} from "../../helpers/dateFormats";
-import * as moment from 'moment';
-import {FormControl} from "@angular/forms";
 import {AppStateService} from "../../app-state.service";
-
 
 @Component({
   selector: 'app-stock-editor',
@@ -37,9 +34,6 @@ export class StockEditorComponent implements OnInit {
   // The stock from which we are creating a sub-stock (CREATE_SUB_STOCK mode only)
   baseStock: StockFull;
 
-  // Putative parental stock (CREATE mode only)
-  putativeParentalStock: StockFull = null;
-
   // holds the working copy of the stock we are editing.
   stock: StockFull;
 
@@ -54,6 +48,8 @@ export class StockEditorComponent implements OnInit {
   // the researcher field so far
   filteredResearcherOptions: string[];
   filteredPIOptions: string[];
+
+  // Flag allows deactivation after saving changes.
   saved = false;
 
   constructor(
@@ -68,6 +64,7 @@ export class StockEditorComponent implements OnInit {
   ngOnInit() {
     // watch for changes to the paramMap (i.e. changes to the route)
     this.route.paramMap.subscribe((pm: ParamMap) => {
+      this.service.enterEditMode();
       switch (pm.get('mode')) {
         case EditMode.EDIT:
           this.stockId = +pm.get('id');
@@ -77,19 +74,6 @@ export class StockEditorComponent implements OnInit {
           });
           break;
         case EditMode.CREATE_NEXT:
-          // 2020-04-26 The below proved to be just plain wrong.  So, no putative parent.
-          // // Make a guess that both parents are the stock that was selected at the time the
-          // // editor was initially invoked.
-          // // It's gonna be a bad guess fairly often, at least for one of the parents,
-          // // but it is better than nothing and it could be dead right pretty often too.
-          // // Corner case note. If the user reloads the browser during a CREATE_NEXT,
-          // // there will be no selected stock, so no putative parent can be filled in.
-          // if (this.service.selected) {
-          //   this.putativeParentalStock = classToClass(this.service.selected);
-          // } else {
-          //   this.putativeParentalStock = null;
-          // }
-          this.putativeParentalStock = null;
           this.initializeForCreate();
           break;
         case EditMode.CREATE_SUB_STOCK:
@@ -103,7 +87,7 @@ export class StockEditorComponent implements OnInit {
   }
 
 
-  // When editing an existing selected, make a working copy from the initial selected.
+  // When editing an existing stock, make a working copy from the initial stock.
   initializeForEdit() {
     this.editMode = EditMode.EDIT;
     this.stock = classToClass(this.initialStock);
@@ -125,14 +109,6 @@ export class StockEditorComponent implements OnInit {
     this.stock.number = Number(this.service.likelyNextStockNumber);
     this.stock.subNumber = 0;
     this.stock.name = String(this.stock.number);
-    // if (this.putativeParentalStock) {
-    //   const temp = classToPlain(this.putativeParentalStock);
-    //   this.stock.matIdInternal = this.putativeParentalStock.id;
-    //   this.stock.matStock = plainToClass(Stock, temp);
-    //   this.stock.patIdInternal = this.putativeParentalStock.id;
-    //   this.stock.patStock = plainToClass(Stock, temp);
-    // }
-
     this.title = 'Creating Stock ' + this.stock.name;
     this.prepParents();
   }
@@ -250,7 +226,7 @@ export class StockEditorComponent implements OnInit {
 
   /* To support deactivation check  */
   canDeactivate(): boolean | Observable<boolean> |Promise <boolean> {
-    if (this.isUnchanged()) {
+    if (this.saved || this.isUnchanged()) {
       return true;
     } else {
       return this.deactivationDialogService.confirm('There are unsaved changes to the stock you are editing.');
@@ -259,7 +235,6 @@ export class StockEditorComponent implements OnInit {
 
   // Check if any of the fields have been changed by the user.
   isUnchanged(): boolean {
-    if (this.saved) { return true; }
     switch (this.editMode) {
       case EditMode.EDIT:
         if (
@@ -309,16 +284,6 @@ export class StockEditorComponent implements OnInit {
           !this.dadInternal
         ) {
           return false;
-        }
-        if (this.putativeParentalStock) {
-          if ((this.stock.matIdInternal !== this.putativeParentalStock.id) ||
-            (this.stock.patIdInternal !== this.putativeParentalStock.id)) {
-            return false;
-          } else {
-            if (this.stock.patIdInternal || this.stock.matIdInternal) {
-              return false;
-            }
-          }
         }
         return true;
       case EditMode.CREATE_SUB_STOCK:

@@ -11,7 +11,7 @@ import {debounceTime} from "rxjs/operators";
 @Component({
   selector: 'app-user-selector',
   template: `
-    <div fxFlex fxLayout="column" class="zf-container">
+    <div fxFlex fxLayout="column" class="zf-full-width">
       <!-- The Filter Part -->
       <div>
         <H4>User Filter</H4>

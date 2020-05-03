@@ -3,6 +3,7 @@ import {Stock} from './stock';
 import {Transgene} from '../transgene-manager/transgene';
 import {Mutation} from '../mutation-manager/mutation';
 import {StockSwimmerDto} from '../tank-manager/stock-swimmer-dto';
+import * as moment from "moment";
 
 
 // All the fields in a stock including related objects like parents and transgenes.
@@ -42,6 +43,12 @@ export class StockFull extends ZfGenericClass {
   fertilizationDateEditable(): boolean {
     return this.nextSubStockNumber <= 1;
   }
+
+    age(): number {
+
+      return Math.floor(moment.duration(moment().diff(moment(this.fertilizationDate))).asDays());
+    }
+
 }
 
 

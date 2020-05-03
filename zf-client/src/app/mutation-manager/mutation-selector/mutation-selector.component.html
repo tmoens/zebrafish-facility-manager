@@ -1,7 +1,7 @@
 <div fxFlex fxLayout="column" class="zf-selector">
 
   <!-- The Filter part  -->
-  <span class="zf-title">Mutation Filter</span>
+  <span class="zf-sub-title">Mutation Filter</span>
   <form [formGroup]="mfForm">
 
 
@@ -63,7 +63,7 @@
 
   <!-- The filtered List part -->
   <div *ngIf="service.filteredList.length > 0" >
-    <span class="zf-title">Filtered List</span>
+    <span class="zf-sub-title">Filtered List</span>
     <mat-list role="list"  dense>
       <mat-list-item
         *ngFor="let item of service.filteredList"

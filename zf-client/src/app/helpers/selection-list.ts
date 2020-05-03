@@ -6,6 +6,7 @@
 
 import {ZfGenericClass} from '../zf-generic/zfgeneric-class';
 
+
 export class ZfSelectionList<OBJ extends ZfGenericClass> {
   count = 0;
   items: {[id: number]: {item: OBJ, selected: boolean}} = {};
@@ -20,6 +21,7 @@ export class ZfSelectionList<OBJ extends ZfGenericClass> {
   remove(item: OBJ) {
     this.removeId(item.id);
   }
+
   removeId(id: number) {
     if (this.items[id]) {
       this.count--;
@@ -30,10 +32,16 @@ export class ZfSelectionList<OBJ extends ZfGenericClass> {
   contains(item: OBJ) {
     return this.containsId(item.id);
   }
+
   containsId(id: number) {
     return !!(this.items[id]);
   }
 
+  toggleId(id: number) {
+    if (this.containsId(id)) {
+      this.items[id].selected = !this.items[id].selected;
+    }
+  }
   getList(): ZfGenericClass[] {
     return Object.values(this.items).map(item => item.item);
   }

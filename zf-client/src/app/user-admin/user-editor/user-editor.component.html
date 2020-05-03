@@ -1,4 +1,4 @@
-<div fxFlex class="zf-container" *ngIf="service.selected">
+<div fxFlex class="zf-full-width" *ngIf="service.selected">
   <div class="zf-title">Edit User {{getFC('username').value}}</div>
   <form (ngSubmit)="save()" [formGroup]="mfForm" fxLayout="column">
     <div fxFlex="20px"></div>

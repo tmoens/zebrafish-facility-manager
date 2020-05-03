@@ -113,15 +113,15 @@ export class StockRepository extends Repository<Stock> {
       .select('DISTINCT stock.id, stock.name, stock.description, stock.researcher, stock.comment, stock.fertilizationDate')
       .where('1');
     if (filter.number) {
-      q = q.andWhere('stock.number <= :n', {n: filter.number});
+      q = q.andWhere('stock.name LIKE :n', {n: filter.number + "%"});
     }
     if (filter.researcher) {
-      q = q.andWhere('stock.researcher Like :r', {r: '%' + filter.researcher + '%'});
+      q = q.andWhere('stock.researcher LIKE :r', {r: '%' + filter.researcher + '%'});
     }
     if (filter.text) {
       const text = '%' + filter.text + '%';
       q = q.andWhere(new Brackets( qb => {
-        qb.where('stock.comment Like :t OR stock.description LIKE :t',
+        qb.where('stock.comment LIKE :t OR stock.description LIKE :t',
           {t: text});
       } ));
     }

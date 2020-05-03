@@ -70,6 +70,7 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
     return this._fieldOptions.options.name.includes(name);
   }
 
+
   toExcel() {
     const wb = XLSX.utils.book_new();
     const mutationSheet = XLSX.utils.json_to_sheet(this.filteredList.map((m: Mutation) => {

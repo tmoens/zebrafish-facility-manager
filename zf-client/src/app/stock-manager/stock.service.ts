@@ -130,6 +130,7 @@ export class StockService extends ZFGenericService<
         // therefore will or will not be in the filtered list.
         this.setSelectedId(r.id);
         this.refresh();
+        this.router.navigateByUrl(this.appState.activeTool.route + '/view/' + result.id)
       }
     });
   }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppStateService} from '../app-state.service';
-import {EditMode} from '../zf-generic/zf-edit-modes';
 import {ZFTool} from "../helpers/zf-tool";
 import {Observable} from "rxjs";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
@@ -14,7 +13,7 @@ import {TransgeneService} from "./transgene.service";
   styleUrls: ['./transgene-manager.component.scss']
 })
 export class TransgeneManagerComponent implements OnInit {
-  // We keep the selector open when the viewport larger than XSmall
+  // We keep the selector open when the viewport larger than Small
   selectorFixed$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.XSmall, Breakpoints.Small])
     .pipe(
       map(result => !result.matches),

@@ -1,84 +1,81 @@
-<section class="mat-typography" fxLayout="column">
-  <mat-toolbar>{{data.type}} Editor for {{data.stock.name}}</mat-toolbar>
-  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start start">
-    <div fxFlex="45" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start stretch">
+<div fxLayout="column" fxLayoutAlign="center" *ngIf="stock" >
+  <mat-toolbar class="zf-mini-toolbar">
+    <span class="zf-title">{{capitalizedType + ' Editor for Stock ' + stock.name}}</span>
+  </mat-toolbar>
 
-      <!-- The stock's own mutations/transgenes -->
-      <div class="zf-container">
-        <mat-card-subtitle>{{data.stock.name}} {{data.type}}s</mat-card-subtitle>
-        <mat-list dense>
-          <mat-list-item *ngIf="ownSelectionList.count === 0">
-            --None--
-          </mat-list-item>
-          <mat-list-item *ngFor="let m of ownSelectionList.items | keyvalue"
-                         matTooltip="{{m.value.item.tooltip}}" matTooltipClass="ttnl"
-                         style="height: 30px">
-            <!--              <mat-icon matListIcon>delete</mat-icon>-->
-            {{m.value.item.name}}
-            <span *ngIf="isInherited(m.value.item)"> (parental)</span>
-            <span *ngIf="!isInherited(m.value.item)"> (novel)</span>
-          </mat-list-item>
-        </mat-list>
-      </div>
+  <div fxLayout="row" fxLayoutGap="50px" >
 
-      <!-- The stock's parent's mutations/transgenes -->
-      <div class="zf-container">
-        <mat-card-subtitle>Parental {{data.type}}s</mat-card-subtitle>
-        <mat-list dense class="zf-selection-list">
-          <mat-list-item *ngIf="parentalSelectionList.count === 0">
-            --None--
-          </mat-list-item>
-          <mat-list-item *ngFor="let mm of parentalSelectionList.items | keyvalue" class="zf-selection-item">
-            <mat-checkbox (change)="onCheckParentalItem(mm.value.item)" [(ngModel)]="mm.value.selected"
-                          matTooltip="{{mm.value.item.tooltip}}" matTooltipClass="ttnl"
-                          color="primary">
-              {{mm.value.item.name}}
-            </mat-checkbox>
-          </mat-list-item>
-        </mat-list>
-      </div>
-    </div>
+    <!-- An area for the user to lookup mutations/transgenes. -->
+    <div fxLayout="column" style="height: 70vh">
+      <div class="zf-sub-title">{{capitalizedType}} Lookup</div>
 
-    <!-- All non-parental mutations/transgenes. With a filter. -->
-    <div fxLayout="column" fxFlex class="zf-container">
-      <mat-card-subtitle>Other {{data.type}}s</mat-card-subtitle>
       <mat-form-field>
-        <label>
-          <input matInput type="text" placeholder="Search" [(ngModel)]="filterString">
-        </label>
+        <input matInput type="text" placeholder="Search" [formControl]="filterStringFC">
+        <mat-hint>Must be at least two characters</mat-hint>
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
-      <mat-list dense class="zf-selection-list" style="max-height: 510px">
 
-        <!-- Put selected ones at the top of the list -->
-        <ng-container *ngFor="let mm of fullSelectionList.items | keyvalue">
-          <mat-list-item  *ngIf="mm.value.selected" class="zf-selection-item">
-            <mat-checkbox (change)="onCheckFilteredItem(mm.value.item)" [(ngModel)]="mm.value.selected"
+      <mat-list dense class="zf-selection-list">
+        <ng-container *ngFor="let mm of lookupList.items | keyvalue">
+          <mat-list-item class="zf-selection-item">
+            <mat-checkbox (change)="onCheckLookupItem(mm.value.item, mm.value.selected)"
+                          [(ngModel)]="mm.value.selected"
                           matTooltip="{{mm.value.item.tooltip}}" matTooltipClass="ttnl"
                           color="primary">
-              {{mm.value.item.name}}
-            </mat-checkbox>
-          </mat-list-item>
-        </ng-container>
-
-        <!-- Put the rest below. -->
-        <ng-container *ngFor="let mm of fullSelectionList.items | keyvalue">
-          <mat-list-item  *ngIf="mm.value.item.containsString(filterString) && !mm.value.selected" class="zf-selection-item">
-            <mat-checkbox (change)="onCheckFilteredItem(mm.value.item)" [(ngModel)]="mm.value.selected"
-                          matTooltip="{{mm.value.item.tooltip}}" matTooltipClass="ttnl"
-                          color="primary">
-              {{mm.value.item.name}}
+              {{mm.value.item.fullName}}
             </mat-checkbox>
           </mat-list-item>
         </ng-container>
       </mat-list>
     </div>
-  </div>
-  <div fxLayout="row">
-    <div class="fill-remaining-space"></div>
-    <button mat-button color="primary" (click)="cancel()">Cancel</button>
-    <button mat-button color="primary" (click)="revert()">Revert</button>
-    <button mat-button color="primary" (click)="save()" [disabled]="!ownListChanged">Save</button>
-  </div>
-</section>
 
+    <div fxLayout="column" >
+
+      <!--The stock's parent's mutations/transgenes -->
+      <div class="zf-sub-title">{{stock.name}} {{capitalizedType}}s From Parents</div>
+      <mat-list dense>
+        <mat-list-item *ngIf="parentalSelectionList.count === 0">
+          --None--
+        </mat-list-item>
+        <mat-list-item *ngFor="let m of parentalSelectionList.items | keyvalue"
+                       class="zf-selection-item">
+          <mat-checkbox (change)="onCheckParentalItem(m.value.item, m.value.selected)"
+                        [(ngModel)]="m.value.selected"
+                        matTooltip="{{m.value.item.tooltip}}" matTooltipClass="ttnl"
+                        style="padding-left: 14px" color="primary">
+            {{m.value.item.fullName}}
+          </mat-checkbox>
+        </mat-list-item>
+      </mat-list>
+
+      <mat-divider></mat-divider>
+
+      <!-- nonParental mutations/transgenes -->
+      <div *ngIf="nonParentalSelectionList.count > 0">
+        <div class="zf-sub-title">{{stock.name}} Additional {{capitalizedType}}s</div>
+        <mat-list dense>
+          <ng-container *ngFor="let mm of nonParentalSelectionList.items | keyvalue">
+            <mat-list-item class="zf-selection-item" *ngIf="mm.value.selected"
+                           matTooltip="{{mm.value.item.tooltip}}" matTooltipClass="ttnl">
+              <button mat-icon-button >
+                <mat-icon color="primary" (click)="onCheckNonParentalItem(mm.value.item)">delete</mat-icon>
+              </button>
+              {{mm.value.item.fullName}}
+            </mat-list-item>
+          </ng-container>
+        </mat-list>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div fxLayout="row">
+        <div class="fill-remaining-space"></div>
+        <button mat-button color="primary" (click)="cancel()">Cancel</button>
+        <button mat-button color="primary" (click)="revert()" [disabled]="!ownListChanged">Revert</button>
+        <button mat-button color="primary" (click)="save()" [disabled]="!ownListChanged">Save</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

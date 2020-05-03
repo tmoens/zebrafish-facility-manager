@@ -5,13 +5,18 @@
     <mat-toolbar class="zf-mini-toolbar">{{title}}</mat-toolbar>
 
     <form #stockEditForm="ngForm">
-        <div fxLayout="column">
+      <!-- Editor form has two sets of fields. Put them side by side on larger screens and in a -->
+      <!-- column on smaller ones. -->
+      <div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0px">
+
+        <!-- First group of fields pertain to the stock itself -->
+        <div fxFlex="50" fxLayout="column">
           <mat-form-field>
-            <input matInput placeholder="Stock Number" name="sn" [(ngModel)]="stock.name" disabled>
+            <input matInput type="text" placeholder="Stock Number" name="sn" [(ngModel)]="stock.name" disabled>
           </mat-form-field>
           <mat-form-field>
-            <input matInput placeholder="Description" name="desc" [(ngModel)]="stock.description" required
-            maxlength="60">
+            <input matInput type="text" placeholder="Description" name="desc" [(ngModel)]="stock.description" required
+                   maxlength="60">
           </mat-form-field>
           <mat-form-field >
             <input matInput [matDatepicker]="picker" placeholder="Fertilization Date" name="fertDate"
@@ -20,29 +25,33 @@
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
           <mat-form-field *ngIf="!appState.getState('hidePI')">
-            <input matInput placeholder="Primary Investigator" (keyup)="onPIChange()" name="pi"
-                   [(ngModel)]="stock.pi" [matAutocomplete]="autoPI">
+            <input matInput type="text" placeholder="Primary Investigator" (keyup)="onPIChange()" name="pi"
+                   [(ngModel)]="stock.pi" [matAutocomplete]="autoPI"
+                   maxlength="25">
           </mat-form-field>
           <mat-form-field>
-            <input matInput placeholder="Researcher" (keyup)="onResearcherChange()" name="researcher"
-                   [(ngModel)]="stock.researcher" [matAutocomplete]="autoResearcher">
+            <input matInput type="text" placeholder="Researcher" (keyup)="onResearcherChange()" name="researcher"
+                   [(ngModel)]="stock.researcher" [matAutocomplete]="autoResearcher"
+                   maxlength="20">
           </mat-form-field>
           <mat-form-field>
         <textarea matInput placeholder="Comment" name="comment"
-                  maxlength="3999"
+                  maxlength="4000"
                   [(ngModel)]="stock.comment"
                   cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
           </mat-form-field>
+        </div>
 
+        <mat-divider vertical fxHide.lt-sm></mat-divider>
+        <!-- The second group identifies the stock's parents -->
+        <div class="zf-full-width" fxLayout="column">
           <!--  Mother --------------------------------------->
-          <div fxLayout="row">
-            <h4>Mom</h4>
+          <span class="zf-sub-title">Mom</span>
             <mat-radio-group [(ngModel)]="momInternal" color="primary" name="mom"
                              [disabled]="!stock.parentsEditable">
-              <mat-radio-button [value]=true>Internal</mat-radio-button>
-              <mat-radio-button [value]=false>External</mat-radio-button>
+              <mat-radio-button class="zf-radio-button" [value]=true>Internal</mat-radio-button>
+              <mat-radio-button class="zf-radio-button" [value]=false>External</mat-radio-button>
             </mat-radio-group>
-          </div>
           <div *ngIf="momInternal" fxLayout="column">
             <mat-form-field>
               <input matInput placeholder="Stock Number"
@@ -52,32 +61,30 @@
               <mat-error *ngIf="matStockNameF.errors">Stock name does not exist</mat-error>
             </mat-form-field>
             <mat-form-field>
-              <input matInput placeholder="Description" name="msd"
+              <input matInput type="text" placeholder="Description" name="msd"
                      [(ngModel)]="stock.matStock.description" disabled>
             </mat-form-field>
           </div>
           <div *ngIf="!momInternal" fxLayout="column">
             <mat-form-field>
-              <input matInput placeholder="External Mother Identifier" name="extMomId"
-                     [(ngModel)]="stock.externalMatId" [disabled]="!stock.parentsEditable">
+              <input matInput type="text" placeholder="External Mother Identifier" name="extMomId"
+                     [(ngModel)]="stock.externalMatId" [disabled]="!stock.parentsEditable"
+                     maxlength="20">
             </mat-form-field>
             <mat-form-field>
-            <textarea matInput placeholder="External Mother Description" name="extMomDesc"
-                      cdkTextareaAutosize="true"
-                      [(ngModel)]="stock.externalMatDescription" [disabled]="!stock.parentsEditable">
-            </textarea>
+              <input matInput type="text" placeholder="External Mother Description" name="extMomDesc"
+                     [(ngModel)]="stock.externalMatDescription" [disabled]="!stock.parentsEditable"
+                     maxlength="40">
             </mat-form-field>
           </div>
 
           <!--  Father --------------------------------------->
-          <div fxLayout="row">
-            <h4>Dad</h4>
+            <span class="zf-sub-title">Dad</span>
             <mat-radio-group [(ngModel)]="dadInternal" color="primary" name="dad"
                              [disabled]="!stock.parentsEditable">
-              <mat-radio-button [value]=true>Internal</mat-radio-button>
-              <mat-radio-button [value]=false>External</mat-radio-button>
+              <mat-radio-button class="zf-radio-button" value=true>Internal</mat-radio-button>
+              <mat-radio-button class="zf-radio-button" [value]=false>External</mat-radio-button>
             </mat-radio-group>
-          </div>
           <div *ngIf="dadInternal"  fxLayout="column">
             <mat-form-field>
               <input matInput placeholder="Stock Number"
@@ -93,25 +100,24 @@
           </div>
           <div *ngIf="!dadInternal" fxLayout="column">
             <mat-form-field>
-              <input matInput placeholder="External Father Identifier" name="extPatId"
-                     [(ngModel)]="stock.externalPatId" [disabled]="!stock.parentsEditable">
+              <input matInput type="text" placeholder="External Father Identifier" name="extPatId"
+                     [(ngModel)]="stock.externalPatId" [disabled]="!stock.parentsEditable"
+                     maxlength="20">
             </mat-form-field>
             <mat-form-field>
-            <textarea matInput placeholder="External Father Description" name="extMatId"
-                      cdkTextareaAutosize="true"
-                      [(ngModel)]="stock.externalPatDescription" [disabled]="!stock.parentsEditable">
-            </textarea>
+              <input matInput type="text" placeholder="External Father Description" name="extMatId"
+                     [(ngModel)]="stock.externalPatDescription" [disabled]="!stock.parentsEditable"
+                     maxlength="40">
             </mat-form-field>
           </div>
         </div>
-
+      </div>
       <div class="fill-remaining-space"></div>
       <div fxLayout="row" fxLayoutGap="20px">
         <div class="fill-remaining-space"></div>
         <button mat-button color="primary" (click)="cancel()">Cancel</button>
         <button mat-button color="primary" [disabled]="isUnchanged()" (click)="revert()">Revert</button>
-        <button (click)="save()" [disabled]="isUnchanged() || !stockEditForm.valid" color="primary" mat-button
-                type=submit>Save
+        <button (click)="save()" [disabled]="isUnchanged() || !stockEditForm.valid" color="primary" mat-button>Save
         </button>
       </div>
     </form>

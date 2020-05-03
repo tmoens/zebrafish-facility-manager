@@ -52,7 +52,7 @@ export class Mutation extends ZfGenericClass {
   }
 
   @computed get fullName(): string {
-    return this.name + ': ' + this.gene;
+    return this.gene + ': ' + this.name;
   }
 
   containsString(searchString: string): boolean {

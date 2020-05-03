@@ -70,6 +70,7 @@ export class StockSwimmersEditorComponent implements OnInit {
     // In the route, We get passed the id of the stock whose swimmers we need to edit.
     // We make sure that the stockService has that stock in focus by selecting it.
     this.route.paramMap.subscribe((pm: ParamMap) => {
+      this.stockService.enterEditMode();
       this.stockId = +pm.get('id');
       if (this.stockId && (!this.stockService.selected || this.stockId !== this.stockService.selected.id)) {
         this.stockService.setSelectedId(this.stockId);

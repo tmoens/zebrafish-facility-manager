@@ -9,6 +9,7 @@ import {CanDeactivateGuard} from '../guards/can-deactivate-guard';
 import {LoginGuardService as LoginGuard} from "../guards/login-guard.service";
 import {RoleGuardService as RoleGuard} from "../guards/role-guard.service";
 import {USER_ROLE} from "../common/auth/zf-roles";
+import {StockGeneticsEditorComponent} from "./stock-genetics-editor/stock-genetics-editor.component";
 
 const stockManagerRoutes: Routes = [
   {
@@ -49,7 +50,7 @@ const stockManagerRoutes: Routes = [
         }
       },
       {
-        path: EditMode.EDIT + '/swimmers',
+        path: EditMode.EDIT + '/swimmers/:id',
         component: StockSwimmersEditorComponent,
         canDeactivate: [CanDeactivateGuard],
         canActivate: [RoleGuard],
@@ -58,8 +59,8 @@ const stockManagerRoutes: Routes = [
         }
       },
       {
-        path: EditMode.EDIT + '/swimmers/:id',
-        component: StockSwimmersEditorComponent,
+        path: EditMode.EDIT + '/genetics/:type/:id',
+        component: StockGeneticsEditorComponent,
         canDeactivate: [CanDeactivateGuard],
         canActivate: [RoleGuard],
         data: {
