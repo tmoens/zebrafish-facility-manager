@@ -5,7 +5,7 @@ import {UserEditorComponent} from "./user-editor/user-editor.component";
 import {EditMode} from "../zf-generic/zf-edit-modes";
 import {CanDeactivateGuard} from "../guards/can-deactivate-guard";
 import {NgModule} from "@angular/core";
-import {RoleGuardService as RoleGuard} from "../guards/role-guard.service";
+import {RoleGuardService as RoleGuard} from "../auth/guards/role-guard.service";
 import {ADMIN_ROLE} from "../common/auth/zf-roles";
 
 const userAdminRoutes: Routes = [
