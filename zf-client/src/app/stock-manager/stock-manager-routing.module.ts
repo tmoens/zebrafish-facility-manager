@@ -6,9 +6,9 @@ import {StockEditorComponent} from './stock-editor/stock-editor.component';
 import {EditMode} from '../zf-generic/zf-edit-modes';
 import {StockSwimmersEditorComponent} from './stock-swimmers-editor/stock-swimmers-editor.component';
 import {CanDeactivateGuard} from '../guards/can-deactivate-guard';
-import {LoginGuardService as LoginGuard} from "../guards/login-guard.service";
-import {RoleGuardService as RoleGuard} from "../guards/role-guard.service";
-import {USER_ROLE} from "../common/auth/zf-roles";
+import {LoginGuardService as LoginGuard} from "../auth/guards/login-guard.service";
+import {RoleGuardService as RoleGuard} from "../auth/guards/role-guard.service";
+import {USER_ROLE} from "../auth/app-roles";
 import {StockGeneticsEditorComponent} from "./stock-genetics-editor/stock-genetics-editor.component";
 
 const stockManagerRoutes: Routes = [

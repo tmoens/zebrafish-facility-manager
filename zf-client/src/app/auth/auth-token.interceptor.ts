@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor} from '@angular/common/http';
 import { Observable, from } from 'rxjs';
 import {AppStateService} from "../app-state.service";
+import {AuthService} from "./auth.service";
 /**
  * This just intercepts the outbound http requests and inserts the jwt
  * More efficient than doing it in every single http request.
@@ -16,7 +17,7 @@ import {AppStateService} from "../app-state.service";
 export class AuthTokenInterceptor implements HttpInterceptor {
 
   constructor(
-    private appStateService: AppStateService,
+    private authService: AuthService,
     ) {
   }
 
@@ -25,10 +26,10 @@ export class AuthTokenInterceptor implements HttpInterceptor {
   }
 
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
-    if (this.appStateService.accessToken) {
+    if (this.authService.accessToken) {
       request = request.clone({
         setHeaders: {
-          Authorization: 'Bearer ' + this.appStateService.accessToken,
+          Authorization: 'Bearer ' + this.authService.accessToken,
         }
       });
     } else {

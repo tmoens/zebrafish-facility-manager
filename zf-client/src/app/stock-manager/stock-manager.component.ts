@@ -6,6 +6,7 @@ import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {StockService} from "./stock.service";
 import {Observable} from "rxjs";
 import {map, shareReplay} from "rxjs/operators";
+import {AuthService} from "../auth/auth.service";
 
 @Component({
   selector: 'app-stock-manager',
@@ -25,6 +26,7 @@ export class StockManagerComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public appState: AppStateService,
+    public authService: AuthService,
     public service: StockService,
     private breakpointObserver: BreakpointObserver,
 

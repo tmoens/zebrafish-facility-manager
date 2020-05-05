@@ -4,11 +4,13 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {Observable, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {AuthService} from "./auth.service";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     private appState: AppStateService,
+    private authService: AuthService,
     private snackBar: MatSnackBar,
   ) {
   }
@@ -22,7 +24,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           if (err.status === 401) {
             // auto logout if 401 response returned from api
             console.log("401");
-            this.appState.onLogout();
+            this.authService.onLogout();
           }
           const error = err.error.message || err.statusText;
           return throwError(error);

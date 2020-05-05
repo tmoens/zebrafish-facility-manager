@@ -1,4 +1,35 @@
-<div fxLayout="row" fxLayoutGap="10px" *ngIf="appState.loggedIn$ | async">
-  <div fxFlex="35"><app-user-selector></app-user-selector></div>
-  <div fxFlex><router-outlet></router-outlet></div>
+<div fxLayout="row" fxLayoutAlign="center" *ngIf="authService.loggedIn$ | async">
+  <div class="zf-full-width">
+
+    <!-- The toolbar specific to User manager -->
+    <mat-toolbar  color="primary">
+
+      <!-- The button to toggle the sidenav is disabled while an item is being edited -->
+      <button mat-icon-button (click)="selector.toggle()" *ngIf="!(selectorFixed$ | async)"
+              [disabled]="service.inEditMode$ | async">
+        <mat-icon>menu</mat-icon>
+      </button>
+      Mutation Manager {{(service.inEditMode$ | async) ? 'Edit Mode' : 'Browse Mode'}}
+      <span class="fill-remaining-space"></span>
+      <app-user-menu></app-user-menu>
+    </mat-toolbar>
+
+    <mat-sidenav-container>
+
+      <!-- The sidenav should collapse when editing an item  or when the screen is small -->
+      <mat-sidenav #selector fixedInViewport
+                   fixedTopGap="120"
+                   [mode]="(selectorFixed$ | async) ? 'side' : 'over'"
+                   [opened]="(selectorFixed$ | async) && !(service.inEditMode$ | async)"
+                   style="background: inherit; border: none">
+        <app-user-selector></app-user-selector>
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+        <div class="zf-tool-content">
+          <router-outlet></router-outlet>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
 </div>

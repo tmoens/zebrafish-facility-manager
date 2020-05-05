@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
-import {EditMode} from "../../zf-generic/zf-edit-modes";
+import {EditMode} from "../../../zf-generic/zf-edit-modes";
 import {UserAdminService} from "../user-admin.service";
-import {UserDTO} from "../../common/user/UserDTO";
-import {AppStateService} from "../../app-state.service";
+import {UserDTO} from "../../UserDTO";
+import {AppStateService} from "../../../app-state.service";
+import {AuthService} from "../../auth.service";
 
 @Component({
   selector: 'app-user-viewer',
@@ -31,7 +32,7 @@ export class UserViewerComponent implements OnInit {
     private route: ActivatedRoute,
     public service: UserAdminService,
     private fb: FormBuilder,
-    public appState: AppStateService,
+    public authService: AuthService,
   ) { }
 
   ngOnInit(): void {
@@ -44,27 +45,19 @@ export class UserViewerComponent implements OnInit {
 
     // use the route's paramMap to figure out the id of the item we are supposed to view.
     this.route.paramMap.subscribe((pm: ParamMap) => {
+      this.service.enterBrowseMode();
       // if there is an id in the route, tell the service to select it.
       const id = pm.get('id');
       if (id) {
-        this.service.selectByIdAndLoad(id);
+        this.service.selectById(id);
       } else {
-        // if not, lets see if there is one already selected and if so, navigate to it.
+        // if there is no id in the route, lets see a mutation is already selected and if so, navigate to it.
         if (this.service.selected) {
           this.router.navigateByUrl('user_admin/view/' + this.service.selected.id, {replaceUrl: true});
         }
       }
     });
-  }
 
-  create() {
-    this.router.navigate(['user_admin/' + EditMode.CREATE, {
-      mode: EditMode.CREATE,
-    }]);
-  }
-
-  delete(id: string) {
-    this.service.delete(id)
   }
 
   edit() {

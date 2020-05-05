@@ -1,35 +1,5 @@
-<div fxFlex class="zf-full-width" *ngIf="service.selected">
+<div fxLayout="column" *ngIf="service.selected">
   <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" >
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item color="primary" (click)="edit()">
-        <mat-icon>edit</mat-icon>
-        <span>Edit {{user.email}}</span>
-      </button>
-      <button (click)="create()" mat-menu-item>
-        <mat-icon>add</mat-icon>
-        <span>Create User</span>
-      </button>
-      <button (click)="service.activate(user)" [disabled]="user.isActive" mat-menu-item>
-        <mat-icon></mat-icon>
-        <span>Activate {{user.email}}</span>
-      </button>
-      <button (click)="service.deactivate(user)" [disabled]="!user.isActive || user.id === appState.loggedInUserId()"
-              mat-menu-item>
-        <mat-icon></mat-icon>
-        <span>Deactivate {{user.email}}</span>
-      </button>
-      <button (click)="service.forceLogout(user)" [disabled]="!user.isLoggedIn" mat-menu-item>
-        <mat-icon></mat-icon>
-        <span>Force logout </span>
-      </button>
-      <button (click)="delete(service.selected.id)" mat-menu-item>
-        <mat-icon>delete</mat-icon>
-        <span>Delete {{service.selected.email}}</span>
-      </button>
-    </mat-menu>
     <span class="zf-title">User Details</span>
     <button mat-icon-button color="primary" (click)="edit()">
       <mat-icon>edit</mat-icon>
@@ -63,7 +33,7 @@
       <button (click)="service.activate(user)" [disabled]="user.isActive" color="primary"
               mat-button>Activate
       </button>
-      <button (click)="service.deactivate(user)" [disabled]="!user.isActive || user.id === appState.loggedInUserId()"
+      <button (click)="service.deactivate(user)" [disabled]="!user.isActive || user.id === authService.loggedInUserId()"
               color="primary"
               mat-button>Deactivate
       </button>

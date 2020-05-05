@@ -23,6 +23,9 @@ import {PasswordChangeComponent} from "./password-change/password-change.compone
     PasswordChangeComponent,
     PasswordResetComponent,
   ],
+  exports: [
+    LoginContainerComponent
+  ],
   imports: [
     CommonModule,
     FlexLayoutModule,

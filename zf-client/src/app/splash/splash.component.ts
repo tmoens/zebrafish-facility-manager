@@ -5,7 +5,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-splash',
-  templateUrl: './splash.component.html',
+  template:`
+    <div class="big-background"></div>
+    <h1>it works.</h1>
+  `,
   styleUrls: ['./splash.component.scss']
 })
 export class SplashComponent implements OnInit {
@@ -13,7 +16,6 @@ export class SplashComponent implements OnInit {
   password: string = null;
 
   constructor(
-    private loaderService: LoaderService,
     private appStateService: AppStateService,
     private route: ActivatedRoute,
     private router: Router,
@@ -23,15 +25,6 @@ export class SplashComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log({username: this.username, password: this.password});
-    this.loaderService.login(this.username, this.password).subscribe( (token: any) => {
-      if (token) {
-        this.appStateService.onLogin(token.access_token);
-        this.router.navigateByUrl(this.appStateService.getDefaultURI());
-      } else {
-        this.appStateService.onLoginFailed();
-      }
-    });
   }
 
 }

@@ -10,6 +10,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {plainToClass} from "class-transformer";
 import {ZFTypes} from "../helpers/zf-types";
 import {Router} from "@angular/router";
+import {AuthService} from "../auth/auth.service";
 
 /**
  * This is the model for transgene information displayed in the GUI.
@@ -26,10 +27,11 @@ export class TransgeneService extends ZFGenericService<Transgene, Transgene, Tra
     private readonly loader: LoaderService,
     private snackBar: MatSnackBar,
     private appState: AppStateService,
+    private authService: AuthService,
     private router: Router,
   ) {
-    super(ZFTypes.TRANSGENE, loader, snackBar, appState, router);
-    this.appState.loggedIn$.subscribe((loggedIn: boolean) => {
+    super(ZFTypes.TRANSGENE, loader, snackBar, appState, authService, router);
+    this.authService.loggedIn$.subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.initialize();
       }

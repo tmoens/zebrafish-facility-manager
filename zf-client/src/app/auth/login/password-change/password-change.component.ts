@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
-import {LoaderService} from "../../loader.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
-import {UserPasswordChangeDTO} from "../../common/user/UserDTO";
-import {AppStateService} from "../../app-state.service";
+import {UserPasswordChangeDTO} from "../../UserDTO";
+import {AppStateService} from "../../../app-state.service";
+import {AuthApiService} from "../../auth-api.service";
+import {AuthService} from "../../auth.service";
 
 @Component({
   selector: 'app-password-change',
@@ -44,10 +45,11 @@ export class PasswordChangeComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<PasswordChangeComponent>,
-    private loaderService: LoaderService,
+    private authApiService: AuthApiService,
     private message: MatSnackBar,
     private fb: FormBuilder,
     private appState: AppStateService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit(): void {
@@ -55,10 +57,10 @@ export class PasswordChangeComponent implements OnInit {
 
   onSubmit() {
     const dto: UserPasswordChangeDTO = this.mfForm.getRawValue();
-    this.loaderService.passwordChange(dto).subscribe( (token: any) => {
+    this.authApiService.passwordChange(dto).subscribe( (token: any) => {
       if (token) {
         this.dialogRef.close();
-        this.appState.onLogin(token.accessToken);
+        this.authService.onLogin(token.accessToken);
         this.message.open(
           "Your password has been changed.",
           null, {duration: this.appState.confirmMessageDuration});
@@ -78,6 +80,6 @@ const repeatPasswordValidator: ValidatorFn = (control: FormGroup): ValidationErr
     np.setErrors({'mismatch': true});
     rp.setErrors({'mismatch': true});
     return { 'mismatch': true};
-  };
+  }
 }
 

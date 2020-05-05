@@ -40,17 +40,18 @@ import {DialogService} from "./dialog.service";
 import {AuthTokenInterceptor} from "./auth/auth-token.interceptor";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {StorageServiceModule} from "ngx-webstorage-service";
-import {LoginGuardService} from "./guards/login-guard.service";
+import {LoginGuardService} from "./auth/guards/login-guard.service";
 import {SplashComponent} from './splash/splash.component';
 import {StockService} from "./stock-manager/stock.service";
-import {UserAdminModule} from "./user-admin/user-admin.module";
-import {RoleGuardService} from "./guards/role-guard.service";
+import {UserAdminModule} from "./auth/user-admin/user-admin.module";
+import {RoleGuardService} from "./auth/guards/role-guard.service";
 import {AuthModule} from "./auth/auth.module";
-import {LoginModule} from "./login/login.module";
+import {LoginModule} from "./auth/login/login.module";
 import {AppStateService} from "./app-state.service";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import { TestnavComponent } from './testnav/testnav.component';
 import { LayoutModule } from '@angular/cdk/layout';
+import {AuthService} from "./auth/auth.service";
 
 export function appStateProviderFactory(provider: AppStateService) {
   return () => provider.initialize();
@@ -62,6 +63,10 @@ export function configProviderFactory(provider: ConfigService) {
 
 export function stockServiceProviderFactory(provider: StockService) {
   return () => provider.placeholder();
+}
+
+export function authServiceProviderFactory(provider: AppStateService) {
+  return () => provider.initialize();
 }
 
 @NgModule({
@@ -121,6 +126,7 @@ export function stockServiceProviderFactory(provider: StockService) {
     {provide: APP_INITIALIZER, useFactory: configProviderFactory, deps: [ConfigService, AppStateService], multi: true},
     {provide: APP_INITIALIZER, useFactory: stockServiceProviderFactory, deps: [StockService], multi: true},
     {provide: LocationStrategy, useClass: PathLocationStrategy},
+    {provide: APP_INITIALIZER, useFactory: authServiceProviderFactory, deps: [AuthService], multi: true},
     CanDeactivateGuard,
     DialogService,
     LoginGuardService,

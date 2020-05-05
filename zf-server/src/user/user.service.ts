@@ -47,12 +47,13 @@ export class UserService {
     return this.repo.find();
   }
 
-  async findFiltered(filter: string): Promise<User[]> {
+  async findFiltered(filter?: string): Promise<User[]> {
+    console.log('user filter: ' + filter)
     if (!filter) {
       return await this.findAll();
     }
     const f = "%" + filter + "%";
-    return await this.repo.createQueryBuilder("u")
+    const res = await this.repo.createQueryBuilder("u")
       .where("u.name LIKE :f", {f: f})
       .orWhere("u.email LIKE :f", {f: f})
       .orWhere("u.role LIKE :f", {f: f})
@@ -60,6 +61,8 @@ export class UserService {
       .orWhere("u.phone LIKE :f", {f: f})
       .orWhere("u.username LIKE :f", {f: f})
       .getMany();
+    console.log('result: ' + JSON.stringify(res));
+    return res;
   }
 
   findOne(id: string): Promise<User> {

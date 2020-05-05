@@ -6,8 +6,8 @@ import {catchError} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {Observable, of} from 'rxjs';
 import {ResetPasswordDTO, UserDTO, UserPasswordChangeDTO} from './UserDTO';
-import {AuthService} from './auth.service';
-import {AppStateService} from '../app-state/app-state.service';
+import {AuthService} from "./auth.service";
+import {AppStateService} from "../app-state.service";
 
 @Injectable({
   providedIn: 'root'
@@ -23,9 +23,9 @@ export class AuthApiService {
     private appState: AppStateService,
   ) {
     if (environment.production) {
-      this.serverURL = location.origin + '/sk-server';
+      this.serverURL = location.origin + '/zf-server';
     } else {
-      this.serverURL = 'http://localhost:3027';
+      this.serverURL = 'http://localhost:3005';
     }
   }
 
@@ -116,7 +116,7 @@ export class AuthApiService {
   }
 
   getUsers(filter: string): Observable<any> {
-    return this.http.get(this.serverURL + '/user' + ((filter) ? '/' + filter : ''))
+    return this.http.get(this.serverURL + '/user/filtered' + ((filter) ? '/' + filter : ''))
       .pipe(
         catchError(this.handleError('Get User' + '.', []))
       );

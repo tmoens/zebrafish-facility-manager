@@ -18,7 +18,8 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatMenuModule} from "@angular/material/menu";
-import {AuthModule} from "../auth/auth.module";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatSidenavModule} from "@angular/material/sidenav";
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {AuthModule} from "../auth/auth.module";
     ReactiveFormsModule,
     MatMenuModule,
     FormsModule,
-    AuthModule,
+    MatToolbarModule,
+    MatSidenavModule,
   ],
   exports: [
     UserMenuComponent,

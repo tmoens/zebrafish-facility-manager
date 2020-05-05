@@ -1,7 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {LoaderService} from '../../loader.service';
-import {AppStateService} from '../../app-state.service';
+import {AppStateService} from '../../../app-state.service';
+import {AuthApiService} from "../../auth-api.service";
+import {AuthService} from "../../auth.service";
 
 @Component({
   selector: 'zfm-login',
@@ -36,24 +37,25 @@ export class LoginComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<LoginComponent>,
-    private loaderService: LoaderService,
-    private appStateService: AppStateService,
+    private authApiService: AuthApiService,
+    private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     if (data && data.username) {
       this.username = data.username;
     }
+    dialogRef.disableClose = true;
   }
 
   ngOnInit(): void {}
 
   onSubmit() {
-    this.loaderService.login(this.username, this.password).subscribe( (token: any) => {
+    this.authApiService.login(this.username, this.password).subscribe( (token: any) => {
       if (token) {
         this.dialogRef.close();
-        this.appStateService.onLogin(token.access_token);
+        this.authService.onLogin(token.access_token);
       } else {
-        this.appStateService.onLoginFailed();
+        this.authService.onLoginFailed();
       }
     });
   }

@@ -71,7 +71,7 @@
   margin: 25px;
   height: 70vh;
   overflow: auto;
-  background: #eaeaea;
+  background: inherit;
 }
 
 .zf-selector::-webkit-scrollbar {
@@ -143,6 +143,26 @@
   margin: 5px 0;
   font-size: 12pt;
   color: deepskyblue;
+}
+
+.big-background {
+  background-image: url('assets/images/horizontal.jpg');
+  background-color: #FFFFFF;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 840px;
+}
+
+.toolbar-bg {
+  background-image: url('assets/images/light_toolbar_bg.jpg');
+  background-color: #FFFFFF;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 64px;
 }
 
 

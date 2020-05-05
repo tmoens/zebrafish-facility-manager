@@ -1,4 +1,4 @@
-import {ZfGenericFilter} from '../zf-generic/zfgeneric-filter';
+import {ZfGenericFilter} from '../../zf-generic/zfgeneric-filter';
 
 export class UserFilter extends ZfGenericFilter {
   filter: string = null;

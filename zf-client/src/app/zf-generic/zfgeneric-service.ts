@@ -9,6 +9,7 @@ import {ZfGenericFilter} from './zfgeneric-filter';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {ZFTypes} from "../helpers/zf-types";
 import {Router} from "@angular/router";
+import {AuthService} from "../auth/auth.service";
 
 /**
  * There is a service for every different type of object in the system.
@@ -112,6 +113,7 @@ export class ZFGenericService<
     // loaderService, I cannot figure out how to inject one in this generic class.
     protected messageService: MatSnackBar,
     private appStateService: AppStateService,
+    private authorizationService: AuthService,
     private routerService: Router,
   ) {
     // problem: I want to pass to the constructor a flag indicating whether or not the
@@ -276,7 +278,7 @@ export class ZFGenericService<
   //    iii) and item is deleted
   // b) periodic reload of the cache.
   refresh() {
-    if (this.appStateService.isAuthenticated) {
+    if (this.authorizationService.isAuthenticated) {
       if (this.cacheAll) this.loadAll();
       this.loadFieldOptions();
       this.getLikelyNextName();

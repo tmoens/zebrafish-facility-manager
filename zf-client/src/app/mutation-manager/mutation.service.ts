@@ -10,6 +10,7 @@ import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
 import {ZFTypes} from "../helpers/zf-types";
 import {Router} from "@angular/router";
+import {AuthService} from "../auth/auth.service";
 
 /**
  * This is the model for mutation information displayed in the GUI.
@@ -28,10 +29,11 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
     private readonly loader: LoaderService,
     private snackBar: MatSnackBar,
     private appState: AppStateService,
+    private authService: AuthService,
     private router: Router,
   ) {
-    super(ZFTypes.MUTATION, loader, snackBar, appState, router);
-    this.appState.loggedIn$.subscribe((loggedIn: boolean) => {
+    super(ZFTypes.MUTATION, loader, snackBar, appState, authService, router);
+    this.authService.loggedIn$.subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.initialize();
       }

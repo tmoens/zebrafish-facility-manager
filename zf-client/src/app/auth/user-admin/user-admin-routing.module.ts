@@ -2,11 +2,11 @@ import {RouterModule, Routes} from "@angular/router";
 import {UserAdminComponent} from "./user-admin.component";
 import {UserViewerComponent} from "./user-viewer/user-viewer.component";
 import {UserEditorComponent} from "./user-editor/user-editor.component";
-import {EditMode} from "../zf-generic/zf-edit-modes";
-import {CanDeactivateGuard} from "../guards/can-deactivate-guard";
+import {EditMode} from "../../zf-generic/zf-edit-modes";
+import {CanDeactivateGuard} from "../../guards/can-deactivate-guard";
 import {NgModule} from "@angular/core";
-import {RoleGuardService as RoleGuard} from "../auth/guards/role-guard.service";
-import {ADMIN_ROLE} from "../common/auth/zf-roles";
+import {RoleGuardService as RoleGuard} from "../guards/role-guard.service";
+import {ADMIN_ROLE} from "../app-roles";
 
 const userAdminRoutes: Routes = [
   {

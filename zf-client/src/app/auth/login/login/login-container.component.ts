@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {LoginComponent} from "./login.component";
 import {PasswordResetComponent} from "../password-reset/password-reset.component";
+import {ZFTool} from "../../../helpers/zf-tool";
+import {ActivatedRoute, ParamMap} from "@angular/router";
 
 /**
  * This container does two things:
@@ -13,7 +15,7 @@ import {PasswordResetComponent} from "../password-reset/password-reset.component
 @Component({
   selector: 'app-login-container',
   template: `
-    <div class="scary-fish-bg"></div>
+    <div class="big-background"></div>
   `,
   styleUrls: ['./login-container.scss']
 })
@@ -22,11 +24,15 @@ export class LoginContainerComponent implements OnInit {
 
   constructor(
     private loginDialog: MatDialog,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
     this.openLoginDialog();
   }
+
+
+
 
   openLoginDialog(username = null) {
     const dialogRef = this.loginDialog.open(LoginComponent, {data: (username) ? {username: username} : {} });

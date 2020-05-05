@@ -1,10 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {LoaderService} from "../../loader.service";
+import {LoaderService} from "../../../loader.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormBuilder, Validators} from "@angular/forms";
-import {UserDTO} from "../../common/user/UserDTO";
-import {AppStateService} from "../../app-state.service";
+import {UserDTO} from "../../UserDTO";
+import {AppStateService} from "../../../app-state.service";
+import {AuthApiService} from "../../auth-api.service";
 
 @Component({
   selector: 'app-password-reset',
@@ -31,7 +32,7 @@ export class PasswordResetComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<PasswordResetComponent>,
-    private loaderService: LoaderService,
+    private authApiService: AuthApiService,
     private message: MatSnackBar,
     private appState: AppStateService,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -45,7 +46,7 @@ export class PasswordResetComponent implements OnInit {
   }
 
   onSubmit() {
-    this.loaderService.resetPassword({usernameOrEmail: this.usernameOrEmail}).subscribe( (u: UserDTO) => {
+    this.authApiService.resetPassword({usernameOrEmail: this.usernameOrEmail}).subscribe( (u: UserDTO) => {
       if (u) {
         this.message.open(
           "A new password has been sent to " + u.email +

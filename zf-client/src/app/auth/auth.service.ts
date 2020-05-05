@@ -1,13 +1,12 @@
 import {Inject, Injectable} from '@angular/core';
 import {BehaviorSubject, interval} from 'rxjs';
-import {SKTool} from '../helpers/sk-tool';
-import {AccessTokenPayload} from './access-token-payload';
 import {Router} from '@angular/router';
 import {LOCAL_STORAGE, StorageService} from 'ngx-webstorage-service';
-import {CHANGE_PASSWORD_PATH} from '../app-state/sk-constants';
-import {Roles} from './roles';
 import {plainToClass} from 'class-transformer';
-import {AppStateService} from '../app-state/app-state.service';
+import {AccessTokenPayload} from "./zfm-access-token-payload";
+import {AppStateService} from "../app-state.service";
+import {ZFTool} from "../helpers/zf-tool";
+import {AppRoles} from "./app-roles";
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +40,7 @@ export class AuthService {
     checkExpiry.subscribe(_ => {
       if (this.isAuthenticated && this.isTokenExpired(this.accessToken)) {
         this.accessToken$.next(null);
-        this.router.navigateByUrl(SKTool.TEAM_STANDINGS.route);
+        this.router.navigateByUrl(ZFTool.SPLASH_LOGIN.route);
       }
     });
 
@@ -70,7 +69,7 @@ export class AuthService {
         } else if (this.decryptToken(token).passwordChangeRequired) {
 
           // If the user is supposed to change their password, force that.
-          this.router.navigateByUrl(CHANGE_PASSWORD_PATH);
+          this.router.navigateByUrl('change-password');
         } else {
 
           // well, finally this looks like a good access token, so mark the user as logged in
@@ -106,7 +105,7 @@ export class AuthService {
       this.intendedPath = null;
       return p;
     }
-    return null;
+    return 'stock_manager/view';
   }
 
   // this decodes the access token and stuffs it in typed object.
@@ -142,11 +141,11 @@ export class AuthService {
     if (!this.isAuthenticated) {
       return false;
     } else {
-      return Roles.isAuthorized(this.decryptToken(this.accessToken).role, roleInQuestion);
+      return AppRoles.isAuthorized(this.decryptToken(this.accessToken).role, roleInQuestion);
     }
   }
 
-  LoggedInUserName(): string {
+  getLoggedInUserName(): string {
     return (this.isAuthenticated) ? this.tokenPayload.username : null;
   }
 

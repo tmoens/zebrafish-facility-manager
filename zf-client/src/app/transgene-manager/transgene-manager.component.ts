@@ -6,6 +6,7 @@ import {Observable} from "rxjs";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {map, shareReplay} from "rxjs/operators";
 import {TransgeneService} from "./transgene.service";
+import {AuthService} from "../auth/auth.service";
 
 @Component({
   selector: 'app-transgene-manager',
@@ -24,6 +25,7 @@ export class TransgeneManagerComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public appState: AppStateService,
+    public authService: AuthService,
     public service: TransgeneService,
     private breakpointObserver: BreakpointObserver,
   ) { }

@@ -1,6 +1,6 @@
 <div fxFlex class="zf-full-width" *ngIf="service.selected">
   <div class="zf-title">Edit User {{getFC('username').value}}</div>
-  <form (ngSubmit)="save()" [formGroup]="mfForm" fxLayout="column">
+  <form [formGroup]="mfForm" fxLayout="column">
     <div fxFlex="20px"></div>
 
     <mat-form-field>
@@ -26,9 +26,11 @@
 
     <div fxLayout="row" fxLayoutGap="10px">
       <div class="fill-remaining-space"></div>
-      <button (click)="cancel()" color="primary" mat-button>Cancel</button>
-      <button (click)="revert()" [disabled]='mfForm.pristine' color="primary" mat-button>Revert</button>
-      <button [disabled]='!mfForm.valid || mfForm.pristine' color="primary" mat-button type="submit">Save</button>
+      <button mat-button (click)="cancel()" color="primary">Cancel</button>
+      <button mat-button (click)="revert()" color="primary"
+              [disabled]='mfForm.pristine'>Revert</button>
+      <button mat-button (click)="save()"color="primary"
+              [disabled]='!mfForm.valid || mfForm.pristine'>Save</button>
     </div>
   </form>
 </div>

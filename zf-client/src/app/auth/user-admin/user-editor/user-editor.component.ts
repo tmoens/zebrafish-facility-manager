@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {EditMode} from "../../zf-generic/zf-edit-modes";
-import {UserDTO} from "../../common/user/UserDTO";
+import {EditMode} from "../../../zf-generic/zf-edit-modes";
+import {UserDTO} from "../../UserDTO";
 import {AbstractControl, AsyncValidatorFn, FormBuilder, ValidationErrors, Validators} from "@angular/forms";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
-import {DialogService} from "../../dialog.service";
+import {DialogService} from "../../../dialog.service";
 import {UserAdminService} from "../user-admin.service";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
-import {ZFRoles} from "../../common/auth/zf-roles";
-import {AppStateService} from "../../app-state.service";
+import {AppRoles} from "../../app-roles";
+import {AuthService} from "../../auth.service";
 
 @Component({
   selector: 'app-user-editor',
@@ -17,19 +17,21 @@ import {AppStateService} from "../../app-state.service";
 })
 
 export class UserEditorComponent implements OnInit {
-  roles: string[] = ZFRoles.getRoles(); // so it is available to the gui
-  item: UserDTO; // the item we are editing.
+  roles: string[] = AppRoles.getRoles(); // so it is available to the gui
+  user: UserDTO; // the item we are editing.
   editMode: EditMode;
   id: string;
   saved = false;
 
-  // Build the edit form.
-  // Note the ".bind(this)" for name validation - it is because that
-  // particular validator needs the context of this object to do its work,
-  // but that is not automatically supplied as sync field validators
-  // are typically context free.
+  // A note on the email and username async validators
+  // these need to call the api service to do their checks, but not if the email/username
+  // is the same as it was when we started editing the user.  For this the validator needs
+  // to be able to see both the api service and the "original" user.  I can pass the api
+  // service to the validator function easily enough but I cannot pass the current user dto.
+  // SO, out comes the sledge hammer and I pass the whole of "this" to the validators, which
+  // now have everything they need.
   mfForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email], [existingEmailValidatorFn(this.service)]],
+    email: ['', [Validators.required, Validators.email], [existingEmailValidatorFn(this)]],
     id: [null],
     isActive: [{value: true, disabled: true}],
     isLoggedIn: [{value: false, disabled: true}],
@@ -37,7 +39,7 @@ export class UserEditorComponent implements OnInit {
     passwordChangeRequired: [{value: false, disabled: true}],
     phone: [null],
     role: ['guest', [Validators.required]],
-    username: [null, [Validators.required], [existingUsernameValidatorFn(this.service)]],
+    username: [null, [Validators.required], [existingUsernameValidatorFn(this)]],
   } );
 
   constructor(
@@ -46,7 +48,8 @@ export class UserEditorComponent implements OnInit {
     private fb: FormBuilder,
     public service: UserAdminService,
     private deactivationDialogService: DialogService,
-    private appState: AppStateService,
+    private authService: AuthService,
+
   ) {}
 
   ngOnInit(): void {
@@ -57,15 +60,15 @@ export class UserEditorComponent implements OnInit {
           this.editMode = EditMode.EDIT;
           this.id = pm.get('id');
           this.service.getById(this.id).subscribe((item: UserDTO) => {
-            this.item = item;
+            this.user = item;
             this.initialize();
           });
           break;
         case EditMode.CREATE:
-          this.item = new UserDTO();
-          this.item.isActive = true;
-          this.item.isLoggedIn = false;
-          this.item.passwordChangeRequired = true;
+          this.user = new UserDTO();
+          this.user.isActive = true;
+          this.user.isLoggedIn = false;
+          this.user.passwordChangeRequired = true;
           this.editMode = EditMode.CREATE;
           this.initialize();
           break;
@@ -75,10 +78,10 @@ export class UserEditorComponent implements OnInit {
   }
 
   initialize() {
-    this.mfForm.setValue(this.item);
+    this.mfForm.setValue(this.user);
     // We do not want the admin user to degrade their own role in case there is
     // no one left to administer the site.
-    if (this.item.id === this.appState.loggedInUserId()) {
+    if (this.user.id === this.authService.loggedInUserId()) {
       this.getFC('role').disable();
     }
   };
@@ -94,7 +97,6 @@ export class UserEditorComponent implements OnInit {
         this.service.update(editedDTO);
         break;
     }
-    this.router.navigate(['user_admin/view']);
   }
 
   cancel() {
@@ -149,22 +151,26 @@ export class UserEditorComponent implements OnInit {
   }
 }
 
-function existingEmailValidatorFn(service: UserAdminService): AsyncValidatorFn {
+function existingEmailValidatorFn(t: UserEditorComponent): AsyncValidatorFn {
   return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-    return service.isEmailInUse(control.value).pipe(
+    // don't bother with the going to the server if the email belongs to the user being edited.
+    if (t.user && t.user.email && t.user.email === control.value) { return of(null); }
+    return t.service.isEmailInUse(control.value).pipe(
       map((result: boolean) => {
         return result ? {inUse: true} : null;
       })
-    )
+    );
   };
 }
 
-function existingUsernameValidatorFn(service: UserAdminService): AsyncValidatorFn {
+function existingUsernameValidatorFn(t: UserEditorComponent): AsyncValidatorFn {
   return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-    return service.isUsernameInUse(control.value).pipe(
+    // don't bother with the going to the server if the username belongs to the user being edited.
+    if (t.user && t.user.username && t.user.username === control.value) { return of(null); }
+    return t.service.isUsernameInUse(control.value).pipe(
       map((result: boolean) => {
         return result ? {inUse: true} : null;
       })
-    )
+    );
   };
 }

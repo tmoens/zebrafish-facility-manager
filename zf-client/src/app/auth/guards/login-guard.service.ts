@@ -1,19 +1,19 @@
 import {Injectable} from "@angular/core";
-import {ActivatedRoute, CanActivate, Router} from "@angular/router";
-import {AppStateService} from "../app-state.service";
+import {CanActivate, Router} from "@angular/router";
 import {Location} from "@angular/common";
+import {AuthService} from "../auth.service";
 
 @Injectable()
 export class LoginGuardService implements CanActivate {
   constructor(
-    public appStateService: AppStateService,
-    public router: Router,
-    public location: Location,
+    private authService: AuthService,
+    private router: Router,
+    private location: Location,
     ) {}
 
   canActivate(): boolean {
-    if (!this.appStateService.isAuthenticated) {
-      this.appStateService.intendedPath = location.pathname;
+    if (!this.authService.isAuthenticated) {
+      this.authService.intendedPath = location.pathname;
       this.router.navigateByUrl('/login');
       return false;
     }
