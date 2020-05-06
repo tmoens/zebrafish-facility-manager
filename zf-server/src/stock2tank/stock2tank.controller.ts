@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Stock2tankRepository} from './stock2tank.repository';
 import {Stock2tank} from './stock-to-tank.entity';
@@ -6,7 +6,7 @@ import {Stock2tankService} from './stock2tank.service';
 import {Stock} from '../stock/stock.entity';
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {Role} from "../guards/role.decorator";
-import {ADMIN_ROLE, USER_ROLE} from "../common/auth/zf-roles";
+import {USER_ROLE} from "../common/auth/zf-roles";
 import {RoleGuard} from "../guards/role-guard.service";
 
 @UseGuards(JwtAuthGuard)
@@ -48,7 +48,7 @@ export class Stock2tankController {
     return await this.repo.updateSwimmer(dto);
   }
 
-  @Role(ADMIN_ROLE)
+  @Role(USER_ROLE)
   @UseGuards(RoleGuard)
   @Delete(':stockId/:tankId')
   async delete(@Param() params): Promise<Stock> {

@@ -7,6 +7,7 @@ import {UserRepository} from './user.repository';
 import {JwtModule} from "@nestjs/jwt";
 import {ConfigModule} from "../config/config.module";
 import {ConfigService} from "../config/config.service";
+import {ZFMailerService} from "../mailer/mailer-service";
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import {ConfigService} from "../config/config.service";
     }),
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, ZFMailerService],
   exports: [
     TypeOrmModule,
     UserService,

@@ -69,7 +69,7 @@ export class AuthService {
         } else if (this.decryptToken(token).passwordChangeRequired) {
 
           // If the user is supposed to change their password, force that.
-          this.router.navigateByUrl('change-password');
+          this.router.navigateByUrl('change_password');
         } else {
 
           // well, finally this looks like a good access token, so mark the user as logged in

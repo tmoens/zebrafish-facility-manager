@@ -8,7 +8,7 @@
               [disabled]="service.inEditMode$ | async">
         <mat-icon>menu</mat-icon>
       </button>
-      Stock Manager {{(service.inEditMode$ | async) ? 'Edit Mode' : 'Browse Mode'}}
+      Stock Manager
       <span class="fill-remaining-space"></span>
       <app-stock-menu></app-stock-menu>
     </mat-toolbar>
@@ -24,7 +24,7 @@
         <app-stock-selector></app-stock-selector>
       </mat-sidenav>
 
-      <mat-sidenav-content>
+      <mat-sidenav-content style="height=100%">
         <div class="zf-tool-content">
           <router-outlet></router-outlet>
         </div>

@@ -74,10 +74,11 @@
           <mat-list-item>None</mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.offspringCount > 0" dense>
-          <mat-list-item *ngFor="let kid of service.selected.offspring" style="height: 30px"
-                         matTooltip="{{kid.tooltip}}" matTooltipClass="ttnl">
-            <button mat-button color="primary" (click)="goTo(kid.id)">{{kid.name}}</button>
-            <span>{{kid.description}}</span>
+          <mat-list-item *ngFor="let kid of service.selected.offspring"
+                         class="zf-selection-item truncate" role="listitem"
+                         matTooltip="{{kid.tooltip}}" matTooltipClass="ttnl"
+                         (click)="goTo(kid.id)">
+            {{kid.name}} {{kid.description}}
           </mat-list-item>
         </mat-list>
       </div>

@@ -32,8 +32,6 @@ export class LoginContainerComponent implements OnInit {
   }
 
 
-
-
   openLoginDialog(username = null) {
     const dialogRef = this.loginDialog.open(LoginComponent, {data: (username) ? {username: username} : {} });
     dialogRef.afterClosed().subscribe((result) => {

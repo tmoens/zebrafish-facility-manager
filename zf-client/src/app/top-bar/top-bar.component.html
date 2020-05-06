@@ -23,6 +23,10 @@
                 [routerLink]="zfTool.USER_MANAGER.route" color="primary">
           {{zfTool.USER_MANAGER.display_name}}
         </button>
+        <button mat-button *ngIf="authService.loggedIn$ | async"
+                routerLink="change_password" color="primary">
+          Change Password
+        </button>
         <button mat-button (click)="logout()"
                 [matTooltip]="authService.getLoggedInUserName()">
           Logout
@@ -60,6 +64,11 @@
           <button mat-menu-item zfmHideUnauthorized="admin" [disabled]="appState.activeTool === zfTool.USER_MANAGER"
                   [routerLink]="zfTool.USER_MANAGER.route">
             {{zfTool.USER_MANAGER.display_name}}
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item
+                  routerLink="change_password" color="primary">
+            Change Password
           </button>
         </mat-menu>
         <button mat-button (click)="logout()"

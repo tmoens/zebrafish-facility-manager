@@ -7,7 +7,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
   Request,
   UseGuards,
   UseInterceptors
@@ -21,13 +20,23 @@ import {Role} from "../guards/role.decorator";
 import {ADMIN_ROLE} from "../common/auth/zf-roles";
 import {RoleGuard} from "../guards/role-guard.service";
 import {LocalAuthGuard} from "../guards/local-auth.guard";
+import {ZFMailerService} from "../mailer/mailer-service";
+
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
   constructor(
     private readonly service: UserService,
+    private readonly mailerService: ZFMailerService,
   ) {
+  }
+
+  @Get('test')
+  async test(): Promise<any> {
+    console.log('Will try to mail something from here.');
+    this.mailerService.example();
+    return true;
   }
 
   @Role(ADMIN_ROLE)

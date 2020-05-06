@@ -21,7 +21,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     // At this point, the token itself and the expiry have already been checked by Passport.
-
     // However, the user may have logged out or been deactivated.
 
     const user = await this.userService.findActiveUser(payload.sub);
@@ -36,9 +35,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user.isLoggedIn) {
       throw new UnauthorizedException('Token does not identify a logged in user.');
     }
-    // if (!this.authService.isLoggedIn(user)) {
-    //   throw new UnauthorizedException('Token does not identify a logged in user.');
-    // }
 
     // passport will stick the user in the request object for us.
     return user;

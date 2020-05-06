@@ -3,6 +3,8 @@ import * as Joi from '@hapi/joi';
 import * as fs from 'fs';
 import {TypeOrmOptionsFactory, TypeOrmModuleOptions} from '@nestjs/typeorm';
 import {LoggerOptions} from 'typeorm/logger/LoggerOptions';
+import {HandlebarsAdapter, MailerOptions, MailerOptionsFactory} from "@nestjs-modules/mailer";
+import {throwError} from "rxjs";
 
 export interface EnvConfig {
   [prop: string]: string;
@@ -14,7 +16,7 @@ class FacilityDTO {
   prefix: string;
 }
 
-export class ConfigService implements TypeOrmOptionsFactory {
+export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactory {
   private readonly envConfig: EnvConfig;
   readonly facility: string; // which facility are we talking about
 
@@ -22,10 +24,17 @@ export class ConfigService implements TypeOrmOptionsFactory {
     this.facility = process.env.FACILITY;
 
     if (!this.facility) {
-      this.facility = 'test';
+      throw new Error("You must set a FACILITY environment variable before running the" +
+        " Zebrafish Facility Management server. export FACILITY=some_facility_identifier" +
+        "  The system will then look for the server's configuration file in the file" +
+        " environments/some_facility_identifier.env")
     }
 
     const filePath = `environments/${this.facility}.env`;
+    if(!fs.existsSync(filePath)) {
+      throw new Error(`You have set the FACILITY to ${this.facility}, but
+      the expected configuration file was not found at ${filePath}`);
+    }
     const config = dotenv.parse(fs.readFileSync(filePath));
     this.envConfig = ConfigService.validateInput(config);
   }
@@ -54,6 +63,8 @@ export class ConfigService implements TypeOrmOptionsFactory {
       JWT_SECRET: Joi.string().required(),
       JWT_DURATION: Joi.string().required(),
 
+      GMAIL_SENDER: Joi.string().required(),
+      GMAIL_PASSWORD: Joi.string().required(),
     });
 
     const {error, value: validatedEnvConfig} = Joi.validate(
@@ -117,5 +128,22 @@ export class ConfigService implements TypeOrmOptionsFactory {
       synchronize: this.typeORMSync,
       logging: loggingOption,
     };
+  }
+
+  // This is used to build ORM configuration options
+  createMailerOptions(): Promise<MailerOptions> | MailerOptions {
+    return {
+      defaults: {
+        from:'"Zebrafish Facility Manager" <zebrafishfacilitymanager@gmail.com>'
+      },
+      transport: 'smtps://' + this.envConfig.GMAIL_SENDER + ':' + this.envConfig.GMAIL_PASSWORD + '@smtp.gmail.com',
+      template: {
+        dir: __dirname + '/templates',
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    }
   }
 }

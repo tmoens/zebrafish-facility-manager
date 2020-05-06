@@ -60,7 +60,7 @@ export class PasswordChangeComponent implements OnInit {
     this.authApiService.passwordChange(dto).subscribe( (token: any) => {
       if (token) {
         this.dialogRef.close();
-        this.authService.onLogin(token.accessToken);
+        this.authService.onLogin(token.access_token);
         this.message.open(
           "Your password has been changed.",
           null, {duration: this.appState.confirmMessageDuration});

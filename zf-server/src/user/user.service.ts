@@ -7,6 +7,7 @@ import {Logger} from "winston";
 import {ADMIN_ROLE} from "../common/auth/zf-roles";
 import {JwtService} from "@nestjs/jwt";
 import {UserRepository} from "./user.repository";
+import {ZFMailerService} from "../mailer/mailer-service";
 
 @Injectable()
 export class UserService {
@@ -14,13 +15,14 @@ export class UserService {
     @InjectRepository(UserRepository) private readonly repo: UserRepository,
     @Inject('winston') private readonly logger: Logger,
     private jwtService: JwtService,
+    private mailerService: ZFMailerService,
   ) {
     this.makeSureAdminExists();
   }
 
   // when a system starts up, it needs at least one user, in this case the admin user
-  // with the password admin and set up so that the user must change her password when
-  // they first log in.
+  // with the password "admin" set up so that the user must change her password when
+  // she first logs in.
   async makeSureAdminExists() {
     if (!await this.findByUserName('admin')) {
       const admin: User = await this.create({username: 'admin', role: ADMIN_ROLE, email: 'admin@admin.com'});
@@ -102,7 +104,7 @@ export class UserService {
     if (!u) {
       throw new UnauthorizedException('No such user.');
     }
-    console.log('Setting random password for ' + u.username + ': ' + u.setRandomPassword());
+    this.mailerService.passwordReset(u, u.setRandomPassword());
     return this.repo.save(u);
   }
 

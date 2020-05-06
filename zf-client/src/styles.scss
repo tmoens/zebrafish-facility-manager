@@ -10,6 +10,10 @@
   flex: 1 1 auto;
 }
 
+// Untile we work out how we want to do the sidenav and nav content background...
+.mat-sidenav-container {
+  background-color: white;
+}
 // used to limit presentation of a field to the available space
 .truncate {
   white-space: nowrap;
@@ -135,14 +139,12 @@
   font-size: 14pt;
   font-weight: 500;
   margin: 0 0 4px;
-  color: darkorchid;
 }
 
 .zf-sub-title {
   font-weight: 500;
   margin: 5px 0;
   font-size: 12pt;
-  color: deepskyblue;
 }
 
 .big-background {

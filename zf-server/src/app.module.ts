@@ -26,6 +26,8 @@ import {JwtStrategy} from "./guards/jwt.strategy";
 import {PassportModule} from "@nestjs/passport";
 import {JwtModule} from "@nestjs/jwt";
 import {JwtStrategy2} from "./guards/jwt.strategy2";
+import {HandlebarsAdapter, MailerModule} from "@nestjs-modules/mailer";
+import {ZFMailerService} from "./mailer/mailer-service";
 
 
 const rotatingFileLog = new DailyRotateFile({
@@ -62,6 +64,11 @@ const consoleLog = new (winston.transports.Console)({
         imports: [ConfigModule],
         useExisting: ConfigService,
       }),
+    MailerModule.forRootAsync(
+      {
+        imports: [ConfigModule],
+        useExisting: ConfigService,
+      }),
     WinstonModule.forRoot({
       transports: [
         consoleLog,
@@ -77,6 +84,7 @@ const consoleLog = new (winston.transports.Console)({
     LocalStrategy,
     JwtStrategy,
     JwtStrategy2,
+    ZFMailerService,
   ],
 })
 export class AppModule implements NestModule{
