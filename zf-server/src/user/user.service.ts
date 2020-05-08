@@ -8,6 +8,7 @@ import {ADMIN_ROLE} from "../common/auth/zf-roles";
 import {JwtService} from "@nestjs/jwt";
 import {UserRepository} from "./user.repository";
 import {ZFMailerService} from "../mailer/mailer-service";
+import {ConfigService} from "../config/config.service";
 
 @Injectable()
 export class UserService {
@@ -16,6 +17,7 @@ export class UserService {
     @Inject('winston') private readonly logger: Logger,
     private jwtService: JwtService,
     private mailerService: ZFMailerService,
+    private configService: ConfigService,
   ) {
     this.makeSureAdminExists();
   }
@@ -23,10 +25,14 @@ export class UserService {
   // when a system starts up, it needs at least one user, in this case the admin user
   // with the password "admin" set up so that the user must change her password when
   // she first logs in.
+  // FWIW, the config file checker ensures that the configuration fields are present.
   async makeSureAdminExists() {
-    if (!await this.findByUserName('admin')) {
-      const admin: User = await this.create({username: 'admin', role: ADMIN_ROLE, email: 'admin@admin.com'});
-      admin.setPassword('admin');
+    if (!await this.findByUserName(this.configService.defaultAdminUserName)) {
+      const admin: User = await this.create({
+        username: this.configService.defaultAdminUserName,
+        role: ADMIN_ROLE,
+        email: this.configService.defaultAdminUserEmail});
+      admin.setPassword(this.configService.defaultAdminUserPassword);
       admin.passwordChangeRequired = true;
       await this.repo.save(admin);
     }

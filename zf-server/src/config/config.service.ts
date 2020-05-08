@@ -65,6 +65,10 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
 
       GMAIL_SENDER: Joi.string().required(),
       GMAIL_PASSWORD: Joi.string().required(),
+
+      DEFAULT_ADMIN_USER_NAME: Joi.string().required(),
+      DEFAULT_ADMIN_USER_EMAIL: Joi.string().required(),
+      DEFAULT_ADMIN_USER_PASSWORD: Joi.string().required(),
     });
 
     const {error, value: validatedEnvConfig} = Joi.validate(
@@ -95,6 +99,17 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
       short_name: this.envConfig.FACILITY_ORG_SHORT_NAME,
       prefix: this.envConfig.FACILITY_ORG_PREFIX,
     };
+  }
+
+  // This is so the system can set up a default admin user
+  get defaultAdminUserName(): string {
+    return this.envConfig.DEFAULT_ADMIN_USER_NAME;
+  }
+  get defaultAdminUserEmail(): string {
+    return this.envConfig.DEFAULT_ADMIN_USER_EMAIL;
+  }
+  get defaultAdminUserPassword(): string {
+    return this.envConfig.DEFAULT_ADMIN_USER_PASSWORD;
   }
 
   get jwtSecret(): string {
