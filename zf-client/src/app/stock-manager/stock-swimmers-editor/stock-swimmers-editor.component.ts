@@ -73,8 +73,7 @@ export class StockSwimmersEditorComponent implements OnInit {
       this.stockService.enterEditMode();
       this.stockId = +pm.get('id');
       if (this.stockId && (!this.stockService.selected || this.stockId !== this.stockService.selected.id)) {
-        this.stockService.setSelectedId(this.stockId);
-        this.stockService.loadSelected();
+        this.stockService.selectByIdAndLoad(this.stockId);
       }
     });
 

@@ -97,15 +97,13 @@ export class AuthService {
   // a) whatever the intend path was when the user was forced to login.  This supports
   // one user sending another an interesting url.
   // b) wherever the user was when they were last logged in (as figured out from local storage)
-  // c) failing that, the Stock Manager in view mode.
-  // TODO deal with the user having been in edit mode when logged out.
   getDefaultURI(): string {
     if (this.intendedPath) {
       const p = this.intendedPath;
       this.intendedPath = null;
       return p;
     }
-    return 'stock_manager/view';
+    return this.appState.getDefaultURI();
   }
 
   // this decodes the access token and stuffs it in typed object.

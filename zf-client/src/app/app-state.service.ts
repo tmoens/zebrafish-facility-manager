@@ -1,11 +1,8 @@
 import {Inject, Injectable} from '@angular/core';
-import {BehaviorSubject, interval} from 'rxjs';
-import {AccessTokenPayload} from "./auth/zfm-access-token-payload";
-import {plainToClass} from "class-transformer";
+import {BehaviorSubject} from 'rxjs';
 import {LOCAL_STORAGE, StorageService} from "ngx-webstorage-service";
 import {ZFTool} from "./helpers/zf-tool";
 import {Router} from "@angular/router";
-import {AppRoles} from "./auth/app-roles";
 import {ZFTypes} from "./helpers/zf-types";
 
 /**
@@ -39,6 +36,23 @@ export class AppStateService {
     private router: Router,
     @Inject(LOCAL_STORAGE) private localStorage: StorageService,
   ) {
+  }
+
+  // Figure out the user's last URI based on state in local storage.
+  // This allows the user to keep their place when they login.
+  // Failing that, go to the stock manager.
+  getDefaultURI(): string {
+    let tool: ZFTool = this.localStorage.get(ZFToolStates.ACTIVE_TOOL) as ZFTool;
+    if (!tool || tool.route === ZFTool.SPLASH_LOGIN.route) {
+      tool = ZFTool.STOCK_MANAGER;
+    }
+    let uri: string = '/' + tool.route;
+    // check to see if there is a particular object that we should be viewing.
+    const selected_id = this.getToolState(tool.type, ZFToolStates.SELECTED_ID);
+    if (selected_id) {
+      uri = uri + '/view/' + selected_id;
+    }
+    return uri;
   }
 
   // we introduce a random stagger of 2 to 7 seconds so that all the services don;t refresh simultaneously

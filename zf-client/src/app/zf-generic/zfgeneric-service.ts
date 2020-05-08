@@ -78,15 +78,12 @@ export class ZFGenericService<
     return this._filter;
   }
 
-  // private _filteredList$: BehaviorSubject<SIMPLE_OBJ[]> = new BehaviorSubject<SIMPLE_OBJ[]>([]);
-  // private get filteredList$(): BehaviorSubject<SIMPLE_OBJ[]> { return this._filteredList$; }
-  // get filteredList(): SIMPLE_OBJ[] { return this._filteredList$.value; }
   private _filteredList: SIMPLE_OBJ[] = [];
   get filteredList(): SIMPLE_OBJ[] { return this._filteredList; }
 
   // The ZF objects usually have a name that is assigned by the the system. The
   // name is sequential and the user does not get to choose it, again usually.
-  // So we keep track of what the is the next designated name for the next object.
+  // So we keep track of what the next designated name for the next object.
   // The next name is only "likely" because some other GUI client may grab it
   // first.
   private _likelyNextName$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
