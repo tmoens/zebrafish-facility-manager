@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppStateService} from '../app-state.service';
 import {ZFTool} from "../helpers/zf-tool";
-import {Observable} from "rxjs";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
-import {map, shareReplay} from "rxjs/operators";
 import {TransgeneService} from "./transgene.service";
 import {AuthService} from "../auth/auth.service";
 
@@ -14,12 +12,9 @@ import {AuthService} from "../auth/auth.service";
   styleUrls: ['./transgene-manager.component.scss']
 })
 export class TransgeneManagerComponent implements OnInit {
-  // We keep the selector open when the viewport larger than Small
-  selectorFixed$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.XSmall, Breakpoints.Small])
-    .pipe(
-      map(result => !result.matches),
-      shareReplay()
-    );
+
+  // This tracks if we want the selector open (fixed) or toggleable.
+  selectorFixed: boolean = false;
 
   constructor(
     private router: Router,
@@ -31,6 +26,10 @@ export class TransgeneManagerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // We keep the selector open when the viewport larger than XSmall
+    this.breakpointObserver.observe([Breakpoints.XSmall, Breakpoints.Small])
+      .subscribe(result => this.selectorFixed = !(result.matches)
+      );
     this.route.url.subscribe( () => this.appState.setActiveTool(ZFTool.TRANSGENE_MANAGER));
   }
 }

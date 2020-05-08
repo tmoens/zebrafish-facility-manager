@@ -5,11 +5,11 @@
     <mat-toolbar  color="primary">
 
       <!-- The button to toggle the sidenav is disabled while an item is being edited -->
-      <button mat-icon-button (click)="selector.toggle()" *ngIf="!(selectorFixed$ | async)"
-              [disabled]="service.inEditMode$ | async">
+      <button mat-icon-button (click)="selector.toggle()" *ngIf="!(selectorFixed)"
+              [disabled]="service.inEditMode">
         <mat-icon>menu</mat-icon>
       </button>
-      Mutation Manager {{(service.inEditMode$ | async) ? 'Edit Mode' : 'Browse Mode'}}
+      User Administration
       <span class="fill-remaining-space"></span>
       <app-user-menu></app-user-menu>
     </mat-toolbar>
@@ -19,10 +19,10 @@
       <!-- The sidenav should collapse when editing an item  or when the screen is small -->
       <mat-sidenav #selector fixedInViewport
                    fixedTopGap="120"
-                   [mode]="(selectorFixed$ | async) ? 'side' : 'over'"
-                   [opened]="(selectorFixed$ | async) && !(service.inEditMode$ | async)"
+                   [mode]="(selectorFixed) ? 'side' : 'over'"
+                   [opened]="(selectorFixed) && !(service.inEditMode)"
                    style="background: inherit; border: none">
-        <app-user-selector></app-user-selector>
+        <app-user-selector (selected)="!selectorFixed && selector.toggle()"></app-user-selector>
       </mat-sidenav>
 
       <mat-sidenav-content>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormBuilder} from '@angular/forms';
 import {debounceTime, map, startWith} from 'rxjs/operators';
 import {StockService} from '../stock.service';
@@ -24,6 +24,7 @@ import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/lay
   styleUrls: ['./stock-selector.component.scss']
 })
 export class StockSelectorComponent implements OnInit {
+  @Output() selected = new EventEmitter<Stock>();
 
   mfForm = this.fb.group(this.service.filter);
 
@@ -76,6 +77,7 @@ export class StockSelectorComponent implements OnInit {
 
   // Tell the service which Id is currently selected.
   onSelect(s: Stock | null) {
+    this.selected.emit(s);
     this.router.navigate(['stock_manager/view/' + s.id]);
   }
 }

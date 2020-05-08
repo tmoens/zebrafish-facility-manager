@@ -15,8 +15,7 @@ export class UserAdminService {
   get selected() { return this.selected$.getValue(); }
 
   // This keeps track of whether the user is editing or browsing
-  private _inEditMode$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  get inEditMode$(): BehaviorSubject<boolean> { return this._inEditMode$; }
+  public inEditMode = false;
 
   users: UserDTO[] = [];
 
@@ -147,9 +146,10 @@ export class UserAdminService {
   }
 
   enterEditMode() {
-    this.inEditMode$.next(true);
+    this.inEditMode = true;
   }
   enterBrowseMode() {
-    this.inEditMode$.next(false);
+    this.inEditMode = false;
   }
+
 }

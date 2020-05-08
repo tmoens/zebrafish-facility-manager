@@ -4,8 +4,6 @@ import {ZFTool} from "../helpers/zf-tool";
 import {AppStateService} from "../app-state.service";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {StockService} from "./stock.service";
-import {Observable} from "rxjs";
-import {map, shareReplay} from "rxjs/operators";
 import {AuthService} from "../auth/auth.service";
 
 @Component({
@@ -14,12 +12,9 @@ import {AuthService} from "../auth/auth.service";
   styleUrls: ['./stock-manager.component.scss']
 })
 export class StockManagerComponent implements OnInit {
-  // We keep the selector open when the viewport larger than XSmall
-  selectorFixed$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.XSmall, Breakpoints.Small])
-    .pipe(
-      map(result => !result.matches),
-      shareReplay()
-    );
+
+  // This tracks if we want the selector open (fixed) or toggleable.
+  selectorFixed: boolean = false;
 
 
   constructor (
@@ -33,6 +28,10 @@ export class StockManagerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // We keep the selector open when the viewport larger than XSmall
+    this.breakpointObserver.observe([Breakpoints.XSmall, Breakpoints.Small])
+      .subscribe(result => this.selectorFixed = !(result.matches)
+    );
     this.route.url.subscribe( () => this.appState.setActiveTool(ZFTool.STOCK_MANAGER));
   }
 }

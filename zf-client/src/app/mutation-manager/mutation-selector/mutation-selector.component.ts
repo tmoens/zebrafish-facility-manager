@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 import {FormBuilder} from '@angular/forms';
 import {debounceTime, map, startWith} from 'rxjs/operators';
 import {MutationFilter} from '../mutation-filter';
+import {Stock} from "../../stock-manager/stock";
 
 @Component({
   selector: 'app-mutation-selector',
@@ -13,6 +14,8 @@ import {MutationFilter} from '../mutation-filter';
   styleUrls: ['./mutation-selector.component.scss']
 })
 export class MutationSelectorComponent implements OnInit {
+  @Output() selected = new EventEmitter<Mutation>();
+
   // Build the filter form.
   mfForm = this.fb.group(this.service.filter);
 
@@ -72,6 +75,7 @@ export class MutationSelectorComponent implements OnInit {
   // Decision not to route.navigate to the mutation, let the
   // mutation manager decide what to do in any given context.
   onSelect(m: Mutation | null) {
+    this.selected.emit(m);
     this.router.navigate(['mutation_manager/view/' + m.id]);
   }
 }

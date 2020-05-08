@@ -7,7 +7,6 @@ import {ActivatedRoute, Router} from "@angular/router";
   selector: 'app-splash',
   template:`
     <div class="big-background"></div>
-    <h1>it works.</h1>
   `,
   styleUrls: ['./splash.component.scss']
 })

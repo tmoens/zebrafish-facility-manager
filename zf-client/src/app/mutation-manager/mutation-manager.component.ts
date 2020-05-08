@@ -15,12 +15,8 @@ import {AuthService} from "../auth/auth.service";
 })
 export class MutationManagerComponent implements OnInit {
 
-  // We keep the selector open when the viewport larger than XSmall
-  selectorFixed$: Observable<boolean> = this.breakpointObserver.observe([Breakpoints.XSmall])
-    .pipe(
-      map(result => !result.matches),
-      shareReplay()
-    );
+  // This tracks if we want the selector open (fixed) or toggleable.
+  selectorFixed: boolean = false;
 
   constructor(
     private router: Router,
@@ -32,6 +28,12 @@ export class MutationManagerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    // We keep the selector open when the viewport larger than XSmall
+    this.breakpointObserver.observe([Breakpoints.XSmall, Breakpoints.Small])
+      .subscribe(result => this.selectorFixed = !(result.matches)
+      );
+
     this.route.url.subscribe( () => this.appState.setActiveTool(ZFTool.MUTATION_MANAGER));
 
   }

@@ -97,8 +97,7 @@ export class ZFGenericService<
   get fieldOptions(): FieldOptions { return this._fieldOptions; }
 
   // This keeps track of whether the user is editing or browsing
-  private _inEditMode$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  get inEditMode$(): BehaviorSubject<boolean> { return this._inEditMode$; }
+  public inEditMode = false;
 
   constructor(
     // this is used to tell the loaderService what type to use in server calls.
@@ -287,9 +286,9 @@ export class ZFGenericService<
   }
 
   enterEditMode() {
-    this.inEditMode$.next(true);
+    this.inEditMode = true;
   }
   enterBrowseMode() {
-    this.inEditMode$.next(false);
+    this.inEditMode = false;
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {LoaderService} from "../../../loader.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserDTO} from "../../UserDTO";
@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {UserAdminService} from "../user-admin.service";
 import {debounceTime} from "rxjs/operators";
+import {Stock} from "../../../stock-manager/stock";
 
 @Component({
   selector: 'app-user-selector',
@@ -39,6 +40,8 @@ import {debounceTime} from "rxjs/operators";
   `,
 })
 export class UserSelectorComponent implements OnInit {
+  @Output() selected = new EventEmitter<UserDTO>();
+
   filterFC: FormControl = new FormControl('');
 
   users: UserDTO[] = [];
@@ -63,6 +66,7 @@ export class UserSelectorComponent implements OnInit {
 
   // when the user clicks on a user, go view it
   onSelect(instance: UserDTO | null) {
+    this.selected.emit(instance);
     this.service.select(instance);
     this.router.navigateByUrl('user_admin/view');
   }

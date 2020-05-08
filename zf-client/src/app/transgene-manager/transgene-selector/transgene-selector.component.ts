@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {TransgeneService} from '../transgene.service';
 import {AbstractControl, FormBuilder} from '@angular/forms';
 import {debounceTime} from 'rxjs/operators';
@@ -11,6 +11,8 @@ import {Transgene} from '../transgene';
   templateUrl: 'transgene-selector.component.html',
 })
 export class TransgeneSelectorComponent implements OnInit {
+  @Output() selected = new EventEmitter<Transgene>();
+
   // Build the filter form.
   mfForm = this.fb.group(this.service.filter);
 
@@ -39,6 +41,7 @@ export class TransgeneSelectorComponent implements OnInit {
   // when the user clicks on a transgene, go view it
   // This has a side-effect of causing the transgene to become selected.
   onSelect(instance: Transgene | null) {
+    this.selected.emit(instance);
     this.router.navigate(['transgene_manager/view/' + instance.id]);
   }
 }
