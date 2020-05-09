@@ -1,6 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {StockFull} from '../stockFull';
-import {ZfGenericClass} from '../../zf-generic/zfgeneric-class';
 import {ZfSelectionList} from '../../helpers/selection-list';
 import {StockService} from '../stock.service';
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
@@ -9,10 +7,12 @@ import {FormBuilder, FormControl} from "@angular/forms";
 import {MutationService} from "../../mutation-manager/mutation.service";
 import {TransgeneService} from "../../transgene-manager/transgene.service";
 import {ZFTypes} from "../../helpers/zf-types";
-import {Mutation} from "../../mutation-manager/mutation";
-import {plainToClass} from "class-transformer";
-import {Transgene} from "../../transgene-manager/transgene";
 import {Observable} from "rxjs";
+import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
+import {StockFullDto} from "../dto/stock-full-dto";
+import {classToClass} from "class-transformer";
+import {MutationDto} from "../../mutation-manager/mutation-dto";
+import {TransgeneDto} from "../../transgene-manager/transgene-dto";
 
 /**
  * This dialog allows the user to indicate which mutations/transgenes (markers) are present
@@ -33,19 +33,19 @@ export class StockGeneticsEditorComponent implements OnInit {
   type: string; // mutation or transgene
 
   // The stock in question
-  stock: StockFull;
+  stock: StockFullDto;
 
   // The markers of both parental stocks
-  parentalSelectionList: ZfSelectionList<ZfGenericClass>;
+  parentalSelectionList: ZfSelectionList<ZfGenericDto>;
 
   // A list of markers which the stock has but were not inherited from parents
-  nonParentalSelectionList: ZfSelectionList<ZfGenericClass>;
+  nonParentalSelectionList: ZfSelectionList<ZfGenericDto>;
 
   // working copy of the markers of the stock in question
-  ownList: ZfSelectionList<ZfGenericClass>;
+  ownList: ZfSelectionList<ZfGenericDto>;
 
   // for checking if the ownList has changed
-  initialList: ZfGenericClass[];
+  initialList: ZfGenericDto[];
 
   // whether or not the working copy differs from the initial
   ownListChanged = false;
@@ -54,7 +54,7 @@ export class StockGeneticsEditorComponent implements OnInit {
   // find the one she wants without having to go the the mutation manager
   // or transgene manager and make a note. It gets updated as the user
   // enters a filter string.
-  lookupList: ZfSelectionList<ZfGenericClass> = new ZfSelectionList<ZfGenericClass>();
+  lookupList: ZfSelectionList<ZfGenericDto> = new ZfSelectionList<ZfGenericDto>();
 
   // The filter string;
   filterStringFC: FormControl = new FormControl('');
@@ -84,7 +84,7 @@ export class StockGeneticsEditorComponent implements OnInit {
       this.id = Number(pm.get('id'));
       this.type = pm.get('type');
       this.capitalizedType = this.type.charAt(0).toUpperCase() + this.type.slice(1);
-      this.service.getById(this.id).subscribe((s: StockFull) => {
+      this.service.getById(this.id).subscribe((s: StockFullDto) => {
         this.stock = s;
         this.initialize();
       });
@@ -96,9 +96,9 @@ export class StockGeneticsEditorComponent implements OnInit {
 
   initialize() {
 
-    this.ownList = new ZfSelectionList<ZfGenericClass>();
-    this.parentalSelectionList = new ZfSelectionList<ZfGenericClass>();
-    this.nonParentalSelectionList = new ZfSelectionList<ZfGenericClass>();
+    this.ownList = new ZfSelectionList<ZfGenericDto>();
+    this.parentalSelectionList = new ZfSelectionList<ZfGenericDto>();
+    this.nonParentalSelectionList = new ZfSelectionList<ZfGenericDto>();
 
     // Initialization uses different tools for Mutations and Transgenes...
     switch (this.type) {
@@ -106,20 +106,20 @@ export class StockGeneticsEditorComponent implements OnInit {
         this.initialList = this.stock.mutations;
 
         // The stock's own list starts with whatever markers the stock has.
-        this.stock.mutations.map((item: ZfGenericClass) => {
-          this.ownList.insert(plainToClass(Mutation, item), true);
+        this.stock.mutations.map((item: MutationDto) => {
+          this.ownList.insert(classToClass(item), true);
         });
 
         // The parental list is fetched, and any markers the child has are selected.
-        this.service.getParentalMutations().map((item: ZfGenericClass) => {
-          this.parentalSelectionList.insert(item, this.ownList.contains(item));
+        this.service.getParentalMutations().map((item: MutationDto) => {
+          this.parentalSelectionList.insert(item, this.ownList.containsId(item.id));
         });
 
         // If the stock has any markers that neither parent has, these are "additional"
         // or "non parental" markers.
-        this.stock.mutations.map((item: ZfGenericClass) => {
+        this.stock.mutations.map((item: MutationDto) => {
           if (!this.parentalSelectionList.containsId(item.id)) {
-            this.nonParentalSelectionList.insert(plainToClass(Mutation, item), true);
+            this.nonParentalSelectionList.insert(classToClass(item), true);
           }
         });
         break;
@@ -128,20 +128,20 @@ export class StockGeneticsEditorComponent implements OnInit {
         this.initialList = this.stock.transgenes;
 
         // The stock's own list starts with whatever markers the stock has.
-        this.stock.transgenes.map((item: ZfGenericClass) => {
-          this.ownList.insert(plainToClass(Transgene, item), true);
+        this.stock.transgenes.map((item: TransgeneDto) => {
+          this.ownList.insert(classToClass(item), true);
         });
 
         // The parental list is fetched, and any markers the child has are selected.
-        this.service.getParentalTransgenes().map((item: ZfGenericClass) => {
-          this.parentalSelectionList.insert(item, this.ownList.contains(item));
+        this.service.getParentalTransgenes().map((item: TransgeneDto) => {
+          this.parentalSelectionList.insert(item, this.ownList.containsId(item.id));
         });
 
         // If the stock has any markers that neither parent has, these are "additional"
         // or "non parental" markers.
-        this.stock.transgenes.map((item: ZfGenericClass) => {
+        this.stock.transgenes.map((item: TransgeneDto) => {
           if (!this.parentalSelectionList.containsId(item.id)) {
-            this.nonParentalSelectionList.insert(plainToClass(Transgene, item), true);
+            this.nonParentalSelectionList.insert(classToClass(item), true);
           }
         });
         break;
@@ -151,7 +151,7 @@ export class StockGeneticsEditorComponent implements OnInit {
   }
 
   loadLookupList(filter: string) {
-    this.lookupList = new ZfSelectionList<ZfGenericClass>();
+    this.lookupList = new ZfSelectionList<ZfGenericDto>();
 
     // to keep the GUI performant, require the search string to be at least two characters.
     if (filter.length <2) { return; }
@@ -161,7 +161,7 @@ export class StockGeneticsEditorComponent implements OnInit {
       case ZFTypes.MUTATION:
 
 
-        this.mutationService.all.map((m: Mutation) => {
+        this.mutationService.all.map((m: MutationDto) => {
           if ((m.gene && m.gene.toLowerCase().includes(f)) ||
             (m.name && m.name.toLowerCase().includes(f)) ||
             (m.researcher && m.researcher.toLowerCase().includes(f))) {
@@ -176,7 +176,7 @@ export class StockGeneticsEditorComponent implements OnInit {
       case ZFTypes.TRANSGENE:
         // for transgenes, we can load them all, so we do not demand any length
         // of filter string.
-        this.transgeneService.all.map((m: Transgene) => {
+        this.transgeneService.all.map((m: TransgeneDto) => {
           if (m.allele && m.allele.toLowerCase().includes(f) ||
             (m.descriptor && m.descriptor.toLowerCase().includes(f))) {
             this.lookupList.insert(m, this.ownList.containsId(m.id));
@@ -190,10 +190,10 @@ export class StockGeneticsEditorComponent implements OnInit {
   save() {
     switch (this.type) {
       case ZFTypes.MUTATION:
-        this.stock.mutations = this.ownList.getList() as Mutation[];
+        this.stock.mutations = this.ownList.getList() as MutationDto[];
         break;
       case ZFTypes.TRANSGENE:
-        this.stock.transgenes = this.ownList.getList() as Transgene[];
+        this.stock.transgenes = this.ownList.getList() as TransgeneDto[];
         break;
     }
     this.service.update(this.stock);
@@ -226,7 +226,7 @@ export class StockGeneticsEditorComponent implements OnInit {
     return this.ownListChanged;
   }
 
-  onCheckParentalItem(item: ZfGenericClass, selected: boolean) {
+  onCheckParentalItem(item: ZfGenericDto, selected: boolean) {
     if (selected) {
       this.ownList.insert(item, true);
     } else {
@@ -236,7 +236,7 @@ export class StockGeneticsEditorComponent implements OnInit {
     this.hasOwnListChanged();
   }
 
-  onCheckNonParentalItem(item: ZfGenericClass) {
+  onCheckNonParentalItem(item: ZfGenericDto) {
     this.ownList.removeId(item.id);
     this.parentalSelectionList.toggleId(item.id)
     this.nonParentalSelectionList.removeId(item.id);
@@ -244,7 +244,7 @@ export class StockGeneticsEditorComponent implements OnInit {
     this.hasOwnListChanged();
   }
 
-  onCheckLookupItem(item: ZfGenericClass, selected: boolean) {
+  onCheckLookupItem(item: ZfGenericDto, selected: boolean) {
     if (selected) {
       this.ownList.insert(item, true);
       this.nonParentalSelectionList.insert(item, true);

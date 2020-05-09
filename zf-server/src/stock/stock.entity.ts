@@ -2,7 +2,7 @@ import {
   Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, Index,
   ManyToOne, ManyToMany, JoinTable, JoinColumn, OneToMany,
 } from 'typeorm';
-import { Exclude, Transform, Type } from 'class-transformer';
+import {Exclude, Expose, Transform, Type} from 'class-transformer';
 import { Mutation } from '../mutation/mutation.entity';
 import { Transgene } from '../transgene/transgene.entity';
 import { Background } from '../background/background.entity';
@@ -203,10 +203,6 @@ export class Stock {
   })
   transgenes: Transgene[];
 
-  // TODO ApiModelProperty indicating type causes the SwaggerUI to break when
-  // showing the Response structure for this query. May be related to the
-  // structure of Stock2Tank. Anyway, no harm to comment it out for now.
-  // @ApiModelPropertyOptional({type: [Stock2tank]})
   @Type(() => Stock2tank)
   @OneToMany(type => Stock2tank, s2t => s2t.stock)
   swimmers: Stock2tank[];
@@ -226,5 +222,35 @@ export class Stock {
     if (this.subNumber > 0) {
       this.name = this.name.concat('.0', String(this.subNumber));
     }
+  }
+
+  @Expose()
+  get fullName(): string {
+    return this.name + ' ' + this.description;
+  }
+
+  // This just makes a string that can be used as a tooltip when
+  // hovering over a stock in the GUI.
+  // I'm really unhappy about this
+  // a) because it duplicates some of the stock data being sent to the client, and
+  // b) because tooltips are really the domain of the client.
+  // The alternative is that this gets computed on the client side.  But in order to do
+  // THAT, I'd have to create a "real" object on the client side rather than just a DTO.
+  // And doing that turns the client into a significantly more complicated thing that has
+  // to have another whole layer of objects and converters.
+  // So For now, I'll take the pain.
+  @Expose()
+  get tooltip(): string {
+    const strings: string[] = [];
+    if (this.researcher) {
+      strings.push('researcher: ' + this.researcher);
+    }
+    if (this.fertilizationDate) {
+      strings.push('fertilized: ' + this.fertilizationDate);
+    }
+    if (this.comment) {
+      strings.push('comment: ' + this.comment.substr(0, 50));
+    }
+    return strings.join('\n');
   }
 }

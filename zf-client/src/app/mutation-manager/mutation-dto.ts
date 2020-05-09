@@ -1,4 +1,4 @@
-import {ZfGenericDto} from '../zf-generic/zfgeneric-dto';
+import {ZfGenericDto} from "../zf-generic/zfgeneric-dto";
 
 export class MutationDto extends ZfGenericDto {
   alternateGeneName: string = null;
@@ -6,11 +6,9 @@ export class MutationDto extends ZfGenericDto {
   actgChange: string = null;
   comment: string = null;
   gene: string = null;
-  // id: number = null; // from generic
   isDeletable = false;
   mutationType: string = null;
   morphantPhenotype: string = null;
-  name: string = null;
   phenotype: string = null;
   researcher: string = null;
   screenType: string = null;

@@ -2,9 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {MutationService} from '../mutation.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {classToPlain} from 'class-transformer';
-import {Mutation} from '../mutation';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
+import {MutationDto} from "../mutation-dto";
 
 /**
  * Show the details of the "selected" mutation.
@@ -31,7 +30,6 @@ export class MutationViewerComponent implements OnInit {
     alternateGeneName: [{value: '', disabled: true}],
     comment: [{value: '', disabled: true}],
     gene: [{value: '', disabled: true}],
-    id: [null],
     morphantPhenotype: [{value: '', disabled: true}],
     mutationType: [{value: '', disabled: true}],
     name: [{value: '', disabled: true}],
@@ -43,7 +41,11 @@ export class MutationViewerComponent implements OnInit {
     thawDate: [{value: null, disabled: true}],
     tillingMaleNumber: [{value: null, disabled: true}],
     vialsFrozen: [{value: '', disabled: true}],
-    isDeletable: [{value: '', disabled: true}],
+
+    id: [null],
+    isDeletable: [true],
+    fullName: [null],
+    tooltip: [null],
   });
 
   constructor(
@@ -54,9 +56,9 @@ export class MutationViewerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.service.selected$.subscribe((selected: Mutation) => {
+    this.service.selected$.subscribe((selected: MutationDto) => {
       if (selected) {
-        this.mfForm.setValue(classToPlain(selected));
+        this.mfForm.setValue(selected);
       }
     });
 

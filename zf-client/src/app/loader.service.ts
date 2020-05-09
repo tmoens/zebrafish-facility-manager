@@ -3,12 +3,12 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError} from 'rxjs/operators';
-import {StockFull} from "./stock-manager/stockFull";
 import {environment} from "../environments/environment"
 import {AppStateService} from "./app-state.service";
 import {ZFTypes} from "./helpers/zf-types";
 import {Router} from "@angular/router";
 import {AuthService} from "./auth/auth.service";
+import {StockFullDto} from "./stock-manager/dto/stock-full-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -133,7 +133,7 @@ export class LoaderService {
   /** =========== Stock Specific requests ===============
    *
    */
-  createSubStock(thing: StockFull) {
+  createSubStock(thing: StockFullDto) {
     return this.http.post(this.serverURL + '/stock/substock/', thing)
       .pipe(
         catchError(this.handleError('Create substock failed.', null))

@@ -3,8 +3,6 @@ import {TransgeneDto} from '../../transgene-manager/transgene-dto';
 import {MutationDto} from '../../mutation-manager/mutation-dto';
 
 export class StockDto extends ZfGenericDto {
-  // id: number = null; // inherited from generic
-  name: string = null;
   number: number = null;
   subNumber: number = null;
   description: string = null;

@@ -4,7 +4,7 @@ import {Stock} from './stock.entity';
 import {StockReportDTO} from './dto/stock-report.dto';
 import moment = require('moment');
 import {StockFilter} from './stock-filter';
-import {StockMiniDTO} from '../common/Stock/stock.mini.dto';
+import {StockMiniDto} from '../common/Stock/stockMiniDto';
 import {Logger} from "winston";
 
 
@@ -108,9 +108,10 @@ export class StockRepository extends Repository<Stock> {
   //    stock when you join, say, with hox mutations and the stock has several
   //    hox mutations.
   // b) the records are smaller and more efficient to send to the client
-  async findFiltered(filter: StockFilter): Promise<StockMiniDTO[]> {
+  async findFiltered(filter: StockFilter): Promise<StockMiniDto[]> {
     let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
       .select('DISTINCT stock.id, stock.name, stock.description, stock.researcher, stock.comment, stock.fertilizationDate')
+      .addSelect('DATE_FORMAT(stock.fertilizationDate, "%Y-%m-%d")', 'fertilizationDate')
       .where('1');
     if (filter.number) {
       q = q.andWhere('stock.name LIKE :n', {n: filter.number + "%"});
@@ -167,9 +168,32 @@ export class StockRepository extends Repository<Stock> {
       }
     }
 
-    return await q
+    const stocks: any[] =  await q
       .limit(50)
       .getRawMany();
+
+    // Please look the other way now for a minute
+    const stockMinis: StockMiniDto[] = [];
+    for (const s of stocks) {
+      const tooltipStrings: string[] = [];
+      if (s.researcher) {
+        tooltipStrings.push('researcher: ' + s.researcher);
+      }
+      if (s.fertilizationDate) {
+        tooltipStrings.push('fertilized: ' + s.fertilizationDate.substr(0,10));
+      }
+      if (s.comment) {
+        tooltipStrings.push('comment: ' + s.comment.substr(0, 50));
+      }
+      tooltipStrings.join('\n');
+      stockMinis.push({
+        id: s.id,
+        name: s.name,
+        description: s.description,
+        tooltip: tooltipStrings.join('\n'),
+      });
+    }
+    return stockMinis;
   }
 
   async findByName(name: string): Promise<Stock> {
@@ -299,9 +323,5 @@ export class StockRepository extends Repository<Stock> {
     return items.map(item => {
       return new StockReportDTO(item);
     });
-  }
-
-  async test(id) {
-    return 12;
   }
 }

@@ -4,13 +4,13 @@ import {MutationFilter} from './mutation-filter';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {FieldOptions} from '../helpers/field-options';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
-import {Mutation} from './mutation';
 import * as XLSX from 'xlsx';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
 import {ZFTypes} from "../helpers/zf-types";
 import {Router} from "@angular/router";
 import {AuthService} from "../auth/auth.service";
+import {MutationDto} from "./mutation-dto";
 
 /**
  * This is the model for mutation information displayed in the GUI.
@@ -21,7 +21,7 @@ import {AuthService} from "../auth/auth.service";
 @Injectable({
   providedIn: 'root'
 })
-export class MutationService extends ZFGenericService<Mutation, Mutation, MutationFilter> {
+export class MutationService extends ZFGenericService<MutationDto, MutationDto, MutationFilter> {
 
   public spermFreezeOptions = ['DONE', 'NEVER', 'TODO'];
 
@@ -58,16 +58,6 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
     this.refresh();
   }
 
-  // Data comes from the server as a plain dto, this just converts to the corresponding class
-  convertSimpleDto2Class(dto): any {
-    return plainToClass(Mutation, dto);
-  }
-
-  // Data comes from the server as a dto, this just converts to the corresponding class
-  convertFullDto2Class(dto): any {
-    return plainToClass(Mutation, dto);
-  }
-
   nameIsInUse(name: string): boolean {
     return this._fieldOptions.options.name.includes(name);
   }
@@ -75,7 +65,7 @@ export class MutationService extends ZFGenericService<Mutation, Mutation, Mutati
 
   toExcel() {
     const wb = XLSX.utils.book_new();
-    const mutationSheet = XLSX.utils.json_to_sheet(this.filteredList.map((m: Mutation) => {
+    const mutationSheet = XLSX.utils.json_to_sheet(this.filteredList.map((m: MutationDto) => {
       return {Allele: m.name, Gene: m.gene, 'Alt Gene': m.alternateGeneName, Researcher: m.researcher,
         'AA Change': m.aaChange, 'BP Change': m.actgChange, Plan: m.spermFreezePlan, Frozen: m.vialsFrozen,
         Comment: m.comment, Phenotype: m.phenotype, 'Morphant Phenotype': m.morphantPhenotype};

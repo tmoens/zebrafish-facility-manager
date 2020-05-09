@@ -3,7 +3,6 @@ import {LoaderService} from '../loader.service';
 import {TransgeneFilter} from './transgene-filter';
 import {FieldOptions} from '../helpers/field-options';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
-import {Transgene} from './transgene';
 import * as XLSX from 'xlsx';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -11,6 +10,7 @@ import {plainToClass} from "class-transformer";
 import {ZFTypes} from "../helpers/zf-types";
 import {Router} from "@angular/router";
 import {AuthService} from "../auth/auth.service";
+import {TransgeneDto} from "./transgene-dto";
 
 /**
  * This is the model for transgene information displayed in the GUI.
@@ -21,7 +21,7 @@ import {AuthService} from "../auth/auth.service";
 @Injectable({
   providedIn: 'root'
 })
-export class TransgeneService extends ZFGenericService<Transgene, Transgene, TransgeneFilter> {
+export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDto, TransgeneFilter> {
 
   constructor(
     private readonly loader: LoaderService,
@@ -53,23 +53,13 @@ export class TransgeneService extends ZFGenericService<Transgene, Transgene, Tra
     this.refresh();
   }
 
-  // Data comes from the server as a plain dto, this just converts to the corresponding class
-  convertSimpleDto2Class(dto): any {
-    return plainToClass(Transgene, dto);
-  }
-
-  // Data comes from the server as a dto, this just converts to the corresponding class
-  convertFullDto2Class(dto): any {
-    return plainToClass(Transgene, dto);
-  }
-
   uniquenessValidator(name: string): boolean {
     return this._fieldOptions.options.nameValidation.includes(name);
   }
 
   toExcel() {
     const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(this.all.map((m: Transgene) => {
+    const ws = XLSX.utils.json_to_sheet(this.all.map((m: TransgeneDto) => {
       return {Descriptor: m.descriptor, Allele: m.allele, Source: m.source, Plasmid: m.plasmid, Comment: m.comment};
     }));
     XLSX.utils.book_append_sheet(wb, ws, 'Transgenes');

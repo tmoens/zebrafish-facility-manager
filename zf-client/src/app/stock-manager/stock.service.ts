@@ -6,18 +6,18 @@ import {FieldOptions} from '../helpers/field-options';
 import * as XLSX from 'xlsx';
 import {map} from 'rxjs/operators';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
-import {StockFull} from './stockFull';
 import {Observable} from 'rxjs';
-import {Stock} from './stock';
 import {MutationService} from '../mutation-manager/mutation.service';
-import {Mutation} from '../mutation-manager/mutation';
 import {TransgeneService} from '../transgene-manager/transgene.service';
-import {Transgene} from '../transgene-manager/transgene';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
 import {ZFTypes} from "../helpers/zf-types";
 import {Router} from "@angular/router";
 import {AuthService} from "../auth/auth.service";
+import {StockDto} from "./dto/stock-dto";
+import {StockFullDto} from "./dto/stock-full-dto";
+import {MutationDto} from "../mutation-manager/mutation-dto";
+import {TransgeneDto} from "../transgene-manager/transgene-dto";
 
 /**
  * This is the model for stock information displayed in the GUI.
@@ -34,7 +34,7 @@ import {AuthService} from "../auth/auth.service";
   providedIn: 'root'
 })
 export class StockService extends ZFGenericService<
-  Stock, StockFull, StockFilter> {
+  StockDto, StockFullDto, StockFilter> {
 
   constructor(
     private readonly loader: LoaderService,
@@ -70,74 +70,27 @@ export class StockService extends ZFGenericService<
       'researcher': [],
     });
 
-    // Note: normally a stock is selected and received from the server. By default the
-    // received simple object is converted to a StockFull object.  However, plainToClass
-    // does not seem to auto convert the arrays of mutations and transgenes DTOs in the
-    // stock dto to arrays of Mutations and Transgenes. So we do that here. Ditto for parents.
-    this.selected$.subscribe((s: StockFull) => {
-      if (s) {
-        if (s.mutations) {
-          s.mutations = s.mutations.map(m => this.mutationService.convertSimpleDto2Class(m));
-        }
-        if (s.transgenes) {
-          s.transgenes = s.transgenes.map(m => this.transgeneService.convertSimpleDto2Class(m));
-        }
-        if (s.offspring) {
-          s.offspring = s.offspring.map(m => this.convertSimpleDto2Class(m));
-        }
-        if (s.matStock) {
-          s.matStock = this.convertSimpleDto2Class(s.matStock);
-          if (s.matStock.mutations) {
-            s.matStock.mutations = s.matStock.mutations.map(m => this.mutationService.convertSimpleDto2Class(m));
-          }
-          if (s.matStock.transgenes) {
-            s.matStock.transgenes = s.matStock.transgenes.map(m => this.transgeneService.convertSimpleDto2Class(m));
-          }
-        }
-        if (s.patStock) {
-          s.patStock = this.convertSimpleDto2Class(s.patStock);
-          if (s.patStock.mutations) {
-            s.patStock.mutations = s.patStock.mutations.map(m => this.mutationService.convertSimpleDto2Class(m));
-          }
-          if (s.patStock.transgenes) {
-            s.patStock.transgenes = s.patStock.transgenes.map(m => this.transgeneService.convertSimpleDto2Class(m));
-          }
-        }
-      }
-    });
     this.refresh();
   }
 
-  // Data comes from the server as a plain dto, this just converts to the corresponding class
-  convertSimpleDto2Class(dto): any {
-    return plainToClass(Stock, dto);
-  }
-
-  // Data comes from the server as a dto, this just converts to the corresponding class
-  convertFullDto2Class(dto): any {
-    return plainToClass(StockFull, dto);
-  }
-
-
-  createSubStock(item: StockFull) {
-    this.loader.createSubStock(item).subscribe((result: StockFull) => {
+  createSubStock(item: StockFullDto) {
+    this.loader.createSubStock(item).subscribe((result: StockFullDto) => {
       if (result.id) {
-        const r = this.convertFullDto2Class(result as StockFull);
-        this.message.open(r.name + ' created.', null, {duration: this.appState.confirmMessageDuration});
+        this.message.open(result.name + ' created.', null, {duration: this.appState.confirmMessageDuration});
         // It might seem right just to select the object you get back from the create call
         // rather than make another round trip to re-fetch the object from the server.
         // BUT the object you get back from the creation call is not reliable.  For
         // example, the "is Deletable" flag is not in the value returned here.
         // Also the new object may or may not meet the filter criteria and
         // therefore will or will not be in the filtered list.
-        this.setSelectedId(r.id);
+        this.setSelectedId(result.id);
         this.refresh();
         this.router.navigateByUrl(this.appState.activeTool.route + '/view/' + result.id)
       }
     });
   }
 
-  getByName(stockName: string): Observable<Stock> {
+  getByName(stockName: string): Observable<StockDto> {
     return this.loader.getByName(ZFTypes.STOCK, stockName).pipe(
       map(s => (s))
     );
@@ -184,8 +137,8 @@ export class StockService extends ZFGenericService<
 
   }
 
-  getParentalMutations(): Mutation[] {
-    let r: Mutation[] = [];
+  getParentalMutations(): MutationDto[] {
+    let r: MutationDto[] = [];
     if (this.selected.matStock && this.selected.matStock.mutations) {
       r = this.selected.matStock.mutations;
     }
@@ -195,8 +148,8 @@ export class StockService extends ZFGenericService<
     return r;
   }
 
-  getParentalTransgenes(): Transgene[] {
-    let r: Transgene[] = [];
+  getParentalTransgenes(): TransgeneDto[] {
+    let r: TransgeneDto[] = [];
     if (this.selected.matStock && this.selected.matStock.transgenes) {
       r = this.selected.matStock.transgenes;
     }

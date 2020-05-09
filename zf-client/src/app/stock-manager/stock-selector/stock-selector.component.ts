@@ -5,8 +5,8 @@ import {StockService} from '../stock.service';
 import {StockFilter} from './stock-filter';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
-import {Stock} from '../stock';
 import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/layout";
+import {StockDto} from "../dto/stock-dto";
 
 /**
  * A two-part component: a filter for stocks and a list of filtered stocks.
@@ -24,7 +24,7 @@ import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/lay
   styleUrls: ['./stock-selector.component.scss']
 })
 export class StockSelectorComponent implements OnInit {
-  @Output() selected = new EventEmitter<Stock>();
+  @Output() selected = new EventEmitter<StockDto>();
 
   mfForm = this.fb.group(this.service.filter);
 
@@ -76,7 +76,7 @@ export class StockSelectorComponent implements OnInit {
   }
 
   // Tell the service which Id is currently selected.
-  onSelect(s: Stock | null) {
+  onSelect(s: StockDto | null) {
     this.selected.emit(s);
     this.router.navigate(['stock_manager/view/' + s.id]);
   }

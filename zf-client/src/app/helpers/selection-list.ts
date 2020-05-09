@@ -5,9 +5,10 @@
 // the index and the data are typed.
 
 import {ZfGenericClass} from '../zf-generic/zfgeneric-class';
+import {ZfGenericDto} from "../zf-generic/zfgeneric-dto";
 
 
-export class ZfSelectionList<OBJ extends ZfGenericClass> {
+export class ZfSelectionList<OBJ extends ZfGenericDto> {
   count = 0;
   items: {[id: number]: {item: OBJ, selected: boolean}} = {};
   constructor() {
@@ -42,7 +43,7 @@ export class ZfSelectionList<OBJ extends ZfGenericClass> {
       this.items[id].selected = !this.items[id].selected;
     }
   }
-  getList(): ZfGenericClass[] {
+  getList(): ZfGenericDto[] {
     return Object.values(this.items).map(item => item.item);
   }
 }

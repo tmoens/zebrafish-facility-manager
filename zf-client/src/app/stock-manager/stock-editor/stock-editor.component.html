@@ -20,7 +20,7 @@
           </mat-form-field>
           <mat-form-field >
             <input matInput [matDatepicker]="picker" placeholder="Fertilization Date" name="fertDate"
-                   [(ngModel)]="stock.fertilizationDate" [disabled]="!stock.fertilizationDateEditable()" required>
+            [(ngModel)]="stock.fertilizationDate" [disabled]="stock.nextSubStockNumber > 1" required>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>

@@ -2,14 +2,13 @@ import {Injectable} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {BehaviorSubject, interval, Observable} from 'rxjs';
 import {LoaderService} from '../loader.service';
-import {ZfGenericClass} from './zfgeneric-class';
-import {map} from 'rxjs/operators';
 import {FieldOptions} from '../helpers/field-options';
 import {ZfGenericFilter} from './zfgeneric-filter';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {ZFTypes} from "../helpers/zf-types";
 import {Router} from "@angular/router";
 import {AuthService} from "../auth/auth.service";
+import {ZfGenericDto} from "./zfgeneric-dto";
 
 /**
  * There is a service for every different type of object in the system.
@@ -43,12 +42,12 @@ export class ZFGenericService<
   // The SIMPLE_OBJ is a simple version of an object (Transgene, Mutation, Stock)
   // It is SIMPLE because it does not contain related objects.  So, it is used
   // for things like the filteredList.
-  SIMPLE_OBJ extends ZfGenericClass,
+  SIMPLE_OBJ extends ZfGenericDto,
 
   // The FULL_OBJ is the full version including some related objects.
   // It is FULL because it *does* (or can) contain related objects.  So, it is used
   // for things like the selectedObject.
-  FULL_OBJ extends ZfGenericClass,
+  FULL_OBJ extends ZfGenericDto,
   // Note to future self: for Transgenes and Mutations the simple and full classes
   // are the same. For Stocks, they are not even close.
 
@@ -129,18 +128,6 @@ export class ZFGenericService<
     return this._all$.value;
   }
 
-  // Data comes from the server as a dto, this just converts to the corresponding class
-  // Needs to be implemented by inheritors.
-  convertSimpleDto2Class(dto): any {
-    // return plainToClass(this.ZFSimpleClass, dto);
-  }
-
-  // Data comes from the server as a dto, this just converts to the corresponding class
-  // Needs to be implemented by inheritors.
-  convertFullDto2Class(dto): any {
-    // return plainToClass(this.ZFFullClass, dto);
-  }
-
   // load the set of currently known values for some fields
 
   // These are used primarily for auto-complete fields in the GUI
@@ -188,15 +175,13 @@ export class ZFGenericService<
 
   loadAll() {
     this.loaderService.getFilteredList(this.zfType, {}).subscribe((data) => {
-      this._all$.next(data.map(item => this.convertSimpleDto2Class(item)));
+      this._all$.next(data);
     })
   }
 
   // fetch an instance from the server.
   getById(id: number): Observable<FULL_OBJ> {
-    return this.loaderService.getInstance(this.zfType, id).pipe(
-      map(m => this.convertFullDto2Class(m))
-    );
+    return this.loaderService.getInstance(this.zfType, id);
   }
 
   setFilter(filter: FILTER) {
@@ -207,7 +192,7 @@ export class ZFGenericService<
     this.appStateService.setToolState(this.zfType, ZFToolStates.FILTER, this.filter);
     this.loaderService.getFilteredList(this.zfType, this.filter)
       .subscribe((dtoList: any[]) => {
-        this._filteredList = dtoList.map(item => this.convertSimpleDto2Class(item));
+        this._filteredList = dtoList;
       });
   }
 

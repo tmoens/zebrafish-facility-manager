@@ -134,7 +134,7 @@ export function authServiceProviderFactory(provider: AppStateService) {
     {provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true},
   ],
   exports: [
-    TopBarComponent
+    TopBarComponent,
   ],
   bootstrap: [AppComponent]
 })

@@ -8,7 +8,7 @@ import {StockService} from './stock.service';
 import {StockReportDTO} from './dto/stock-report.dto';
 import {StockFilter} from './stock-filter';
 import {plainToClass} from 'class-transformer';
-import {StockMiniDTO} from '../common/Stock/stock.mini.dto';
+import {StockMiniDto} from '../common/Stock/stockMiniDto';
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {ADMIN_ROLE, USER_ROLE} from "../common/auth/zf-roles";
 import {RoleGuard} from "../guards/role-guard.service";
@@ -60,7 +60,7 @@ export class StockController {
   }
 
   @Get()
-  async findFiltered(@Query() params): Promise<StockMiniDTO[]> {
+  async findFiltered(@Query() params): Promise<StockMiniDto[]> {
     const filter: StockFilter = plainToClass(StockFilter, params);
     return await this.repo.findFiltered(filter);
   }

@@ -4,9 +4,7 @@ import {Observable} from 'rxjs';
 import {AbstractControl, FormBuilder, ValidationErrors, Validators} from '@angular/forms';
 import {MutationService} from '../mutation.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {classToPlain} from 'class-transformer';
 import {map, startWith} from 'rxjs/operators';
-import {Mutation} from '../mutation';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {DialogService} from '../../dialog.service';
 import {MAT_DATE_FORMATS} from "@angular/material/core";
@@ -28,17 +26,15 @@ export class MutationEditorComponent implements OnInit {
   saved = false;
 
   // Build the edit form.
-  // Note the ".bind(this)" for name validation - it is because that
-  // particular validator needs the context of this object to do its work,
-  // but that is not automatically supplied as synchronous field validators
-  // are typically context free.
+  // Even though the form does not support editing of every field,
+  // all the fields that *can* come in the DTO require a formControl
+  // in the group.
   mfForm = this.fb.group({
     alternateGeneName: [''],
     aaChange: [''],
     actgChange: [''],
     comment: [''],
     gene: [''],
-    id: [null],
     mutationType: [''],
     morphantPhenotype: [''],
     name: ['', [Validators.required, this.nameValidator.bind(this)]],
@@ -50,7 +46,11 @@ export class MutationEditorComponent implements OnInit {
     thawDate: [null],
     tillingMaleNumber: [null],
     vialsFrozen: [0],
+
+    id: [null],
     isDeletable: [true],
+    fullName: [null],
+    tooltip: [null],
   });
 
 // These are arrays containing options for the various filter fields
@@ -83,8 +83,6 @@ export class MutationEditorComponent implements OnInit {
         case EditMode.CREATE_NEXT:
           this.editMode = EditMode.CREATE_NEXT;
           break;
-        default:
-        // TODO handle getting here - i.e. something is broken.
       }
       this.initialize();
     });
@@ -124,7 +122,7 @@ export class MutationEditorComponent implements OnInit {
           this.item = m;
           // TODO This seems wrong. Why can I not change the name of un-owned mutations?
           this.mfForm.get('name').disable();
-          this.mfForm.setValue(classToPlain(this.item));
+          this.mfForm.setValue(this.item);
         });
         break;
 
@@ -133,7 +131,7 @@ export class MutationEditorComponent implements OnInit {
         this.item = new MutationDto();
         // can't change name of mutation unless creating it
         this.mfForm.get('name').enable();
-        this.mfForm.setValue(classToPlain(this.item));
+        this.mfForm.setValue(this.item);
         break;
 
       // In CREATE_NEXT mode we pre-fill the mutation name and disallow user changes
@@ -144,14 +142,14 @@ export class MutationEditorComponent implements OnInit {
         this.item = new MutationDto();
         this.item.name = this.service.likelyNextName;
         this.mfForm.get('name').disable();
-        this.mfForm.setValue(classToPlain(this.item));
+        this.mfForm.setValue(this.item);
     }
   }
 
 
   save() {
     this.saved = true;
-    const editedDTO = new Mutation(this.mfForm.getRawValue());
+    const editedDTO = this.mfForm.getRawValue();
     switch (this.editMode) {
       case EditMode.CREATE:
         this.service.create(editedDTO);

@@ -18,7 +18,9 @@
         </mat-form-field>
         <mat-form-field>
           <input matInput placeholder="Fertilization Date"
-                 [value]="service.selected.fertilizationDate + ' (' + service.selected.age() + ' days)'" disabled>
+                 [value]="service.selected.fertilizationDate +
+                 ' (' + (service.selected.fertilizationDate | dateToAge) + ' days)'"
+                 disabled>
         </mat-form-field>
         <mat-form-field *ngIf="!appState.getState('hidePI') && service.selected.pi">
           <input matInput placeholder="Primary Investigator"

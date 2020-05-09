@@ -30,6 +30,7 @@ import {StockNameCheckValidator} from './validators/stockNameCheck';
 import {AuthModule} from "../auth/auth.module";
 import {MatCardModule} from "@angular/material/card";
 import {MatSidenavModule} from "@angular/material/sidenav";
+import {DateToAgePipe} from "./date-to-age.pipe";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
     StockViewerComponent,
     TankNameValidator,
     StockNameCheckValidator,
+    DateToAgePipe,
   ],
   imports: [
     StockManagerRoutingModule,

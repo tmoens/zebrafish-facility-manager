@@ -4,14 +4,14 @@ import {AbstractControl, FormBuilder} from '@angular/forms';
 import {debounceTime} from 'rxjs/operators';
 import {TransgeneFilter} from '../transgene-filter';
 import {Router} from '@angular/router';
-import {Transgene} from '../transgene';
+import {TransgeneDto} from "../transgene-dto";
 
 @Component({
   selector: 'app-transgene-selector',
   templateUrl: 'transgene-selector.component.html',
 })
 export class TransgeneSelectorComponent implements OnInit {
-  @Output() selected = new EventEmitter<Transgene>();
+  @Output() selected = new EventEmitter<TransgeneDto>();
 
   // Build the filter form.
   mfForm = this.fb.group(this.service.filter);
@@ -40,7 +40,7 @@ export class TransgeneSelectorComponent implements OnInit {
 
   // when the user clicks on a transgene, go view it
   // This has a side-effect of causing the transgene to become selected.
-  onSelect(instance: Transgene | null) {
+  onSelect(instance: TransgeneDto | null) {
     this.selected.emit(instance);
     this.router.navigate(['transgene_manager/view/' + instance.id]);
   }

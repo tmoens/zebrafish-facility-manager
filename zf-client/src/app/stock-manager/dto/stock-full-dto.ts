@@ -5,7 +5,6 @@ import {ZfGenericDto} from '../../zf-generic/zfgeneric-dto';
 import {StockSwimmerDto} from '../../tank-manager/stock-swimmer-dto';
 
 export class StockFullDto extends ZfGenericDto {
-  // id: number = null; // inherited from generic
   name: string = null;
   number: number = null;
   subNumber: number = null;
@@ -29,6 +28,7 @@ export class StockFullDto extends ZfGenericDto {
   offspringCount: number = null;
   offspring: StockDto[] = [];
   nextSubStockNumber: number = null;
+  parentsEditable: boolean = false;
 }
 
 

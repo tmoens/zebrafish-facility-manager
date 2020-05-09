@@ -6,7 +6,6 @@ import {Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {UserAdminService} from "../user-admin.service";
 import {debounceTime} from "rxjs/operators";
-import {Stock} from "../../../stock-manager/stock";
 
 @Component({
   selector: 'app-user-selector',

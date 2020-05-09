@@ -5,9 +5,9 @@ import {Observable} from 'rxjs';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {TransgeneService} from '../transgene.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {Transgene} from '../transgene';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {DialogService} from '../../dialog.service';
+import {TransgeneDto} from "../transgene-dto";
 
 @Component({
   selector: 'app-transgene-editor',
@@ -15,7 +15,7 @@ import {DialogService} from '../../dialog.service';
   styleUrls: ['./transgene-editor.component.scss']
 })
 export class TransgeneEditorComponent implements OnInit {
-  item: Transgene; // the item we are editing.
+  item: TransgeneDto; // the item we are editing.
   editMode: EditMode;
   id: number;
   saved = false;
@@ -34,6 +34,9 @@ export class TransgeneEditorComponent implements OnInit {
     id: [null],
     serialNumber: [null],
     isDeletable: [true],
+    name: [null],
+    fullName: [null],
+    tooltip: [null],
   }, { validators: this.uniquenessValidator.bind(this) });
 
   filteredSourceOptions: Observable<string[]>;
@@ -55,7 +58,7 @@ export class TransgeneEditorComponent implements OnInit {
         case EditMode.EDIT:
           this.editMode = EditMode.EDIT;
           this.id = +pm.get('id');
-          this.service.getById(this.id).subscribe((item: Transgene) => {
+          this.service.getById(this.id).subscribe((item: TransgeneDto) => {
             this.item = item;
             if (this.item.serialNumber) {
               this.mfForm.get('allele').disable();
@@ -67,13 +70,13 @@ export class TransgeneEditorComponent implements OnInit {
           });
           break;
         case EditMode.CREATE:
-          this.item = new Transgene();
+          this.item = new TransgeneDto();
           this.editMode = EditMode.CREATE;
           this.mfForm.get('allele').enable();
           this.initialize();
           break;
         case EditMode.CREATE_NEXT:
-          this.item = new Transgene();
+          this.item = new TransgeneDto();
           this.item.allele = this.service.likelyNextName;
           this.editMode = EditMode.CREATE_NEXT;
           this.mfForm.get('allele').disable();
@@ -98,7 +101,7 @@ export class TransgeneEditorComponent implements OnInit {
 
   save() {
     this.saved = true;
-    const editedDTO = new Transgene(this.mfForm.getRawValue());
+    const editedDTO = this.mfForm.getRawValue();
     switch (this.editMode) {
       case EditMode.CREATE:
         this.service.create(editedDTO);

@@ -3,7 +3,6 @@ import {MatDialog} from '@angular/material/dialog';
 import {StockService} from '../stock.service';
 import {StockGeneticsEditorComponent} from '../stock-genetics-editor/stock-genetics-editor.component';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {StockFull} from '../stockFull';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {MutationService} from '../../mutation-manager/mutation.service';
 import {TransgeneService} from '../../transgene-manager/transgene.service';

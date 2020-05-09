@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {classToPlain} from 'class-transformer';
 import {FormBuilder} from '@angular/forms';
 import {TransgeneService} from '../transgene.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {Transgene} from '../transgene';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
+import {TransgeneDto} from "../transgene-dto";
 
 /**
  * Always view the selected item as held in the service.
@@ -29,6 +28,9 @@ export class TransgeneViewerComponent implements OnInit {
     id: [null],
     serialNumber: [{value: null, disabled: true}],
     isDeletable: [{value: '', disabled: true}],
+    name: [null],
+    fullName: [null],
+    tooltip: [null],
   });
 
   constructor(
@@ -40,10 +42,10 @@ export class TransgeneViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.selected$.subscribe((selected: Transgene) => {
+    this.service.selected$.subscribe((selected: TransgeneDto) => {
       this.service.enterBrowseMode();
       if (selected) {
-        this.mfForm.setValue(classToPlain(selected));
+        this.mfForm.setValue(selected);
       }
     });
 

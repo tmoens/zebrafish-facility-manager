@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn, CreateDateColumn, Index, ManyToMany, JoinTable } from 'typeorm';
-import { Exclude, Transform, Type } from 'class-transformer';
+import {Exclude, Expose, Transform, Type} from 'class-transformer';
 import { Stock } from '../stock/stock.entity';
 
 @Entity()
@@ -184,4 +184,41 @@ export class Mutation {
   isOwned(): boolean {
     return !!(this.serialNumber);
   }
+
+  @Expose()
+  get fullName(): string {
+    return this.gene + ': ' + this.name;
+  }
+
+  // This just makes a string that can be used as a tooltip when
+  // hovering over a mutation in the GUI.
+  // I'm really unhappy about this
+  // a) because it duplicates pretty much all of the mutation data, and
+  // b) because tooltips are really the domain of the client.
+  // The alternative is that this gets computed on the client side.  But in order to do
+  // THAT, I'd have to create a "real" object on the client side rather than just a DTO.
+  // And doing that turns the client into a significantly more complicated thing that has
+  // to have another whole layer of objects and converters.
+  // So For now, I'll take the pain.
+  @Expose()
+  get tooltip(): string {
+    const strings: string[] = [];
+    if (this.alternateGeneName) {
+      strings.push('alt gene name: ' + this.alternateGeneName);
+    }
+    if (this.researcher) {
+      strings.push('researcher: ' + this.researcher);
+    }
+    if (this.phenotype) {
+      strings.push('phenotype: ' + this.phenotype.substr(0, 50));
+    }
+    if (this.morphantPhenotype) {
+      strings.push('morphant phenotype: ' + this.morphantPhenotype.substr(0, 50));
+    }
+    if (this.comment) {
+      strings.push('comment: ' + this.comment.substr(0, 50));
+    }
+    return strings.join('\n');
+  }
+
 }

@@ -1,12 +1,11 @@
 import {Component, OnInit, Output, EventEmitter, ViewChild, AfterViewInit, AfterContentInit, ElementRef, ViewChildren} from '@angular/core';
 import {MutationService} from '../mutation.service';
-import {Mutation} from '../mutation';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
 import {FormBuilder} from '@angular/forms';
 import {debounceTime, map, startWith} from 'rxjs/operators';
 import {MutationFilter} from '../mutation-filter';
-import {Stock} from "../../stock-manager/stock";
+import {MutationDto} from "../mutation-dto";
 
 @Component({
   selector: 'app-mutation-selector',
@@ -14,7 +13,7 @@ import {Stock} from "../../stock-manager/stock";
   styleUrls: ['./mutation-selector.component.scss']
 })
 export class MutationSelectorComponent implements OnInit {
-  @Output() selected = new EventEmitter<Mutation>();
+  @Output() selected = new EventEmitter<MutationDto>();
 
   // Build the filter form.
   mfForm = this.fb.group(this.service.filter);
@@ -74,7 +73,7 @@ export class MutationSelectorComponent implements OnInit {
   // When a mutation is selected we just tell the service (model).
   // Decision not to route.navigate to the mutation, let the
   // mutation manager decide what to do in any given context.
-  onSelect(m: Mutation | null) {
+  onSelect(m: MutationDto | null) {
     this.selected.emit(m);
     this.router.navigate(['mutation_manager/view/' + m.id]);
   }

@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {StockService} from '../stock.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {Stock} from '../stock';
-import {StockFull} from '../stockFull';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {classToClass} from 'class-transformer';
 import {DialogService} from '../../dialog.service';
@@ -10,6 +8,8 @@ import {Observable} from 'rxjs';
 import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {ZF_DATE_FORMATS} from "../../helpers/dateFormats";
 import {AppStateService} from "../../app-state.service";
+import {StockDto} from "../dto/stock-dto";
+import {StockFullDto} from "../dto/stock-full-dto";
 
 @Component({
   selector: 'app-stock-editor',
@@ -29,13 +29,13 @@ export class StockEditorComponent implements OnInit {
   stockId: number;
 
   // The stock we are meant to edit (EDIT mode only)
-  initialStock: StockFull;
+  initialStock: StockFullDto;
 
   // The stock from which we are creating a sub-stock (CREATE_SUB_STOCK mode only)
-  baseStock: StockFull;
+  baseStock: StockFullDto;
 
   // holds the working copy of the stock we are editing.
-  stock: StockFull;
+  stock: StockFullDto;
 
   // Title for the editor screen
   title: string;
@@ -68,7 +68,7 @@ export class StockEditorComponent implements OnInit {
       switch (pm.get('mode')) {
         case EditMode.EDIT:
           this.stockId = +pm.get('id');
-          this.service.getById(this.stockId).subscribe((s: StockFull) => {
+          this.service.getById(this.stockId).subscribe((s: StockFullDto) => {
             this.initialStock = s;
             this.initializeForEdit();
           });
@@ -77,7 +77,7 @@ export class StockEditorComponent implements OnInit {
           this.initializeForCreate();
           break;
         case EditMode.CREATE_SUB_STOCK:
-          this.service.getById(this.service.selected.id).subscribe((s: StockFull) => {
+          this.service.getById(this.service.selected.id).subscribe((s: StockFullDto) => {
             this.baseStock = s;
             this.initializeForCreateSubStock();
           });
@@ -99,7 +99,7 @@ export class StockEditorComponent implements OnInit {
   // take a few educated guesses about the attributes.
   initializeForCreate() {
     this.editMode = EditMode.CREATE_NEXT;
-    this.stock = new StockFull();
+    this.stock = new StockFullDto();
     this.stock.parentsEditable = true;
     this.momInternal = true;
     this.dadInternal = true;
@@ -130,8 +130,8 @@ export class StockEditorComponent implements OnInit {
   }
 
   prepParents() {
-    if (!this.stock.matStock) { this.stock.matStock = new Stock(); }
-    if (!this.stock.patStock) { this.stock.patStock = new Stock(); }
+    if (!this.stock.matStock) { this.stock.matStock = new StockDto(); }
+    if (!this.stock.patStock) { this.stock.patStock = new StockDto(); }
     this.momInternal = !!this.stock.matIdInternal;
     this.dadInternal = !!this.stock.patIdInternal;
     this.filteredResearcherOptions =
@@ -151,26 +151,26 @@ export class StockEditorComponent implements OnInit {
   }
 
   onSetMatStock() {
-    this.service.getByName(this.stock.matStock.name).subscribe((s: Stock) => {
+    this.service.getByName(this.stock.matStock.name).subscribe((s: StockDto) => {
       if (s && s.id) {
         this.stock.matIdInternal = s.id;
         this.stock.matStock = s;
       } else {
         const name = this.stock.matStock.name;
-        this.stock.matStock = new Stock();
+        this.stock.matStock = new StockDto();
         this.stock.matStock.name = name;
       }
     });
   }
 
   onSetPatStock() {
-    this.service.getByName(this.stock.patStock.name).subscribe((s: Stock) => {
+    this.service.getByName(this.stock.patStock.name).subscribe((s: StockDto) => {
       if (s && s.id) {
         this.stock.patIdInternal = s.id;
         this.stock.patStock = s;
       } else {
         const name = this.stock.patStock.name;
-        this.stock.patStock = new Stock();
+        this.stock.patStock = new StockDto();
         this.stock.patStock.name = name;
       }
     });
