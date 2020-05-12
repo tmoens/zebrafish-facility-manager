@@ -33,6 +33,7 @@ export class MutationViewerComponent implements OnInit {
     morphantPhenotype: [{value: '', disabled: true}],
     mutationType: [{value: '', disabled: true}],
     name: [{value: '', disabled: true}],
+    nickname: [{value: '', disabled: true}],
     phenotype: [{value: '', disabled: true}],
     researcher: [{value: '', disabled: true}],
     screenType: [{value: '', disabled: true}],

@@ -38,6 +38,7 @@ export class MutationEditorComponent implements OnInit {
     mutationType: [''],
     morphantPhenotype: [''],
     name: ['', [Validators.required, this.nameValidator.bind(this)]],
+    nickname: [''],
     phenotype: [''],
     researcher: ['', Validators.required],
     screenType: [''],

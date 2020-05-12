@@ -27,6 +27,13 @@ export class Transgene {
   @Column({
     type: 'varchar',
     nullable: true,
+    length: 30,
+  })
+  nickname: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
     length: 40,
     comment: 'Describes the source (lab or researcher) of the transgene.',
   })

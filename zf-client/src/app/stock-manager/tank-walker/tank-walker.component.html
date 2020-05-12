@@ -7,58 +7,35 @@
 <div fxLayout="column" *ngIf="tankList && tankList.length > 0">
   <mat-card>
     <mat-card-content fxLayout="column">
-      <div fxLayout="row" fxLayoutAlign="space-around" style="padding-bottom: 20px">
+      <div fxLayout="row" fxLayoutGap="20px">
         <div fxLayout="column" fxLayoutAlign="center">
-          <button mat-button (click)="goToIndex(0)" [disabled]="inFocusIndex < 1"
-                  color="primary" class="mini-label">
-            <mat-icon>first_page</mat-icon>
-            First
-          </button>
-          <div  class="mini-text">{{tankList[0].tankName}}</div>
-        </div>
-        <div fxLayout="column" fxLayoutAlign="center">
-          <button mat-button (click)="goToIndex(inFocusIndex - 1)" [disabled]="inFocusIndex < 1"
-            color="primary" class="mini-label">
+          <button mat-mini-fab (click)="goToIndex(inFocusIndex - 1)" [disabled]="inFocusIndex < 1"
+                  color="primary" >
             <mat-icon>navigate_before</mat-icon>
-            Prev
           </button>
           <div class="mini-text">{{inFocusIndex >0 ? tankList[inFocusIndex - 1].tankName : "-"}}</div>
         </div>
 
-        <div fxLayout="column" fxLayoutAlign="center">
-          <span class="mini-label">Tank {{tankList[inFocusIndex].tankName}}</span>
-          <div class="mini-text">{{inFocusIndex + 1}} of {{tankList.length}}</div>
+        <div fxFlex fxLayout="column">
+          <div class="zf-sub-title">Tank {{tankList[inFocusIndex].tankName + ' (' + (inFocusIndex + 1) + ' of ' + tankList.length + ')'}} </div>
+          <mat-form-field>
+            <input matInput type="text" placeholder="Count" [formControl]="countFC">
+          </mat-form-field>
+          <mat-form-field>
+            <textarea matInput placeholder="Comment" [formControl]="commentFC"
+                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="7">
+            </textarea>
+          </mat-form-field>
         </div>
 
         <div fxLayout="column" fxLayoutAlign="center">
-          <button mat-button (click)="goToIndex(inFocusIndex + 1)" [disabled]="inFocusIndex >= tankList.length"
-                  color="primary" class="mini-label">
-            Next
+          <button mat-mini-fab (click)="goToIndex(inFocusIndex + 1)" [disabled]="inFocusIndex >= tankList.length"
+                  color="primary">
             <mat-icon>navigate_next</mat-icon>
           </button>
           <div class="mini-text">{{inFocusIndex < (tankList.length - 1) ?
             tankList[inFocusIndex + 1].tankName : "-"}}</div>
         </div>
-        <div fxLayout="column" fxLayoutAlign="center">
-          <button mat-button (click)="goToIndex(tankList.length - 1)" [disabled]="inFocusIndex >= tankList.length"
-                  color="primary" class="mini-label">
-            Last
-            <mat-icon>last_page</mat-icon>
-          </button>
-          <div  class="mini-text">{{tankList[tankList.length - 1].tankName}}</div>
-        </div>
-      </div>
-      <mat-form-field>
-        <input matInput type="text" placeholder="Count" [formControl]="countFC">
-      </mat-form-field>
-      <mat-form-field>
-        <textarea matInput placeholder="Comment" [formControl]="commentFC"
-                  cdkTextareaAutosize="true" cdkAutosizeMaxRows="7">
-        </textarea>
-      </mat-form-field>
-      <div fxLayout="row">
-        <span class="fill-remaining-space"></span>
-        <button mat-button (click)="onSave()" color="primary">Save</button>
       </div>
     </mat-card-content>
   </mat-card>

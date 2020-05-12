@@ -19,6 +19,10 @@
           <input matInput type="text" placeholder="Gene" formControlName="gene">
         </mat-form-field>
 
+        <mat-form-field *ngIf="service.selected.nickname">
+          <input matInput type="text" placeholder="Nickname" formControlName="nickname">
+        </mat-form-field>
+
         <mat-form-field *ngIf="service.selected.alternateGeneName">
           <input matInput placeholder="Alternate Gene Name" formControlName="alternateGeneName">
         </mat-form-field>

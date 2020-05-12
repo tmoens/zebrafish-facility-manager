@@ -23,6 +23,7 @@ export class TransgeneViewerComponent implements OnInit {
     allele: [{value: '', disabled: true}],
     descriptor: [{value: '', disabled: true}],
     comment: [{value: '', disabled: true}],
+    nickname: [{value: '', disabled: true}],
     plasmid: [{value: '', disabled: true}],
     source: [{value: '', disabled: true}],
     id: [null],

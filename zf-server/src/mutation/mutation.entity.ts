@@ -17,6 +17,13 @@ export class Mutation {
 
   @Column({
     type: 'varchar',
+    length: 30,
+    comment: 'The unique human readable name for this mutation.',
+  })
+  nickname: string;
+
+  @Column({
+    type: 'varchar',
     nullable: true,
     length: 20,
     comment: 'Researcher or owner of this mutation.',

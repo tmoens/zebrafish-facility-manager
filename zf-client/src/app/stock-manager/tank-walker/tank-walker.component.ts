@@ -18,6 +18,7 @@ export class TankWalkerComponent implements OnInit {
   tankList: TankWalkerDto[];
   inFocusIndex = -1;
   inFocusStock: StockFullDto;
+  inFocusTank: TankWalkerDto;
 
   countFC: FormControl = new FormControl();
   commentFC: FormControl = new FormControl();
@@ -44,10 +45,24 @@ export class TankWalkerComponent implements OnInit {
     });
   }
 
-  goToIndex(index: number) {
-    this.inFocusIndex = index;
-    this.countFC.setValue(this.tankList[this.inFocusIndex].num);
-    this.commentFC.setValue(this.tankList[this.inFocusIndex].comment);
+  // Decision: since there are only two fields and we want this to be 
+  // really easy, we do not ask the user to explicitly "save" changes
+  // to the number of fish in the tank or the comment.
+  // If they have changed when we navigate away, save the changes.
+  goToIndex(newIndex: number) {
+    if (this.inFocusIndex > -1) {
+      if ((this.countFC.value !== this.inFocusTank.num) || 
+          (this.commentFC.value !== this.inFocusTank.comment)) {
+        this.inFocusTank.num = this.countFC.value;
+        this.inFocusTank.comment = this.commentFC.value;
+        this.save();
+      }
+    }
+    this.inFocusIndex = newIndex;
+    this.inFocusTank = this.tankList[this.inFocusIndex];
+    this.countFC.setValue(this.inFocusTank.num);
+    this.commentFC.setValue(this.inFocusTank.comment);
+    
     this.getInFocusStock();
   }
 
@@ -58,7 +73,7 @@ export class TankWalkerComponent implements OnInit {
 
 
 
-  onSave() {
+  save() {
     const swimmerDto: StockSwimmerDto = {
       stockId: Number(this.tankList[this.inFocusIndex].stockId),
       tankId: Number(this.tankList[this.inFocusIndex].tankId),
@@ -66,9 +81,6 @@ export class TankWalkerComponent implements OnInit {
       comment: this.commentFC.value,
     }
     this.tankService.updateSwimmer(swimmerDto).subscribe();
-    this.tankList[this.inFocusIndex].num = this.countFC.value;
-    this.tankList[this.inFocusIndex].comment = this.commentFC.value;
-
     }
 
   done() {

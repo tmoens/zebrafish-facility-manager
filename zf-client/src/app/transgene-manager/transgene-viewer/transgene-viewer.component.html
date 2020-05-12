@@ -18,6 +18,10 @@
       <input matInput type="text" placeholder="Descriptor" formControlName="descriptor">
     </mat-form-field>
 
+    <mat-form-field *ngIf="service.selected.nickname">
+      <input matInput type="text" placeholder="NickName" formControlName="nickname">
+    </mat-form-field>
+
     <mat-form-field *ngIf="service.selected.plasmid">
       <input matInput type="text" placeholder="Plasmid" formControlName="plasmid">
     </mat-form-field>

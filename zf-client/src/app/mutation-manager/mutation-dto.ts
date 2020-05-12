@@ -9,6 +9,7 @@ export class MutationDto extends ZfGenericDto {
   isDeletable = false;
   mutationType: string = null;
   morphantPhenotype: string = null;
+  nickname: string = null;
   phenotype: string = null;
   researcher: string = null;
   screenType: string = null;

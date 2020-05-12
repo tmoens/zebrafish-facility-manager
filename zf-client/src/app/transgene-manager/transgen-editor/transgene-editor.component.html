@@ -20,6 +20,11 @@
       </mat-form-field>
 
       <mat-form-field>
+        <input required matInput type="text" placeholder="Nickname" formControlName="nickname"
+               maxlength="30">
+      </mat-form-field>
+
+      <mat-form-field>
         <input matInput type="text" placeholder="Plasmid" formControlName="plasmid"
                (emptied)="clearFormControl('plasmid')"
                maxlength="250">

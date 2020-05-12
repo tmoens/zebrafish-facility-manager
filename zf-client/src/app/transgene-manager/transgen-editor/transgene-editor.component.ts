@@ -29,6 +29,7 @@ export class TransgeneEditorComponent implements OnInit {
     allele: [''],
     descriptor: ['', [Validators.required]],
     comment: [{value: ''}],
+    nickname: [{value: ''}],
     plasmid: [{value: ''}],
     source: [{value: ''}],
     id: [null],
