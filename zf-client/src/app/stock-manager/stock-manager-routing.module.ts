@@ -10,6 +10,7 @@ import {LoginGuardService as LoginGuard} from "../auth/guards/login-guard.servic
 import {RoleGuardService as RoleGuard} from "../auth/guards/role-guard.service";
 import {USER_ROLE} from "../auth/app-roles";
 import {StockGeneticsEditorComponent} from "./stock-genetics-editor/stock-genetics-editor.component";
+import {TankWalkerComponent} from "./tank-walker/tank-walker.component";
 
 const stockManagerRoutes: Routes = [
   {
@@ -84,6 +85,10 @@ const stockManagerRoutes: Routes = [
         data: {
           permittedRole: USER_ROLE
         }
+      },
+      {
+        path: 'stock_walker',
+        component: TankWalkerComponent,
       },
     ]
   }

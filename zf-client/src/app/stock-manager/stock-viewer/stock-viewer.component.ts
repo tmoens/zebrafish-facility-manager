@@ -1,13 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {StockService} from '../stock.service';
-import {StockGeneticsEditorComponent} from '../stock-genetics-editor/stock-genetics-editor.component';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {MutationService} from '../../mutation-manager/mutation.service';
 import {TransgeneService} from '../../transgene-manager/transgene.service';
 import {PrintService} from '../../printing/print.service';
-import {ZFTypes} from "../../helpers/zf-types";
 import {AppStateService} from "../../app-state.service";
 
 /**
@@ -90,6 +88,8 @@ export class StockViewerComponent implements OnInit {
 
   /* print a tank label for this tank */
   printLabel(tankId) {
+    // this.router.navigateByUrl('preview/tankLabels/' + tankId)
     this.printService.printDocument('tankLabels', [tankId]);
+
   }
 }

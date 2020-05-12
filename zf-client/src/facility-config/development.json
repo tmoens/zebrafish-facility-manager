@@ -6,7 +6,8 @@
 
   "tankNumberingHint": "Legal tank numbers run from blah blahblah",
   "tankLabelConfig": {
-    "fontPointSize": 14,
+    "fontPointSize": 12,
+    "showQrCode": true,
     "layout": [
       [
         "STOCK_NUMBER",

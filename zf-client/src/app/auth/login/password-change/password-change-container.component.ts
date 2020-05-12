@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {LoginComponent} from "../login/login.component";
-import {PasswordResetComponent} from "../password-reset/password-reset.component";
 import {PasswordChangeComponent} from "./password-change.component";
 import {Location} from "@angular/common";
 

@@ -133,6 +133,28 @@ export class LoaderService {
   /** =========== Stock Specific requests ===============
    *
    */
+  getTankWalkerList(filter: any): Observable<any> {
+    if (!filter) {
+      filter = {};
+    }
+    const q = convertObjectToHTTPQueryParams(filter);
+    return this.http.get(this.serverURL + '/stock/tankWalk' + q)
+      .pipe(
+        catchError(this.handleError('Get /stock/tankWalk.', []))
+      );
+
+  }
+
+  getTankWalkerStock(id: any): Observable<any> {
+    if (!id) {
+      return of({});
+    }
+    return this.http.get(this.serverURL + '/stock/medium/' + id.toString())
+      .pipe(
+        catchError(this.handleError('Get stock/medium for tank walker. Id: ' + id + '.', {}))
+      );
+  }
+
   createSubStock(thing: StockFullDto) {
     return this.http.post(this.serverURL + '/stock/substock/', thing)
       .pipe(
@@ -191,6 +213,7 @@ export class LoaderService {
       return of(result as T);
     };
   }
+
 }
 
 // this assumes that the params are scalar. Which they are.

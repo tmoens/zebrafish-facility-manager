@@ -31,6 +31,7 @@ import {AuthModule} from "../auth/auth.module";
 import {MatCardModule} from "@angular/material/card";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {DateToAgePipe} from "./date-to-age.pipe";
+import {TankWalkerComponent} from "./tank-walker/tank-walker.component";
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import {DateToAgePipe} from "./date-to-age.pipe";
     StockSelectorComponent,
     StockSwimmersEditorComponent,
     StockViewerComponent,
+    TankWalkerComponent,
     TankNameValidator,
     StockNameCheckValidator,
     DateToAgePipe,

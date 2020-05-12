@@ -5,10 +5,8 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {StockRepository} from './stock.repository';
 import {Stock} from './stock.entity';
 import {StockService} from './stock.service';
-import {StockReportDTO} from './dto/stock-report.dto';
 import {StockFilter} from './stock-filter';
 import {plainToClass} from 'class-transformer';
-import {StockMiniDto} from '../common/Stock/stockMiniDto';
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {ADMIN_ROLE, USER_ROLE} from "../common/auth/zf-roles";
 import {RoleGuard} from "../guards/role-guard.service";
@@ -33,14 +31,14 @@ export class StockController {
 
   // Get a stock with no relationships fetched.
   @Get('brief/:id')
-  async getById(@Param('id', new ParseIntPipe())  id: number): Promise<Stock> {
+  async getById(@Param('id', new ParseIntPipe())  id: number): Promise<any> {
     return await this.repo.getById(id);
   }
 
   @Role(ADMIN_ROLE)
   @UseGuards(RoleGuard)
   @Delete(':id')
-  async delete(@Param('id', new ParseIntPipe())  id: number): Promise<Stock> {
+  async delete(@Param('id', new ParseIntPipe())  id: number): Promise<any> {
     return await this.service.validateAndRemove(id);
   }
 
@@ -60,13 +58,19 @@ export class StockController {
   }
 
   @Get()
-  async findFiltered(@Query() params): Promise<StockMiniDto[]> {
+  async findFiltered(@Query() params): Promise<any[]> {
     const filter: StockFilter = plainToClass(StockFilter, params);
     return await this.repo.findFiltered(filter);
   }
 
+  @Get('tankWalk')
+  async getTankWalk(@Query() params): Promise<any[]> {
+    const filter: StockFilter = plainToClass(StockFilter, params);
+    return await this.repo.getTankWalk(filter);
+  }
+
   @Get('report')
-  async getReport(@Query() params): Promise<StockReportDTO[]> {
+  async getReport(@Query() params): Promise<any[]> {
     return await this.repo.getReport(params);
   }
 
@@ -89,7 +93,13 @@ export class StockController {
 
   // Get a stock with all relations exploded
   @Get(':id')
-  async getFullById(@Param('id', new ParseIntPipe())  id: number): Promise<Stock> {
+  async getFullById(@Param('id', new ParseIntPipe())  id: number): Promise<any> {
     return await this.repo.getStockWithRelations(id);
+  }
+
+  // Get a reasonably comprehensive view of a stock without as much as the full stockWithRelations
+  @Get('medium/:id')
+  async getMediumById(@Param('id', new ParseIntPipe())  id: number): Promise<any> {
+    return await this.repo.getStockMedium(id);
   }
 }

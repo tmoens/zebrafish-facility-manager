@@ -54,6 +54,10 @@ export class StockMenuComponent implements OnInit {
     }
   }
 
+  goToTankWalker(){
+    this.router.navigateByUrl('stock_manager/stock_walker');
+  }
+
   onStockReport(): void {
     this.service.getStockReport();
   }

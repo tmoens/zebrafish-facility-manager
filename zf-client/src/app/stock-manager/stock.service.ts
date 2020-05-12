@@ -18,6 +18,7 @@ import {StockDto} from "./dto/stock-dto";
 import {StockFullDto} from "./dto/stock-full-dto";
 import {MutationDto} from "../mutation-manager/mutation-dto";
 import {TransgeneDto} from "../transgene-manager/transgene-dto";
+import {TankWalkerDto} from "./tank-walker/tank-walker-dto";
 
 /**
  * This is the model for stock information displayed in the GUI.
@@ -157,5 +158,9 @@ export class StockService extends ZFGenericService<
       r = r.concat(this.selected.patStock.transgenes);
     }
     return r;
+  }
+
+  getStockWalkerList(): Observable<any> {
+    return this.loader.getTankWalkerList(this.filter)
   }
 }

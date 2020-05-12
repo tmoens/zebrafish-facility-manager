@@ -24,7 +24,6 @@ import {UserController} from "./user/user.controller";
 import {LocalStrategy} from "./guards/local.strategy";
 import {JwtStrategy} from "./guards/jwt.strategy";
 import {PassportModule} from "@nestjs/passport";
-import {JwtModule} from "@nestjs/jwt";
 import {JwtStrategy2} from "./guards/jwt.strategy2";
 import {HandlebarsAdapter, MailerModule} from "@nestjs-modules/mailer";
 import {ZFMailerService} from "./mailer/mailer-service";

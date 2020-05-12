@@ -40,6 +40,13 @@
       <span>Print Label(s)</span>
     </button>
 
+    <button mat-menu-item (click)="goToTankWalker()"
+            matTooltip="Leads you through the selected stocks in tank order in the facility.">
+      <mat-icon>assignment</mat-icon>
+      <span>Tank Walker</span>
+    </button>
+
+
     <!--  Download Stock Report-->
     <button zfmHideUnauthorized="user" mat-menu-item (click)="onStockReport()"
             matTooltip="A spreadsheet containing stocks meeting the current filter.">

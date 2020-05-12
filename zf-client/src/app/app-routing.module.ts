@@ -18,6 +18,10 @@ const routes: Routes = [
     component: TankLabelComponent,
   },
   {
+    path: 'preview/tankLabels/:tankIds',
+    component: TankLabelComponent,
+  },
+  {
     path: '**',
     component: SplashComponent,
   },

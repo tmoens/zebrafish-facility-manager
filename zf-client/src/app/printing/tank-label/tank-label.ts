@@ -12,6 +12,7 @@ export enum TankLabelOption {
 }
 
 export class TankLabelConfig {
-  fontPointSize: number;
+  fontPointSize: number = 12;
+  showQrCode: boolean = false;
   layout: string[][];
 }

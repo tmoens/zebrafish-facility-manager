@@ -48,6 +48,21 @@ export class StockRepository extends Repository<Stock> {
     return stock;
   }
 
+  async getStockMedium(id: number): Promise<Stock> {
+    const stock: Stock = await super.findOne(id, {relations: [
+        'transgenes', 'mutations',
+        'matStock',
+        'patStock',
+      ]});
+    if (!stock) {
+      const msg = 'Stock does not exist. Id: ' + id;
+      this.logger.error(msg);
+      throw new BadRequestException('Bad Request', msg);
+    }
+
+    return stock;
+  }
+
   async getStockGenetics(id: number): Promise<Stock> {
     const stock: Stock = await super.findOne(id, {relations: [
         'transgenes', 'mutations',
@@ -64,7 +79,7 @@ export class StockRepository extends Repository<Stock> {
     // Set some ancillary computed fields
     // Kludge Alert.  Clearly this should be done in the Stock Class but that
     // class does not have access to the repository to figure this stuff out.
-    // So I do it here. Sue me. :)
+    // So I do it here. Sue me. :-)
     stock.offspring = await this.getOffspring(stock.id);
     stock.offspringCount = await this.countOffspring(stock.id);
     stock.nextSubStockNumber = await this.getNextSubStockNumber(stock.number);
@@ -89,9 +104,9 @@ export class StockRepository extends Repository<Stock> {
 
   // You cannot edit the parents of a stock if it would lead to inconsistencies
   // in the data.  Specifically
-  // - a stock with subStocks can't change the parent of the stock or any of the
+  // - a stock with subStocks: can't change the parent of the stock or any of the
   //   subStocks because they must all have the same parents.
-  // - a stock with offspring because the offspring's mutations and transgenes came
+  // - a stock with offspring: because the offspring's mutations and transgenes came
   //   from parent in the first place, so if you change the parent's parent, the
   //   inheritance becomes wonky.
   parentsEditable(stock: Stock): boolean {
@@ -154,8 +169,10 @@ export class StockRepository extends Repository<Stock> {
           {tn: text});
     }
     if (filter.liveStocksOnly) {
-      q = q.leftJoin('stock.swimmers', 'swimmers')
-        .andWhere('swimmers.tank IS NOT NULL')
+      if (!filter.tankName) {
+        q = q.leftJoin('stock.swimmers', 'swimmers');
+      }
+       q = q.andWhere('swimmers.tank IS NOT NULL')
         .groupBy('stock.id');
     }
 
@@ -194,6 +211,65 @@ export class StockRepository extends Repository<Stock> {
       });
     }
     return stockMinis;
+  }
+
+  // Find a set of stocks which match the filter criteria.
+  // Sort the result in tank order to facilitate someone being able to walk
+  // around the facility on the trail of a particular set of stocks.
+  async getTankWalk(filter: StockFilter): Promise<StockMiniDto[]> {
+    let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
+      .select('DISTINCT stock.id as stockId, stock.name as stockName, ' +
+        'tank.id as tankId, tank.name as tankName, swimmers.num, swimmers.comment')
+      .leftJoin('stock.swimmers', 'swimmers')
+      .leftJoin('swimmers.tank', 'tank')
+      .where('swimmers.tank IS NOT NULL')
+      .orderBy('tank.id')
+      .addOrderBy('stock.id');
+    if (filter.tankName) {
+      q = q.andWhere('tank.name LIKE :tn', {tn: filter.tankName + '%'});
+    }
+    if (filter.number) {
+      q = q.andWhere('stock.name LIKE :n', {n: filter.number + "%"});
+    }
+    if (filter.researcher) {
+      q = q.andWhere('stock.researcher LIKE :r', {r: '%' + filter.researcher + '%'});
+    }
+    if (filter.text) {
+      const text = '%' + filter.text + '%';
+      q = q.andWhere(new Brackets( qb => {
+        qb.where('stock.comment LIKE :t OR stock.description LIKE :t',
+          {t: text});
+      } ));
+    }
+    if (filter.mutation) {
+      const text = '%' + filter.mutation + '%';
+      q = q.leftJoin('stock.mutations', 'mutation')
+        .andWhere(new Brackets(qb => {
+          qb.where('mutation.name LIKE :mt OR mutation.gene LIKE :mt OR mutation.comment LIKE :mt OR ' +
+            'mutation.phenotype LIKE :mt OR mutation.morphantPhenotype LIKE :mt',
+            { mt: text });
+        }));
+    }
+    if (filter.transgene) {
+      const text = '%' + filter.transgene + '%';
+      q = q.leftJoin('stock.transgenes', 'transgene')
+        .andWhere(new Brackets(qb => {
+          qb.where('transgene.descriptor LIKE :tt OR transgene.allele LIKE :tt OR ' +
+            'transgene.plasmid LIKE :tt OR transgene.comment LIKE :tt',
+            {tt: text});
+        }));
+    }
+
+    if (filter.age) {
+      const dob = moment().subtract(Number(filter.age), 'days');
+      if (filter.ageModifier === 'or_older') {
+        q = q.andWhere('fertilizationDate <= :d', {d: dob.format('YYYY-MM-DD')});
+      } else {
+        q = q.andWhere('fertilizationDate >= :d', {d: dob.format('YYYY-MM-DD')});
+      }
+    }
+
+    return await q.getRawMany();
   }
 
   async findByName(name: string): Promise<Stock> {
@@ -250,6 +326,8 @@ export class StockRepository extends Repository<Stock> {
       .getCount();
   }
 
+  // The params are in fact a stock filter.
+  // Facilitates the client building an excel spreadsheet of the stocks that meet the filter.
   async getReport(params: any): Promise<StockReportDTO[]> {
     if (!params) {
       params = {};

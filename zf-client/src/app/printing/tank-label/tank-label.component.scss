@@ -1,9 +1,14 @@
-.tankLabel {
-  margin: 0px;
-  padding-left: 25px;
-  padding-right: 5px;
+.tank-label {
+  background-color: lightgray;
+  margin-right: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
   page-break-after: always;
 }
-.tankLabel:last-child {
-  page-break-after: auto;
+.text-part {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.text-row {
 }

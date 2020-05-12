@@ -1,0 +1,147 @@
+<mat-toolbar class="zf-mini-toolbar">
+  <span class="zf-title">Tank Walker</span>
+  <span class="fill-remaining-space"></span>
+  <button mat-button color="primary" (click)="done()">Done</button>
+</mat-toolbar>
+
+<div fxLayout="column" *ngIf="tankList && tankList.length > 0">
+  <mat-card>
+    <mat-card-content fxLayout="column">
+      <div fxLayout="row" fxLayoutAlign="space-around" style="padding-bottom: 20px">
+        <div fxLayout="column" fxLayoutAlign="center">
+          <button mat-button (click)="goToIndex(0)" [disabled]="inFocusIndex < 1"
+                  color="primary" class="mini-label">
+            <mat-icon>first_page</mat-icon>
+            First
+          </button>
+          <div  class="mini-text">{{tankList[0].tankName}}</div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center">
+          <button mat-button (click)="goToIndex(inFocusIndex - 1)" [disabled]="inFocusIndex < 1"
+            color="primary" class="mini-label">
+            <mat-icon>navigate_before</mat-icon>
+            Prev
+          </button>
+          <div class="mini-text">{{inFocusIndex >0 ? tankList[inFocusIndex - 1].tankName : "-"}}</div>
+        </div>
+
+        <div fxLayout="column" fxLayoutAlign="center">
+          <span class="mini-label">Tank {{tankList[inFocusIndex].tankName}}</span>
+          <div class="mini-text">{{inFocusIndex + 1}} of {{tankList.length}}</div>
+        </div>
+
+        <div fxLayout="column" fxLayoutAlign="center">
+          <button mat-button (click)="goToIndex(inFocusIndex + 1)" [disabled]="inFocusIndex >= tankList.length"
+                  color="primary" class="mini-label">
+            Next
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+          <div class="mini-text">{{inFocusIndex < (tankList.length - 1) ?
+            tankList[inFocusIndex + 1].tankName : "-"}}</div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center">
+          <button mat-button (click)="goToIndex(tankList.length - 1)" [disabled]="inFocusIndex >= tankList.length"
+                  color="primary" class="mini-label">
+            Last
+            <mat-icon>last_page</mat-icon>
+          </button>
+          <div  class="mini-text">{{tankList[tankList.length - 1].tankName}}</div>
+        </div>
+      </div>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Count" [formControl]="countFC">
+      </mat-form-field>
+      <mat-form-field>
+        <textarea matInput placeholder="Comment" [formControl]="commentFC"
+                  cdkTextareaAutosize="true" cdkAutosizeMaxRows="7">
+        </textarea>
+      </mat-form-field>
+      <div fxLayout="row">
+        <span class="fill-remaining-space"></span>
+        <button mat-button (click)="onSave()" color="primary">Save</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-divider style="padding-bottom: 10px"></mat-divider>
+
+  <div *ngIf="inFocusStock" fxLayout="column">
+    <!-- Main stock information-->
+    <span class="zf-sub-title">Stock: {{inFocusStock.fullName}}</span>
+    <mat-form-field>
+      <input matInput placeholder="Fertilization Date"
+             [value]="inFocusStock.fertilizationDate +
+                 ' (' + (inFocusStock.fertilizationDate | dateToAge) + ' days)'"
+             disabled>
+    </mat-form-field>
+    <mat-form-field *ngIf="!appState.getState('hidePI') && inFocusStock.pi">
+      <input matInput placeholder="Primary Investigator"
+             [value]="inFocusStock.pi" disabled>
+    </mat-form-field>
+    <mat-form-field *ngIf="inFocusStock.researcher">
+      <input matInput placeholder="Researcher"
+             [value]="inFocusStock.researcher" disabled>
+    </mat-form-field>
+    <mat-form-field *ngIf="inFocusStock.comment">
+        <textarea matInput placeholder="Comment"
+                  [value]="inFocusStock.comment"
+                  cdkTextareaAutosize="true" cdkAutosizeMaxRows="7" disabled></textarea>
+    </mat-form-field>
+
+    <!-- Mom   -->
+    <mat-form-field *ngIf="inFocusStock.matStock">
+      <input matInput placeholder="Mom (internal)"
+             [value]="inFocusStock.matStock.fullName"
+             [matTooltip]="inFocusStock.matStock.tooltip" disabled>
+    </mat-form-field>
+    <mat-form-field *ngIf="!inFocusStock.matStock">
+          <textarea matInput placeholder="Mom (external)"
+                    cdkTextareaAutosize="true"
+                    [value]="inFocusStock.externalMatId + inFocusStock.externalMatDescription" disabled>
+          </textarea>
+    </mat-form-field>
+
+    <!-- Dad   -->
+    <mat-form-field *ngIf="inFocusStock.patStock">
+      <input matInput placeholder="Dad (internal)"
+             [value]="inFocusStock.patStock.fullName"
+             [matTooltip]="inFocusStock.patStock.tooltip" disabled>
+    </mat-form-field>
+    <mat-form-field *ngIf="!inFocusStock.patStock">
+          <textarea matInput placeholder="Dad (external)"
+                    cdkTextareaAutosize="true"
+                    [value]="inFocusStock.externalPatId + inFocusStock.externalPatDescription" disabled>
+          </textarea>
+    </mat-form-field>
+
+    <!-- Information about mutations -->
+    <div class="zf-sub-sub-title">Mutations</div>
+    <mat-list *ngIf="inFocusStock.mutations.length > 0" dense>
+      <mat-list-item *ngFor="let m of inFocusStock.mutations"
+                     matTooltip="{{m.tooltip}}" matTooltipClass="ttnl"
+                     style="height: 30px">
+        {{m.fullName}}
+      </mat-list-item>
+    </mat-list>
+    <mat-list *ngIf="inFocusStock.mutations.length < 1" dense>
+      <mat-list-item>None</mat-list-item>
+    </mat-list>
+    <mat-divider></mat-divider>
+
+    <!-- Information about transgenes -->
+    <div class="zf-sub-sub-title">Transgenes</div>
+    <mat-list *ngIf="inFocusStock.transgenes.length > 0" dense>
+      <mat-list-item *ngFor="let t of inFocusStock.transgenes"
+                     matTooltip="{{t.tooltip}}" matTooltipClass="ttnl"
+                     style="height: 30px">
+        {{t.fullName}}
+      </mat-list-item>
+    </mat-list>
+    <mat-list *ngIf="inFocusStock.transgenes.length < 1" dense>
+      <mat-list-item>None</mat-list-item>
+    </mat-list>
+    <mat-divider></mat-divider>
+
+  </div>
+</div>
+<div *ngIf="!tankList || tankList.length === 0">There are no live stocks that meet the filter criteria.</div>

@@ -52,6 +52,7 @@ import {MatMomentDateModule} from "@angular/material-moment-adapter";
 import { TestnavComponent } from './testnav/testnav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import {AuthService} from "./auth/auth.service";
+import {QRCodeModule} from "angularx-qrcode";
 
 export function appStateProviderFactory(provider: AppStateService) {
   return () => provider.initialize();
@@ -112,6 +113,7 @@ export function authServiceProviderFactory(provider: AppStateService) {
     MatTableModule,
     MatToolbarModule,
     MatTooltipModule,
+    QRCodeModule,
     ReactiveFormsModule,
     AppRoutingModule,
     StorageServiceModule,

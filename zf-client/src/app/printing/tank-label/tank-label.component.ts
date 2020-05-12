@@ -6,6 +6,7 @@ import {TankLabelOption} from './tank-label';
 import {StockService} from '../../stock-manager/stock.service';
 
 export class TankLabel {
+  qrCode
   rows: string[][] = [];
   addRow(row: string[]) {
     this.rows.push(row);
@@ -34,30 +35,38 @@ export class TankLabels {
 export class TankLabelComponent implements OnInit {
   tankIds: string[];
   tankLabels: TankLabels = new TankLabels();
+  stockUrl: string;
 
   constructor(
     route: ActivatedRoute,
     private stockService: StockService,
     private printService: PrintService,
-    private appStateService: AppStateService,
+    public appState: AppStateService,
   ) {
     this.tankIds = route.snapshot.params['tankIds']
       .split(',');
   }
 
   ngOnInit() {
+
     this.tankLabels.fontPointSize =
-      this.appStateService.getState('tankLabelPointSize');
+      this.appState.getState('tankLabelPointSize');
     for (const tankId of this.tankIds) {
       this.tankLabels.addLabel(this.makeLabel(tankId));
     }
     console.log(JSON.stringify(this.tankLabels));
     this.printService.onDataReady();
+
+    // We are going to make a QR code from this so that users can see all the
+    // stock details by pointing their camera at said code on a label
+    this.stockUrl = location.origin + '/stock_manager/view/' + this.stockService.selected.id;
+
+
   }
 
   makeLabel(tankId: string): TankLabel {
     const label = new TankLabel();
-    for (const row of this.appStateService.getState('tankLabelLayout')) {
+    for (const row of this.appState.getState('tankLabelLayout')) {
       const labelRow = [];
       for (const field of row) {
         switch (field) {
@@ -96,8 +105,9 @@ export class TankLabelComponent implements OnInit {
             }
             break;
           case TankLabelOption.STOCK_TRANSGENES:
+
             labelRow.push(this.stockService.selected.transgenes
-              .map(t => t.descriptor)
+              .map(t => t.fullName)
               .join(', ')
             );
             break;
