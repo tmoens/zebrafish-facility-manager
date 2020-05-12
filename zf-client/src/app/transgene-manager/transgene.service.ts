@@ -23,6 +23,8 @@ import {TransgeneDto} from "./transgene-dto";
 })
 export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDto, TransgeneFilter> {
 
+  public spermFreezeOptions = ['DONE', 'NEVER', 'TODO'];
+
   constructor(
     private readonly loader: LoaderService,
     private snackBar: MatSnackBar,

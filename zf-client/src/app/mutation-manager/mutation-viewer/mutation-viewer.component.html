@@ -11,12 +11,12 @@
     <form fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px" [formGroup]="mfForm">
 
       <div fxLayout="column" fxFlex="40%">
-        <mat-form-field *ngIf="service.selected.name">
-          <input required matInput placeholder="Allele" formControlName="name">
-        </mat-form-field>
-
         <mat-form-field *ngIf="service.selected.gene">
           <input matInput type="text" placeholder="Gene" formControlName="gene">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="service.selected.name">
+          <input required matInput placeholder="Allele" formControlName="name">
         </mat-form-field>
 
         <mat-form-field *ngIf="service.selected.nickname">

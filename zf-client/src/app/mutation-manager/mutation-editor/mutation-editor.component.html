@@ -8,12 +8,6 @@
     <div fxLayout="row" fxLayoutGap="20px">
 
       <div fxLayout="column" fxFlex="30%">
-        <mat-form-field>
-          <input required type="text"  matInput placeholder="Allele" formControlName="name"
-                 maxlength="20">
-          <mat-error *ngIf="nameControl.touched && nameControl.invalid">{{getNameError()}}</mat-error>
-        </mat-form-field>
-
         <mat-form-field >
           <input matInput type="text" placeholder="Gene" formControlName="gene"
                  [matAutocomplete]="autoGene"
@@ -21,7 +15,13 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input required type="text"  matInput placeholder="Nickname" formControlName="nickname"
+          <input required type="text"  matInput placeholder="Allele" formControlName="name"
+                 maxlength="20">
+          <mat-error *ngIf="nameControl.touched && nameControl.invalid">{{getNameError()}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input type="text"  matInput placeholder="Nickname" formControlName="nickname"
                  maxlength="30">
         </mat-form-field>
 

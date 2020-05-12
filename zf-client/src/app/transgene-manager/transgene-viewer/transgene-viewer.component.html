@@ -10,12 +10,12 @@
 
 
   <form fxLayout="column" [formGroup]="mfForm">
-    <mat-form-field *ngIf="service.selected.allele">
-      <input matInput type="text"  placeholder="Allele" formControlName="allele">
+    <mat-form-field *ngIf="service.selected.descriptor">
+      <input matInput type="text" placeholder="Construct" formControlName="descriptor">
     </mat-form-field>
 
-    <mat-form-field *ngIf="service.selected.descriptor">
-      <input matInput type="text" placeholder="Descriptor" formControlName="descriptor">
+    <mat-form-field *ngIf="service.selected.allele">
+      <input matInput type="text"  placeholder="Genomic feature name" formControlName="allele">
     </mat-form-field>
 
     <mat-form-field *ngIf="service.selected.nickname">
@@ -34,6 +34,14 @@
       <textarea matInput placeholder="Comment" formControlName="comment"
                 cdkTextareaAutosize="true"  cdkAutosizeMaxRows="7">
       </textarea>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.spermFreezePlan">
+      <input matInput type="text" placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.vialsFrozen">
+      <input matInput type="text" placeholder="Number of vials frozen" formControlName="vialsFrozen">
     </mat-form-field>
   </form>
   </div>

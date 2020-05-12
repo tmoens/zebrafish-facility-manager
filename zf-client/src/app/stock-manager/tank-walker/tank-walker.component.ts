@@ -45,13 +45,13 @@ export class TankWalkerComponent implements OnInit {
     });
   }
 
-  // Decision: since there are only two fields and we want this to be 
+  // Decision: since there are only two fields and we want this to be
   // really easy, we do not ask the user to explicitly "save" changes
   // to the number of fish in the tank or the comment.
   // If they have changed when we navigate away, save the changes.
   goToIndex(newIndex: number) {
     if (this.inFocusIndex > -1) {
-      if ((this.countFC.value !== this.inFocusTank.num) || 
+      if ((this.countFC.value !== this.inFocusTank.num) ||
           (this.commentFC.value !== this.inFocusTank.comment)) {
         this.inFocusTank.num = this.countFC.value;
         this.inFocusTank.comment = this.commentFC.value;
@@ -62,7 +62,7 @@ export class TankWalkerComponent implements OnInit {
     this.inFocusTank = this.tankList[this.inFocusIndex];
     this.countFC.setValue(this.inFocusTank.num);
     this.commentFC.setValue(this.inFocusTank.comment);
-    
+
     this.getInFocusStock();
   }
 

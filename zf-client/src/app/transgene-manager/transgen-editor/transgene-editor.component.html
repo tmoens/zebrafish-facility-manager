@@ -7,20 +7,20 @@
   <form [formGroup]="mfForm">
 
     <div fxLayout="column">
+      <mat-form-field>
+        <input required matInput type="text" placeholder="Construct" formControlName="descriptor"
+               maxlength="50">
+        <mat-error *ngIf="!mfForm.valid">{{getUniquenessError()}}</mat-error>
+      </mat-form-field>
+
       <mat-form-field >
-        <input required matInput type="text" placeholder="Allele" formControlName="allele"
+        <input required matInput type="text" placeholder="Genomic feature name" formControlName="allele"
                maxlength="20">
         <mat-error *ngIf="!mfForm.valid">{{getUniquenessError()}}</mat-error>
       </mat-form-field>
 
       <mat-form-field>
-        <input required matInput type="text" placeholder="Descriptor" formControlName="descriptor"
-               maxlength="50">
-        <mat-error *ngIf="!mfForm.valid">{{getUniquenessError()}}</mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input required matInput type="text" placeholder="Nickname" formControlName="nickname"
+        <input matInput type="text" placeholder="Nickname" formControlName="nickname"
                maxlength="30">
       </mat-form-field>
 
@@ -38,6 +38,18 @@
                 (click)="clearFormControl('source')">
           <mat-icon>close</mat-icon>
         </button>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">
+          <mat-option [value]=null>--Any--</mat-option>
+          <mat-option *ngFor="let i of service.spermFreezeOptions" [value]="i">{{i}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field >
+        <input matInput type="number" placeholder="Vials Frozen" formControlName="vialsFrozen"
+               min="0">
       </mat-form-field>
 
       <mat-form-field>

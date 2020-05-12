@@ -21,21 +21,20 @@ export class TransgeneEditorComponent implements OnInit {
   saved = false;
 
   // Build the edit form.
-  // Note the ".bind(this)" for name validation - it is because that
-  // particular validator needs the context of this object to do its work,
-  // but that is not automatically supplied as sync field validators
-  // are typically context free.
   mfForm = this.fb.group({
     allele: [''],
     descriptor: ['', [Validators.required]],
     comment: [{value: ''}],
+    name: [null],
     nickname: [{value: ''}],
     plasmid: [{value: ''}],
-    source: [{value: ''}],
-    id: [null],
     serialNumber: [null],
+    source: [{value: ''}],
+    spermFreezePlan: [''],
+    vialsFrozen: [0],
+
+    id: [null],
     isDeletable: [true],
-    name: [null],
     fullName: [null],
     tooltip: [null],
   }, { validators: this.uniquenessValidator.bind(this) });

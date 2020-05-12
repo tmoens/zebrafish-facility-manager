@@ -23,15 +23,19 @@ export class TransgeneViewerComponent implements OnInit {
     allele: [{value: '', disabled: true}],
     descriptor: [{value: '', disabled: true}],
     comment: [{value: '', disabled: true}],
+    name: [null],
     nickname: [{value: '', disabled: true}],
     plasmid: [{value: '', disabled: true}],
-    source: [{value: '', disabled: true}],
-    id: [null],
     serialNumber: [{value: null, disabled: true}],
+    source: [{value: '', disabled: true}],
+    spermFreezePlan: [{value: '', disabled: true}],
+    vialsFrozen: [{value: 0, disabled: true}],
+
+    id: [null],
     isDeletable: [{value: '', disabled: true}],
-    name: [null],
     fullName: [null],
     tooltip: [null],
+
   });
 
   constructor(
