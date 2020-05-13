@@ -76,7 +76,18 @@ export class AuthService {
           // and cache the token payload.
           this.loggedIn$.next(true);
           this.tokenPayload = this.decryptToken(token);
-          this.router.navigateByUrl(this.getDefaultURI());
+
+          // If the user was heading somewhere when they were forced to log in, go there now.
+          if (this.intendedPath) {
+            const path = this.intendedPath;
+            this.intendedPath = null;
+            this.router.navigateByUrl(path);
+          }
+
+          // If the user is just logging in to no path in particular send them to the stock_manager
+          if ('/login' === location.pathname) {
+            this.router.navigateByUrl('stock_manager');
+          }
         }
       });
   }
@@ -93,18 +104,6 @@ export class AuthService {
     this.onLogout();
   }
 
-  // The default URI (after login) should be
-  // a) whatever the intend path was when the user was forced to login.  This supports
-  // one user sending another an interesting url.
-  // b) wherever the user was when they were last logged in (as figured out from local storage)
-  getDefaultURI(): string {
-    if (this.intendedPath) {
-      const p = this.intendedPath;
-      this.intendedPath = null;
-      return p;
-    }
-    return this.appState.getDefaultURI();
-  }
 
   // this decodes the access token and stuffs it in typed object.
   decryptToken(token): AccessTokenPayload {

@@ -38,27 +38,15 @@ export class AppStateService {
   ) {
   }
 
-  // Figure out the user's last URI based on state in local storage.
-  // This allows the user to keep their place when they login.
-  // Failing that, go to the stock manager.
-  getDefaultURI(): string {
-    let tool: ZFTool = this.localStorage.get(ZFToolStates.ACTIVE_TOOL) as ZFTool;
-    if (!tool || tool.route === ZFTool.SPLASH_LOGIN.route) {
-      tool = ZFTool.STOCK_MANAGER;
-    }
-    let uri: string = '/' + tool.route;
-    // check to see if there is a particular object that we should be viewing.
-    const selected_id = this.getToolState(tool.type, ZFToolStates.SELECTED_ID);
-    if (selected_id) {
-      uri = uri + '/view/' + selected_id;
-    }
-    return uri;
-  }
-
-  // we introduce a random stagger of 2 to 7 seconds so that all the services don;t refresh simultaneously
+  // The services refresh their data every hour or so (by default).  There is a random
+  // stagger of 20 to 70 seconds so that all the services don't refresh simultaneously.
+  // This should probably be a configuration constant, but anyway.
+  // Even better, we could do this with "push notifications" from the server
+  // and a much better approach to caching in the services.  But it suffices
+  // and is not too data intensive.
   get backgroundDataRefreshInterval(): number {
-    let d = this.getState('backgroundDataRefresh') || 300000;
-    return d + Math.floor(Math.random() * 5000 + 2000);
+    let d = this.getState('backgroundDataRefresh') || 3600000;
+    return d + Math.floor(Math.random() * 50000 + 20000);
   }
 
   // These next few are used to remember where the user was over restarts
@@ -120,6 +108,7 @@ export class AppStateService {
     }
   }
 
+  // For future use, services can potentially set a service specific cache refresh rate.
   set backgroundDataRefresh(ms: number) {
     if (ms < 0) {
       this.deleteState('backgroundDataRefresh');
