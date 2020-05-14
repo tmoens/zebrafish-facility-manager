@@ -1,10 +1,11 @@
-m
 ## MariaDB For a single facility
 
-If you followed the instructions when installing MariaDB (securely), you will not 
+If you followed the instructions when installing MariaDB (securely) for the deployment
+as a whole, you will not 
 be able to log in as as the database root user, but you will have created an admin
 user with sufficient privileges to create new databases and you will know that the
-admin user's password.  If you did not, it is ok but you have to do equivalent
+admin user's password.  If you did not follow the instructions when installing
+MariaDB, it is ok but you have to do equivalent
 operations to what is presented here.
 
 Following the running example, 

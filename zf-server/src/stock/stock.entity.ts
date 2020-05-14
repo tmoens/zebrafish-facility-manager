@@ -40,7 +40,7 @@ export class Stock {
   @Column({
     type: 'varchar',
     nullable: true,
-    length: 60,
+    length: 255,
     comment: 'A description of the stock limited to fit on a tank label.',
   })
   description: string;
