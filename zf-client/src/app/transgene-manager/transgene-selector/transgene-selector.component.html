@@ -1,3 +1,14 @@
+<!-- The selector is quite different on the phone and on a big screen. -->
+
+<!-- Filtered List Item
+     Big Screen - mouse over shows more content about the item
+     Phone - no mouse over.  So we try this.  If the user clicks
+      once (touches), the item gets "pre-selected".  More info is displayed
+      and a button comes up to let the user actually select the item.
+      When "actually" selected, the whole selector toggles away and
+      the selected item is viewed. -->
+
+
 <div fxFlex fxLayout="column" class="zf-selector">
 
   <!-- The Filter Part -->
@@ -15,16 +26,47 @@
   <!-- The Filtered List part -->
   <div fxFlex *ngIf="service.filteredList.length > 0">
     <span class="zf-sub-title">Filtered List</span>
-    <mat-list role="list" dense>
-      <mat-list-item
-        *ngFor="let item of service.filteredList"
-        [class.selected]="service.selected && item.id === service.selected.id"
-        class="zf-selection-item truncate" role="listitem"
-        matTooltip="{{item.tooltip}}" matTooltipClass="ttnl"
-        (click)="onSelect(item)">
-        {{item.fullName}}
-      </mat-list-item>
-    </mat-list>
+
+     <!--When the selector is fixed in place-->
+    <div *ngIf="appState.selectorFixed">
+      <mat-list role="list" dense>
+        <mat-list-item
+          *ngFor="let item of service.filteredList"
+          [class.selected]="service.selected && item.id === service.selected.id"
+          class="zf-selection-item truncate" role="listitem"
+          (mouseover)="onPreselect(item.id)"
+          (mouseleave)="onPreselect(-1)"
+          (click)="onSelect(item)">
+
+          <div mat-line>{{item.fullName}}</div>
+
+          <div mat-line *ngIf="item.id === focusId">
+            <app-transgene-mini-viewer mat-line [transgene]="item"></app-transgene-mini-viewer>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+
+    <!-- When the selector is toggleable (on a handset)-->
+    <div *ngIf="!appState.selectorFixed">
+      <mat-list role="list" dense>
+        <mat-list-item
+          *ngFor="let item of service.filteredList"
+          [class.selected]="service.selected && item.id === service.selected.id"
+          class="zf-selection-item truncate" role="listitem"
+          (click)="onPreselect(item.id)">
+          <button *ngIf="focusId === item.id" mat-mini-fab (click)="onSelect(item)" color="primary">
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+
+          <div mat-line>{{item.fullName}}</div>
+
+          <div mat-line *ngIf="item.id === focusId">
+            <app-transgene-mini-viewer mat-line [transgene]="item"></app-transgene-mini-viewer>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </div>
   </div>
   <div *ngIf="service.filteredList.length == 0">
     <p>No transgenes match the current filter.</p>

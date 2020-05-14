@@ -22,6 +22,9 @@ import {AppStateService} from "../../app-state.service";
 
 export class StockViewerComponent implements OnInit {
   id: number = null;
+  highlightStock: number;
+  highlightMutation: number;
+  highlightTransgene: number;
 
   constructor(
     public appState: AppStateService,
@@ -43,7 +46,7 @@ export class StockViewerComponent implements OnInit {
     // use the route's paramMap to figure out the id of the item we are supposed to view.
     this.route.paramMap.subscribe((pm: ParamMap) => {
       this.service.enterBrowseMode();
-// if there is an id in the route, tell the service to select it.
+      // if there is an id in the route, tell the service to select it.
       const id = +pm.get('id');
       if (id) {
         this.service.selectByIdAndLoad(id);

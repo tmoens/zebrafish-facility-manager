@@ -32,6 +32,9 @@ import {MatCardModule} from "@angular/material/card";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {DateToAgePipe} from "./date-to-age.pipe";
 import {TankWalkerComponent} from "./tank-walker/tank-walker.component";
+import { StockMiniViewerComponent } from './stock-mini-viewer/stock-mini-viewer.component';
+import {MutationManagerModule} from "../mutation-manager/mutation-manager.module";
+import {TransgeneManagerModule} from "../transgene-manager/transgene-manager.module";
 
 @NgModule({
   declarations: [
@@ -47,6 +50,7 @@ import {TankWalkerComponent} from "./tank-walker/tank-walker.component";
     TankNameValidator,
     StockNameCheckValidator,
     DateToAgePipe,
+    StockMiniViewerComponent,
   ],
   imports: [
     StockManagerRoutingModule,
@@ -72,6 +76,8 @@ import {TankWalkerComponent} from "./tank-walker/tank-walker.component";
     FormsModule,
     AuthModule,
     MatSidenavModule,
+    MutationManagerModule,
+    TransgeneManagerModule,
   ],
   exports: [
     StockMenuComponent

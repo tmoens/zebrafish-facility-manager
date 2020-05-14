@@ -76,16 +76,48 @@
   <!-- The Filtered List part -->
   <div *ngIf="service.filteredList.length > 0" >
     <span class="zf-sub-title">Filtered List</span>
-    <mat-list role="list" dense>
-      <mat-list-item
-        *ngFor="let item of service.filteredList"
-        [class.selected]="service.selected && item.id === service.selected.id"
-        class="zf-selection-item truncate" role="listitem"
-        matTooltip="{{item.tooltip}}" matTooltipClass="ttnl"
-        (click)="onSelect(item)">
-        {{item.name}} {{item.description}}
-      </mat-list-item>
-    </mat-list>
+
+    <!--When the selector is fixed in place-->
+    <div *ngIf="appState.selectorFixed">
+      <mat-list role="list" dense>
+        <mat-list-item
+          *ngFor="let stock of service.filteredList"
+          [class.selected]="service.selected && stock.id === service.selected.id"
+          class="zf-selection-item truncate" role="listitem"
+          (mouseover)="onPreselect(stock.id)"
+          (mouseleave)="onPreselect(-1)"
+          (click)="onSelect(stock)">
+
+          <div mat-line>{{stock.name}} {{stock.description}}</div>
+
+          <div mat-line *ngIf="stock.id === focusId">
+            <app-stock-mini-viewer [stock]="stock" mat-line></app-stock-mini-viewer>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+
+    <!-- When the selector is toggleable (on a handset)-->
+    <div *ngIf="!appState.selectorFixed">
+      <mat-list role="list" dense>
+        <mat-list-item
+          *ngFor="let stock of service.filteredList"
+          [class.selected]="service.selected && stock.id === service.selected.id"
+          class="zf-selection-item truncate" role="listitem"
+          (click)="onPreselect(stock.id)">
+          <button *ngIf="focusId === stock.id" mat-mini-fab (click)="onSelect(stock)" color="primary">
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+
+          <div mat-line>{{stock.name}} {{stock.description}}</div>
+
+          <div mat-line *ngIf="stock.id === focusId">
+            <app-stock-mini-viewer [stock]="stock" mat-line></app-stock-mini-viewer>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+
   </div>
   <div *ngIf="service.filteredList.length == 0">
     <p>No stocks match the current filter,</p>
@@ -94,7 +126,7 @@
 </div>
 
 
-<!-- Auto completes grouped for easier reading of code-->
+<!-- Auto completes sent down here for easier reading of code-->
 <mat-autocomplete #autoResearcher="matAutocomplete">
   <mat-option *ngFor="let option of filteredResearcherOptions | async" [value]="option">
     {{option}}

@@ -66,7 +66,7 @@
 }
 
 .zf-tool-content {
-  margin: 25px;
+  padding: 25px;
 }
 
 .zf-selector {
@@ -132,6 +132,10 @@
   }
 }
 
+.zf-mini-row {
+  font-size: small;
+  margin-left: 10px;
+}
 
 // I really should build a typography configuration for the app and then base this
 // size relative to some existing typography style, but I is lazy.

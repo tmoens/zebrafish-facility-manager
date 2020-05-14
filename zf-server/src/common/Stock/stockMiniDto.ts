@@ -4,5 +4,8 @@ export class StockMiniDto {
   name: string;
   description: string;
   tooltip: string;
+  researcher: string;
+  comment: string;
+  fertilizationDate: string;
 
 }

@@ -26,6 +26,7 @@ export class AppStateService {
   // for storing arbitrary state data and arbitrary state data that persists over restarts
   state: {[name: string]: any } = {};
   persistentState: {[name: string]: any } = {};
+  selectorFixed: boolean = false;
 
   private _activeTool$: BehaviorSubject<ZFTool> = new BehaviorSubject<ZFTool>(ZFTool.SPLASH_LOGIN);
   private get activeTool$() { return this._activeTool$; }

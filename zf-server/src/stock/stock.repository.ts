@@ -125,7 +125,8 @@ export class StockRepository extends Repository<Stock> {
   // b) the records are smaller and more efficient to send to the client
   async findFiltered(filter: StockFilter): Promise<StockMiniDto[]> {
     let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
-      .select('DISTINCT stock.id, stock.name, stock.description, stock.researcher, stock.comment, stock.fertilizationDate')
+      .select('DISTINCT stock.id, stock.name, stock.description, ' +
+        'stock.researcher, stock.comment, stock.fertilizationDate')
       .addSelect('DATE_FORMAT(stock.fertilizationDate, "%Y-%m-%d")', 'fertilizationDate')
       .where('1');
     if (filter.number) {
@@ -207,7 +208,10 @@ export class StockRepository extends Repository<Stock> {
         id: s.id,
         name: s.name,
         description: s.description,
+        researcher: s.researcher,
         tooltip: tooltipStrings.join('\n'),
+        comment: (s.comment) ? s.comment.substr(0, 45) : '',
+        fertilizationDate: s.fertilizationDate,
       });
     }
     return stockMinis;

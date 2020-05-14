@@ -23,6 +23,7 @@ import {CommonModule} from '@angular/common';
 import {AuthModule} from "../auth/auth.module";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSidenavModule} from "@angular/material/sidenav";
+import { MutationMiniViewerComponent } from './mutation-mini-viewer/mutation-mini-viewer.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
     MutationMenuComponent,
     MutationSelectorComponent,
     MutationViewerComponent,
+    MutationMiniViewerComponent,
   ],
   imports: [
     MutationManagerRoutingModule,
@@ -55,7 +57,8 @@ import {MatSidenavModule} from "@angular/material/sidenav";
     MatSidenavModule,
   ],
   exports: [
-    MutationMenuComponent
+    MutationMenuComponent,
+    MutationMiniViewerComponent
   ]
 })
 

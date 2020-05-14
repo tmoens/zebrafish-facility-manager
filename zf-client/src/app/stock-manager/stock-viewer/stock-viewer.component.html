@@ -39,7 +39,6 @@
         <!-- Mom   -->
         <span class="zf-sub-title">Mom
           <button *ngIf="service.selected.matStock" mat-button color="primary"
-                  matTooltip="{{service.selected.matStock.tooltip}}" matTooltipClass="ttnl"
                   (click)="goTo(service.selected.matStock.id)">{{service.selected.matStock.name}}</button>
         </span>
         <mat-form-field *ngIf="service.selected.matStock">
@@ -56,7 +55,6 @@
         <!-- Dad   -->
         <span class="zf-sub-title">Dad
           <button *ngIf="service.selected.patStock" mat-button color="primary"
-                  matTooltip="{{service.selected.patStock.tooltip}}" matTooltipClass="ttnl"
                   (click)="goTo(service.selected.patStock.id)">{{service.selected.patStock.name}}</button>
         </span>
         <mat-form-field *ngIf="service.selected.patStock">
@@ -77,10 +75,14 @@
         </mat-list>
         <mat-list *ngIf="service.selected.offspringCount > 0" dense>
           <mat-list-item *ngFor="let kid of service.selected.offspring"
+                         (mouseover)="highlightStock = kid.id"
+                         (mouseleave)="highlightStock = -1"
                          class="zf-selection-item truncate" role="listitem"
-                         matTooltip="{{kid.tooltip}}" matTooltipClass="ttnl"
                          (click)="goTo(kid.id)">
-            {{kid.name}} {{kid.description}}
+            <div mat-line>{{kid.name}} {{kid.description}}</div>
+            <div *ngIf="highlightStock === kid.id">
+              <app-stock-mini-viewer mat-line [stock]="kid"></app-stock-mini-viewer>
+            </div>
           </mat-list-item>
         </mat-list>
       </div>
@@ -97,9 +99,13 @@
         </div>
         <mat-list *ngIf="service.selected.mutations.length > 0" dense>
           <mat-list-item *ngFor="let m of service.selected.mutations"
-                         matTooltip="{{m.tooltip}}" matTooltipClass="ttnl"
-                         style="height: 30px">
-            {{m.fullName}}
+                         class="zf-selection-item truncate" role="listitem"
+                         (mouseover)="highlightMutation = m.id"
+                         (mouseleave)="highlightMutation = -1">
+            <div mat-line>{{m.fullName}}</div>
+            <div mat-line *ngIf="m.id === highlightMutation">
+              <app-mutation-mini-viewer [mutation]="m"></app-mutation-mini-viewer>
+            </div>
           </mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.mutations.length < 1" dense>
@@ -116,9 +122,13 @@
         </div>
         <mat-list *ngIf="service.selected.transgenes.length > 0" dense>
           <mat-list-item *ngFor="let t of service.selected.transgenes"
-                         matTooltip="{{t.tooltip}}" matTooltipClass="ttnl"
-                         style="height: 30px">
-            {{t.fullName}}
+                         class="zf-selection-item truncate" role="listitem"
+                         (mouseover)="highlightTransgene = t.id"
+                         (mouseleave)="highlightTransgene = -1">
+            <div mat-line>{{t.fullName}}</div>
+            <div mat-line *ngIf="t.id === highlightTransgene">
+              <app-transgene-mini-viewer [transgene]="t"></app-transgene-mini-viewer>
+            </div>
           </mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.transgenes.length < 1" dense>

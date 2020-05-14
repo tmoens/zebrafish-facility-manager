@@ -5,6 +5,7 @@ import {debounceTime} from 'rxjs/operators';
 import {TransgeneFilter} from '../transgene-filter';
 import {Router} from '@angular/router';
 import {TransgeneDto} from "../transgene-dto";
+import {AppStateService} from "../../app-state.service";
 
 @Component({
   selector: 'app-transgene-selector',
@@ -12,11 +13,13 @@ import {TransgeneDto} from "../transgene-dto";
 })
 export class TransgeneSelectorComponent implements OnInit {
   @Output() selected = new EventEmitter<TransgeneDto>();
+  focusId: number;
 
   // Build the filter form.
   mfForm = this.fb.group(this.service.filter);
 
   constructor(
+    public appState: AppStateService,
     private router: Router,
     private fb: FormBuilder,
     public service: TransgeneService,
@@ -38,10 +41,18 @@ export class TransgeneSelectorComponent implements OnInit {
     this.getFC(name).setValue(''); // which will cause the filter to reapply.
   }
 
-  // when the user clicks on a transgene, go view it
-  // This has a side-effect of causing the transgene to become selected.
+  // when the user clicks on a transgene,
+  // a) emit an event.  Right now the only consumer of this event is the containing sidenav.
+  //    If the selector is toggled open (as opposed to being fixed in place), it needs to
+  //    toggle itself closed before
+  // b) navigate to view the selected transgene
   onSelect(instance: TransgeneDto | null) {
+    this.focusId = instance.id;
     this.selected.emit(instance);
     this.router.navigate(['transgene_manager/view/' + instance.id]);
+  }
+
+  onPreselect(id) {
+    this.focusId = id;
   }
 }

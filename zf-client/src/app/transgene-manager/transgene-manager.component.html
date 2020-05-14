@@ -4,7 +4,7 @@
     <!-- The toolbar specific to Transgene manager -->
     <mat-toolbar  color="primary">
       <!-- The button to toggle the sidenav is disabled while an item is being edited -->
-      <button mat-icon-button (click)="selector.toggle()" *ngIf="!(selectorFixed)"
+      <button mat-icon-button (click)="selector.toggle()" *ngIf="!(appState.selectorFixed)"
               [disabled]="service.inEditMode">
         <mat-icon>menu</mat-icon>
       </button>
@@ -18,10 +18,13 @@
       <!-- The sidenav should collapse when editing an item  or when the screen is small -->
       <mat-sidenav #selector fixedInViewport
                    fixedTopGap="120"
-                   [mode]="(selectorFixed) ? 'side' : 'over'"
-                   [opened]="(selectorFixed) && !(service.inEditMode)"
+                   [mode]="(appState.selectorFixed) ? 'side' : 'over'"
+                   [opened]="(appState.selectorFixed) && !(service.inEditMode)"
                    style="background: inherit; border: none">
-        <app-transgene-selector (selected)="!selectorFixed && selector.toggle()"></app-transgene-selector>
+
+        <!-- When the selector is in toggle mode (small screen) and -->
+        <!-- the user selects something, toggle the selector closed. -->
+        <app-transgene-selector (selected)="!appState.selectorFixed && selector.toggle()"></app-transgene-selector>
       </mat-sidenav>
 
       <mat-sidenav-content>

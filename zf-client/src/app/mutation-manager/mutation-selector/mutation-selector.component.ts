@@ -6,6 +6,7 @@ import {FormBuilder} from '@angular/forms';
 import {debounceTime, map, startWith} from 'rxjs/operators';
 import {MutationFilter} from '../mutation-filter';
 import {MutationDto} from "../mutation-dto";
+import {AppStateService} from "../../app-state.service";
 
 @Component({
   selector: 'app-mutation-selector',
@@ -14,6 +15,7 @@ import {MutationDto} from "../mutation-dto";
 })
 export class MutationSelectorComponent implements OnInit {
   @Output() selected = new EventEmitter<MutationDto>();
+  focusId: number;
 
   // Build the filter form.
   mfForm = this.fb.group(this.service.filter);
@@ -26,6 +28,7 @@ export class MutationSelectorComponent implements OnInit {
   filteredScreenTypeOptions: Observable<string[]>;
 
   constructor(
+    public appState: AppStateService,
     private router: Router,
     private fb: FormBuilder,
     public service: MutationService,
@@ -70,11 +73,17 @@ export class MutationSelectorComponent implements OnInit {
     this.mfForm.reset(); // which will cause the filter to reapply.
   }
 
-  // When a mutation is selected we just tell the service (model).
-  // Decision not to route.navigate to the mutation, let the
-  // mutation manager decide what to do in any given context.
+  // when the user clicks on a mutation,
+  // a) emit an event.  Right now the only consumer of this event is the containing sidenav.
+  //    If the selector is toggled open (as opposed to being fixed in place), it needs to
+  //    toggle itself closed before
+  // b) navigate to view the selected mutation
   onSelect(m: MutationDto | null) {
     this.selected.emit(m);
     this.router.navigate(['mutation_manager/view/' + m.id]);
+  }
+
+  onPreselect(id) {
+    this.focusId = id;
   }
 }

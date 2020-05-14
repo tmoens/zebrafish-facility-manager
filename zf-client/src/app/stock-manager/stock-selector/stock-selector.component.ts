@@ -7,6 +7,7 @@ import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/layout";
 import {StockDto} from "../dto/stock-dto";
+import {AppStateService} from "../../app-state.service";
 
 /**
  * A two-part component: a filter for stocks and a list of filtered stocks.
@@ -25,21 +26,23 @@ import {StockDto} from "../dto/stock-dto";
 })
 export class StockSelectorComponent implements OnInit {
   @Output() selected = new EventEmitter<StockDto>();
+  focusId: number;
 
+  // Build the filter form.
   mfForm = this.fb.group(this.service.filter);
 
   filteredResearcherOptions: Observable<string[]>;
 
   constructor(
+    public appState: AppStateService,
     private router: Router,
     private fb: FormBuilder,
     public service: StockService,
-    public breakpointObserver: BreakpointObserver,
   ) {
   }
 
   ngOnInit() {
-    // any time a filter value changes, send the changed filter to the service.
+    // any time a filter value changes, reapply it
     this.mfForm.valueChanges.pipe(debounceTime(300)).subscribe(() => {
       this.service.setFilter(new StockFilter(this.mfForm.value));
       this.service.applyFilter();
@@ -52,15 +55,6 @@ export class StockSelectorComponent implements OnInit {
       map(value => this.service.fieldOptions.filterOptionsContaining('researcher', value))
     );
 
-    this.breakpointObserver
-      .observe([Breakpoints.Small, Breakpoints.HandsetPortrait])
-      .subscribe((state: BreakpointState) => {
-        if (state.matches) {
-          console.log(
-            'Matches small viewport or handset in portrait mode'
-          );
-        }
-      });
   }
 
   getFC(name: string): AbstractControl {
@@ -75,10 +69,18 @@ export class StockSelectorComponent implements OnInit {
     this.mfForm.reset(); // which will cause the filter to reapply.
   }
 
-  // Tell the service which Id is currently selected.
+  // when the user clicks on a transgene,
+  // a) emit an event.  Right now the only consumer of this event is the containing sidenav.
+  //    If the selector is toggled open (as opposed to being fixed in place), it needs to
+  //    toggle itself closed before
+  // b) navigate to view the selected transgene
   onSelect(s: StockDto | null) {
     this.selected.emit(s);
     this.router.navigate(['stock_manager/view/' + s.id]);
+  }
+
+  onPreselect(id) {
+    this.focusId = id;
   }
 }
 
