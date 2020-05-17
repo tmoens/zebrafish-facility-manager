@@ -58,7 +58,9 @@ environment.
 Here is a friendly article for [how to install MariaDB securely on 
 Debian](https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-debian-10).
 Later, when you go to create individual databases for each zebrafish facility, the guide will assume
-you have followed the good, secure procedure described there.
+you have followed the good, secure procedure described there.  You will have created an administrative
+user called admin, which you will use to create  databases for each facility.
+You must remember the password for that administrative user.
 
 ### Web Server
 
@@ -78,31 +80,6 @@ to include links to whatever whatever facility managers you have running.
 You will need to set up a separate virtual host for each zebrafish facility the system manages.
 It is a good idea to set up an example one now.
 The process of setting up a virtual host for a facility is covered [here](Apache.md).
-
-### Set up SSL on your Web Server
-
-Before you start this section, you should have set up DNS for your domain
-(and any sub-domains you can think of in advance). Unfortunately you also need to also have at least one
-virtual host set up for this to work.
-So you probably want to go ahead with the rest of your deployment and then creat a deployment
-for one or two facilities and **then** come back and set up SSL.
-
-The good news is that this is mercifully fast to do.
-
-Before using the procedure that follows, please note that when 
-you get to the part where the procedure says to use 
-certbot to create your certificate, you can use multiple -d options,
-one for your domain and one for each sub-domain.  Using the example above, your command might look like
-
-```bash 
-sudo certbot --apache -d example_zfm.com -d test.example-zfc.com -d eue.example-zfc.com -d acdc.example-zfc.com
-```
-                                                       
-Here it a procedure on
-[how to secure Apache](https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-debian-10).
-
-Later when you want to add another facility, you will create a sub-domain and add it to your certificate.
-This is covered in the "Per Facility" guide.
 
 ## zf-server and zf-client deployment
 
@@ -146,6 +123,24 @@ ng build --configuration=production
 The result of this operation will be a directory called /dist/zf-client.
 You need to deploy the directory to your Web Server.  Assuming that the
 root of your web server is _/var/www/_, just deploy zf-client directory there.
+
+## GMAIL Sender
+
+The application needs to send emails. Example:
+when a user is created, they get an email with password reset instructions.
+
+We did not invest a huge amount of time here, we simply send them via gmail which
+means that you will need to provide a gmail address the server can use for sending
+emails.
+
+What is more, since the application sends the emails programattically, the gmail account
+it logs into is deemed insecure by Google, no matter how good the password is.
+
+You need to create such a Google/gmail account - do not use your own.
+You need to give it a very good password (again, use a password generator).
+You need to configure the account to allow "insecure access".
+
+In the "per faccility" guide you will be entering the id and password for this account.
 
 ## Wrap up
 

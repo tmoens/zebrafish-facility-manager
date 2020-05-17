@@ -2,10 +2,10 @@
 
 If you followed the instructions when installing MariaDB (securely) for the deployment
 as a whole, you will not 
-be able to log in as as the database root user, but you will have created an admin
+be able to log in as the database root user, but you will have created an admin
 user with sufficient privileges to create new databases and you will know that the
 admin user's password.  If you did not follow the instructions when installing
-MariaDB, it is ok but you have to do equivalent
+MariaDB, it is ok, but you have to do equivalent
 operations to what is presented here.
 
 Following the running example, 
@@ -50,5 +50,5 @@ GRANT ALL PRIVILEGES ON `zf\_eue`.* TO 'zf_eue'@'localhost';
 ```
 
 You now have a database.  There are no tables in it, but they will be created automatically
-when the zf_server is run for the first time.
+when the zf_server runs for the first time.
 
