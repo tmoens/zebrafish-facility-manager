@@ -5,7 +5,6 @@ import {
 import {Exclude, Expose, Transform, Type} from 'class-transformer';
 import { Mutation } from '../mutation/mutation.entity';
 import { Transgene } from '../transgene/transgene.entity';
-import { Background } from '../background/background.entity';
 import { Stock2tank } from '../stock2tank/stock-to-tank.entity';
 @Entity({
   orderBy: {number: 'DESC', subNumber: 'ASC'},
@@ -68,13 +67,6 @@ export class Stock {
     comment: 'Who the stock is for.',
   })
   researcher: string;
-
-  @Type(() => Background)
-  @ManyToOne(type => Background)
-  @JoinColumn({
-    name: 'background',
-  })
-  background: Background;
 
   // Expose the internal id of the mother without having to join the tables.
   // Makes searches for children of a stock much more efficient.

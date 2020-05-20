@@ -16,7 +16,6 @@ export class StockMediumDto extends ZfGenericDto {
   fertilizationDate: string = null;
   pi: string = null;
   researcher: string = null;
-  background: number = null;
   matIdInternal: number = null;
   externalMatId: string = null;
   externalMatDescription: string = null;

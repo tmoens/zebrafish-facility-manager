@@ -36,7 +36,6 @@ export class StockRepository extends Repository<Stock> {
         'transgenes', 'mutations', 'swimmers', 'swimmers.tank',
         'matStock', 'matStock.mutations', 'matStock.transgenes',
         'patStock', 'patStock.mutations', 'patStock.transgenes',
-        'background',
       ]});
     if (!stock) {
       const msg = 'Stock does not exist. Id: ' + id;
