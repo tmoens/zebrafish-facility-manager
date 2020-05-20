@@ -1,14 +1,14 @@
+{
+  "facilityName": "Amacher Lab OSU",
+  "facilityAbbrv": "OSU",
+  "facilityPrefix": "osu",
 
-  "facilityName": "FHCRC",
-  "facilityAbbrv": "fhcrc",
+  "hidePI": true,
 
-  "auth0ClientId": "zMZwc4fmzjysGmPizSe7jNpbgMqLFxu9",
-  "auth0Domain": "dev-8hdwaaeq.auth0.com",
-  "auth0Audience": "https://fhcrc.zfserver.com",
-
-  "tankNumberingHint": "Legal tank numbers run from blah blahblah",
+  "tankNumberingHint": "Legal tank numbers are 1000 to 3000, Nursery and Juvenile",
   "tankLabelConfig": {
-    "fontPointSize": 14,
+    "fontPointSize": 10,
+    "showQrCode": true,
     "layout": [
       [
         "STOCK_NUMBER",

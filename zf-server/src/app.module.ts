@@ -7,7 +7,6 @@ import {ConfigService} from './config/config.service';
 import {MutationModule} from './mutation/mutation.module';
 import {TankModule} from './tank/tank.module';
 import {TransgeneModule} from './transgene/transgene.module';
-import {BackgroundModule} from './background/background.module';
 import {Stock2tankModule} from './stock2tank/stock2tank.module';
 import {StockModule} from './stock/stock.module';
 import {AuthModule} from './auth/auth.module';
@@ -49,7 +48,6 @@ const consoleLog = new (winston.transports.Console)({
 @Module({
   imports: [
     AuthModule,
-    BackgroundModule,
     ConfigModule,
     MutationModule,
     StockModule,
