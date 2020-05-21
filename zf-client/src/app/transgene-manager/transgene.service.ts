@@ -11,6 +11,7 @@ import {ZFTypes} from "../helpers/zf-types";
 import {Router} from "@angular/router";
 import {AuthService} from "../auth/auth.service";
 import {TransgeneDto} from "./transgene-dto";
+import {MutationDto} from "../mutation-manager/mutation-dto";
 
 /**
  * This is the model for transgene information displayed in the GUI.
@@ -54,6 +55,17 @@ export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDt
     });
     this.refresh();
   }
+
+  // This is used to populate a autocomplete field of transgenes
+  getListFilteredByString(searchString: string): TransgeneDto[] {
+    return this.all.filter((t: TransgeneDto) => {
+      return(
+        (t.descriptor && t.descriptor.includes(searchString)) ||
+        (t.allele && t.allele.includes(searchString)) ||
+        (t.nickname && t.nickname.includes(searchString)));
+    });
+  }
+
 
   uniquenessValidator(name: string): boolean {
     return this._fieldOptions.options.nameValidation.includes(name);

@@ -29,12 +29,6 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput type="text" placeholder="Search Text" formControlName="text">
-          <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
-                  (click)="clearFormControl('text')"><mat-icon>close</mat-icon></button>
-        </mat-form-field>
-
-        <mat-form-field>
           <input matInput type="text" placeholder="Tank Name" formControlName="tankName">
           <button mat-button matSuffix mat-icon-button *ngIf="getFC('tankName').value"
                   (click)="clearFormControl('tankName')"><mat-icon>close</mat-icon></button>
@@ -43,16 +37,11 @@
 
       <!-- Second group of filter fields -->
       <div fxLayout="column" fxFlex="50%">
-        <mat-form-field>
-          <input matInput type="text" placeholder="Mutation" formControlName="mutation">
-          <button mat-button matSuffix mat-icon-button *ngIf="getFC('mutation').value"
-                  (click)="clearFormControl('mutation')"><mat-icon>close</mat-icon></button>
-        </mat-form-field>
 
         <mat-form-field>
-          <input matInput type="text" placeholder="Transgene" formControlName="transgene">
-          <button mat-button matSuffix mat-icon-button *ngIf="getFC('transgene').value"
-                  (click)="clearFormControl('transgene')"><mat-icon>close</mat-icon></button>
+          <input matInput type="text" placeholder="Search Text" formControlName="text">
+          <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
+                  (click)="clearFormControl('text')"><mat-icon>close</mat-icon></button>
         </mat-form-field>
 
         <mat-form-field>
@@ -69,6 +58,27 @@
           </mat-select>
         </mat-form-field>
       </div>
+    </div>
+    <div>
+      <mat-form-field >
+        <input matInput type="text" placeholder="Mutation" [formControl]="mutationFilterFC"
+               [matAutocomplete]="autoMutation"
+               [value]="(mutationFilterFC.value) ?
+                   (mutationFilterFC.value.fullName) ?
+                      mutationFilterFC.value.fullName : mutationFilterFC.value : ''">
+        <button mat-button matSuffix mat-icon-button
+                (click)="clearMutationFilter()"><mat-icon>close</mat-icon></button>
+      </mat-form-field>
+
+      <mat-form-field >
+        <input matInput type="text" placeholder="Transgene" [formControl]="transgeneFilterFC"
+               [matAutocomplete]="autoTransgene"
+               [value]="(transgeneFilterFC.value) ?
+                   (transgeneFilterFC.value.fullName) ?
+                      transgeneFilterFC.value.fullName : transgeneFilterFC.value : ''">
+        <button mat-button matSuffix mat-icon-button
+                (click)="clearTransgeneFilter()"><mat-icon>close</mat-icon></button>
+      </mat-form-field>
     </div>
   </form>
   <mat-divider></mat-divider>
@@ -130,5 +140,24 @@
 <mat-autocomplete #autoResearcher="matAutocomplete">
   <mat-option *ngFor="let option of filteredResearcherOptions | async" [value]="option">
     {{option}}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete #autoMutation="matAutocomplete">
+  <mat-option *ngFor="let option of filteredMutationOptions" [value]="option">
+    <div>{{option.fullName}}</div>
+    <div class="option-detail" *ngIf="option.comment">
+      {{option.comment}}
+    </div>
+  </mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete #autoTransgene="matAutocomplete">
+  <mat-option *ngFor="let option of filteredTransgeneOptions" [value]="option">
+    <div>{{option.fullName}}</div>
+    <div class="option-detail" >
+      <span *ngIf="option.source">source: {{option.source}} </span>
+      <span *ngIf="option.plasmid">plasmid: {{option.plasmid}}</span>
+    </div>
   </mat-option>
 </mat-autocomplete>

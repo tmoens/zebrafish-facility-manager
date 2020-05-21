@@ -141,7 +141,10 @@ export class StockRepository extends Repository<Stock> {
           {t: text});
       } ));
     }
-    if (filter.mutation) {
+    if (filter.mutationId) {
+      q = q.leftJoin('stock.mutations', 'mutation')
+        .andWhere('mutation.id = :mid', {mid: filter.mutationId});
+    } else if (filter.mutation) {
       const text = '%' + filter.mutation + '%';
       q = q.leftJoin('stock.mutations', 'mutation')
         .andWhere(new Brackets(qb => {
@@ -150,7 +153,10 @@ export class StockRepository extends Repository<Stock> {
             { mt: text });
         }));
     }
-    if (filter.transgene) {
+    if (filter.transgeneId) {
+      q = q.leftJoin('stock.transgenes', 'transgene')
+        .andWhere('transgene.id = :tid', {tid: filter.transgeneId});
+    } else if (filter.transgene) {
       const text = '%' + filter.transgene + '%';
       q = q.leftJoin('stock.transgenes', 'transgene')
         .andWhere(new Brackets(qb => {
@@ -168,11 +174,12 @@ export class StockRepository extends Repository<Stock> {
         .andWhere('tank.name LIKE :tn',
           {tn: text});
     }
+
     if (filter.liveStocksOnly) {
       if (!filter.tankName) {
         q = q.leftJoin('stock.swimmers', 'swimmers');
       }
-       q = q.andWhere('swimmers.tank IS NOT NULL')
+      q = q.andWhere('swimmers.tank IS NOT NULL')
         .groupBy('stock.id');
     }
 
@@ -244,7 +251,10 @@ export class StockRepository extends Repository<Stock> {
           {t: text});
       } ));
     }
-    if (filter.mutation) {
+    if (filter.mutationId) {
+      q = q.leftJoin('stock.mutations', 'mutation')
+        .andWhere('mutation.id = :mid', {mid: filter.mutationId});
+    } else if (filter.mutation) {
       const text = '%' + filter.mutation + '%';
       q = q.leftJoin('stock.mutations', 'mutation')
         .andWhere(new Brackets(qb => {
@@ -253,7 +263,10 @@ export class StockRepository extends Repository<Stock> {
             { mt: text });
         }));
     }
-    if (filter.transgene) {
+    if (filter.transgeneId) {
+      q = q.leftJoin('stock.transgenes', 'transgene')
+        .andWhere('transgene.id = :tid', {tid: filter.transgeneId});
+    } else if (filter.transgene) {
       const text = '%' + filter.transgene + '%';
       q = q.leftJoin('stock.transgenes', 'transgene')
         .andWhere(new Brackets(qb => {
@@ -262,7 +275,6 @@ export class StockRepository extends Repository<Stock> {
             {tt: text});
         }));
     }
-
     if (filter.age) {
       const dob = moment().subtract(Number(filter.age), 'days');
       if (filter.ageModifier === 'or_older') {

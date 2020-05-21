@@ -2,4 +2,23 @@
   width: 90%;
 }
 
+.mat-option {
+  font-size: 12px;
+  padding: 8px;
+  line-height: 16px;
+  min-height: 32px;
+  white-space: normal;
+  text-overflow: unset;
+  overflow: auto;
+  max-height: 100px;
+}
+
+.option-detail {
+  font-size: 11px;
+  padding-left: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 

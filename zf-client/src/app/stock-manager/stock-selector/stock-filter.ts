@@ -6,7 +6,9 @@ export class StockFilter {
   researcher: string = null;
   tankName: string = null;
   mutation: string = null;
+  mutationId: number = null;
   transgene: string = null;
+  transgeneId: number = null;
   age: number = null;
   ageModifier: string = null;
 
