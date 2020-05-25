@@ -8,6 +8,7 @@ import { plainToClassFromExist } from 'class-transformer';
 import { MutationFilter } from './mutation.filter';
 import {GenericService} from '../Generics/generic-service';
 import {Logger} from "winston";
+import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
 
 @Injectable()
 export class MutationService extends GenericService {
@@ -40,6 +41,7 @@ export class MutationService extends GenericService {
   }
   // creating NON "owned" mutations
   async validateAndCreate(dto: any): Promise<Mutation> {
+    convertEmptyStringToNull(dto);
     this.ignoreAttribute(dto, 'id');
     this.ignoreAttribute(dto, 'serialNumber');
     this.mustHaveAttribute(dto, 'name');
@@ -53,6 +55,7 @@ export class MutationService extends GenericService {
 
   // for creating the next "owned" mutation, we auto-create the name
   async validateAndCreateOwned(dto: any): Promise<Mutation> {
+    convertEmptyStringToNull(dto);
     dto.serialNumber = await this.getNextSerialNumber();
     // auto name "owned" mutations
     dto.name =
@@ -64,6 +67,7 @@ export class MutationService extends GenericService {
 
   // for updating, make sure the tg is there
   async validateAndUpdate(dto: any): Promise<Mutation> {
+    convertEmptyStringToNull(dto);
     this.mustHaveAttribute(dto, 'id');
     // get the mutation as it stands prior to update.
     let candidate: Mutation = await this.mustExist(dto.id);

@@ -6,6 +6,7 @@ import {GenericService} from '../Generics/generic-service';
 import {Stock} from './stock.entity';
 import {plainToClassFromExist} from 'class-transformer';
 import {Logger} from "winston";
+import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
 
 @Injectable()
 export class StockService extends GenericService {
@@ -21,6 +22,7 @@ export class StockService extends GenericService {
   // For creation, create a fresh stock, merge in the DTO and save.
   // TODO watch for fertilization date irregularities (e.g. younger parent)
   async validateAndCreate(dto: any, isSubStock: boolean = false): Promise<Stock> {
+    convertEmptyStringToNull(dto);
     // New stocks should not have transgenes, mutations or swimmers,
     // so get rid of them if they are present in the incoming dto
     this.ignoreAttribute(dto, 'id');
@@ -140,12 +142,12 @@ export class StockService extends GenericService {
   // *are* updated.
   // TODO dont let the parents change if they should not.
   async validateAndUpdate(dto: any): Promise<any> {
+    convertEmptyStringToNull(dto);
     // the client is not permitted to change the stock name, number or subNumber
     // so if a client sends any of those, just ignore them.
     this.ignoreAttribute(dto, 'name');
     this.ignoreAttribute(dto, 'number');
     this.ignoreAttribute(dto, 'subNumber');
-
     this.mustHaveAttribute(dto, 'id');
     let candidate = await this.repo.getStockWithRelations(dto.id);
 

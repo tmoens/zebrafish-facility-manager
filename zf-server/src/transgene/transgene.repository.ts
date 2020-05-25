@@ -20,6 +20,7 @@ export class TransgeneRepository extends Repository<Transgene> {
       q = q.where(
         'm.allele Like :t OR ' +
         'm.descriptor LIKE :t OR ' +
+        'm.nickname LIKE :t OR ' +
         'm.source LIKE :t OR ' +
         'm.comment LIKE :t OR ' +
         'm.plasmid LIKE :t',

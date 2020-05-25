@@ -29,6 +29,7 @@ export class Transgene {
     type: 'varchar',
     nullable: true,
     length: 255,
+    unique: true,
     comment: 'an abbreviated name for use in space constrained areas.',
   })
   nickname: string;

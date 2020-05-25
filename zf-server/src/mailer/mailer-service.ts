@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import {MailerService, MailerOptions} from "@nestjs-modules/mailer";
 import {User} from "../user/user.entity";
+import {ConfigService} from "../config/config.service";
 
 @Injectable()
 export class ZFMailerService {
-  constructor(private readonly  mailerService: MailerService) {
+  constructor(
+    private readonly  mailerService: MailerService,
+    private readonly configService: ConfigService,
+    ) {
   }
 
   public example(): void {
@@ -26,7 +30,7 @@ export class ZFMailerService {
       .mailerService
       .sendMail({
         to: user.email,
-        from: 'zebrafishfacilitymanager@gmail.com',
+        from: this.configService.gmailSender,
         subject: 'Zebrafish Facility Manager Password Reset', // Subject line
         html: `<p>Greetings ${user.username}: <\p>
           <p>As requested, your password has been changed.  Your new password is 
@@ -36,6 +40,27 @@ export class ZFMailerService {
           
           Zebrafish Facility Manager
           and a website link to go here.`
+      })
+      .then(() => {})
+      .catch(() => {});
+  }
+
+  public newUser(user: User, newPassword: string): void {
+    this
+      .mailerService
+      .sendMail({
+        to: user.email,
+        from: this.configService.gmailSender,
+        subject: 'Welcome to Zebrafish Facility Manager', // Subject line
+        html: `<p>Greetings ${user.username}: <\p>
+          <p>Welcome to the Zebrafish facility manager for ${this.configService.facilityInfo.name}.
+          <p>Login here: ${this.configService.facilityInfo.url}</p>
+          <p>Your new password is 
+          <b>${newPassword}</b>. You will be required to change it when you log in.
+          
+          Regards,
+          
+          Zebrafish Facility Manager`
       })
       .then(() => {})
       .catch(() => {});

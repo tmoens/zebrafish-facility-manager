@@ -19,6 +19,7 @@ export class Mutation {
     type: 'varchar',
     length: 255,
     nullable: true,
+    unique: true,
     comment: 'an abbreviated name for use in space constrained areas.',
   })
   nickname: string;

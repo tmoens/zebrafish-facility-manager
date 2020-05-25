@@ -45,6 +45,15 @@ export class Stock {
   description: string;
 
   @Column({
+    type: 'varchar',
+    nullable: true,
+    length: 255,
+    unique: true,
+    comment: 'an abbreviated name for use in space constrained areas.',
+  })
+  nickname: string;
+
+  @Column({
     type: 'date',
     nullable: true,
     comment: 'The date on which the stock was fertilized.',

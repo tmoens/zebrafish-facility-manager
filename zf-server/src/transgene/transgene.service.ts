@@ -8,6 +8,7 @@ import { plainToClassFromExist } from 'class-transformer';
 import { TransgeneFilter } from './transgene.filter';
 import {GenericService} from '../Generics/generic-service';
 import {Logger} from "winston";
+import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
 
 @Injectable()
 export class TransgeneService extends GenericService{
@@ -41,20 +42,21 @@ export class TransgeneService extends GenericService{
 
   // creating NON "owned" transgenes
   async validateAndCreate(dto: any): Promise<Transgene> {
+    convertEmptyStringToNull(dto);
     this.ignoreAttribute(dto, 'id');
     this.ignoreAttribute(dto, 'serialNumber');
     this.mustHaveAttribute(dto, 'allele');
     this.mustHaveAttribute(dto, 'descriptor');
     // should not be named to look like an owned transgene.
     this.checkAlleleValidity(dto.allele);
-    let candidate: Transgene = new Transgene();
-    candidate = plainToClassFromExist(candidate, dto);
+    const candidate = plainToClassFromExist(new Transgene(), dto);
     await this.mustNotExist(candidate.allele, candidate.descriptor);
     return await this.repo.save(candidate);
   }
 
   // for creating the next "owned" transgene, we auto-create the name
   async validateAndCreateOwned(dto: any): Promise<Transgene> {
+    convertEmptyStringToNull(dto);
     this.mustHaveAttribute(dto, 'descriptor');
     dto.serialNumber = await this.getNextSerialNumber();
     // auto name the allele for "owned" transgenes
@@ -67,6 +69,7 @@ export class TransgeneService extends GenericService{
 
   // for updating, make sure the tg is there
   async validateAndUpdate(dto: any): Promise<Transgene> {
+    convertEmptyStringToNull(dto);
     this.mustHaveAttribute(dto, 'id');
     // get the transgene as it stands prior to update.
     let candidate: Transgene = await this.mustExist(dto.id);

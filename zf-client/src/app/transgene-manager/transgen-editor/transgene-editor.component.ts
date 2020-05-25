@@ -26,7 +26,7 @@ export class TransgeneEditorComponent implements OnInit {
     descriptor: ['', [Validators.required]],
     comment: [{value: ''}],
     name: [null],
-    nickname: [{value: ''}],
+    nickname: ['', [this.nicknameValidator.bind(this)]],
     plasmid: [{value: ''}],
     serialNumber: [null],
     source: [{value: ''}],
@@ -157,6 +157,27 @@ export class TransgeneEditorComponent implements OnInit {
     }
   }
 
+  nicknameValidator(control: AbstractControl): ValidationErrors | null {
+    if (!this.item) {
+      return null;
+    }
+    if (this.service.nicknameIsInUse(control.value, this.item.id)) {
+      return {'unique': {value: control.value}};
+    } else {
+      return null;
+    }
+  }
+
+  get nicknameControl() {
+    return this.mfForm.get('nickname');
+  }
+
+  getNicknameError() {
+    if (this.nicknameControl.hasError('unique')) {
+      return 'The nickname ' + this.nicknameControl.value + ' is already in use.';
+    }
+  }
+
   getFC(name: string): AbstractControl {
     return this.mfForm.get(name);
   }
@@ -167,7 +188,6 @@ export class TransgeneEditorComponent implements OnInit {
   }
 
   /* To support deactivation check  */
-  /* Contrary to tsLint's perspective, this function *is* invoked by the deactivation guard */
   canDeactivate(): boolean | Observable<boolean> |Promise <boolean> {
     if (this.saved) {
       return true;

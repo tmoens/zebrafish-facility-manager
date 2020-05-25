@@ -71,6 +71,15 @@ export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDt
     return this._fieldOptions.options.nameValidation.includes(name);
   }
 
+  nicknameIsInUse(nickname: string, exceptingId: number): boolean {
+    for (const t of this.all) {
+      if (t.id !== exceptingId && t.nickname === nickname) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   toExcel() {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(this.all.map((m: TransgeneDto) => {

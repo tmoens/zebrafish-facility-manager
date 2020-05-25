@@ -41,12 +41,12 @@ export class MutationRepository extends Repository<Mutation> {
       const freeText = '%' + filter.freeText + '%';
       q = q.andWhere(new Brackets( qb => {
         qb.where('m.comment LIKE :t OR m.morphantPhenotype LIKE :t OR m.phenotype LIKE :t ' +
-          'OR m.gene LIKE :t OR m.name LIKE :t OR m.alternateGeneName LIKE :t',
+          'OR m.gene LIKE :t OR m.name LIKE :t OR m.alternateGeneName LIKE :t ' +
+          'OR m.nickname LIKE :t',
           {t: freeText});
       } ));
     }
-    const items: Mutation[] = await q.orderBy('m.name').getMany();
-    return items;
+    return await q.orderBy('m.name').getMany();
   }
 
   // an alternative filtering mechanism that searches multiple fields using just a string filter
@@ -58,6 +58,7 @@ export class MutationRepository extends Repository<Mutation> {
         'OR m.alternateGeneName LIKE :t ' +
         'OR m.phenotype LIKE :t ' +
         'OR m.morphantPhenotype LIKE :t ' +
+        'OR m.nickname LIKE :t ' +
         'OR m.researcher LIKE :t ' +
         'OR m.comment LIKE :t', {t: freeText})
       .orderBy('m.name')
@@ -84,15 +85,6 @@ export class MutationRepository extends Repository<Mutation> {
 
   async findById(id: number): Promise<Mutation> {
     return await this.findOne(id);
-  }
-
-  async findOrFail(id: number): Promise<Mutation> {
-    const o: Mutation = await this.findOne(id);
-    if (o) {
-      return o;
-    } else {
-      throw new BadRequestException('Bad Request', 'Mutation does not exist. id: ' + id);
-    }
   }
 
   // values that can be used to auto-complete various fields in the GUI

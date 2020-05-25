@@ -10,10 +10,11 @@ export interface EnvConfig {
   [prop: string]: string;
 }
 
-class FacilityDTO {
+class FacilityDto {
   name: string;
   short_name: string;
   prefix: string;
+  url: string;
 }
 
 export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactory {
@@ -47,9 +48,10 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
     const envVarsSchema: Joi.ObjectSchema = Joi.object({
       NODE_ENV: Joi.string().default('production'),
 
-      FACILITY_ORG_NAME: Joi.string().required(),
-      FACILITY_ORG_SHORT_NAME: Joi.string().required(),
-      FACILITY_ORG_PREFIX: Joi.string().required(),
+      FACILITY_NAME: Joi.string().required(),
+      FACILITY_SHORT_NAME: Joi.string().required(),
+      FACILITY_PREFIX: Joi.string().required(),
+      FACILITY_URL: Joi.string().required(),
 
       PORT: Joi.number().required(),
 
@@ -93,11 +95,12 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
     return Boolean(this.envConfig.TYPEORM_SYNC_DATABASE);
   }
 
-  get facilityInfo(): FacilityDTO {
+  get facilityInfo(): FacilityDto {
     return {
-      name: this.envConfig.FACILITY_ORG_NAME,
-      short_name: this.envConfig.FACILITY_ORG_SHORT_NAME,
-      prefix: this.envConfig.FACILITY_ORG_PREFIX,
+      name: this.envConfig.FACILITY_NAME,
+      short_name: this.envConfig.FACILITY_SHORT_NAME,
+      prefix: this.envConfig.FACILITY_PREFIX,
+      url: this.envConfig.FACILITY_URL,
     };
   }
 
@@ -118,6 +121,10 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
 
   get jwtDuration(): string {
     return this.envConfig.JWT_DURATION;
+  }
+
+  get gmailSender(): string {
+    return this.envConfig.GMAIL_SENDER;
   }
 
   // This is used to build ORM configuration options

@@ -24,6 +24,7 @@ export class MutationEditorComponent implements OnInit {
   editMode: EditMode;
   id: number;
   saved = false;
+  curious = 0;
 
   // Build the edit form.
   // Even though the form does not support editing of every field,
@@ -38,7 +39,7 @@ export class MutationEditorComponent implements OnInit {
     mutationType: [''],
     morphantPhenotype: [''],
     name: ['', [Validators.required, this.nameValidator.bind(this)]],
-    nickname: [''],
+    nickname: ['', [this.nicknameValidator.bind(this)]],
     phenotype: [''],
     researcher: ['', Validators.required],
     screenType: [''],
@@ -181,13 +182,36 @@ export class MutationEditorComponent implements OnInit {
     }
   }
 
+  nicknameValidator(control: AbstractControl): ValidationErrors | null {
+    if (!this.item) {
+      return null;
+    }
+    if (this.service.nicknameIsInUse(control.value, this.item.id)) {
+      return {'unique': {value: control.value}};
+    } else {
+      return null;
+    }
+  }
+
   get nameControl() {
+    console.log('name: ' + this.curious++);
     return this.mfForm.get('name');
+  }
+
+  get nicknameControl() {
+    console.log('nickname: ' + this.curious++);
+    return this.mfForm.get('nickname');
   }
 
   getNameError() {
     if (this.nameControl.hasError('unique')) {
       return 'The name ' + this.nameControl.value + ' is already in use.';
+    }
+  }
+
+  getNicknameError() {
+    if (this.nicknameControl.hasError('unique')) {
+      return 'The nickname ' + this.nicknameControl.value + ' is already in use.';
     }
   }
 

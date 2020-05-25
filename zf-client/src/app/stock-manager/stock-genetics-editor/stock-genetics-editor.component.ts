@@ -78,7 +78,7 @@ export class StockGeneticsEditorComponent implements OnInit {
   }
 
   ngOnInit() {
-    // watch for changes to the paramMap (i.e. changes to the route)
+    // watch for changes to the paramMap (i.e. changes to the route parameters)
     this.route.paramMap.subscribe((pm: ParamMap) => {
       this.service.enterEditMode(); // tucks away the stock selector.
       this.id = Number(pm.get('id'));
@@ -164,6 +164,7 @@ export class StockGeneticsEditorComponent implements OnInit {
         this.mutationService.all.map((m: MutationDto) => {
           if ((m.gene && m.gene.toLowerCase().includes(f)) ||
             (m.name && m.name.toLowerCase().includes(f)) ||
+            (m.nickname && m.nickname.toLowerCase().includes(f)) ||
             (m.researcher && m.researcher.toLowerCase().includes(f))) {
 
             // fill the lookup list and select any markers that are present in the stock.

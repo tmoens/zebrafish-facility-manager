@@ -9,6 +9,7 @@ import {JwtService} from "@nestjs/jwt";
 import {UserRepository} from "./user.repository";
 import {ZFMailerService} from "../mailer/mailer-service";
 import {ConfigService} from "../config/config.service";
+import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
 
 @Injectable()
 export class UserService {
@@ -97,10 +98,12 @@ export class UserService {
 
   async create(dto: UserDTO): Promise<User> {
     // TODO remember this is where you were thinking of using @hapi/joi
+    convertEmptyStringToNull(dto);
     delete dto.id; // a new user can not have an id.
     const u: User = plainToClass(User, dto);
-    this.logger.debug('Setting random password for ' + u.username + ': ' + u.setRandomPassword());
-    console.log('Setting random password for ' + u.username + ': ' + u.setRandomPassword());
+    const newPassword = u.setRandomPassword();
+    console.log('Setting random password for ' + u.username + ': ' + newPassword);
+    this.mailerService.newUser(u, newPassword);
     return this.repo.save(u);
   }
 
@@ -124,6 +127,7 @@ export class UserService {
   }
 
   async update(dto: UserDTO): Promise<User> {
+    convertEmptyStringToNull(dto)
     if (!dto.id) {
       const message = "Received a user update without a user id!";
       this.logger.error(message);

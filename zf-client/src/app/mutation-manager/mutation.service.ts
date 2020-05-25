@@ -62,11 +62,16 @@ export class MutationService extends ZFGenericService<MutationDto, MutationDto, 
     return this._fieldOptions.options.name.includes(name);
   }
 
-  nicknameIsInUse(nickname: string): boolean {
+  nicknameIsInUse(nickname: string, exceptingId: number): boolean {
+    for (const t of this.all) {
+      if (t.id !== exceptingId && t.nickname === nickname) {
+        return true;
+      }
+    }
     return false;
   }
 
-  // This is used to populate a autocomplete field of mutations
+  // This is used to populate an autocomplete field of mutations
   getListFilteredByString(searchString: string): MutationDto[] {
     return this.all.filter((m: MutationDto) => {
       return(
