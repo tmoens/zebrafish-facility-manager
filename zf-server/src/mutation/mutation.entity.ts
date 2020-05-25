@@ -9,15 +9,11 @@ export class Mutation {
 
   @Index({ unique: true })
   @Column({
-    type: 'varchar',
-    length: 20,
     comment: 'The unique human readable name for this mutation.',
   })
   name: string;
 
   @Column({
-    type: 'varchar',
-    length: 255,
     nullable: true,
     unique: true,
     comment: 'an abbreviated name for use in space constrained areas.',
@@ -25,61 +21,47 @@ export class Mutation {
   nickname: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 20,
     comment: 'Researcher or owner of this mutation.',
   })
   researcher: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 25,
     name: 'screen_type',
     comment: 'The method used to create this mutation.',
   })
   screenType: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 15,
     name: 'mutation_type',
     comment: 'What kind of mutation - stop/splice/missense, etc.',
   })
   mutationType: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 20,
     comment: 'The gene affected by this mutation.',
   })
   gene: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 100,
     name: 'alternate_gene_name',
     comment: 'An alternate name for the gene affected by this mutation.',
   })
   alternateGeneName: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 10,
     name: 'actg_change',
     comment: 'The nucleotide change caused y the mutation.',
   })
   actgChange: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 10,
     name: 'aa_change',
     comment: 'The change in amino acid sequence which causes this mutation.',
   })
@@ -88,7 +70,7 @@ export class Mutation {
   @Column({
     type: 'varchar',
     nullable: true,
-    length: 3000,
+    length: 5000,
     comment: 'Notes pertaining to this mutation.',
   })
   comment: string;
@@ -133,9 +115,7 @@ export class Mutation {
   morphantPhenotype: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 15,
     name: 'sperm_freeze_plan',
   })
   spermFreezePlan: string;

@@ -17,8 +17,6 @@ export class Stock {
   // so it should not be in the database.  But for historical reasons it is.
   @Index({ unique: true })
   @Column({
-    type: 'varchar',
-    length: 20,
     comment: 'The unique human readable name for this stock.',
   })
   name: string;
@@ -37,17 +35,13 @@ export class Stock {
   subNumber: number;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 255,
     comment: 'A description of the stock limited to fit on a tank label.',
   })
   description: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 255,
     unique: true,
     comment: 'an abbreviated name for use in space constrained areas.',
   })
@@ -62,17 +56,13 @@ export class Stock {
   fertilizationDate: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 25,
     comment: 'Primary investigator for this stock.',
   })
   pi: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 20,
     comment: 'Who the stock is for.',
   })
   researcher: string;
@@ -90,9 +80,7 @@ export class Stock {
   matStock: Stock;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 20,
     name: 'matIdExternal',
     comment: 'Reference to a maternal stock in some other system. Just a bit of text.',
   })
@@ -108,9 +96,7 @@ export class Stock {
   enuMatId: number;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 40,
     comment: 'A description of the maternal stock, if that stock is external.',
     name: 'matDescription',
   })
@@ -129,9 +115,7 @@ export class Stock {
   patIdInternal: number;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 20,
     name: 'patIdExternal',
     comment: 'Reference to a paternal stock in some other system. Just a bit of text.',
   })
@@ -147,9 +131,7 @@ export class Stock {
   enuPatId: number;
 
   @Column({
-    type: 'varchar',
     nullable: true,
-    length: 40,
     name: 'patDescription',
     comment: 'A description of the maternal stock, if that stock is external.',
   })
@@ -230,6 +212,7 @@ export class Stock {
     return this.name + ' ' + this.description;
   }
 
+  // TODO make it go away or make it better
   // This just makes a string that can be used as a tooltip when
   // hovering over a stock in the GUI.
   // I'm really unhappy about this
