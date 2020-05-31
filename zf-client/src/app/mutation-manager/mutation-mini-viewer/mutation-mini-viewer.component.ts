@@ -4,20 +4,14 @@ import {MutationDto} from "../mutation-dto";
 @Component({
   selector: 'app-mutation-mini-viewer',
   template: `
-    <div mat-line *ngIf="mutation.alternateGeneName" class="zf-mini-row">
+    <div mat-line *ngIf="mutation.alternateGeneName" class="zf-mini-row truncate">
       alt gene name: {{mutation.alternateGeneName}}
     </div>
-    <div mat-line *ngIf="mutation.researcher" class="zf-mini-row">
-      plasmid: {{mutation.researcher}}
+    <div mat-line *ngIf="mutation.phenotype" class="zf-mini-row truncate">
+      phenotype: {{mutation.phenotype}}
     </div>
-    <div mat-line *ngIf="mutation.phenotype" class="zf-mini-row">
-      phenotype: {{mutation.phenotype.substr(0, 50)}}
-    </div>
-    <div mat-line *ngIf="mutation.morphantPhenotype" class="zf-mini-row">
-      morphant phenotype: {{mutation.morphantPhenotype.substr(0, 50)}}
-    </div>
-    <div mat-line *ngIf="mutation.comment" class="zf-mini-row">
-      comment: {{mutation.comment.substr(0, 50)}}
+    <div mat-line *ngIf="mutation.comment" class="zf-mini-row truncate">
+      comment: {{mutation.comment}}
     </div>
   `,
 })

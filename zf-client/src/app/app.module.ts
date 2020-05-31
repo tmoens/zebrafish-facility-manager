@@ -27,7 +27,6 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatTableModule} from "@angular/material/table";
 import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatTooltipModule} from "@angular/material/tooltip";
 import {TankLabelComponent} from "./printing/tank-label/tank-label.component";
 import {TransgeneManagerModule} from "./transgene-manager/transgene-manager.module";
 import {StockManagerModule} from "./stock-manager/stock-manager.module";
@@ -112,7 +111,6 @@ export function authServiceProviderFactory(provider: AppStateService) {
     MatSnackBarModule,
     MatTableModule,
     MatToolbarModule,
-    MatTooltipModule,
     QRCodeModule,
     ReactiveFormsModule,
     AppRoutingModule,

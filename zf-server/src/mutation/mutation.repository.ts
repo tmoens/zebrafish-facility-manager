@@ -46,7 +46,9 @@ export class MutationRepository extends Repository<Mutation> {
           {t: freeText});
       } ));
     }
-    return await q.orderBy('m.name').getMany();
+    return await q.orderBy('m.gene')
+      .addOrderBy('m.name')
+      .getMany();
   }
 
   // an alternative filtering mechanism that searches multiple fields using just a string filter
@@ -61,7 +63,8 @@ export class MutationRepository extends Repository<Mutation> {
         'OR m.nickname LIKE :t ' +
         'OR m.researcher LIKE :t ' +
         'OR m.comment LIKE :t', {t: freeText})
-      .orderBy('m.name')
+      .orderBy('m.gene')
+      .addOrderBy('m.name')
       .getMany();
   }
 
