@@ -143,7 +143,7 @@ Go to this site:
 https://www.ssllabs.com/ssltest/
 
 Enter your subdomain (in this case eue.examplezfm.com) in the Hostname,
-hit the "Submit" button and you should get a reasonably good report!
+hit the "Submit" button. You should get a reasonably good report!
 It takes a couple of minutes to run.
 
 
@@ -185,7 +185,7 @@ in this case 3004.
 
 #### Am I ready to move on?
 
-You can (temporarilly) run the server now from the command line.  
+You can (temporarily) run the server now from the command line.  
 The server rejects bad or missing configuration with useful error messages.
 
 ```bash
@@ -267,7 +267,7 @@ sudo systemclt enable zfm-eue
 sudo systemctl start zfm-eue
 
 # check that it is running properly
-sudo journalctl zfm-eue
+sudo journalctl -u zfm-eue
 
 #### Am I ready to move on?
 

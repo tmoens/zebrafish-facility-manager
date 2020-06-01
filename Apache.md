@@ -3,12 +3,12 @@
 This guide assumes you have apache set up and running. It covers creation of a virtual
 server for each facility you want to manage.
 
-In this case we are going to create a virtual host for the the Example University of Examples.
+In this case we are going to create a virtual host for the Example University of Examples.
 
 Prerequisites: 
 1. you have purchased the domain _example_zfm.com_
 1. you have set up a sub-domain for the Example University of Examples called _eue.example_zfm.com_
-1. you have already set up the zf-server for _eue_ and it is running on port 3004.
+1. you have chosen to run the zf-server for _eue_ on port 3004.
 1. you have built the zf-client and installed it in the appropriate directory.
 Likely /var/www/zf-client.
 

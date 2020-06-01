@@ -52,6 +52,7 @@ import { TestnavComponent } from './testnav/testnav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import {AuthService} from "./auth/auth.service";
 import {QRCodeModule} from "angularx-qrcode";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 export function appStateProviderFactory(provider: AppStateService) {
   return () => provider.initialize();
@@ -116,6 +117,7 @@ export function authServiceProviderFactory(provider: AppStateService) {
     AppRoutingModule,
     StorageServiceModule,
     LayoutModule,
+    MatTooltipModule,
   ],
   entryComponents: [
     StockGeneticsEditorComponent,
