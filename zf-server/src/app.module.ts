@@ -1,6 +1,6 @@
 import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {ConfigModule} from './config/config.module';
 import {ConfigService} from './config/config.service';
@@ -24,7 +24,7 @@ import {LocalStrategy} from "./guards/local.strategy";
 import {JwtStrategy} from "./guards/jwt.strategy";
 import {PassportModule} from "@nestjs/passport";
 import {JwtStrategy2} from "./guards/jwt.strategy2";
-import {HandlebarsAdapter, MailerModule} from "@nestjs-modules/mailer";
+import {MailerModule} from "@nestjs-modules/mailer";
 import {ZFMailerService} from "./mailer/mailer-service";
 
 

@@ -2,10 +2,11 @@ import {Brackets, EntityRepository, Repository, SelectQueryBuilder} from 'typeor
 import {BadRequestException, Inject} from '@nestjs/common';
 import {Stock} from './stock.entity';
 import {StockReportDTO} from './dto/stock-report.dto';
-import moment = require('moment');
 import {StockFilter} from './stock-filter';
 import {StockMiniDto} from '../common/Stock/stockMiniDto';
 import {Logger} from "winston";
+import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
+import moment = require('moment');
 
 
 @EntityRepository(Stock)
@@ -313,7 +314,7 @@ export class StockRepository extends Repository<Stock> {
   }
 
   // values that can be used to auto-complete various fields in the GUI
-  async getAutoCompleteOptions(): Promise<any> {
+  async getAutoCompleteOptions(): Promise<AutoCompleteOptions> {
     const options: any = {};
     options.researcher = await this.getAutocompleteOption('researcher');
     options.pi = await this.getAutocompleteOption('pi');

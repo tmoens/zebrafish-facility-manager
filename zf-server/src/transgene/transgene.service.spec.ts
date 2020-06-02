@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing';
+import {Test} from '@nestjs/testing';
 import {getCustomRepositoryToken, TypeOrmModule} from '@nestjs/typeorm';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
@@ -10,9 +10,10 @@ import {Mutation} from '../mutation/mutation.entity';
 import {TransgeneFilter} from './transgene.filter';
 import {TransgeneRepository} from './transgene.repository';
 import * as winston from "winston";
-import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
 import {Logger} from "winston";
+import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
 import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
+import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
 
 describe('TransgeneService testing', () => {
   let logger: Logger;
@@ -61,6 +62,7 @@ describe('TransgeneService testing', () => {
     transgeneRepo = module.get<TransgeneRepository>(TransgeneRepository);
     mutationRepo = module.get<MutationRepository>(MutationRepository);
     service = new TransgeneService(logger, configService, transgeneRepo, mutationRepo);
+    console.log("here");
   });
 
   describe('4974046 creation of "owned" transgenes', () => {

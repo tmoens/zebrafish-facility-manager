@@ -5,6 +5,6 @@
 // For every object there are is a different set of such attributes, but for every object
 // the general shape of the array is always the same: a list of attributes, each with an
 // array of known values.
-interface AutoCompleteOptions {
+export interface AutoCompleteOptions {
   [index: string]: string[];
 }

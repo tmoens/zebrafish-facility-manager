@@ -1,8 +1,8 @@
-import { Test } from '@nestjs/testing';
-import { getCustomRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '../config/config.module';
-import { ConfigService } from '../config/config.service';
-import { Connection } from 'typeorm';
+import {Test} from '@nestjs/testing';
+import {getCustomRepositoryToken, TypeOrmModule} from '@nestjs/typeorm';
+import {ConfigModule} from '../config/config.module';
+import {ConfigService} from '../config/config.service';
+import {Connection} from 'typeorm';
 import {TransgeneRepository} from '../transgene/transgene.repository';
 import {Transgene} from '../transgene/transgene.entity';
 import {Stock} from './stock.entity';
@@ -14,9 +14,10 @@ import {classToPlain} from 'class-transformer';
 import {StockFilter} from './stock-filter';
 import * as moment from 'moment';
 import * as winston from "winston";
-import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
 import {Logger} from "winston";
+import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
 import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
+import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
 
 describe('Stock Service testing', () => {
   let logger: Logger;
@@ -507,14 +508,14 @@ describe('Stock Service testing', () => {
     });
 
     it('8258046 direct match 4th number', async () => {
-      // Note: The filtered list gives all stocks <= the specified number.
+      // Note: The filtered list gives all stocks that start with the specified number.
       //       On the other hand, the report gives stocks with names LIKE
       //       the specified name.
       // TMOTS is that names are a sucky way to filter.
       const filter: StockFilter = new StockFilter();
       filter.number = String(stocks[3].name);
       const list = await stockRepo.findFiltered(filter);
-      expect(list.length).toBe(4);
+      expect(list.length).toBe(1);
       const reportList = await stockRepo.getReport(filter);
       expect(reportList.length).toBe(1);
     });
@@ -587,7 +588,7 @@ describe('Stock Service testing', () => {
       // The options is the list of unique researchers in the database.
       // Test Strategy:
       // Check what the options are to start.
-      const initialOptions: {researcher: string[]} = await stockRepo.getAutoCompleteOptions();
+      const initialOptions: AutoCompleteOptions = await stockRepo.getAutoCompleteOptions();
 
       // Add a stock with an almost certainly new researcher and save it.
       const randomResearcher1: string = String(Math.random());
@@ -596,7 +597,7 @@ describe('Stock Service testing', () => {
         researcher: randomResearcher1,
       };
       const stock1: Stock = await stockService.validateAndCreate(s1);
-      let options: {researcher: string[]} = await stockRepo.getAutoCompleteOptions();
+      let options: AutoCompleteOptions = await stockRepo.getAutoCompleteOptions();
       // There should be one more option than we started and we know what it should be.
       expect(initialOptions.researcher.length === options.researcher.length + 1 &&
         options.researcher.includes(randomResearcher1));

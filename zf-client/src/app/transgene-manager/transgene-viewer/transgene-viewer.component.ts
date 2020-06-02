@@ -44,11 +44,11 @@ export class TransgeneViewerComponent implements OnInit {
     public service: TransgeneService,
     private fb: FormBuilder,
   ) {
+    this.service.enterBrowseMode();
   }
 
   ngOnInit() {
     this.service.selected$.subscribe((selected: TransgeneDto) => {
-      this.service.enterBrowseMode();
       if (selected) {
         this.mfForm.setValue(selected);
       }

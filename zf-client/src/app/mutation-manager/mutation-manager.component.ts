@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ZFTool} from "../helpers/zf-tool";
 import {AppStateService} from "../app-state.service";
@@ -10,16 +10,14 @@ import {AuthService} from "../auth/auth.service";
   templateUrl: './mutation-manager.component.html',
   styleUrls: ['./mutation-manager.component.scss']
 })
-export class MutationManagerComponent implements OnInit {
+export class MutationManagerComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     public appState: AppStateService,
     public authService: AuthService,
     public service: MutationService,
-  ) { }
-
-  ngOnInit() {
-    this.route.url.subscribe( () => this.appState.setActiveTool(ZFTool.MUTATION_MANAGER));
+  ) {
+    this.appState.setActiveTool(ZFTool.MUTATION_MANAGER);
   }
 }

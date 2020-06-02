@@ -3,6 +3,7 @@ import {Transgene} from './transgene.entity';
 import {TransgeneFilter} from './transgene.filter';
 import {Logger} from "winston";
 import {Inject} from "@nestjs/common";
+import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
 
 @EntityRepository(Transgene)
 export class TransgeneRepository extends Repository<Transgene> {

@@ -75,12 +75,12 @@ export class StockGeneticsEditorComponent implements OnInit {
     private router: Router,
     private deactivationDialogService: DialogService,
   ) {
+    this.service.enterEditMode(); // tucks away the stock selector.
   }
 
   ngOnInit() {
     // watch for changes to the paramMap (i.e. changes to the route parameters)
     this.route.paramMap.subscribe((pm: ParamMap) => {
-      this.service.enterEditMode(); // tucks away the stock selector.
       this.id = Number(pm.get('id'));
       this.type = pm.get('type');
       this.capitalizedType = this.type.charAt(0).toUpperCase() + this.type.slice(1);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AppStateService} from '../app-state.service';
 import {ZFTool} from "../helpers/zf-tool";
@@ -10,7 +10,7 @@ import {AuthService} from "../auth/auth.service";
   templateUrl: './transgene-manager.component.html',
   styleUrls: ['./transgene-manager.component.scss']
 })
-export class TransgeneManagerComponent implements OnInit {
+export class TransgeneManagerComponent {
 
   constructor(
     private router: Router,
@@ -18,9 +18,7 @@ export class TransgeneManagerComponent implements OnInit {
     public appState: AppStateService,
     public authService: AuthService,
     public service: TransgeneService,
-  ) { }
-
-  ngOnInit() {
-    this.route.url.subscribe( () => this.appState.setActiveTool(ZFTool.TRANSGENE_MANAGER));
+  ) {
+    this.appState.setActiveTool(ZFTool.TRANSGENE_MANAGER);
   }
 }

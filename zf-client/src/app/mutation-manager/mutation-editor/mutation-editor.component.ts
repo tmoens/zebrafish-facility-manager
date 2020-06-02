@@ -68,12 +68,13 @@ export class MutationEditorComponent implements OnInit {
     private fb: FormBuilder,
     private service: MutationService,
     private deactivationDialogService: DialogService,
-  ) {}
+  ) {
+    this.service.enterEditMode();
+  }
 
   ngOnInit() {
     // watch for changes to the paramMap (i.e. changes to the route)
     this.route.paramMap.subscribe((pm: ParamMap) => {
-      this.service.enterEditMode();
       switch (pm.get('mode')) {
         case EditMode.EDIT:
           this.editMode = EditMode.EDIT;

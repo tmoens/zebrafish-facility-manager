@@ -1,14 +1,16 @@
 import {BadRequestException, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import { ConfigService } from '../config/config.service';
-import { MutationRepository } from './mutation.repository';
-import { TransgeneRepository } from '../transgene/transgene.repository';
-import { Mutation } from './mutation.entity';
-import { plainToClassFromExist } from 'class-transformer';
-import { MutationFilter } from './mutation.filter';
+import {ConfigService} from '../config/config.service';
+import {MutationRepository} from './mutation.repository';
+import {TransgeneRepository} from '../transgene/transgene.repository';
+import {Mutation} from './mutation.entity';
+import {plainToClassFromExist} from 'class-transformer';
+import {MutationFilter} from './mutation.filter';
 import {GenericService} from '../Generics/generic-service';
 import {Logger} from "winston";
 import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
+import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
+
 
 @Injectable()
 export class MutationService extends GenericService {

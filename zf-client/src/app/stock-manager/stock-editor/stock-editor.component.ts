@@ -58,13 +58,13 @@ export class StockEditorComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private deactivationDialogService: DialogService,
-
-  ) {}
+  ) {
+    this.service.enterEditMode();
+  }
 
   ngOnInit() {
     // watch for changes to the paramMap (i.e. changes to the route)
     this.route.paramMap.subscribe((pm: ParamMap) => {
-      this.service.enterEditMode();
       switch (pm.get('mode')) {
         case EditMode.EDIT:
           this.stockId = +pm.get('id');

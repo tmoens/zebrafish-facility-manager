@@ -67,12 +67,12 @@
           </div>
           <div *ngIf="!momInternal" fxLayout="column">
             <mat-form-field>
-              <input matInput type="text" placeholder="External Mother Identifier" name="extMomId"
+              <input matInput name="extMomId" placeholder="External Identifier" type="text"
                      [(ngModel)]="stock.externalMatId" [disabled]="!stock.parentsEditable"
                      maxlength="20">
             </mat-form-field>
             <mat-form-field>
-              <input matInput type="text" placeholder="External Mother Description" name="extMomDesc"
+              <input matInput name="extMomDesc" placeholder="Description" type="text"
                      [(ngModel)]="stock.externalMatDescription" [disabled]="!stock.parentsEditable"
                      maxlength="40">
             </mat-form-field>
@@ -100,12 +100,12 @@
           </div>
           <div *ngIf="!dadInternal" fxLayout="column">
             <mat-form-field>
-              <input matInput type="text" placeholder="External Father Identifier" name="extPatId"
+              <input matInput name="extPatId" placeholder="External Identifier" type="text"
                      [(ngModel)]="stock.externalPatId" [disabled]="!stock.parentsEditable"
                      maxlength="20">
             </mat-form-field>
             <mat-form-field>
-              <input matInput type="text" placeholder="External Father Description" name="extMatId"
+              <input matInput name="extMatId" placeholder="Description" type="text"
                      [(ngModel)]="stock.externalPatDescription" [disabled]="!stock.parentsEditable"
                      maxlength="40">
             </mat-form-field>

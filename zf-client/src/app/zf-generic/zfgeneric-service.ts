@@ -267,9 +267,13 @@ export class ZFGenericService<
     }
   }
 
+  // Badly named.  These *really* mean -
+  // true: tuck away the selector
+  // false: show the selector.
   enterEditMode() {
     this.inEditMode = true;
   }
+
   enterBrowseMode() {
     this.inEditMode = false;
   }

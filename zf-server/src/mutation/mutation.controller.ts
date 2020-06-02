@@ -42,7 +42,7 @@ export class MutationController {
   }
 
   @Get('autoCompleteOptions')
-  async  getAutoCompleteOptions(): Promise<AutoCompleteOptions> {
+  async getAutoCompleteOptions(): Promise<any> {
     return await this.mutationService.getAutoCompleteOptions();
   }
 

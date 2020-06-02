@@ -1,12 +1,11 @@
-import { Brackets, EntityRepository, Repository } from 'typeorm';
-import { BadRequestException } from '@nestjs/common';
-import { Mutation } from './mutation.entity';
-import { MutationFilter } from './mutation.filter';
+import {Brackets, EntityRepository, Repository} from 'typeorm';
+import {Mutation} from './mutation.entity';
+import {MutationFilter} from './mutation.filter';
+import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
 
 @EntityRepository(Mutation)
 export class MutationRepository extends Repository<Mutation> {
-  constructor(
-  ) {
+  constructor() {
     super();
   }
 

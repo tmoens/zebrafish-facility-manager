@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TankWalkerDto} from "./tank-walker-dto";
 import {StockService} from "../stock.service";
 import {StockFullDto} from "../dto/stock-full-dto";
@@ -29,14 +29,14 @@ export class TankWalkerComponent implements OnInit {
     public loader: LoaderService,
     public appState: AppStateService,
     private location: Location,
-  ) { }
-
-  ngOnInit(): void {
+  ) {
     // we are not actually entering edit mode.  That function was badly named.
     // What we *are* doing is going into the stock walker and for that, we want
     // the stock selector to be tucked away, which is all that "enterEditMode" does.
     this.service.enterEditMode();
+  }
 
+  ngOnInit(): void {
     this.service.getStockWalkerList().subscribe(data => {
       this.tankList = data;
       if (this.tankList.length > 0) {

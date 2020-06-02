@@ -54,7 +54,9 @@ export class MutationViewerComponent implements OnInit {
     private route: ActivatedRoute,
     public service: MutationService,
     private fb: FormBuilder,
-  ) {}
+  ) {
+    this.service.enterBrowseMode();
+  }
 
   ngOnInit() {
     this.service.selected$.subscribe((selected: MutationDto) => {
@@ -65,7 +67,6 @@ export class MutationViewerComponent implements OnInit {
 
     // use the route's paramMap to figure out the id of the item we are supposed to view.
     this.route.paramMap.subscribe((pm: ParamMap) => {
-      this.service.enterBrowseMode();
       // if there is an id in the route, tell the service to select it.
       const id = +pm.get('id');
       if (id) {

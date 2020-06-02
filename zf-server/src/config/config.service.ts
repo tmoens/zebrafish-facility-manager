@@ -1,10 +1,10 @@
 import * as dotenv from 'dotenv';
 import * as Joi from '@hapi/joi';
 import * as fs from 'fs';
-import {TypeOrmOptionsFactory, TypeOrmModuleOptions} from '@nestjs/typeorm';
+import {TypeOrmModuleOptions, TypeOrmOptionsFactory} from '@nestjs/typeorm';
 import {LoggerOptions} from 'typeorm/logger/LoggerOptions';
-import {HandlebarsAdapter, MailerOptions, MailerOptionsFactory} from "@nestjs-modules/mailer";
-import {throwError} from "rxjs";
+import {MailerOptions, MailerOptionsFactory} from "@nestjs-modules/mailer";
+import {HandlebarsAdapter} from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 
 export interface EnvConfig {
   [prop: string]: string;

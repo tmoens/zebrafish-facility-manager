@@ -4,7 +4,6 @@ import {FormBuilder} from "@angular/forms";
 import {EditMode} from "../../../zf-generic/zf-edit-modes";
 import {UserAdminService} from "../user-admin.service";
 import {UserDTO} from "../../UserDTO";
-import {AppStateService} from "../../../app-state.service";
 import {AuthService} from "../../auth.service";
 
 @Component({
@@ -33,7 +32,9 @@ export class UserViewerComponent implements OnInit {
     public service: UserAdminService,
     private fb: FormBuilder,
     public authService: AuthService,
-  ) { }
+  ) {
+    this.service.enterBrowseMode();
+  }
 
   ngOnInit(): void {
     this.service.selected$.subscribe((u: UserDTO) => {
@@ -45,7 +46,6 @@ export class UserViewerComponent implements OnInit {
 
     // use the route's paramMap to figure out the id of the item we are supposed to view.
     this.route.paramMap.subscribe((pm: ParamMap) => {
-      this.service.enterBrowseMode();
       // if there is an id in the route, tell the service to select it.
       const id = pm.get('id');
       if (id) {
