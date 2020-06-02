@@ -137,7 +137,7 @@ export class MutationEditorComponent implements OnInit {
         break;
 
       // In CREATE_NEXT mode we pre-fill the mutation name and disallow user changes
-      // Note that the name we prefill with is chosen optimistically and the real name
+      // Note that the name we pre-fill with is chosen optimistically and the real name
       // may be different if, for example, someone else created a new owned mutation
       // while the user was busy editing this one.
       case EditMode.CREATE_NEXT:
@@ -194,12 +194,10 @@ export class MutationEditorComponent implements OnInit {
   }
 
   get nameControl() {
-    console.log('name: ' + this.curious++);
     return this.mfForm.get('name');
   }
 
   get nicknameControl() {
-    console.log('nickname: ' + this.curious++);
     return this.mfForm.get('nickname');
   }
 

@@ -45,12 +45,18 @@
           <input matInput placeholder="Description"
                  [value]="service.selected.matStock.description" disabled>
         </mat-form-field>
-        <mat-form-field *ngIf="!service.selected.matStock">
+        <div *ngIf="!service.selected.matStock">
+          <mat-form-field>
+            <input [value]="service.selected.externalMatId" disabled
+                   matInput placeholder="External Id">
+          </mat-form-field>
+          <mat-form-field>
           <textarea matInput placeholder="External Mother Description"
                     cdkTextareaAutosize="true"
                     [value]="service.selected.externalMatDescription" disabled>
           </textarea>
-        </mat-form-field>
+          </mat-form-field>
+        </div>
 
         <!-- Dad   -->
         <span class="zf-sub-title">Dad
@@ -61,12 +67,18 @@
           <input matInput placeholder="Description"
                  [value]="service.selected.patStock.description" disabled>
         </mat-form-field>
-        <mat-form-field  *ngIf="!service.selected.patStock">
-          <textarea matInput placeholder="External Father Description"
-                    cdkTextareaAutosize="true"
-                    [value]="service.selected.externalPatDescription" disabled>
-          </textarea>
-        </mat-form-field>
+        <div *ngIf="!service.selected.patStock">
+          <mat-form-field>
+            <input [value]="service.selected.externalPatId" disabled
+                   matInput placeholder="External Id">
+          </mat-form-field>
+          <mat-form-field>
+            <textarea [value]="service.selected.externalPatDescription" cdkTextareaAutosize="true"
+                      disabled
+                      matInput placeholder="External Father Description">
+            </textarea>
+          </mat-form-field>
+        </div>
 
         <!-- Offspring   -->
         <span class="zf-sub-title">Offspring</span>
