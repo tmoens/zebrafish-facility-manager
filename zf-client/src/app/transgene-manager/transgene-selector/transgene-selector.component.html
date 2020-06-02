@@ -14,6 +14,7 @@
   <!-- The Filter Part -->
   <span class="zf-sub-title">Transgene Filter</span>
   <form [formGroup]="mfForm">
+    <div fxLayout="column">
     <mat-form-field>
       <input matInput type="text" placeholder="Search all fields" formControlName="text">
       <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
@@ -21,6 +22,14 @@
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Sperm Freeze State" formControlName="spermFreeze">
+        <mat-option [value]=null>--Any--</mat-option>
+        <mat-option *ngFor="let i of service.spermFreezeOptions" [value]="i">{{i}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    </div>
   </form>
 
   <!-- The Filtered List part -->

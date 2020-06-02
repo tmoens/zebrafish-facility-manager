@@ -15,10 +15,13 @@ export class TransgeneRepository extends Repository<Transgene> {
 
   // TODO upgrade MariaDB to 10.5+, then convert to full-text searches. Just to learn.
   async findFiltered(filter: TransgeneFilter): Promise<any> {
-    let q = this.createQueryBuilder('m');
+    let q = this.createQueryBuilder('m').where('1');
+    if (filter.spermFreeze) {
+      q = q.andWhere('m.spermFreezePlan Like :sf', {sf: '%' + filter.spermFreeze + '%'});
+    }
 
     if (filter.text) {
-      q = q.where(
+      q = q.andWhere(
         'm.allele Like :t OR ' +
         'm.descriptor LIKE :t OR ' +
         'm.nickname LIKE :t OR ' +

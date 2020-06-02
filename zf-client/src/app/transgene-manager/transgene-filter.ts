@@ -2,6 +2,8 @@ import {ZfGenericFilter} from '../zf-generic/zfgeneric-filter';
 
 export class TransgeneFilter extends ZfGenericFilter {
   text: string = null;
+  spermFreeze: string = null;
+
 
   public constructor( init?: Partial<TransgeneFilter>) {
     super();
@@ -9,7 +11,7 @@ export class TransgeneFilter extends ZfGenericFilter {
   }
 
   isEmpty(): boolean {
-    return !(this.text);
+    return !(this.text || this.spermFreeze);
   }
 
 }
