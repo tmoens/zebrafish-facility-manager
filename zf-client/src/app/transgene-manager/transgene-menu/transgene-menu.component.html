@@ -38,4 +38,11 @@
       <span>Transgene Report</span>
     </button>
   </div>
+
+  <button (click)="service.dataCleanlinessReport()" mat-menu-item
+          matTooltip="So you can audit transgene data for inconsistencies."
+          zfmHideUnauthorized="user">
+    <mat-icon>cloud_download</mat-icon>
+    <span>Transgene Data Audit</span>
+  </button>
 </mat-menu>

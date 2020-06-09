@@ -39,5 +39,12 @@
       <mat-icon>cloud_download</mat-icon>
       <span>Mutation Report</span>
     </button>
+
+    <button (click)="service.dataCleanlinessReport()" mat-menu-item
+            matTooltip="So you can audit mutation data for inconsistencies."
+            zfmHideUnauthorized="user">
+      <mat-icon>cloud_download</mat-icon>
+      <span>Mutation Data Audit</span>
+    </button>
   </div>
 </mat-menu>

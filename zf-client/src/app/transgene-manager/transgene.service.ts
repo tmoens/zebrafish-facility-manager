@@ -11,7 +11,6 @@ import {ZFTypes} from "../helpers/zf-types";
 import {Router} from "@angular/router";
 import {AuthService} from "../auth/auth.service";
 import {TransgeneDto} from "./transgene-dto";
-import {MutationDto} from "../mutation-manager/mutation-dto";
 
 /**
  * This is the model for transgene information displayed in the GUI.
@@ -100,11 +99,15 @@ export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDt
       ];
     }
     const filterSheet = XLSX.utils.aoa_to_sheet(data);
-    filterSheet['!cols'] = [ {wch: 100}];
+    filterSheet['!cols'] = [{wch: 100}];
     XLSX.utils.book_append_sheet(wb, filterSheet, 'Filter');
 
     // const now = moment().format('YYYY-MM-DD-HH-mm-ss');
     const now = Date().toString();
     XLSX.writeFile(wb, 'Transgenes-' + now + '.xlsx');
+  }
+
+  dataCleanlinessReport() {
+    super.dataCleanlinessReport(['source'], 'TransgeneDataCleanliness');
   }
 }

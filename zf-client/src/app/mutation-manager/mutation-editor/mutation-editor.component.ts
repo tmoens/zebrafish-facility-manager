@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MutationDto} from '../mutation-dto';
 import {Observable} from 'rxjs';
-import {AbstractControl, FormBuilder, ValidationErrors, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, ValidationErrors, Validators} from '@angular/forms';
 import {MutationService} from '../mutation.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {map, startWith} from 'rxjs/operators';
@@ -24,7 +24,8 @@ export class MutationEditorComponent implements OnInit {
   editMode: EditMode;
   id: number;
   saved = false;
-  curious = 0;
+
+  mutationTypeFC: FormControl = new FormControl();
 
   // Build the edit form.
   // Even though the form does not support editing of every field,
@@ -66,7 +67,7 @@ export class MutationEditorComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-    private service: MutationService,
+    public service: MutationService,
     private deactivationDialogService: DialogService,
   ) {
     this.service.enterEditMode();

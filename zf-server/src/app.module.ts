@@ -26,6 +26,8 @@ import {PassportModule} from "@nestjs/passport";
 import {JwtStrategy2} from "./guards/jwt.strategy2";
 import {MailerModule} from "@nestjs-modules/mailer";
 import {ZFMailerService} from "./mailer/mailer-service";
+import {MutationTypeModule} from './mutation-type/mutation-type.module';
+import {ScreenTypeModule} from './screen-type/screen-type.module';
 
 
 const rotatingFileLog = new DailyRotateFile({
@@ -73,6 +75,8 @@ const consoleLog = new (winston.transports.Console)({
       ],
       // other options
     }),
+    MutationTypeModule,
+    ScreenTypeModule,
   ],
 
   controllers: [AppController],

@@ -182,6 +182,25 @@ export class LoaderService {
       );
   }
 
+  /**
+   * Get all the mutation types
+   */
+  getMutationTypes(): Observable<any> {
+    return this.http.get(this.serverURL + '/mutation-type')
+      .pipe(
+        catchError(this.handleError('Get mutation types.', []))
+      );
+  }
+
+  /**
+   * Get all the screen types
+   */
+  getScreenTypes(): Observable<any> {
+    return this.http.get(this.serverURL + '/screen-type')
+      .pipe(
+        catchError(this.handleError('Get screen types.', []))
+      );
+  }
 
   /**
    * Handle Http operation that failed.
@@ -189,6 +208,7 @@ export class LoaderService {
    * @param operation - name of the operation that failed
    * @param result - optional value to return as the observable result
    */
+
   /*
    * This generic handler was copied from the Angular tutorial.
    * And as a note to future, even thicker, self who will be going WTF?...

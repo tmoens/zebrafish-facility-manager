@@ -9,6 +9,7 @@ import {ZFTypes} from "../helpers/zf-types";
 import {Router} from "@angular/router";
 import {AuthService} from "../auth/auth.service";
 import {ZfGenericDto} from "./zfgeneric-dto";
+import * as XLSX from "xlsx";
 
 /**
  * There is a service for every different type of object in the system.
@@ -277,4 +278,19 @@ export class ZFGenericService<
   enterBrowseMode() {
     this.inEditMode = false;
   }
+
+  dataCleanlinessReport(fieldList: string[], title) {
+    const wb = XLSX.utils.book_new();
+    for (const fieldName of fieldList) {
+      const data: string[][] = [[fieldName, 'Change To']];
+      this._fieldOptions.options[fieldName].map((item: string) => data.push([item]));
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      ws['!cols'] = [{wch: 25}, {wch: 25}];
+      XLSX.utils.book_append_sheet(wb, ws, fieldName);
+    }
+
+    const now = new Date().toISOString();
+    XLSX.writeFile(wb, title + now + '.xlsx');
+  }
+
 }
