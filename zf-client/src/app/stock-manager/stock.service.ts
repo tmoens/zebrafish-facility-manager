@@ -22,7 +22,7 @@ import {TransgeneDto} from "../transgene-manager/transgene-dto";
 /**
  * This is the model for stock information displayed in the GUI.
  *
- * It is primarily a minor specialization of the generic service class.
+ * It is primarily a specialization of the generic service class.
  *
  * However, stocks have many relationships the mutations and transgenes
  * do not, so it has significantly more extensions than the other
