@@ -48,6 +48,13 @@ export class Transgene {
   comment: string;
 
   @Column({
+    type: 'varchar',
+    nullable: true,
+    length: 255,
+  })
+  zfinURL: string;
+
+  @Column({
     type: 'int',
     nullable: true,
     unique: true,
@@ -82,6 +89,9 @@ export class Transgene {
   @Expose()
   get fullName(): string {
     const name: string[] = [];
+    if (this.nickname) {
+      return this.nickname;
+    }
     if (this.descriptor) { name.push(this.descriptor); }
     if (this.allele) { name.push(this.allele); }
     return name.join(': ');
@@ -90,30 +100,5 @@ export class Transgene {
   @Expose()
   get name(): string {
     return this.fullName;
-  }
-
-  // This just makes a string that can be used as a tooltip when
-  // hovering over a mutation in the GUI.
-  // I'm really unhappy about this
-  // a) because it duplicates pretty much all of the mutation data, and
-  // b) because tooltips are really the domain of the client.
-  // The alternative is that this gets computed on the client side.  But in order to do
-  // THAT, I'd have to create a "real" object on the client side rather than just a DTO.
-  // And doing that turns the client into a significantly more complicated thing that has
-  // to have another whole layer of objects and converters.
-  // So For now, I'll take the pain.
-  @Expose()
-  get tooltip(): string {
-    const strings: string[] = [];
-    if (this.source) {
-      strings.push('source: ' + this.source);
-    }
-    if (this.plasmid) {
-      strings.push('plasmid: ' + this.plasmid);
-    }
-    if (this.comment) {
-      strings.push('comment: ' + this.comment.substr(0, 50));
-    }
-    return strings.join('\n');
   }
 }

@@ -30,12 +30,11 @@ export class TransgeneViewerComponent implements OnInit {
     source: [{value: '', disabled: true}],
     spermFreezePlan: [{value: '', disabled: true}],
     vialsFrozen: [{value: 0, disabled: true}],
+    zfinURL: [{value: '', disabled: true}],
 
     id: [null],
     isDeletable: [{value: '', disabled: true}],
     fullName: [null],
-    tooltip: [null],
-
   });
 
   constructor(

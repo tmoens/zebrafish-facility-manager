@@ -94,14 +94,9 @@
           *ngFor="let stock of service.filteredList"
           [class.selected]="service.selected && stock.id === service.selected.id"
           class="zf-selection-item truncate" role="listitem"
-          (mouseover)="onPreselect(stock.id)"
-          (mouseleave)="onPreselect(-1)"
           (click)="onSelect(stock)">
-
-          <div mat-line>{{stock.name}} {{stock.description}}</div>
-
-          <div mat-line *ngIf="stock.id === focusId">
-            <app-stock-mini-viewer [stock]="stock" mat-line></app-stock-mini-viewer>
+          <div>
+            <span class="zf-clickable">{{stock.name}} </span> {{stock.description}}
           </div>
         </mat-list-item>
       </mat-list>

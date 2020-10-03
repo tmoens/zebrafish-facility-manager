@@ -2,7 +2,7 @@
   "facilityName": "development",
   "facilityAbbrv": "dev",
 
-  "hidePI": true,
+  "hidePI": false,
 
   "tankNumberingHint": "Legal tank numbers run from blah blahblah",
   "tankLabelConfig": {

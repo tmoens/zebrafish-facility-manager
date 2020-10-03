@@ -28,6 +28,5 @@ export class StockFullDto extends ZfGenericDto {
   offspring: StockDto[] = [];
   nextSubStockNumber: number = null;
   parentsEditable: boolean = false;
+  alleleSummary:string = null;
 }
-
-

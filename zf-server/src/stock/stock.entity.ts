@@ -195,6 +195,7 @@ export class Stock {
   offspring: Stock[];
   isDeletable: boolean;
   parentsEditable: boolean;
+  alleleSummary: string;
 
   setName() {
     this.name = String(this.number);
@@ -212,29 +213,4 @@ export class Stock {
     return this.name + ' ' + this.description;
   }
 
-  // TODO make it go away or make it better
-  // This just makes a string that can be used as a tooltip when
-  // hovering over a stock in the GUI.
-  // I'm really unhappy about this
-  // a) because it duplicates some of the stock data being sent to the client, and
-  // b) because tooltips are really the domain of the client.
-  // The alternative is that this gets computed on the client side.  But in order to do
-  // THAT, I'd have to create a "real" object on the client side rather than just a DTO.
-  // And doing that turns the client into a significantly more complicated thing that has
-  // to have another whole layer of objects and converters.
-  // So For now, I'll take the pain.
-  @Expose()
-  get tooltip(): string {
-    const strings: string[] = [];
-    if (this.researcher) {
-      strings.push('researcher: ' + this.researcher);
-    }
-    if (this.fertilizationDate) {
-      strings.push('fertilized: ' + this.fertilizationDate);
-    }
-    if (this.comment) {
-      strings.push('comment: ' + this.comment.substr(0, 50));
-    }
-    return strings.join('\n');
-  }
 }

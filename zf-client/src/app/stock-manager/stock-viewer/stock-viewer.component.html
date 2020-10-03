@@ -17,6 +17,10 @@
                  [value]="service.selected.description" disabled>
         </mat-form-field>
         <mat-form-field>
+          <input matInput placeholder="Allele Summary"
+                 [value]="service.selected.alleleSummary" disabled>
+        </mat-form-field>
+        <mat-form-field>
           <input matInput placeholder="Fertilization Date"
                  [value]="service.selected.fertilizationDate +
                  ' (' + (service.selected.fertilizationDate | dateToAge) + ' days)'"
@@ -37,47 +41,47 @@
         </mat-form-field>
 
         <!-- Mom   -->
-        <span class="zf-sub-title">Mom
-          <button *ngIf="service.selected.matStock" mat-button color="primary"
-                  (click)="goTo(service.selected.matStock.id)">{{service.selected.matStock.name}}</button>
-        </span>
-        <mat-form-field *ngIf="service.selected.matStock">
-          <input matInput placeholder="Description"
-                 [value]="service.selected.matStock.description" disabled>
-        </mat-form-field>
+        <div *ngIf="service.selected.matStock">
+          <div class="zf-sub-title">Mom (Internal)</div>
+          <mat-list dense>
+            <mat-list-item class="zf-list-item" style="height: fit-content">
+              <app-stock-mini-viewer [stock]="service.selected.matStock"
+                                     class="zf-selection-item"
+                                     (click)="goTo(service.selected.matStock.id)">
+              </app-stock-mini-viewer>
+            </mat-list-item>
+          </mat-list>
+        </div>
         <div *ngIf="!service.selected.matStock">
-          <mat-form-field>
-            <input [value]="service.selected.externalMatId" disabled
-                   matInput placeholder="External Id">
-          </mat-form-field>
-          <mat-form-field>
-          <textarea matInput placeholder="Description"
-                    cdkTextareaAutosize="true"
-                    [value]="service.selected.externalMatDescription" disabled>
-          </textarea>
-          </mat-form-field>
+          <div class="zf-sub-title">Mom (External)</div>
+          <mat-list dense>
+            <mat-list-item style="height: fit-content">
+              <span *ngIf="!service.selected.externalMatId">{{service.selected.externalMatId}} </span>
+              <span *ngIf="service.selected.externalMatDescription">{{service.selected.externalMatDescription}}</span>
+            </mat-list-item>
+          </mat-list>
         </div>
 
         <!-- Dad   -->
-        <span class="zf-sub-title">Dad
-          <button *ngIf="service.selected.patStock" mat-button color="primary"
-                  (click)="goTo(service.selected.patStock.id)">{{service.selected.patStock.name}}</button>
-        </span>
-        <mat-form-field *ngIf="service.selected.patStock">
-          <input matInput placeholder="Description"
-                 [value]="service.selected.patStock.description" disabled>
-        </mat-form-field>
+        <div *ngIf="service.selected.patStock">
+          <div class="zf-sub-title">Dad (Internal)</div>
+          <mat-list dense>
+            <mat-list-item class="zf-list-item" style="height: fit-content">
+              <app-stock-mini-viewer [stock]="service.selected.patStock"
+                                     class="zf-selection-item"
+                                     (click)="goTo(service.selected.patStock.id)">
+              </app-stock-mini-viewer>
+            </mat-list-item>
+          </mat-list>
+        </div>
         <div *ngIf="!service.selected.patStock">
-          <mat-form-field>
-            <input [value]="service.selected.externalPatId" disabled
-                   matInput placeholder="External Id">
-          </mat-form-field>
-          <mat-form-field>
-            <textarea [value]="service.selected.externalPatDescription" cdkTextareaAutosize="true"
-                      disabled
-                      matInput placeholder="Description">
-            </textarea>
-          </mat-form-field>
+          <div class="zf-sub-title">Dad (External)</div>
+          <mat-list dense>
+            <mat-list-item style="height: fit-content">
+              <span *ngIf="!service.selected.externalPatId">Id: {{service.selected.externalPatId}}</span>
+              <span *ngIf="service.selected.externalPatDescription">Desc: {{service.selected.externalPatDescription}}</span>
+            </mat-list-item>
+          </mat-list>
         </div>
 
         <!-- Offspring   -->
@@ -87,14 +91,9 @@
         </mat-list>
         <mat-list *ngIf="service.selected.offspringCount > 0" dense>
           <mat-list-item *ngFor="let kid of service.selected.offspring"
-                         (mouseover)="highlightStock = kid.id"
-                         (mouseleave)="highlightStock = -1"
-                         class="zf-selection-item truncate" role="listitem"
+                         class="zf-selection-item zf-list-item truncate" role="listitem"
                          (click)="goTo(kid.id)">
-            <div mat-line>{{kid.name}} {{kid.description}}</div>
-            <div *ngIf="highlightStock === kid.id">
-              <app-stock-mini-viewer mat-line [stock]="kid"></app-stock-mini-viewer>
-            </div>
+            <app-stock-mini-viewer [stock]="kid"></app-stock-mini-viewer>
           </mat-list-item>
         </mat-list>
       </div>
@@ -111,13 +110,8 @@
         </div>
         <mat-list *ngIf="service.selected.mutations.length > 0" dense>
           <mat-list-item *ngFor="let m of service.selected.mutations"
-                         class="zf-selection-item truncate" role="listitem"
-                         (mouseover)="highlightMutation = m.id"
-                         (mouseleave)="highlightMutation = -1">
-            <div mat-line>{{m.fullName}}</div>
-            <div mat-line *ngIf="m.id === highlightMutation">
-              <app-mutation-mini-viewer [mutation]="m"></app-mutation-mini-viewer>
-            </div>
+                         class=zf-list-item role="listitem" style="height: fit-content">
+            <app-mutation-mini-viewer mat-line [mutation]="m"></app-mutation-mini-viewer>
           </mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.mutations.length < 1" dense>
@@ -126,6 +120,7 @@
         <mat-divider></mat-divider>
 
         <!-- Information about transgenes -->
+
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
           <span class="zf-sub-title">Transgenes</span>
           <button mat-icon-button zfmHideUnauthorized="user" color="primary" (click)="editTransgenes()">
@@ -133,14 +128,9 @@
           </button>
         </div>
         <mat-list *ngIf="service.selected.transgenes.length > 0" dense>
-          <mat-list-item *ngFor="let t of service.selected.transgenes"
-                         class="zf-selection-item truncate" role="listitem"
-                         (mouseover)="highlightTransgene = t.id"
-                         (mouseleave)="highlightTransgene = -1">
-            <div mat-line>{{t.fullName}}</div>
-            <div mat-line *ngIf="t.id === highlightTransgene">
-              <app-transgene-mini-viewer [transgene]="t"></app-transgene-mini-viewer>
-            </div>
+          <mat-list-item *ngFor="let t of service.selected.transgenes" style="height: fit-content"
+                         class=zf-list-item role="listitem">
+            <app-transgene-mini-viewer mat-line [transgene]="t"></app-transgene-mini-viewer>
           </mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.transgenes.length < 1" dense>

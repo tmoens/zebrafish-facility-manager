@@ -101,6 +101,13 @@
         </mat-form-field>
 
         <mat-form-field>
+            <textarea matInput placeholder="ZFIN URL" formControlName="zfinURL"
+                      maxlength="255"
+                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="3"></textarea>
+          <mat-error *ngIf="zfinURLControl.touched && zfinURLControl.invalid">{{getZfinURLError()}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
             <textarea matInput placeholder="Phenotype" formControlName="phenotype"
                       maxlength="3000"
                       cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>

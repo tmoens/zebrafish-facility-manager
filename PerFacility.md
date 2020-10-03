@@ -157,6 +157,8 @@ Once you have configured the db, in keeping with the running example, you will h
 1. db user: _zf_eue_
 1. db password: _some_very_good_eue_password_
 
+Remember to add the new database to your backup process.
+
 ####Am I ready to move on?
 
 On the command line,

@@ -42,11 +42,11 @@ export class MutationViewerComponent implements OnInit {
     thawDate: [{value: null, disabled: true}],
     tillingMaleNumber: [{value: null, disabled: true}],
     vialsFrozen: [{value: '', disabled: true}],
+    zfinURL: [{value: '', disabled: true}],
 
     id: [null],
     isDeletable: [true],
     fullName: [null],
-    tooltip: [null],
   });
 
   constructor(

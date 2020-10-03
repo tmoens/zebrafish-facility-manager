@@ -6,30 +6,33 @@
   <div fxLayout="row" fxLayoutGap="50px" >
 
     <!-- An area for the user to lookup mutations/transgenes. -->
-    <div fxLayout="column" style="height: 70vh">
+    <div fxFlex="40%" fxShrink="0" fxGrow="0" fxLayout="column" style="height: 70vh" >
       <div class="zf-sub-title">{{capitalizedType}} Lookup</div>
-
       <mat-form-field>
         <input matInput type="text" placeholder="Search" [formControl]="filterStringFC">
-        <mat-hint>Must be at least two characters</mat-hint>
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
 
-      <mat-list dense class="zf-selection-list">
+      <mat-list dense class="zf-selection-list" >
         <ng-container *ngFor="let mm of lookupList.items | keyvalue">
-          <mat-list-item class="zf-selection-item">
-            <mat-checkbox (change)="onCheckLookupItem(mm.value.item, mm.value.selected)"
-                          [(ngModel)]="mm.value.selected"
-                          matTooltip="{{mm.value.item.tooltip}}" matTooltipClass="ttnl"
-                          color="primary">
+          <mat-list-item
+                         (mouseover)="highlightId=mm.value.item.id"
+                         >
+            <mat-checkbox color="primary"
+                          (change)="onCheckLookupItem(mm.value.item, mm.value.selected)"
+                          [(ngModel)]="mm.value.selected">
               {{mm.value.item.fullName}}
             </mat-checkbox>
+
+          </mat-list-item>
+          <mat-list-item *ngIf="mm.value.item.comment && highlightId === mm.value.item.id">
+            <div class="zf-mini-row" style="width:100%" *ngIf="mm.value.item.comment">{{mm.value.item.comment}}</div>
           </mat-list-item>
         </ng-container>
       </mat-list>
     </div>
 
-    <div fxLayout="column" >
+    <div fxLayout="column" fxFlex="50%" fxGrow="0">
 
       <!--The stock's parent's mutations/transgenes -->
       <div class="zf-sub-title">{{stock.name}} {{capitalizedType}}s From Parents</div>
@@ -38,33 +41,46 @@
           --None--
         </mat-list-item>
         <mat-list-item *ngFor="let m of parentalSelectionList.items | keyvalue"
-                       class="zf-selection-item">
+                       style="height: fit-content">
           <mat-checkbox (change)="onCheckParentalItem(m.value.item, m.value.selected)"
                         [(ngModel)]="m.value.selected"
-                        matTooltip="{{m.value.item.tooltip}}" matTooltipClass="ttnl"
-                        style="padding-left: 14px" color="primary">
-            {{m.value.item.fullName}}
+                        style="padding-left: 14px; padding-right: 14px" color="primary">
+          <ng-container *ngIf="type === types.MUTATION">
+            <app-mutation-mini-viewer [mutation]="m.value.item"></app-mutation-mini-viewer>
+          </ng-container>
+          <ng-container *ngIf="type === types.TRANSGENE">
+            <app-transgene-mini-viewer [transgene]="m.value.item"></app-transgene-mini-viewer>
+          </ng-container>
           </mat-checkbox>
+
         </mat-list-item>
       </mat-list>
 
       <mat-divider></mat-divider>
 
       <!-- nonParental mutations/transgenes -->
-      <div *ngIf="nonParentalSelectionList.count > 0">
-        <div class="zf-sub-title">{{stock.name}} Additional {{capitalizedType}}s</div>
-        <mat-list dense>
-          <ng-container *ngFor="let mm of nonParentalSelectionList.items | keyvalue">
-            <mat-list-item class="zf-selection-item" *ngIf="mm.value.selected"
-                           matTooltip="{{mm.value.item.tooltip}}" matTooltipClass="ttnl">
-              <button mat-icon-button >
-                <mat-icon color="primary" (click)="onCheckNonParentalItem(mm.value.item)">delete</mat-icon>
-              </button>
-              {{mm.value.item.fullName}}
-            </mat-list-item>
-          </ng-container>
-        </mat-list>
+      <div class="zf-sub-title"
+           matTooltip="These are for newly generated traits or known traits in external stocks.">
+        {{stock.name}} Additional {{capitalizedType}}s
       </div>
+      <mat-list dense>
+        <mat-list-item *ngIf="nonParentalSelectionList.count === 0"
+                       matTooltip="Normally none as traits normally come from parents.">--None--
+        </mat-list-item>
+        <ng-container *ngFor="let mm of nonParentalSelectionList.items | keyvalue">
+          <mat-list-item class="zf-selection-item" *ngIf="mm.value.selected" style="height: fit-content">
+            <button mat-icon-button >
+              <mat-icon color="primary" (click)="onCheckNonParentalItem(mm.value.item)">delete</mat-icon>
+            </button>
+            <ng-container *ngIf="type === types.MUTATION">
+              <app-mutation-mini-viewer [mutation]="mm.value.item"></app-mutation-mini-viewer>
+            </ng-container>
+            <ng-container *ngIf="type === types.TRANSGENE">
+              <app-transgene-mini-viewer [transgene]="mm.value.item"></app-transgene-mini-viewer>
+            </ng-container>
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
 
       <mat-divider></mat-divider>
 

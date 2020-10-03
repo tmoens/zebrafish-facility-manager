@@ -36,6 +36,12 @@
       </textarea>
     </mat-form-field>
 
+    <mat-form-field *ngIf="service.selected.zfinURL">
+      <textarea matInput placeholder="ZFIN URL" formControlName="zfinURL"
+                cdkTextareaAutosize="true"  cdkAutosizeMaxRows="3">
+      </textarea>
+    </mat-form-field>
+
     <mat-form-field *ngIf="service.selected.spermFreezePlan">
       <input matInput type="text" placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">
     </mat-form-field>

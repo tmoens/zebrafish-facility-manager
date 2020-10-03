@@ -79,20 +79,12 @@
     <!-- When the selector is fixed in place -->
     <div *ngIf="appState.selectorFixed">
       <mat-list role="list"  dense>
-        <mat-list-item
+        <mat-list-item style="height: fit-content"
           *ngFor="let item of service.filteredList"
           [class.selected]="service.selected && item.id === service.selected.id"
-          class="zf-selection-item truncate" role="listitem"
-          (mouseover)="onPreselect(item.id)"
-          (mouseleave)="onPreselect(-1)"
+          class="zf-selection-item zf-list-item truncate" role="listitem"
           (click)="onSelect(item)">
-
-          <div mat-line>{{item.fullName}}</div>
-
-          <div mat-line *ngIf="item.id === focusId">
             <app-mutation-mini-viewer mat-line [mutation]="item"></app-mutation-mini-viewer>
-          </div>
-
         </mat-list-item>
       </mat-list>
     </div>
@@ -109,8 +101,9 @@
             <mat-icon>navigate_next</mat-icon>
           </button>
 
-          <div mat-line>{{item.fullName}}</div>
-
+          <div mat-line *ngIf="item.id !== focusId">
+            <div mat-line>{{item.fullName}}</div>
+          </div>
           <div mat-line *ngIf="item.id === focusId">
             <app-mutation-mini-viewer mat-line [mutation]="item"></app-mutation-mini-viewer>
           </div>

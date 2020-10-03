@@ -20,6 +20,8 @@ export class TransgeneEditorComponent implements OnInit {
   id: number;
   saved = false;
 
+  urlPattern = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+
   // Build the edit form.
   mfForm = this.fb.group({
     allele: [''],
@@ -32,11 +34,11 @@ export class TransgeneEditorComponent implements OnInit {
     source: [{value: ''}],
     spermFreezePlan: [''],
     vialsFrozen: [0],
+    zfinURL: [null, Validators.pattern(this.urlPattern)],
 
     id: [null],
     isDeletable: [true],
     fullName: [null],
-    tooltip: [null],
   }, { validators: this.uniquenessValidator.bind(this) });
 
   filteredSourceOptions: Observable<string[]>;
@@ -179,14 +181,25 @@ export class TransgeneEditorComponent implements OnInit {
     }
   }
 
-  getFC(name: string): AbstractControl {
-    return this.mfForm.get(name);
+  get zfinURLControl() {
+    return this.mfForm.get('zfinURL');
+  }
+
+  getZfinURLError() {
+    if (this.zfinURLControl.hasError('pattern')) {
+      return 'Please enter a valid URL';
+    }
   }
 
   clearFormControl(name: string) {
     this.getFC(name).setValue(null);
     this.getFC(name).markAsDirty();
   }
+
+  getFC(name: string): AbstractControl {
+    return this.mfForm.get(name);
+  }
+
 
   /* To support deactivation check  */
   canDeactivate(): boolean | Observable<boolean> |Promise <boolean> {

@@ -18,6 +18,7 @@ export class StockDto extends ZfGenericDto {
   comment: string = null;
   transgenes: TransgeneDto[] = [];
   mutations: MutationDto[] = [];
+  alleleSummary: string = null;
 }
 
 

@@ -10,4 +10,5 @@ export class TransgeneDto extends ZfGenericDto {
   source: string = null;
   spermFreezePlan: string = null;
   vialsFrozen: number = null;
+  zfinURL: string = null;
 }

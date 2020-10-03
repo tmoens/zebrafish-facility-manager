@@ -10,8 +10,8 @@ import {AppStateService} from "../../app-state.service";
 
 /**
  * Note to future self.
- * Why do we not simply view the selected selected in the service?
- * Because we want to navigate to each selected selected explicitly.  And we want
+ * Why do we not simply view the selected stock in the service?
+ * Because we want to navigate to each selected stock explicitly.  And we want
  * to do that because it gives us free forward/backward navigation in the browser.
  */
 @Component({

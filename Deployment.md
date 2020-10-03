@@ -62,6 +62,8 @@ you have followed the good, secure procedure described there.  You will have cre
 user called admin, which you will use to create  databases for each facility.
 You must remember the password for that administrative user.
 
+We leave it to you to make sure you back up your databases to a remote file server.
+
 ### Web Server
 
 The system uses a web server to:
@@ -108,7 +110,7 @@ npm run build
 
 ```bash 
 # navigate to the the zf-client sub-directory
-cd path/to/zebrafish-facility-manager/zf-server
+cd path/to/zebrafish-facility-manager/zf-client
 
 # Download npm packages
 npm install
@@ -121,7 +123,7 @@ ng build --configuration=production
 ```
 
 The result of this operation will be a directory called /dist/zf-client.
-You need to deploy the directory to your Web Server.  Assuming that the
+You need to deploy the directory to your Web Server.  Assuming the
 root of your web server is _/var/www/_, just deploy zf-client directory there.
 
 ## GMAIL Sender
@@ -133,14 +135,14 @@ We did not invest a huge amount of time here, we simply send them via gmail whic
 means that you will need to provide a gmail address the server can use for sending
 emails.
 
-What is more, since the application sends the emails programattically, the gmail account
+What is more, since the application sends the emails programatically, the gmail account
 it logs into is deemed insecure by Google, no matter how good the password is.
 
-You need to create such a Google/gmail account - do not use your own.
-You need to give it a very good password (again, use a password generator).
-You need to configure the account to allow "insecure access".
+1. You need to create such a Google/gmail account - do not use your own.
+1. You need to give it a very good password (again, use a password generator).
+1. You need to configure the account to allow "insecure access".
 
-In the "per faccility" guide you will be entering the id and password for this account.
+In the "per facility" guide you will be entering the id and password for this account.
 
 ## Wrap up
 

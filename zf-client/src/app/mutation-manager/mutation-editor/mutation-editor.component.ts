@@ -27,6 +27,8 @@ export class MutationEditorComponent implements OnInit {
 
   mutationTypeFC: FormControl = new FormControl();
 
+  urlPattern = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+
   // Build the edit form.
   // Even though the form does not support editing of every field,
   // all the fields that *can* come in the DTO require a formControl
@@ -49,11 +51,11 @@ export class MutationEditorComponent implements OnInit {
     thawDate: [null],
     tillingMaleNumber: [null],
     vialsFrozen: [0],
+    zfinURL: [null, Validators.pattern(this.urlPattern)],
 
     id: [null],
     isDeletable: [true],
     fullName: [null],
-    tooltip: [null],
   });
 
 // These are arrays containing options for the various filter fields
@@ -199,14 +201,14 @@ export class MutationEditorComponent implements OnInit {
     return this.mfForm.get('name');
   }
 
-  get nicknameControl() {
-    return this.mfForm.get('nickname');
-  }
-
   getNameError() {
     if (this.nameControl.hasError('unique')) {
       return 'The name ' + this.nameControl.value + ' is already in use.';
     }
+  }
+
+  get nicknameControl() {
+    return this.mfForm.get('nickname');
   }
 
   getNicknameError() {
@@ -214,6 +216,17 @@ export class MutationEditorComponent implements OnInit {
       return 'The nickname ' + this.nicknameControl.value + ' is already in use.';
     }
   }
+
+  get zfinURLControl() {
+    return this.mfForm.get('zfinURL');
+  }
+
+  getZfinURLError() {
+    if (this.zfinURLControl.hasError('pattern')) {
+      return 'Please enter a valid URL';
+    }
+  }
+
 
   /* To support deactivation check  */
   /* Contrary to tsLint's perspective, this function *is* invoked by the deactivation guard */

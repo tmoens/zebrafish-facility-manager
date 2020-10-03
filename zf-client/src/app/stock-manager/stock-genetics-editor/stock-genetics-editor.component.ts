@@ -30,7 +30,9 @@ import {TransgeneDto} from "../../transgene-manager/transgene-dto";
 })
 export class StockGeneticsEditorComponent implements OnInit {
   id: number;
+  highlightId: number;
   type: string; // mutation or transgene
+  types = ZFTypes;
 
   // The stock in question
   stock: StockFullDto;
@@ -89,9 +91,6 @@ export class StockGeneticsEditorComponent implements OnInit {
         this.initialize();
       });
     });
-
-    // watch the filter string for changes and load the lookup list accordingly
-    this.filterStringFC.valueChanges.subscribe((filter: string) => this.loadLookupList(filter));
   }
 
   initialize() {
@@ -145,22 +144,20 @@ export class StockGeneticsEditorComponent implements OnInit {
           }
         });
         break;
-
     }
     this.hasOwnListChanged();
+    // watch the filter string for changes and load the lookup list accordingly
+    this.filterStringFC.valueChanges.subscribe((filter: string) => this.loadLookupList(filter));
+    this.filterStringFC.setValue('');
   }
 
   loadLookupList(filter: string) {
     this.lookupList = new ZfSelectionList<ZfGenericDto>();
 
-    // to keep the GUI performant, require the search string to be at least two characters.
-    if (filter.length <2) { return; }
     const f =  filter.toLowerCase();
 
     switch (this.type) {
       case ZFTypes.MUTATION:
-
-
         this.mutationService.all.map((m: MutationDto) => {
           if ((m.gene && m.gene.toLowerCase().includes(f)) ||
             (m.name && m.name.toLowerCase().includes(f)) ||
@@ -171,14 +168,12 @@ export class StockGeneticsEditorComponent implements OnInit {
             this.lookupList.insert(m, this.ownList.containsId(m.id));
           }
         });
-
         break;
 
       case ZFTypes.TRANSGENE:
-        // for transgenes, we can load them all, so we do not demand any length
-        // of filter string.
         this.transgeneService.all.map((m: TransgeneDto) => {
           if (m.allele && m.allele.toLowerCase().includes(f) ||
+            (m.nickname && m.nickname.toLowerCase().includes(f)) ||
             (m.descriptor && m.descriptor.toLowerCase().includes(f))) {
             this.lookupList.insert(m, this.ownList.containsId(m.id));
           }
@@ -186,7 +181,6 @@ export class StockGeneticsEditorComponent implements OnInit {
         break;
     }
   }
-
 
   save() {
     switch (this.type) {

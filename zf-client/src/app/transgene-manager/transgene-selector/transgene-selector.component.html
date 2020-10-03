@@ -15,20 +15,20 @@
   <span class="zf-sub-title">Transgene Filter</span>
   <form [formGroup]="mfForm">
     <div fxLayout="column">
-    <mat-form-field>
-      <input matInput type="text" placeholder="Search all fields" formControlName="text">
-      <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
-              (click)="clearFormControl('text')">
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-form-field>
+      <mat-form-field>
+        <input matInput type="text" placeholder="Search all fields" formControlName="text">
+        <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
+                (click)="clearFormControl('text')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-select placeholder="Sperm Freeze State" formControlName="spermFreeze">
-        <mat-option [value]=null>--Any--</mat-option>
-        <mat-option *ngFor="let i of service.spermFreezeOptions" [value]="i">{{i}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Sperm Freeze State" formControlName="spermFreeze">
+          <mat-option [value]=null>--Any--</mat-option>
+          <mat-option *ngFor="let i of service.spermFreezeOptions" [value]="i">{{i}}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </form>
 
@@ -36,22 +36,15 @@
   <div fxFlex *ngIf="service.filteredList.length > 0">
     <span class="zf-sub-title">Filtered List</span>
 
-     <!--When the selector is fixed in place-->
+    <!--When the selector is fixed in place-->
     <div *ngIf="appState.selectorFixed">
       <mat-list role="list" dense>
-        <mat-list-item
+        <mat-list-item style="height: fit-content"
           *ngFor="let item of service.filteredList"
           [class.selected]="service.selected && item.id === service.selected.id"
           class="zf-selection-item truncate" role="listitem"
-          (mouseover)="onPreselect(item.id)"
-          (mouseleave)="onPreselect(-1)"
           (click)="onSelect(item)">
-
-          <div mat-line>{{item.fullName}}</div>
-
-          <div mat-line *ngIf="item.id === focusId">
-            <app-transgene-mini-viewer mat-line [transgene]="item"></app-transgene-mini-viewer>
-          </div>
+          <app-transgene-mini-viewer mat-line [transgene]="item"></app-transgene-mini-viewer>
         </mat-list-item>
       </mat-list>
     </div>
@@ -68,7 +61,9 @@
             <mat-icon>navigate_next</mat-icon>
           </button>
 
-          <div mat-line>{{item.fullName}}</div>
+          <div mat-line *ngIf="item.id !== focusId">
+            <div mat-line>{{item.fullName}}</div>
+          </div>
 
           <div mat-line *ngIf="item.id === focusId">
             <app-transgene-mini-viewer mat-line [transgene]="item"></app-transgene-mini-viewer>

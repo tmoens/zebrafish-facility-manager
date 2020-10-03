@@ -71,6 +71,9 @@ export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDt
   }
 
   nicknameIsInUse(nickname: string, exceptingId: number): boolean {
+    if (nickname === null) {
+      return false;
+    }
     for (const t of this.all) {
       if (t.id !== exceptingId && t.nickname === nickname) {
         return true;

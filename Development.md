@@ -1,7 +1,7 @@
 #Zebrafish Facility Manager Development
 
 If you are developing, I don;t need to hold your hand.  Pretty much everything goes as per
-the normal deployment environment.  However, there are a few things to be arawe of.
+the normal deployment environment.  However, there are a few things to be aware of.
 
 ## Running in Development mode on localhost
 
@@ -43,13 +43,13 @@ means you have to run the development server on port 3005.
 
 This is how you do it:
 ```shell
-cd sk-server
+cd zf-server
 export FACILITY=some_facility_name
 # make sure there is a config file in environments/some_facility_name.env
 # make sure the PORT configuration variable is 3005 in some_facility_name.env
 # the rest of the configuration file does need to be set up properly.
 # run the server in watch mode so that it restarts when you change code
-npr run start:dev
+npm run start:dev
 ```
 
 Note that during development there are some corners being cut!

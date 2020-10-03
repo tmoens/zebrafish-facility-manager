@@ -68,8 +68,7 @@
     <!-- Mom   -->
     <mat-form-field *ngIf="inFocusStock.matStock">
       <input matInput placeholder="Mom (internal)"
-             [value]="inFocusStock.matStock.fullName"
-             [matTooltip]="inFocusStock.matStock.tooltip" disabled>
+             [value]="inFocusStock.matStock.fullName" disabled>
     </mat-form-field>
     <mat-form-field *ngIf="!inFocusStock.matStock">
           <textarea matInput placeholder="Mom (external)"
@@ -81,8 +80,7 @@
     <!-- Dad   -->
     <mat-form-field *ngIf="inFocusStock.patStock">
       <input matInput placeholder="Dad (internal)"
-             [value]="inFocusStock.patStock.fullName"
-             [matTooltip]="inFocusStock.patStock.tooltip" disabled>
+             [value]="inFocusStock.patStock.fullName" disabled>
     </mat-form-field>
     <mat-form-field *ngIf="!inFocusStock.patStock">
           <textarea matInput placeholder="Dad (external)"
@@ -95,7 +93,6 @@
     <div class="zf-sub-sub-title">Mutations</div>
     <mat-list *ngIf="inFocusStock.mutations.length > 0" dense>
       <mat-list-item *ngFor="let m of inFocusStock.mutations"
-                     matTooltip="{{m.tooltip}}" matTooltipClass="ttnl"
                      style="height: 30px">
         {{m.fullName}}
       </mat-list-item>
@@ -109,7 +106,6 @@
     <div class="zf-sub-sub-title">Transgenes</div>
     <mat-list *ngIf="inFocusStock.transgenes.length > 0" dense>
       <mat-list-item *ngFor="let t of inFocusStock.transgenes"
-                     matTooltip="{{t.tooltip}}" matTooltipClass="ttnl"
                      style="height: 30px">
         {{t.fullName}}
       </mat-list-item>

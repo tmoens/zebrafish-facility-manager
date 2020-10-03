@@ -18,4 +18,5 @@ export class MutationDto extends ZfGenericDto {
   thawDate: Date = null;
   tillingMaleNumber: number = null;
   vialsFrozen: number = null;
+  zfinURL: string = null;
 }

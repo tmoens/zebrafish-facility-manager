@@ -7,6 +7,5 @@ export abstract class ZfGenericClass {
   }
 
   abstract get name(): string;
-  get tooltip(): string { return null; }
   containsString(s: string): boolean { return false; }
 }

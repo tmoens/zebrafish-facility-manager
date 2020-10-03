@@ -7,6 +7,8 @@ import {StockMiniDto} from '../common/Stock/stockMiniDto';
 import {Logger} from "winston";
 import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
 import moment = require('moment');
+import {Transgene} from "../transgene/transgene.entity";
+import {Mutation} from "../mutation/mutation.entity";
 
 
 @EntityRepository(Stock)
@@ -85,6 +87,7 @@ export class StockRepository extends Repository<Stock> {
     stock.nextSubStockNumber = await this.getNextSubStockNumber(stock.number);
     stock.isDeletable = this.isDeletable(stock);
     stock.parentsEditable = this.parentsEditable(stock);
+    stock.alleleSummary = this.getAlleleSummary(stock);
     return ;
   }
 
@@ -114,6 +117,25 @@ export class StockRepository extends Repository<Stock> {
       return false;
     }
     return stock.nextSubStockNumber <= 1;
+  }
+
+  // Users are terrible at writing descriptions that summarize the genetic traits
+  // of a stock.  So we do it for them in the hope that they will stop writing
+  // all kinds of crap in the stock's description
+  getAlleleSummary(stock: Stock): string | null {
+    let summary: string = '';
+    const tgSummary = stock.transgenes.map((t: Transgene) => t.fullName);
+    const mutSummary = stock.mutations.map((m: Mutation) => m.fullName);
+    if(tgSummary.length > 0) {
+      summary = "tg: " + tgSummary.join(";");
+    }
+    if(summary && mutSummary.length > 0) {
+      summary += "  ";
+    }
+    if(mutSummary.length > 0) {
+      summary += "m: " + mutSummary.join(";");
+    }
+    return summary;
   }
 
   // Find a set of stocks which match the filter criteria.
@@ -167,7 +189,6 @@ export class StockRepository extends Repository<Stock> {
         }));
     }
 
-    // TODO Probable bug here - could join swimmers twice.
     if (filter.tankName) {
       const text = filter.tankName + '%';
       q = q.leftJoin('stock.swimmers', 'swimmers')
@@ -194,31 +215,20 @@ export class StockRepository extends Repository<Stock> {
     }
 
     const stocks: any[] =  await q
-      .limit(50)
+      .limit(100)
       .getRawMany();
 
     // Please look the other way now for a minute
     const stockMinis: StockMiniDto[] = [];
     for (const s of stocks) {
-      const tooltipStrings: string[] = [];
-      if (s.researcher) {
-        tooltipStrings.push('researcher: ' + s.researcher);
-      }
-      if (s.fertilizationDate) {
-        tooltipStrings.push('fertilized: ' + s.fertilizationDate.substr(0,10));
-      }
-      if (s.comment) {
-        tooltipStrings.push('comment: ' + s.comment.substr(0, 50));
-      }
-      tooltipStrings.join('\n');
       stockMinis.push({
         id: s.id,
         name: s.name,
         description: s.description,
         researcher: s.researcher,
-        tooltip: tooltipStrings.join('\n'),
         comment: (s.comment) ? s.comment.substr(0, 45) : '',
         fertilizationDate: s.fertilizationDate,
+        alleleSummary: '',
       });
     }
     return stockMinis;
@@ -330,11 +340,25 @@ export class StockRepository extends Repository<Stock> {
     return list.map((i: any) => i[field]);
   }
 
+  // We want to get a list of offspring including the mutation and transgene summary,
+  // but not all the details.  So we join the mutations and transgenes, build the
+  // summary, and then delete the detail.
   async getOffspring(id: number): Promise<Stock[]> {
-    return await this.createQueryBuilder('s')
-      .where('s.matIdInternal = :id OR s.patIdInternal = :id', {id})
-      .getMany();
+    const offspring: Stock[] = await super.find({
+      relations: ['transgenes', 'mutations'],
+      where: [
+        {matIdInternal: id},
+        {patIdInternal: id}
+      ]}
+    );
+    return offspring.map((o: Stock) => {
+      o.alleleSummary = this.getAlleleSummary(o);
+      delete o.mutations;
+      delete o.transgenes;
+      return o;
+    });
   }
+
 
   async countOffspring(id: number): Promise<number> {
     return await this.createQueryBuilder('s')
@@ -342,8 +366,8 @@ export class StockRepository extends Repository<Stock> {
       .getCount();
   }
 
-  // The params are in fact a stock filter.
-  // Facilitates the client building an excel spreadsheet of the stocks that meet the filter.
+// The params are in fact a stock filter.
+// Facilitates the client building an excel spreadsheet of the stocks that meet the filter.
   async getReport(params: any): Promise<StockReportDTO[]> {
     if (!params) {
       params = {};

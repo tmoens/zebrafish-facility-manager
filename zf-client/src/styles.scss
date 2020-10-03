@@ -14,6 +14,7 @@
 .mat-sidenav-container {
   background-color: white;
 }
+
 // used to limit presentation of a field to the available space
 .truncate {
   white-space: nowrap;
@@ -94,11 +95,23 @@
 }
 
 .zf-mini-row {
-  font-size: small;
+  font-size: 10px;
   margin-left: 10px;
 }
 
+.zf-mini-title {
+  font-size: 12px;
+  font-weight: 500;
+}
 
+.zf-list-item {
+  margin-bottom: 4px;
+  height: fit-content;
+}
+
+.zf-clickable {
+  color: mat-color(map-get($zf-app-theme, primary));
+}
 // I really should build a typography configuration for the app and then base this
 // size relative to some existing typography style, but I is lazy.
 .zf-title {
@@ -139,6 +152,13 @@
   min-height: 64px;
 }
 
+app-mutation-mini-viewer {
+  width: 100%;
+}
+
+app-transgene-mini-viewer {
+  width: 100%;
+}
 
 @media print {
   app-root > * { display: none; }

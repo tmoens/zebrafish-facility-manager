@@ -126,14 +126,16 @@ export class StockEditorComponent implements OnInit {
     // but we need to make sure we don't get any live instances in tanks.
     this.stock.swimmers = [];
     this.title = 'Creating Sub-Stock ' + this.stock.name;
+    // you can never edit the parents of a sub-stock
+    this.stock.parentsEditable = false;
     this.prepParents();
   }
 
   prepParents() {
     if (!this.stock.matStock) { this.stock.matStock = new StockDto(); }
     if (!this.stock.patStock) { this.stock.patStock = new StockDto(); }
-    this.momInternal = !!this.stock.matIdInternal;
-    this.dadInternal = !!this.stock.patIdInternal;
+    // this.momInternal = !!this.stock.matIdInternal;
+    // this.dadInternal = !!this.stock.patIdInternal;
     this.filteredResearcherOptions =
       this.service.fieldOptions.filterOptionsContaining('researcher', this.stock.researcher);
     this.filteredResearcherOptions =
