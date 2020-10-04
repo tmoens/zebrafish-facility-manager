@@ -13,13 +13,13 @@ Angular rebuilds and runs it for you.
 
 #### Where to put the client's *facility config file*
 
-In production the client gets it's facility configuration from a file in
+In production the client gets its facility configuration from a file in
 /your_deployment_root/zf-client/facility-config/facility_sub_domain.json
 
 This works really well because supporting a new facility does not require
 a new instance of the zf-client, nor worse, a recompile.
 
-But in development the client not running in a proper subdomain, but is running at
+However, in development the client is not running in a proper subdomain, but is running at
 http://localhost:some_port_number.  Which means the convention for naming the
 client's facility config file will not work because the client's domain name has a colon in it.
 
@@ -64,8 +64,9 @@ While the tools are great, sometimes the move from development mode to productio
 mode reveals some problems in the system.  So you want to run in production mode locally.
 
 This is not exactly the same as running in full production mode because 
-1. your web server (Apache) many not have a certificate
-1. your routes will all be on localhost rather than on proper subdomains
+1. your web server (Apache) may not have a certificate
+1. your routes will not have subdomains
+1. your server will not be running as a service
 
 ### Client
 
@@ -75,10 +76,40 @@ npm install
 # build the app in production mode. This updates the dist directory.
 ng build --prod
 # copy the contents to wherever your apache server serves the client
-# edit any of the 
-
 ```
 
+### Hosts file
+
+You want to find your local hosts file and create an alias like zf_prod_test for 127.0.0.1
+
+### Apache config
+
+Unless you have SSL locally, your apache config file needs to be for http, not https.
+The ServerName field would be zf_prod_test. You can use any port for the rewrite rules
+so long as it matches the port the server is running on.
+
+### Server config file
+
+The server config file should have 
+```
+FACILITY_URL=zf_prod_test
+```
+
+And the PORT should match
+the port used in the rewrite rules in the apache config file.
+
+The file could be called zf_prod_test.env. You would run the server with:
+```
+export FACILITY=zf_prod_test
+#from the root of the repo
+cd zf-server
+npm run start:prod
+```
+
+Now you can finally run the client by going to 
+```
+http:zf_prod_test
+```
 
 
 

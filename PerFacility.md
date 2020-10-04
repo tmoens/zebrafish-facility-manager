@@ -270,6 +270,7 @@ sudo systemctl start zfm-eue
 
 # check that it is running properly
 sudo journalctl -u zfm-eue
+```
 
 #### Am I ready to move on?
 
