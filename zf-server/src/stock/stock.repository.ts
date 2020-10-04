@@ -6,9 +6,9 @@ import {StockFilter} from './stock-filter';
 import {StockMiniDto} from '../common/Stock/stockMiniDto';
 import {Logger} from "winston";
 import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
-import moment = require('moment');
 import {Transgene} from "../transgene/transgene.entity";
 import {Mutation} from "../mutation/mutation.entity";
+import moment = require('moment');
 
 
 @EntityRepository(Stock)
@@ -88,7 +88,13 @@ export class StockRepository extends Repository<Stock> {
     stock.isDeletable = this.isDeletable(stock);
     stock.parentsEditable = this.parentsEditable(stock);
     stock.alleleSummary = this.getAlleleSummary(stock);
-    return ;
+    if (stock.matStock) {
+      stock.matStock.alleleSummary = await this.getAlleleSummaryForId(stock.matIdInternal);
+    }
+    if (stock.patStock) {
+      stock.patStock.alleleSummary = await this.getAlleleSummaryForId(stock.patIdInternal);
+    }
+    return;
   }
 
   // You cannot delete a stock if
@@ -123,20 +129,18 @@ export class StockRepository extends Repository<Stock> {
   // of a stock.  So we do it for them in the hope that they will stop writing
   // all kinds of crap in the stock's description
   getAlleleSummary(stock: Stock): string | null {
-    let summary: string = '';
-    const tgSummary = stock.transgenes.map((t: Transgene) => t.fullName);
-    const mutSummary = stock.mutations.map((m: Mutation) => m.fullName);
-    if(tgSummary.length > 0) {
-      summary = "tg: " + tgSummary.join(";");
-    }
-    if(summary && mutSummary.length > 0) {
-      summary += "  ";
-    }
-    if(mutSummary.length > 0) {
-      summary += "m: " + mutSummary.join(";");
-    }
-    return summary;
+    const tgSummary: string[] = stock.transgenes.map((t: Transgene) => t.fullName);
+    const mutSummary: string[] = stock.mutations.map((m: Mutation) => m.fullName);
+    return mutSummary.concat(tgSummary).join("; ");
   }
+
+  // We the mutation and transgene summary without all the details of the mutations and transgenes.
+  // So we join the mutations and transgenes, build the summary.
+  async getAlleleSummaryForId(id: number): Promise<string> {
+    const stock: Stock = await this.getStockGenetics(id);
+    return this.getAlleleSummary(stock);
+  }
+
 
   // Find a set of stocks which match the filter criteria.
   // In this case we return a set of miniature stock records for two reasons:
@@ -341,15 +345,16 @@ export class StockRepository extends Repository<Stock> {
   }
 
   // We want to get a list of offspring including the mutation and transgene summary,
-  // but not all the details.  So we join the mutations and transgenes, build the
-  // summary, and then delete the detail.
+  // but not all the details of the mutations and transgenes.
+  // So we join the mutations and transgenes, build the summary, and then delete the detail.
   async getOffspring(id: number): Promise<Stock[]> {
     const offspring: Stock[] = await super.find({
-      relations: ['transgenes', 'mutations'],
-      where: [
-        {matIdInternal: id},
-        {patIdInternal: id}
-      ]}
+        relations: ['transgenes', 'mutations'],
+        where: [
+          {matIdInternal: id},
+          {patIdInternal: id}
+        ]
+      }
     );
     return offspring.map((o: Stock) => {
       o.alleleSummary = this.getAlleleSummary(o);
