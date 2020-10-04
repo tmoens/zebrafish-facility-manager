@@ -24,7 +24,7 @@
     "@angular/platform-browser-dynamic": "^9.1.12",
     "@angular/router": "^9.1.12",
     "angularx-qrcode": "^2.3.5",
-    "class-transformer": "^0.2.3",
+    "class-transformer": "^0.3.1",
     "core-js": "^3.6.5",
     "mobx": "5.15.4",
     "mobx-angular": "4.1.0",
