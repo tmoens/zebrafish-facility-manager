@@ -1,11 +1,21 @@
 import {
-  Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, Index,
-  ManyToOne, ManyToMany, JoinTable, JoinColumn, OneToMany,
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import {Exclude, Expose, Transform, Type} from 'class-transformer';
-import { Mutation } from '../mutation/mutation.entity';
-import { Transgene } from '../transgene/transgene.entity';
-import { Stock2tank } from '../stock2tank/stock-to-tank.entity';
+import {Mutation} from '../mutation/mutation.entity';
+import {Transgene} from '../transgene/transgene.entity';
+import {Stock2tank} from '../stock2tank/stock-to-tank.entity';
+
 @Entity({
   orderBy: {number: 'DESC', subNumber: 'ASC'},
 })

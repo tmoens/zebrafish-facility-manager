@@ -15,7 +15,7 @@ For the purpose of illustration, this guide will assume you have
 purchased _examplezfm.com_ and that you set up DNS records to point
 at your host's IP address.
 
-It is a good idea to set up _test.examplezfm.com_ as a an initial sub-domain.
+It is a good idea to set up _test.examplezfm.com_ as an initial sub-domain.
 Later when you are configuring a system for a particular facility, you will be
 adding one sub-domain per facility.  If you happen to know that you are going set up
 managers for facilities _eue_ and _acdc_, you could create those sub-domains too.

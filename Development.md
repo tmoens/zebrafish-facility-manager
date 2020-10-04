@@ -1,6 +1,6 @@
 #Zebrafish Facility Manager Development
 
-If you are developing, I don;t need to hold your hand.  Pretty much everything goes as per
+If you are developing, I don't need to hold your hand.  Pretty much everything goes as per
 the normal deployment environment.  However, there are a few things to be aware of.
 
 ## Running in Development mode on localhost

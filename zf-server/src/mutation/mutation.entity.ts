@@ -1,6 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn, CreateDateColumn, Index, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  VersionColumn
+} from 'typeorm';
 import {Exclude, Expose, Transform, Type} from 'class-transformer';
-import { Stock } from '../stock/stock.entity';
+import {Stock} from '../stock/stock.entity';
 
 @Entity()
 export class Mutation {
