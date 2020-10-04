@@ -93,7 +93,7 @@
         <mat-list-item
           *ngFor="let stock of service.filteredList"
           [class.selected]="service.selected && stock.id === service.selected.id"
-          class="zf-selection-item truncate" role="listitem"
+          class="zf-selection-item" role="listitem"
           (click)="onSelect(stock)">
           <div>
             <span class="zf-clickable">{{stock.name}} </span> {{stock.description}}

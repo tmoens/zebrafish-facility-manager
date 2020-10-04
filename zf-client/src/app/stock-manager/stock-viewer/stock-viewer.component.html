@@ -45,8 +45,7 @@
           <div class="zf-sub-title">Mom (Internal)</div>
           <mat-list dense>
             <mat-list-item class="zf-list-item" style="height: fit-content">
-              <app-stock-mini-viewer [stock]="service.selected.matStock"
-                                     class="zf-selection-item"
+              <app-stock-mini-viewer [stock]="service.selected.matStock" mat-line
                                      (click)="goTo(service.selected.matStock.id)">
               </app-stock-mini-viewer>
             </mat-list-item>
@@ -67,8 +66,7 @@
           <div class="zf-sub-title">Dad (Internal)</div>
           <mat-list dense>
             <mat-list-item class="zf-list-item" style="height: fit-content">
-              <app-stock-mini-viewer [stock]="service.selected.patStock"
-                                     class="zf-selection-item"
+              <app-stock-mini-viewer [stock]="service.selected.patStock" mat-line
                                      (click)="goTo(service.selected.patStock.id)">
               </app-stock-mini-viewer>
             </mat-list-item>
@@ -90,10 +88,10 @@
           <mat-list-item>None</mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.offspringCount > 0" dense>
-          <mat-list-item *ngFor="let kid of service.selected.offspring"
-                         class="zf-selection-item zf-list-item truncate" role="listitem"
+          <mat-list-item *ngFor="let kid of service.selected.offspring" class="zf-selection-item zf-list-item"
+                         mat-line role="listitem"
                          (click)="goTo(kid.id)">
-            <app-stock-mini-viewer [stock]="kid"></app-stock-mini-viewer>
+            <app-stock-mini-viewer [stock]="kid" mat-line></app-stock-mini-viewer>
           </mat-list-item>
         </mat-list>
       </div>
@@ -127,14 +125,18 @@
             <mat-icon>edit</mat-icon>
           </button>
         </div>
+
+        <!-- No Transgenes -->
+        <mat-list *ngIf="service.selected.transgenes.length < 1" dense>
+          <mat-list-item>None</mat-list-item>
+        </mat-list>
+
+        <!-- List Transgenes -->
         <mat-list *ngIf="service.selected.transgenes.length > 0" dense>
           <mat-list-item *ngFor="let t of service.selected.transgenes" style="height: fit-content"
                          class=zf-list-item role="listitem">
             <app-transgene-mini-viewer mat-line [transgene]="t"></app-transgene-mini-viewer>
           </mat-list-item>
-        </mat-list>
-        <mat-list *ngIf="service.selected.transgenes.length < 1" dense>
-          <mat-list-item>None</mat-list-item>
         </mat-list>
         <mat-divider></mat-divider>
 

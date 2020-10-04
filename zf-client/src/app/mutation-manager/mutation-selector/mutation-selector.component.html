@@ -84,7 +84,7 @@
           [class.selected]="service.selected && item.id === service.selected.id"
           class="zf-selection-item zf-list-item truncate" role="listitem"
           (click)="onSelect(item)">
-            <app-mutation-mini-viewer mat-line [mutation]="item"></app-mutation-mini-viewer>
+            <app-mutation-tiny-viewer [mutation]="item" mat-line></app-mutation-tiny-viewer>
         </mat-list-item>
       </mat-list>
     </div>

@@ -21,7 +21,8 @@ import {TransgeneManagerRoutingModule} from './transgene-manager-routing.module'
 import {TransgeneMenuComponent} from './transgene-menu/transgene-menu.component';
 import {AuthModule} from "../auth/auth.module";
 import {MatSidenavModule} from "@angular/material/sidenav";
-import { TransgeneMiniViewerComponent } from './transgene-mini-viewer/transgene-mini-viewer.component';
+import {TransgeneMiniViewerComponent} from './transgene-mini-viewer/transgene-mini-viewer.component';
+import {TransgeneTinyViewerComponent} from "./transgene-mini-viewer/transgene-tiny-viewer.component";
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { TransgeneMiniViewerComponent } from './transgene-mini-viewer/transgene-
     TransgeneSelectorComponent,
     TransgeneViewerComponent,
     TransgeneMiniViewerComponent,
+    TransgeneTinyViewerComponent,
   ],
   imports: [
     TransgeneManagerRoutingModule,

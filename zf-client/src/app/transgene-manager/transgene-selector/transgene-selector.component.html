@@ -44,7 +44,7 @@
           [class.selected]="service.selected && item.id === service.selected.id"
           class="zf-selection-item truncate" role="listitem"
           (click)="onSelect(item)">
-          <app-transgene-mini-viewer mat-line [transgene]="item"></app-transgene-mini-viewer>
+          <app-transgene-tiny-viewer [transgene]="item" mat-line></app-transgene-tiny-viewer>
         </mat-list-item>
       </mat-list>
     </div>
