@@ -58,10 +58,11 @@ export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDt
   // This is used to populate a autocomplete field of transgenes
   getListFilteredByString(searchString: string): TransgeneDto[] {
     return this.all.filter((t: TransgeneDto) => {
+      const ss: string = searchString.toLowerCase();
       return(
-        (t.descriptor && t.descriptor.includes(searchString)) ||
-        (t.allele && t.allele.includes(searchString)) ||
-        (t.nickname && t.nickname.includes(searchString)));
+        (t.descriptor && t.descriptor.toLowerCase().includes(ss)) ||
+        (t.allele && t.allele.toLowerCase().includes(ss)) ||
+        (t.nickname && t.nickname.toLowerCase().includes(ss)));
     });
   }
 

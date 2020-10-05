@@ -84,10 +84,11 @@ export class MutationService extends ZFGenericService<MutationDto, MutationDto, 
   // This is used to populate an autocomplete field of mutations
   getListFilteredByString(searchString: string): MutationDto[] {
     return this.all.filter((m: MutationDto) => {
+      const ss: string = searchString.toLowerCase();
       return(
-        (m.gene && m.gene.includes(searchString)) ||
-        (m.name && m.name.includes(searchString)) ||
-        (m.nickname && m.nickname.includes(searchString)));
+        (m.gene && m.gene.toLowerCase().includes(ss)) ||
+        (m.name && m.name.toLowerCase().includes(ss)) ||
+        (m.nickname && m.nickname.toLowerCase().includes(ss)));
     });
   }
 
