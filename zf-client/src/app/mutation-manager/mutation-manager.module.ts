@@ -60,7 +60,8 @@ import {MutationTinyViewerComponent} from "./mutation-mini-viewer/mutation-tiny-
   ],
   exports: [
     MutationMenuComponent,
-    MutationMiniViewerComponent
+    MutationMiniViewerComponent,
+    MutationTinyViewerComponent
   ]
 })
 

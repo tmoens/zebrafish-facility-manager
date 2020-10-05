@@ -60,7 +60,7 @@ const stockManagerRoutes: Routes = [
         }
       },
       {
-        path: EditMode.EDIT + '/genetics/:type/:id',
+        path: EditMode.EDIT + '/genetics/:id',
         component: StockGeneticsEditorComponent,
         canDeactivate: [CanDeactivateGuard],
         canActivate: [RoleGuard],

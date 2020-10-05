@@ -1,6 +1,7 @@
 <div fxLayout="column" class="zf-selector">
 
   <!-- The Filter Part -->
+
   <form [formGroup]="mfForm">
 
     <div fxLayout="row" fxLayoutAlign="space-between center">
@@ -84,6 +85,7 @@
   <mat-divider></mat-divider>
 
   <!-- The Filtered List part -->
+
   <div *ngIf="service.filteredList.length > 0" >
     <span class="zf-sub-title">Filtered List</span>
 
@@ -114,7 +116,9 @@
             <mat-icon>navigate_next</mat-icon>
           </button>
 
-          <div mat-line>{{stock.name}} {{stock.description}}</div>
+          <div *ngIf="stock.id !== focusId" mat-line>
+            <div mat-line>{{stock.name}} {{stock.description}}</div>
+          </div>
 
           <div mat-line *ngIf="stock.id === focusId">
             <app-stock-mini-viewer [stock]="stock" mat-line></app-stock-mini-viewer>

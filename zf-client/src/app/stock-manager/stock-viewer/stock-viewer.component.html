@@ -44,7 +44,7 @@
         <div *ngIf="service.selected.matStock">
           <div class="zf-sub-title">Mom (Internal)</div>
           <mat-list dense>
-            <mat-list-item class="zf-list-item" style="height: fit-content">
+            <mat-list-item class="zf-list-item zf-selection-item" style="height: fit-content">
               <app-stock-mini-viewer [stock]="service.selected.matStock" mat-line
                                      (click)="goTo(service.selected.matStock.id)">
               </app-stock-mini-viewer>
@@ -65,7 +65,7 @@
         <div *ngIf="service.selected.patStock">
           <div class="zf-sub-title">Dad (Internal)</div>
           <mat-list dense>
-            <mat-list-item class="zf-list-item" style="height: fit-content">
+            <mat-list-item class="zf-list-item zf-selection-item" style="height: fit-content">
               <app-stock-mini-viewer [stock]="service.selected.patStock" mat-line
                                      (click)="goTo(service.selected.patStock.id)">
               </app-stock-mini-viewer>

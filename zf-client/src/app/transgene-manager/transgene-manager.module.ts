@@ -56,7 +56,8 @@ import {TransgeneTinyViewerComponent} from "./transgene-mini-viewer/transgene-ti
   ],
   exports: [
     TransgeneMenuComponent,
-    TransgeneMiniViewerComponent
+    TransgeneMiniViewerComponent,
+    TransgeneTinyViewerComponent
 
   ]
 })

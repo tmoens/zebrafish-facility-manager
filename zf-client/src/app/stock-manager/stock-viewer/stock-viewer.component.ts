@@ -78,11 +78,11 @@ export class StockViewerComponent implements OnInit {
   }
 
   editMutations() {
-    this.router.navigate(['stock_manager/edit/genetics/mutation/' + this.service.selected.id]);
+    this.router.navigate(['stock_manager/edit/genetics/' + this.service.selected.id]);
   }
 
   editTransgenes() {
-    this.router.navigate(['stock_manager/edit/genetics/transgene/' + this.service.selected.id]);
+    this.router.navigate(['stock_manager/edit/genetics/' + this.service.selected.id]);
   }
 
   editSwimmers() {
