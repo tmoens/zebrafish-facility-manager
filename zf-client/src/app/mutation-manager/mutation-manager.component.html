@@ -17,6 +17,7 @@
 
       <!-- The sidenav should collapse when editing an item  or when the screen is small -->
       <mat-sidenav #selector fixedInViewport
+                   [disableClose]="true"
                    [class.zf-fixed-sidenav]="appState.selectorFixed"
                    [class.zf-togglable-sidenav]="!appState.selectorFixed"
                    fixedTopGap="120"
