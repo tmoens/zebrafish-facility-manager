@@ -96,7 +96,7 @@ export class MutationService extends GenericService {
         ' Mutation id: ' +
         candidate.id;
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
 
     // When you use remove, TypeORM returns the object you deleted with the
@@ -113,7 +113,7 @@ export class MutationService extends GenericService {
     if (!candidate) {
       const msg = '7684423 update a non-existent mutation.';
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
     return candidate;
   }
@@ -125,7 +125,7 @@ export class MutationService extends GenericService {
     if (m.length > 0) {
       const msg = '9893064 attempt to create a transgene with a name that already exists.';
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
     return true;
   }
@@ -138,7 +138,7 @@ export class MutationService extends GenericService {
         'You cannot name a mutation starting with ' +
         this.configService.facilityInfo.prefix +
         '.';
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
   }
 

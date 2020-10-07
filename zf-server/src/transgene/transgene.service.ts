@@ -97,7 +97,7 @@ export class TransgeneService extends GenericService {
         ' Transgene id: ' +
         candidate.id;
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
 
     // When you use remove, TypeORM returns the object you deleted with the
@@ -114,7 +114,7 @@ export class TransgeneService extends GenericService {
     if (!candidate) {
       const msg = '7684423 update a non-existent mutation.';
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
     return candidate;
   }
@@ -126,7 +126,7 @@ export class TransgeneService extends GenericService {
     if (t.length > 0) {
       const msg = '9893064 attempt to create a transgene with a name that already exists.';
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
     return true;
   }
@@ -139,7 +139,7 @@ export class TransgeneService extends GenericService {
         'You cannot name a transgene allele starting with ' +
         this.configService.facilityInfo.prefix +
         '.';
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
   }
 

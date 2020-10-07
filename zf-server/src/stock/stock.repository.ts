@@ -26,7 +26,7 @@ export class StockRepository extends Repository<Stock> {
     } else {
       const message: string = 'Stock does not exist. id: ' + stockId;
       this.logger.error(message,);
-      throw new BadRequestException('Bad Request', message);
+      throw new BadRequestException(message);
     }
   }
 
@@ -43,7 +43,7 @@ export class StockRepository extends Repository<Stock> {
     if (!stock) {
       const msg = 'Stock does not exist. Id: ' + id;
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
     await this.computeAncillaryFields(stock);
 
@@ -59,7 +59,7 @@ export class StockRepository extends Repository<Stock> {
     if (!stock) {
       const msg = 'Stock does not exist. Id: ' + id;
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
 
     return stock;
@@ -72,7 +72,7 @@ export class StockRepository extends Repository<Stock> {
     if (!stock) {
       const msg = 'Stock does not exist. Id: ' + id;
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
     return stock;
   }
@@ -348,6 +348,7 @@ export class StockRepository extends Repository<Stock> {
   // but not all the details of the mutations and transgenes.
   // So we join the mutations and transgenes, build the summary, and then delete the detail.
   async getOffspring(id: number): Promise<Stock[]> {
+    if (id === null) return [];
     const offspring: Stock[] = await super.find({
         relations: ['transgenes', 'mutations'],
         where: [

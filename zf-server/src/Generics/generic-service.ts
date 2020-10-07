@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import {BadRequestException} from '@nestjs/common';
 
 /**
  * This is just a place to gather stuff common to all the services
@@ -9,7 +9,7 @@ export class GenericService {
   mustHaveAttribute(dto: any, attribute: string) {
     if (!dto[attribute]) {
       const msg = '9706311 Cannot create a mutation without ' + attribute + '.';
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
   }
 

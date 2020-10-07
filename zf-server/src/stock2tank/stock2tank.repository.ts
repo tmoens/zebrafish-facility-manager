@@ -1,13 +1,12 @@
-import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
-import { classToPlain, plainToClassFromExist } from 'class-transformer';
-import { Stock2tank } from './stock-to-tank.entity';
-import { BadRequestException } from '@nestjs/common';
+import {EntityRepository, Repository} from 'typeorm';
+import {classToPlain, plainToClassFromExist} from 'class-transformer';
+import {Stock2tank} from './stock-to-tank.entity';
+import {BadRequestException} from '@nestjs/common';
 
 @EntityRepository(Stock2tank)
 export class Stock2tankRepository extends Repository<Stock2tank> {
 
-  constructor(
-  ) {
+  constructor() {
     super();
   }
 
@@ -72,9 +71,9 @@ export class Stock2tankRepository extends Repository<Stock2tank> {
     return await this.save(o)
       .catch(error => {
         if (error.code === 'ER_DUP_ENTRY') {
-          throw new BadRequestException('Bad Request', 'Stock already in tank.');
+          throw new BadRequestException('Stock already in tank.');
         } else {
-          throw new BadRequestException('Bad Request', 'error.message');
+          throw new BadRequestException('error.message');
         }
       });
   }

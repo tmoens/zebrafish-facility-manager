@@ -50,7 +50,7 @@ export class StockService extends GenericService {
           candidate.number +
           ' does not exist.';
         this.logger.error(msg);
-        throw new BadRequestException('Bad Request', msg);
+        throw new BadRequestException(msg);
       }
       candidate.subNumber = await this.repo.getNextSubStockNumber(candidate.number);
       // For sub-stock creation, take all the transgenes and mutations from the original stock
@@ -132,7 +132,7 @@ export class StockService extends GenericService {
       const msg: string = 'Child stock (' + child.name + ') older than ' +
         'parent stock (' + parent.name + ').';
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
   }
 
@@ -167,7 +167,7 @@ export class StockService extends GenericService {
       const msg = 'Attempt to delete stock that either has descendants, or is alive in ' +
         'some tank or has subStocks.';
       this.logger.error(msg);
-      throw new BadRequestException('Bad Request', msg);
+      throw new BadRequestException(msg);
     }
     return await this.repo.remove(stock);
   }
