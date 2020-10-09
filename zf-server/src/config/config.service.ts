@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import * as Joi from '@hapi/joi';
+import * as Joi from 'joi';
 import * as fs from 'fs';
 import {TypeOrmModuleOptions, TypeOrmOptionsFactory} from '@nestjs/typeorm';
 import {LoggerOptions} from 'typeorm/logger/LoggerOptions';
@@ -73,9 +73,8 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
       DEFAULT_ADMIN_USER_PASSWORD: Joi.string().required(),
     });
 
-    const {error, value: validatedEnvConfig} = Joi.validate(
+    const {error, value: validatedEnvConfig} = envVarsSchema.validate(
       envConfig,
-      envVarsSchema,
     );
     if (error) {
       throw new Error(`Config validation error: ${error.message}`);
