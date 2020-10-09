@@ -5,13 +5,11 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
-    "start": "ts-node -r tsconfig-paths/register src/main.ts",
-    "start:dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
-    "start:nodemon": "nodemon",
-    "start:debug": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect dist/main.js\"",
-    "start:debugorig": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk dist/main.js\"",
+    "start": "nest start",
+    "start:dev": "nest start:dev",
+    "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest --detectOpenHandles",
@@ -49,6 +47,7 @@
     "winston-daily-rotate-file": "^4.5.0"
   },
   "devDependencies": {
+    "@nestjs/cli": "^7.5.1",
     "@nestjs/testing": "6.1.1",
     "@types/dotenv": "^6.1.1",
     "@types/express": "4.16.1",
