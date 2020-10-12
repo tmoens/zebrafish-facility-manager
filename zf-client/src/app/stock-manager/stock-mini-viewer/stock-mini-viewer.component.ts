@@ -8,6 +8,9 @@ import {StockDto} from "../dto/stock-dto";
     <div *ngIf="stock.alleleSummary" class="zf-mini-row truncate">
       {{stock.alleleSummary}}
     </div>
+    <div *ngIf="!stock.alleleSummary" class="zf-mini-row truncate">
+      No mutations or transgenes
+    </div>
   `,
 })
 export class StockMiniViewerComponent implements OnInit {

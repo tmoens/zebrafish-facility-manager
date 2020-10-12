@@ -95,11 +95,13 @@
         <mat-list-item
           *ngFor="let stock of service.filteredList"
           [class.selected]="service.selected && stock.id === service.selected.id"
-          class="zf-selection-item" role="listitem"
+          class="zf-selection-item zf-list-item" mat-line
+          role="listitem" role="listitem"
           (click)="onSelect(stock)">
-          <div>
-            <span class="zf-clickable">{{stock.name}} </span> {{stock.description}}
-          </div>
+          <app-stock-mini-viewer [stock]="stock" mat-line></app-stock-mini-viewer>
+          <!--<div>-->
+          <!--  <span class="zf-clickable">{{stock.name}} </span> {{stock.description}}-->
+          <!--</div>-->
         </mat-list-item>
       </mat-list>
     </div>
