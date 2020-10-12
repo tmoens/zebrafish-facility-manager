@@ -29,7 +29,7 @@
         </div>
 
         <div fxLayout="column" fxLayoutAlign="center">
-          <button mat-mini-fab (click)="goToIndex(inFocusIndex + 1)" [disabled]="inFocusIndex >= tankList.length"
+          <button (click)="goToIndex(inFocusIndex + 1)" [disabled]="inFocusIndex >= tankList.length - 1" mat-mini-fab
                   color="primary">
             <mat-icon>navigate_next</mat-icon>
           </button>
