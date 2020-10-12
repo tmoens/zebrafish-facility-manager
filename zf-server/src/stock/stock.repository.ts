@@ -14,7 +14,7 @@ import moment = require('moment');
 @EntityRepository(Stock)
 export class StockRepository extends Repository<Stock> {
   constructor(
-    @Inject('winston') private readonly logger: Logger
+    @Inject('winston') private readonly logger: Logger,
   ) {
     super();
   }
@@ -34,12 +34,18 @@ export class StockRepository extends Repository<Stock> {
     return this.mustExist(id);
   }
 
+  async findByName(name: string): Promise<Stock> {
+    return await this.findOne({where: {name}});
+  }
+
   async getStockWithRelations(id: number): Promise<Stock> {
-    const stock: Stock = await super.findOne(id, {relations: [
+    const stock: Stock = await super.findOne(id, {
+      relations: [
         'transgenes', 'mutations', 'swimmers', 'swimmers.tank',
         'matStock', 'matStock.mutations', 'matStock.transgenes',
         'patStock', 'patStock.mutations', 'patStock.transgenes',
-      ]});
+      ]
+    });
     if (!stock) {
       const msg = 'Stock does not exist. Id: ' + id;
       this.logger.error(msg);
@@ -81,7 +87,7 @@ export class StockRepository extends Repository<Stock> {
     // Set some ancillary computed fields
     // Kludge Alert.  Clearly this should be done in the Stock Class but that
     // class does not have access to the repository to figure this stuff out.
-    // So I do it here. Sue me. :-)
+    // So I do it here.
     stock.offspring = await this.getOffspring(stock.id);
     stock.offspringCount = await this.countOffspring(stock.id);
     stock.nextSubStockNumber = await this.getNextSubStockNumber(stock.number);
@@ -134,176 +140,10 @@ export class StockRepository extends Repository<Stock> {
     return mutSummary.concat(tgSummary).join("; ");
   }
 
-  // We the mutation and transgene summary without all the details of the mutations and transgenes.
-  // So we join the mutations and transgenes, build the summary.
+  // Get a summary of all the mutations and transgenes for a stock.
   async getAlleleSummaryForId(id: number): Promise<string> {
     const stock: Stock = await this.getStockGenetics(id);
     return this.getAlleleSummary(stock);
-  }
-
-
-  // Find a set of stocks which match the filter criteria.
-  // In this case we return a set of miniature stock records for two reasons:
-  // a) the real reason - that TypeORM does not supply a way to use DISTINCT
-  //    and without it, when you end up getting multiple records of the same
-  //    stock when you join, say, with hox mutations and the stock has several
-  //    hox mutations.
-  // b) the records are smaller and more efficient to send to the client
-  async findFiltered(filter: StockFilter): Promise<StockMiniDto[]> {
-    let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
-      .select('DISTINCT stock.id, stock.name, stock.description, ' +
-        'stock.researcher, stock.comment, stock.fertilizationDate')
-      .addSelect('DATE_FORMAT(stock.fertilizationDate, "%Y-%m-%d")', 'fertilizationDate')
-      .where('1');
-    if (filter.number) {
-      q = q.andWhere('stock.name LIKE :n', {n: filter.number + "%"});
-    }
-    if (filter.researcher) {
-      q = q.andWhere('stock.researcher LIKE :r', {r: '%' + filter.researcher + '%'});
-    }
-    if (filter.text) {
-      const text = '%' + filter.text + '%';
-      q = q.andWhere(new Brackets( qb => {
-        qb.where('stock.comment LIKE :t OR stock.description LIKE :t',
-          {t: text});
-      } ));
-    }
-    if (filter.mutationId) {
-      q = q.leftJoin('stock.mutations', 'mutation')
-        .andWhere('mutation.id = :mid', {mid: filter.mutationId});
-    } else if (filter.mutation) {
-      const text = '%' + filter.mutation + '%';
-      q = q.leftJoin('stock.mutations', 'mutation')
-        .andWhere(new Brackets(qb => {
-          qb.where('mutation.name LIKE :mt OR mutation.gene LIKE :mt OR mutation.comment LIKE :mt OR ' +
-            'mutation.phenotype LIKE :mt OR mutation.morphantPhenotype LIKE :mt',
-            { mt: text });
-        }));
-    }
-    if (filter.transgeneId) {
-      q = q.leftJoin('stock.transgenes', 'transgene')
-        .andWhere('transgene.id = :tid', {tid: filter.transgeneId});
-    } else if (filter.transgene) {
-      const text = '%' + filter.transgene + '%';
-      q = q.leftJoin('stock.transgenes', 'transgene')
-        .andWhere(new Brackets(qb => {
-          qb.where('transgene.descriptor LIKE :tt OR transgene.allele LIKE :tt OR ' +
-            'transgene.plasmid LIKE :tt OR transgene.comment LIKE :tt',
-            {tt: text});
-        }));
-    }
-
-    if (filter.tankName) {
-      const text = filter.tankName + '%';
-      q = q.leftJoin('stock.swimmers', 'swimmers')
-        .leftJoin('swimmers.tank', 'tank')
-        .andWhere('tank.name LIKE :tn',
-          {tn: text});
-    }
-
-    if (filter.liveStocksOnly) {
-      if (!filter.tankName) {
-        q = q.leftJoin('stock.swimmers', 'swimmers');
-      }
-      q = q.andWhere('swimmers.tank IS NOT NULL')
-        .groupBy('stock.id');
-    }
-
-    if (filter.age) {
-      const dob = moment().subtract(Number(filter.age), 'days');
-      if (filter.ageModifier === 'or_older') {
-        q = q.andWhere('fertilizationDate <= :d', {d: dob.format('YYYY-MM-DD')});
-      } else {
-        q = q.andWhere('fertilizationDate >= :d', {d: dob.format('YYYY-MM-DD')});
-      }
-    }
-
-    const stocks: any[] =  await q
-      .limit(100)
-      .getRawMany();
-
-    // Please look the other way now for a minute
-    const stockMinis: StockMiniDto[] = [];
-    for (const s of stocks) {
-      stockMinis.push({
-        id: s.id,
-        name: s.name,
-        description: s.description,
-        researcher: s.researcher,
-        comment: (s.comment) ? s.comment.substr(0, 45) : '',
-        fertilizationDate: s.fertilizationDate,
-        alleleSummary: '',
-      });
-    }
-    return stockMinis;
-  }
-
-  // Find a set of stocks which match the filter criteria.
-  // Sort the result in tank order to facilitate someone being able to walk
-  // around the facility on the trail of a particular set of stocks.
-  async getTankWalk(filter: StockFilter): Promise<StockMiniDto[]> {
-    let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
-      .select('DISTINCT stock.id as stockId, stock.name as stockName, ' +
-        'tank.id as tankId, tank.name as tankName, swimmers.num, swimmers.comment')
-      .leftJoin('stock.swimmers', 'swimmers')
-      .leftJoin('swimmers.tank', 'tank')
-      .where('swimmers.tank IS NOT NULL')
-      .orderBy('tank.id')
-      .addOrderBy('stock.id');
-    if (filter.tankName) {
-      q = q.andWhere('tank.name LIKE :tn', {tn: filter.tankName + '%'});
-    }
-    if (filter.number) {
-      q = q.andWhere('stock.name LIKE :n', {n: filter.number + "%"});
-    }
-    if (filter.researcher) {
-      q = q.andWhere('stock.researcher LIKE :r', {r: '%' + filter.researcher + '%'});
-    }
-    if (filter.text) {
-      const text = '%' + filter.text + '%';
-      q = q.andWhere(new Brackets( qb => {
-        qb.where('stock.comment LIKE :t OR stock.description LIKE :t',
-          {t: text});
-      } ));
-    }
-    if (filter.mutationId) {
-      q = q.leftJoin('stock.mutations', 'mutation')
-        .andWhere('mutation.id = :mid', {mid: filter.mutationId});
-    } else if (filter.mutation) {
-      const text = '%' + filter.mutation + '%';
-      q = q.leftJoin('stock.mutations', 'mutation')
-        .andWhere(new Brackets(qb => {
-          qb.where('mutation.name LIKE :mt OR mutation.gene LIKE :mt OR mutation.comment LIKE :mt OR ' +
-            'mutation.phenotype LIKE :mt OR mutation.morphantPhenotype LIKE :mt',
-            { mt: text });
-        }));
-    }
-    if (filter.transgeneId) {
-      q = q.leftJoin('stock.transgenes', 'transgene')
-        .andWhere('transgene.id = :tid', {tid: filter.transgeneId});
-    } else if (filter.transgene) {
-      const text = '%' + filter.transgene + '%';
-      q = q.leftJoin('stock.transgenes', 'transgene')
-        .andWhere(new Brackets(qb => {
-          qb.where('transgene.descriptor LIKE :tt OR transgene.allele LIKE :tt OR ' +
-            'transgene.plasmid LIKE :tt OR transgene.comment LIKE :tt',
-            {tt: text});
-        }));
-    }
-    if (filter.age) {
-      const dob = moment().subtract(Number(filter.age), 'days');
-      if (filter.ageModifier === 'or_older') {
-        q = q.andWhere('fertilizationDate <= :d', {d: dob.format('YYYY-MM-DD')});
-      } else {
-        q = q.andWhere('fertilizationDate >= :d', {d: dob.format('YYYY-MM-DD')});
-      }
-    }
-
-    return await q.getRawMany();
-  }
-
-  async findByName(name: string): Promise<Stock> {
-    return await this.findOne({ where: {name}});
   }
 
   // What is the next available number for the stock?
@@ -311,7 +151,11 @@ export class StockRepository extends Repository<Stock> {
     const latest = await this.createQueryBuilder('m')
       .select('MAX(m.number)', 'max')
       .getRawOne();
-    return  Number(latest.max) + 1;
+    return Number(latest.max) + 1;
+  }
+
+  async getNextStockName(): Promise<any> {
+    return {name: String(await this.getNextStockNumber())};
   }
 
   // What is the next available sub stock number for a given stock number?
@@ -320,11 +164,7 @@ export class StockRepository extends Repository<Stock> {
       .select('MAX(s.subNumber)', 'max')
       .where('s.number = :sn', {sn: stockNumber})
       .getRawOne();
-    return  Number(latest.max) + 1;
-  }
-
-  async getNextStockName(): Promise<any> {
-    return { name: String( await this.getNextStockNumber()) };
+    return Number(latest.max) + 1;
   }
 
   // values that can be used to auto-complete various fields in the GUI
@@ -365,20 +205,111 @@ export class StockRepository extends Repository<Stock> {
     });
   }
 
-
   async countOffspring(id: number): Promise<number> {
     return await this.createQueryBuilder('s')
       .where('s.matIdInternal = :id OR s.patIdInternal = :id', {id})
       .getCount();
   }
 
-// The params are in fact a stock filter.
-// Facilitates the client building an excel spreadsheet of the stocks that meet the filter.
-  async getReport(params: any): Promise<StockReportDTO[]> {
-    if (!params) {
-      params = {};
+  // Find a set of stocks which match the filter criteria.
+  // I know that the server should be agnostic to what a particular function
+  // is used for on the client side, but this filtered list is used in the
+  // stock selector. Sue me.
+  // The complexity comes from the fact that the filter can be on objects associated
+  // with the stock (like it's transgenes) and not simply on the stock itself.
+  async findFiltered(filter: StockFilter): Promise<StockMiniDto[]> {
+    // console.log('Filter: ' + JSON.stringify(filter));
+
+    // For this query we only look at a few fields
+    let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
+      .select('stock.id, stock.name, stock.pi, stock.description, stock.researcher, stock.comment, stock.fertilizationDate')
+      .groupBy('stock.id');
+
+    // We have to join a bunch of relationships based on what we are filtering for.
+    // So, if the filter does not include mutations, we do not need to join that table.
+    if (filter.mutationId || filter.mutation) {
+      q = q.leftJoin('stock.mutations', 'mutation');
+    }
+    if (filter.transgeneId || filter.transgene) {
+      q = q.leftJoin('stock.transgenes', 'transgene');
+    }
+    if (filter.liveStocksOnly || filter.tankName) {
+      q = q.leftJoin('stock.swimmers', 'swimmers');
+    }
+    if (filter.tankName) {
+      q = q.leftJoin('swimmers.tank', 'tank')
     }
 
+    q = this.buildWhereConditions(q, filter);
+
+    const stocks: any[] = await q
+      .limit(100)
+      .getRawMany();
+
+    // Please look the other way now for a minute
+    const stockMinis: StockMiniDto[] = [];
+    for (const s of stocks) {
+      const alleleSummary = await this.getAlleleSummaryForId(s.id)
+      stockMinis.push({
+        id: s.id,
+        name: s.name,
+        description: s.description,
+        researcher: s.researcher,
+        comment: (s.comment) ? s.comment.substr(0, 45) : '',
+        fertilizationDate: s.fertilizationDate,
+        alleleSummary: alleleSummary,
+      });
+    }
+    return stockMinis;
+  }
+
+
+  // Find a set of stocks which match the filter criteria, for use in the "Tank Walker"
+  // I know that the server should be agnostic to what a particular function
+  // is used for on the client side, but this filtered list is used in the
+  // Tank Walker. Sue me.
+  async getStocksForTankWalk(filter: StockFilter): Promise<StockMiniDto[]> {
+    // We are only interested in stocks that are in tanks.
+    filter.liveStocksOnly = true;
+
+    // For this query we only look at a few fields
+    // Sort the result in tank order to facilitate someone being able to walk
+    // around the facility on the trail of a particular set of stocks.
+    let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
+      .select('stock.id as stockId, stock.name as stockName, ' +
+        'tank.id as tankId, tank.name as tankName, swimmers.num, swimmers.comment')
+      .orderBy('tank.id')
+      .addOrderBy('stock.id')
+      .groupBy('stock.id');
+
+    // we always join stocks to their swimmers and swimmers to their tanks because
+    // the tank walker only makes sense for stocks that are in tanks.
+    q = q.leftJoin('stock.swimmers', 'swimmers')
+      .leftJoin('swimmers.tank', 'tank')
+
+    // join mutation or transgenes of relationships based if filtering on those
+    if (filter.mutationId || filter.mutation) {
+      q = q.leftJoin('stock.mutations', 'mutation');
+    }
+    if (filter.transgeneId || filter.transgene) {
+      q = q.leftJoin('stock.transgenes', 'transgene');
+    }
+
+    // building the where conditions for the filter is exactly the same as elsewhere
+    q = this.buildWhereConditions(q, filter);
+
+    return await q.getRawMany();
+  }
+
+  // Get information about stocks so that the client can build
+  // a comprehensive spreadsheet of the stocks that meet the filter criteria.
+  async getStocksForReport(filter: StockFilter): Promise<StockReportDTO[]> {
+    if (!filter) {
+      filter = {};
+    }
+
+    // regardless of the filter criteria, we need to join all related objects to
+    // every stock in order to get all the information required for the report.
     let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
       .leftJoin('stock.matStock', 'mom')
       .leftJoin('stock.patStock', 'dad')
@@ -395,57 +326,85 @@ export class StockRepository extends Repository<Stock> {
       .addSelect('GROUP_CONCAT(DISTINCT mutation.name SEPARATOR "; ") Mutations')
       .addSelect('GROUP_CONCAT(DISTINCT transgene.descriptor SEPARATOR "; ") Transgenes')
       .addSelect('GROUP_CONCAT(DISTINCT tank.name SEPARATOR "; ") Tanks')
-      .where( '1')
+      .where('1')
       .groupBy('stock.id');
 
-    if (params.number) {
-      q = q.andWhere('stock.name Like :n', {n: params.number + '%'});
-    }
-    if (params.researcher) {
-      q = q.andWhere('stock.researcher Like :r', {r: '%' + params.researcher + '%'});
-    }
-    if (params.text) {
-      const text = '%' + params.text + '%';
-      q = q.andWhere(new Brackets( qb => {
-        qb.where('stock.comment Like :t OR stock.description LIKE :t',
-          {t: text});
-      } ));
-    }
-    if (params.mutation) {
-      const text = '%' + params.mutation + '%';
-      q = q.andWhere(new Brackets(qb => {
-        qb.where('mutation.name LIKE :mt OR mutation.gene LIKE :mt OR mutation.comment LIKE :mt OR ' +
-          'mutation.phenotype LIKE :mt OR mutation.morphantPhenotype LIKE :mt',
-          { mt: text });
-      }));
-    }
-    if (params.transgene) {
-      const text = '%' + params.transgene + '%';
-      q = q.andWhere(new Brackets(qb => {
-        qb.where('transgene.descriptor LIKE :tt OR transgene.allele LIKE :tt OR ' +
-          'transgene.plasmid LIKE :tt OR transgene.comment LIKE :tt',
-          {tt: text});
-      }));
-    }
-    if (params.tankName) {
-      const text = params.tankName + '%';
-      q = q.andWhere('tank.name LIKE :tn', {tn: text});
-    }
-    if (params.liveStocksOnly) {
-      q = q.andWhere('swimmers.tank IS NOT NULL');
-    }
-    if (params.age) {
-      const dob = moment().subtract(Number(params.age), 'days');
-      if (params.ageModifier === 'or_older') {
-        q = q.andWhere('fertilizationDate < :d', {d: dob.format('YYYY-MM-DD')});
-      } else {
-        q = q.andWhere('fertilizationDate > :d', {d: dob.format('YYYY-MM-DD')});
-      }
-    }
+    // building the where conditions for the filter is exactly the same as elsewhere
+    q = this.buildWhereConditions(q, filter);
     const items = await q
       .getRawMany();
+
     return items.map(item => {
       return new StockReportDTO(item);
     });
+  }
+
+  // Build "where" conditions of a query based on the data in a stock filter object.
+  // BEWARE this function assumes that the stock has been joined to all the necessary
+  // relationships to be able to apply where conditions on those relationships.
+  // It also assumes no aliasing on the relationships.
+  // It really just avoids duplicated cod. But the fact that the SelectQueryBuilder talks about
+  // object fields inside quotes makes it so that this function and the calling
+  // function need to agree on the names of the fields in the quoted strings.
+  buildWhereConditions(q: SelectQueryBuilder<any>, filter: StockFilter): SelectQueryBuilder<any> {
+    q = q.where('1');
+
+    // a filter on the stock number matches the start of the number
+    if (filter.number) {
+      q = q.andWhere('stock.name LIKE :n', {n: filter.number + "%"});
+    }
+
+    // a filter on the researcher matches any par of the researcher's name
+    if (filter.researcher) {
+      q = q.andWhere('stock.researcher LIKE :r', {r: '%' + filter.researcher + '%'});
+    }
+
+    // a filter on text looks anywhere in the stocks comment or description only.
+    if (filter.text) {
+      const text = '%' + filter.text + '%';
+      q = q.andWhere(new Brackets(qb => {
+        qb.where('stock.comment LIKE :t OR stock.description LIKE :t',
+          {t: text});
+      }));
+    }
+
+    // a filter on age is a number in days plus an "or older" or "or younger clarification"
+    if (filter.age) {
+      const dob = moment().subtract(Number(filter.age), 'days');
+      if (filter.ageModifier === 'or_older') {
+        q = q.andWhere('stock.fertilizationDate <= :d', {d: dob.format('YYYY-MM-DD')});
+      } else {
+        q = q.andWhere('stock.fertilizationDate >= :d', {d: dob.format('YYYY-MM-DD')});
+      }
+    }
+
+    // if the filter is for a particular mutationId, you do not need to filter for names.
+    // a filter for "mutation" looks in the name and gene fields
+    if (filter.mutationId) {
+      q = q.andWhere('mutation.id = ' + filter.mutationId);
+    } else if (filter.mutation) {
+      q = q.andWhere(new Brackets(qb => {
+        qb.where('mutation.name LIKE :mt OR mutation.gene LIKE :mt OR mutation.nickname LIKE :mt',
+          {mt: "%" + filter.mutation + "%"});
+      }));
+    }
+
+    if (filter.transgeneId) {
+      q = q.andWhere('transgene.id = ' + filter.transgeneId);
+    } else if (filter.transgene) {
+      q = q.andWhere(new Brackets(qb => {
+        qb.where('transgene.descriptor LIKE :tg OR transgene.allele LIKE :tg OR transgene.nickname LIKE :tg',
+          {tg: "%" + filter.transgene + "%"});
+      }));
+    }
+
+    // if the filter includes a tank name, we do not need to filter for "liveStocksOnly"
+    // because if they are in a tank, they are alive.
+    if (filter.tankName) {
+      q = q.andWhere('tank.name LIKE :tn', {tn: filter.tankName + '%'});
+    } else if (filter.liveStocksOnly) {
+      q = q.andWhere('swimmers.tankId IS NOT NULL');
+    }
+    return q;
   }
 }

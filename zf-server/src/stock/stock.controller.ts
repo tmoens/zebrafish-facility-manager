@@ -1,5 +1,16 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param,
-  ParseIntPipe, Post, Put, Query, UseGuards, UseInterceptors
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {StockRepository} from './stock.repository';
@@ -66,12 +77,12 @@ export class StockController {
   @Get('tankWalk')
   async getTankWalk(@Query() params): Promise<any[]> {
     const filter: StockFilter = plainToClass(StockFilter, params);
-    return await this.repo.getTankWalk(filter);
+    return await this.repo.getStocksForTankWalk(filter);
   }
 
   @Get('report')
   async getReport(@Query() params): Promise<any[]> {
-    return await this.repo.getReport(params);
+    return await this.repo.getStocksForReport(params);
   }
 
   @Get('autoCompleteOptions')

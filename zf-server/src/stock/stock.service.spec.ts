@@ -491,7 +491,7 @@ describe('Stock Service testing', () => {
       const filter: StockFilter = new StockFilter();
       const list = await stockRepo.findFiltered(filter);
       expect(list.length).toBe(5);
-      const reportList = await stockRepo.getReport(filter);
+      const reportList = await stockRepo.getStocksForReport(filter);
       expect(reportList.length).toBe(5);
     });
 
@@ -503,7 +503,7 @@ describe('Stock Service testing', () => {
       expect(list.length).toBe(1);
       // check the returned value
       expect(list[0].description).toBe(stocksForFilterTests[0].description);
-      const reportList = await stockRepo.getReport(filter);
+      const reportList = await stockRepo.getStocksForReport(filter);
       expect(reportList.length).toBe(1);
     });
 
@@ -516,7 +516,7 @@ describe('Stock Service testing', () => {
       filter.number = String(stocks[3].name);
       const list = await stockRepo.findFiltered(filter);
       expect(list.length).toBe(1);
-      const reportList = await stockRepo.getReport(filter);
+      const reportList = await stockRepo.getStocksForReport(filter);
       expect(reportList.length).toBe(1);
     });
 
@@ -525,7 +525,7 @@ describe('Stock Service testing', () => {
       filter.text = '8188099 stock11 x';
       const list = await stockRepo.findFiltered(filter);
       expect(list.length).toBe(1);
-      const reportList = await stockRepo.getReport(filter);
+      const reportList = await stockRepo.getStocksForReport(filter);
       expect(reportList.length).toBe(1);
     });
 
@@ -534,7 +534,7 @@ describe('Stock Service testing', () => {
       filter.text = 'stock2';
       const list = await stockRepo.findFiltered(filter);
       expect(list.length).toBe(4);
-      const reportList = await stockRepo.getReport(filter);
+      const reportList = await stockRepo.getStocksForReport(filter);
       expect(reportList.length).toBe(4);
     });
 
@@ -543,7 +543,7 @@ describe('Stock Service testing', () => {
       filter.researcher = 'flINtstOne';
       const list = await stockRepo.findFiltered(filter);
       expect(list.length).toBe(3);
-      const reportList = await stockRepo.getReport(filter);
+      const reportList = await stockRepo.getStocksForReport(filter);
       expect(reportList.length).toBe(3);
     });
 
@@ -553,8 +553,8 @@ describe('Stock Service testing', () => {
       filter.ageModifier = 'or_older';
       const list = await stockRepo.findFiltered(filter);
       expect(list.length).toBe(5);
-      // const reportList = await stockRepo.getReport(filter);
-      // expect(reportList.length).toBe(5);
+      const reportList = await stockRepo.getStocksForReport(filter);
+      expect(reportList.length).toBe(5);
     });
 
     it('7672696 age test or younger', async () => {
@@ -563,8 +563,8 @@ describe('Stock Service testing', () => {
       filter.ageModifier = 'or_younger';
       const list = await stockRepo.findFiltered(filter);
       expect(list.length).toBe(0);
-      // const reportList = await stockRepo.getReport(filter);
-      // expect(reportList.length).toBe(0);
+      const reportList = await stockRepo.getStocksForReport(filter);
+      expect(reportList.length).toBe(0);
     });
 
     it('3677062 age test or younger', async () => {
@@ -573,8 +573,8 @@ describe('Stock Service testing', () => {
       filter.ageModifier = 'or_younger';
       const list = await stockRepo.findFiltered(filter);
       expect(list.length).toBe(2);
-      // const reportList = await stockRepo.getReport(filter);
-      // expect(reportList.length).toBe(2);
+      const reportList = await stockRepo.getStocksForReport(filter);
+      expect(reportList.length).toBe(2);
     });
 
     afterAll(async () => {
