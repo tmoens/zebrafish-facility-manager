@@ -12,7 +12,7 @@
     </button>
 
     <!--Create a transgene "owned" by this facility  -->
-    <button mat-menu-item zfmHideUnauthorized="user"(click)="createNext()">
+    <button (click)="createNext()" mat-menu-item zfmHideUnauthorized="user">
       <mat-icon>add</mat-icon>
       <span>Create Owned Transgene {{service.likelyNextName}}</span>
     </button>
