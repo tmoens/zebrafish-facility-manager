@@ -43,6 +43,9 @@ export class TransgeneMenuComponent implements OnInit {
     this.service.delete(this.service.selected.id);
   }
 
+  goToBestPractices(): void {
+    window.open('https://zebrafishfacilitymanager.com/mutations');
+  }
 }
 
 

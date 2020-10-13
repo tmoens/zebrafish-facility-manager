@@ -32,12 +32,62 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
     }
 
     const filePath = `environments/${this.facility}.env`;
-    if(!fs.existsSync(filePath)) {
+    if (!fs.existsSync(filePath)) {
       throw new Error(`You have set the FACILITY to ${this.facility}, but
       the expected configuration file was not found at ${filePath}`);
     }
     const config = dotenv.parse(fs.readFileSync(filePath));
     this.envConfig = ConfigService.validateInput(config);
+  }
+
+  get bestPracticesSite(): string {
+    return this.envConfig.BEST_PARACTICES_SITE;
+  }
+
+  get nodeEnv(): string {
+    return this.envConfig.NODE_ENV;
+  }
+
+  get typeORMLogQueries(): boolean {
+    return Boolean(this.envConfig.TYPEORM_LOG_QUERIES);
+  }
+
+  get typeORMSync(): boolean {
+    return Boolean(this.envConfig.TYPEORM_SYNC_DATABASE);
+  }
+
+  get facilityInfo(): FacilityDto {
+    return {
+      name: this.envConfig.FACILITY_NAME,
+      short_name: this.envConfig.FACILITY_SHORT_NAME,
+      prefix: this.envConfig.FACILITY_PREFIX,
+      url: this.envConfig.FACILITY_URL,
+    };
+  }
+
+  // This is so the system can set up a default admin user
+  get defaultAdminUserName(): string {
+    return this.envConfig.DEFAULT_ADMIN_USER_NAME;
+  }
+
+  get defaultAdminUserEmail(): string {
+    return this.envConfig.DEFAULT_ADMIN_USER_EMAIL;
+  }
+
+  get defaultAdminUserPassword(): string {
+    return this.envConfig.DEFAULT_ADMIN_USER_PASSWORD;
+  }
+
+  get jwtSecret(): string {
+    return this.envConfig.JWT_SECRET;
+  }
+
+  get jwtDuration(): string {
+    return this.envConfig.JWT_DURATION;
+  }
+
+  get gmailSender(): string {
+    return this.envConfig.GMAIL_SENDER;
   }
 
   /**
@@ -71,6 +121,8 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
       DEFAULT_ADMIN_USER_NAME: Joi.string().required(),
       DEFAULT_ADMIN_USER_EMAIL: Joi.string().required(),
       DEFAULT_ADMIN_USER_PASSWORD: Joi.string().required(),
+
+      BEST_PRACTICES_SITE: Joi.string().default('https://zebrafishfacilitymanager.com'),
     });
 
     const {error, value: validatedEnvConfig} = envVarsSchema.validate(
@@ -80,50 +132,6 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
       throw new Error(`Config validation error: ${error.message}`);
     }
     return validatedEnvConfig;
-  }
-
-  get nodeEnv(): string {
-    return this.envConfig.NODE_ENV;
-  }
-
-  get typeORMLogQueries(): boolean {
-    return Boolean(this.envConfig.TYPEORM_LOG_QUERIES);
-  }
-
-  get typeORMSync(): boolean {
-    return Boolean(this.envConfig.TYPEORM_SYNC_DATABASE);
-  }
-
-  get facilityInfo(): FacilityDto {
-    return {
-      name: this.envConfig.FACILITY_NAME,
-      short_name: this.envConfig.FACILITY_SHORT_NAME,
-      prefix: this.envConfig.FACILITY_PREFIX,
-      url: this.envConfig.FACILITY_URL,
-    };
-  }
-
-  // This is so the system can set up a default admin user
-  get defaultAdminUserName(): string {
-    return this.envConfig.DEFAULT_ADMIN_USER_NAME;
-  }
-  get defaultAdminUserEmail(): string {
-    return this.envConfig.DEFAULT_ADMIN_USER_EMAIL;
-  }
-  get defaultAdminUserPassword(): string {
-    return this.envConfig.DEFAULT_ADMIN_USER_PASSWORD;
-  }
-
-  get jwtSecret(): string {
-    return this.envConfig.JWT_SECRET;
-  }
-
-  get jwtDuration(): string {
-    return this.envConfig.JWT_DURATION;
-  }
-
-  get gmailSender(): string {
-    return this.envConfig.GMAIL_SENDER;
   }
 
   // This is used to build ORM configuration options

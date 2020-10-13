@@ -65,6 +65,10 @@ export class StockMenuComponent implements OnInit {
   onFacilityAudit(): void {
     this.service.getAuditReport();
   }
+
+  goToBestPractices(): void {
+    window.open('https://zebrafishfacilitymanager.com/stocks');
+  }
 }
 
 

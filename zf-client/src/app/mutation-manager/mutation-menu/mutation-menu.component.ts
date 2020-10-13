@@ -43,6 +43,11 @@ export class MutationMenuComponent implements OnInit {
   delete() {
     this.service.delete(this.service.selected.id);
   }
+
+  goToBestPractices(): void {
+    window.open('https://zebrafishfacilitymanager.com/mutations');
+  }
+
 }
 
 

@@ -96,7 +96,7 @@
           *ngFor="let stock of service.filteredList"
           [class.selected]="service.selected && stock.id === service.selected.id"
           class="zf-selection-item zf-list-item" mat-line
-          role="listitem" role="listitem"
+          role="listitem"
           (click)="onSelect(stock)">
           <app-stock-mini-viewer [stock]="stock" mat-line></app-stock-mini-viewer>
           <!--<div>-->
