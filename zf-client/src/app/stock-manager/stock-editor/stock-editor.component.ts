@@ -138,7 +138,7 @@ export class StockEditorComponent implements OnInit {
     // this.dadInternal = !!this.stock.patIdInternal;
     this.filteredResearcherOptions =
       this.service.fieldOptions.filterOptionsContaining('researcher', this.stock.researcher);
-    this.filteredResearcherOptions =
+    this.filteredPIOptions =
       this.service.fieldOptions.filterOptionsContaining('pi', this.stock.pi);
   }
 
