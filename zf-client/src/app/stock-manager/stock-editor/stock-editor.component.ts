@@ -118,7 +118,7 @@ export class StockEditorComponent implements OnInit {
   initializeForCreateSubStock() {
     this.editMode = EditMode.CREATE_SUB_STOCK;
     this.stock = classToClass(this.baseStock);
-    this.stock.id = null; // can't reuse the initial selected's id.
+    this.stock.id = null; // can't reuse the initial selected item's id.
     this.stock.subNumber = this.baseStock.nextSubStockNumber;
     this.stock.nextSubStockNumber++; // required: ensures parents and fertilizationDate not editable.
     this.stock.name = this.stock.number + '.' + this.stock.subNumber;
@@ -209,7 +209,7 @@ export class StockEditorComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigateByUrl('stock_manager/view');
+    this.router.navigateByUrl('stock_manager/view').then();
   }
 
   revert() {
@@ -276,18 +276,14 @@ export class StockEditorComponent implements OnInit {
         return true;
       case EditMode.CREATE_NEXT:
         // because most of the fields start as empty, if anything is in them, it's touched.
-        if (
-          this.stock.description ||
+        return !(this.stock.description ||
           this.stock.pi ||
           this.stock.researcher ||
           this.stock.fertilizationDate ||
           this.stock.comment ||
           !this.momInternal ||
-          !this.dadInternal
-        ) {
-          return false;
-        }
-        return true;
+          !this.dadInternal);
+
       case EditMode.CREATE_SUB_STOCK:
         // when creating a sub-stock, it is automatically deemed to be "changed"
         // because it has a new sub-stock number.

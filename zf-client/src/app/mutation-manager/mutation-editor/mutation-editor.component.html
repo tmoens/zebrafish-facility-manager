@@ -8,34 +8,45 @@
     <div fxLayout="row" fxLayoutGap="20px">
 
       <div fxLayout="column" fxFlex="30%">
-        <mat-form-field >
-          <input matInput type="text" placeholder="Gene" formControlName="gene"
-                 [matAutocomplete]="autoGene"
-                 maxlength="20">
+        <mat-form-field>
+          <label>
+            <input [matAutocomplete]="autoGene" formControlName="gene" matInput maxlength="20"
+                   placeholder="Gene"
+                   type="text">
+          </label>
         </mat-form-field>
 
         <mat-form-field>
-          <input required type="text"  matInput placeholder="Allele" formControlName="name"
-                 maxlength="20">
+          <label>
+            <input formControlName="name" matInput maxlength="25" placeholder="Allele" required
+                   type="text">
+          </label>
           <mat-error *ngIf="nameControl.touched && nameControl.invalid">{{getNameError()}}</mat-error>
         </mat-form-field>
 
         <mat-form-field>
-          <input type="text"  matInput placeholder="Nickname" formControlName="nickname"
-                 maxlength="30">
+          <label>
+            <input formControlName="nickname" matInput maxlength="30" placeholder="Nickname"
+                   type="text">
+          </label>
           <mat-error *ngIf="nicknameControl.touched && nicknameControl.invalid">{{getNicknameError()}}</mat-error>
           <mat-hint>Used for printing compact labels</mat-hint>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Alternate Gene Name" formControlName="alternateGeneName"
-                 maxlength="100">
+          <label>
+            <input formControlName="alternateGeneName" matInput maxlength="100"
+                   placeholder="Alternate Gene Name">
+          </label>
         </mat-form-field>
 
-        <mat-form-field >
-          <input required matInput type="text" placeholder="Researcher" formControlName="researcher"
-                 [matAutocomplete]="autoResearcher"
-                 maxlength="20">
+        <mat-form-field>
+          <label>
+            <input [matAutocomplete]="autoResearcher" formControlName="researcher" matInput maxlength="20"
+                   placeholder="Researcher"
+                   required
+                   type="text">
+          </label>
         </mat-form-field>
 
         <mat-form-field>
@@ -51,13 +62,17 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Nucleotide Change" formControlName="actgChange"
-                 maxlength="10">
+          <label>
+            <input formControlName="actgChange" matInput maxlength="10"
+                   placeholder="Nucleotide Change">
+          </label>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput placeholder="Amino Acid Change" formControlName="aaChange"
-                 maxlength="10">
+          <label>
+            <input formControlName="aaChange" matInput maxlength="10"
+                   placeholder="Amino Acid Change">
+          </label>
         </mat-form-field>
 
         <mat-form-field>
@@ -72,14 +87,6 @@
           </mat-select>
         </mat-form-field>
 
-
-        <!--          2020-04-26 hidden as per request from fhcrc lab.  not used in others.-->
-        <!--          <mat-form-field >-->
-        <!--            <input matInput [matDatepicker]="picker" placeholder="Thaw Date" formControlName="thawDate">-->
-        <!--            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
-        <!--            <mat-datepicker #picker></mat-datepicker>-->
-        <!--          </mat-form-field>-->
-
         <mat-form-field>
           <mat-select placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">
             <mat-option [value]=null>--Any--</mat-option>
@@ -87,35 +94,45 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field >
-          <input matInput type="number" placeholder="Vials Frozen" formControlName="vialsFrozen"
-                 min="0">
+        <mat-form-field>
+          <label>
+            <input formControlName="vialsFrozen" matInput min="0" placeholder="Vials Frozen"
+                   type="number">
+          </label>
         </mat-form-field>
       </div>
 
       <div fxLayout="column" fxLayoutGap="20px" fxFlex>
         <mat-form-field>
-            <textarea matInput placeholder="Comment" formControlName="comment"
-                      maxlength="3000"
-                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
+          <label>
+<textarea cdkAutosizeMaxRows="7" cdkTextareaAutosize="true" formControlName="comment"
+          matInput
+          maxlength="3000" placeholder="Comment"></textarea>
+          </label>
         </mat-form-field>
 
         <mat-form-field>
-            <textarea matInput placeholder="ZFIN URL" formControlName="zfinURL"
-                      maxlength="255"
-                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="3"></textarea>
+          <label>
+<textarea cdkAutosizeMaxRows="3" cdkTextareaAutosize="true" formControlName="zfinURL"
+          matInput
+          maxlength="255" placeholder="ZFIN URL"></textarea>
+          </label>
           <mat-error *ngIf="zfinURLControl.touched && zfinURLControl.invalid">{{getZfinURLError()}}</mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <textarea matInput placeholder="Phenotype" formControlName="phenotype"
-                      maxlength="3000"
-                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
+          <label>
+<textarea cdkAutosizeMaxRows="7" cdkTextareaAutosize="true" formControlName="phenotype"
+          matInput
+          maxlength="3000" placeholder="Phenotype"></textarea>
+          </label>
         </mat-form-field>
         <mat-form-field>
-            <textarea matInput placeholder="Morphant Phenotype" formControlName="morphantPhenotype"
-                      maxlength="3000"
-                      cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
+          <label>
+<textarea cdkAutosizeMaxRows="7" cdkTextareaAutosize="true" formControlName="morphantPhenotype"
+          matInput
+          maxlength="3000" placeholder="Morphant Phenotype"></textarea>
+          </label>
         </mat-form-field>
         <div class="fill-remaining-space"></div>
         <div fxLayout="row" fxLayoutGap="20px">
