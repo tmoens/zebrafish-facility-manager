@@ -16,7 +16,9 @@
   <form [formGroup]="mfForm">
     <div fxLayout="column">
       <mat-form-field>
-        <input matInput type="text" placeholder="Search all fields" formControlName="text">
+        <label>
+          <input formControlName="text" matInput placeholder="Search all fields" type="text">
+        </label>
         <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
                 (click)="clearFormControl('text')">
           <mat-icon>close</mat-icon>
@@ -33,47 +35,12 @@
   </form>
 
   <!-- The Filtered List part -->
-  <div fxFlex *ngIf="service.filteredList.length > 0">
-    <span class="zf-sub-title">Filtered List</span>
+  <div class="zf-sub-title">Filtered List</div>
+  <app-zf-selector-list
+    (itemSelected)="onSelect($event)"
+    [list]="service.filteredList"
+    [service]="service"
+    emptyMessage="No matches. Try relaxing the filter.">
+  </app-zf-selector-list>
 
-    <!--When the selector is fixed in place-->
-    <div *ngIf="appState.selectorFixed">
-      <mat-list role="list" dense>
-        <mat-list-item style="height: fit-content"
-          *ngFor="let item of service.filteredList"
-          [class.selected]="service.selected && item.id === service.selected.id"
-          class="zf-selection-item truncate" role="listitem"
-          (click)="onSelect(item)">
-          <app-transgene-tiny-viewer [transgene]="item" mat-line></app-transgene-tiny-viewer>
-        </mat-list-item>
-      </mat-list>
-    </div>
-
-    <!-- When the selector is toggleable (on a handset)-->
-    <div *ngIf="!appState.selectorFixed">
-      <mat-list role="list" dense>
-        <mat-list-item
-          *ngFor="let item of service.filteredList"
-          [class.selected]="service.selected && item.id === service.selected.id"
-          class="zf-selection-item truncate" role="listitem"
-          (click)="onPreselect(item.id)">
-          <button *ngIf="focusId === item.id" mat-mini-fab (click)="onSelect(item)" color="primary">
-            <mat-icon>navigate_next</mat-icon>
-          </button>
-
-          <div mat-line *ngIf="item.id !== focusId">
-            <div mat-line>{{item.fullName}}</div>
-          </div>
-
-          <div mat-line *ngIf="item.id === focusId">
-            <app-transgene-mini-viewer mat-line [transgene]="item"></app-transgene-mini-viewer>
-          </div>
-        </mat-list-item>
-      </mat-list>
-    </div>
-  </div>
-  <div *ngIf="service.filteredList.length == 0">
-    <p>No transgenes match the current filter.</p>
-    <p>Try relaxing the filter criteria. </p>
-  </div>
 </div>

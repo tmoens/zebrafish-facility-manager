@@ -25,6 +25,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MutationMiniViewerComponent} from './mutation-mini-viewer/mutation-mini-viewer.component';
 import {MutationTinyViewerComponent} from "./mutation-mini-viewer/mutation-tiny-viewer.component";
+import {ZfGenericModule} from "../zf-generic/zf-generic.module";
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {MutationTinyViewerComponent} from "./mutation-mini-viewer/mutation-tiny-
     AuthModule,
     MatCheckboxModule,
     MatSidenavModule,
+    ZfGenericModule,
   ],
   exports: [
     MutationMenuComponent,

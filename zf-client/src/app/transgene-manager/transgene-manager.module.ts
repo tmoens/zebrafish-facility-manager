@@ -23,6 +23,7 @@ import {AuthModule} from "../auth/auth.module";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {TransgeneMiniViewerComponent} from './transgene-mini-viewer/transgene-mini-viewer.component';
 import {TransgeneTinyViewerComponent} from "./transgene-mini-viewer/transgene-tiny-viewer.component";
+import {ZfGenericModule} from "../zf-generic/zf-generic.module";
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import {TransgeneTinyViewerComponent} from "./transgene-mini-viewer/transgene-ti
     FormsModule,
     AuthModule,
     MatSidenavModule,
+    ZfGenericModule,
   ],
   exports: [
     TransgeneMenuComponent,

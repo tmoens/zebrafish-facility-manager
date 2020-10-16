@@ -56,11 +56,12 @@ export class ZFGenericService<
   FILTER extends ZfGenericFilter> {
 
   // Some extensions like transgeneService and mutationService will cache all instances and
-  // make them available.
-  private _all$: BehaviorSubject<SIMPLE_OBJ[]> = new BehaviorSubject<SIMPLE_OBJ[]>([]);
+  protected _filteredList: SIMPLE_OBJ[] = [];
   // Flag indicating that the service is meant to cache all instances of this type.
-  private cacheAll: boolean;
-  // get all(): ZfGenericClass[] { return []; }
+  private readonly cacheAll: boolean;
+
+  // make them available.
+  protected _all: SIMPLE_OBJ[] = [];
 
   // This is the currently selected item.
   // It is in focus as far as the GUI is concerned.
@@ -78,8 +79,13 @@ export class ZFGenericService<
     return this._filter;
   }
 
-  private _filteredList: SIMPLE_OBJ[] = [];
-  get filteredList(): SIMPLE_OBJ[] { return this._filteredList; }
+  get all(): SIMPLE_OBJ[] {
+    return this._all;
+  }
+
+  get filteredList(): SIMPLE_OBJ[] {
+    return this._filteredList;
+  }
 
   // The ZF objects usually have a name that is assigned by the the system. The
   // name is sequential and the user does not get to choose it, again usually.
@@ -125,8 +131,13 @@ export class ZFGenericService<
     source.subscribe(_ => this.refresh());
   }
 
-  get all(): SIMPLE_OBJ[] {
-    return this._all$.value;
+  // these two methods have to be overridden by service classes
+  plain2FullClass(plain): FULL_OBJ {
+    return plain;
+  }
+
+  plain2RegularClass(plain): SIMPLE_OBJ {
+    return plain;
   }
 
   // load the set of currently known values for some fields
@@ -153,7 +164,7 @@ export class ZFGenericService<
     if (id) {
       this.getById(id).subscribe((item: FULL_OBJ) => {
         if (item) {
-          this.selected$.next(item);
+          this.selected$.next(this.plain2FullClass(item));
         } else {
           this.appStateService.removeToolState(this.zfType, ZFToolStates.SELECTED_ID);
           this.selected$.next(null);
@@ -174,12 +185,6 @@ export class ZFGenericService<
     return (this.filteredList.length > 0) ? this.filteredList[0].id : 0;
   }
 
-  loadAll() {
-    this.loaderService.getFilteredList(this.zfType, {}).subscribe((data) => {
-      this._all$.next(data);
-    })
-  }
-
   // fetch an instance from the server.
   getById(id: number): Observable<FULL_OBJ> {
     return this.loaderService.getInstance(this.zfType, id);
@@ -193,9 +198,17 @@ export class ZFGenericService<
     this.appStateService.setToolState(this.zfType, ZFToolStates.FILTER, this.filter);
     this.loaderService.getFilteredList(this.zfType, this.filter)
       .subscribe((dtoList: any[]) => {
-        this._filteredList = dtoList;
+        this._filteredList = dtoList.map(dto => this.plain2RegularClass(dto));
       });
   }
+
+  loadAll() {
+    this.loaderService.getFilteredList(this.zfType, {})
+      .subscribe((dtoList: any[]) => {
+        this._all = dtoList.map(dto => this.plain2RegularClass(dto));
+      });
+  }
+
 
   getLikelyNextName() {
     this.loaderService.getLikelyNextName(this.zfType).subscribe(data => {
@@ -211,7 +224,7 @@ export class ZFGenericService<
         this.messageService.open(this.zfType + ' updated.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(result.id);
         this.refresh();
-        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id);
+        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id).then();
       }
     });
   }
@@ -222,7 +235,7 @@ export class ZFGenericService<
         this.messageService.open(this.zfType + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(result.id);
         this.refresh();
-        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id)
+        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id).then();
       }
     });
   }
@@ -235,7 +248,7 @@ export class ZFGenericService<
         this.messageService.open(this.zfType + ' created.', null, {duration: this.appStateService.confirmMessageDuration});
         this.setSelectedId(item.id);
         this.refresh();
-        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id)
+        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view/' + result.id).then();
       }
     });
   }
@@ -248,7 +261,7 @@ export class ZFGenericService<
         this.selected$.next(null);
         this.refresh();
         // TODO the refresh may not be done by the time the viewer tries to select
-        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view')
+        this.routerService.navigateByUrl(this.appStateService.activeTool.route + '/view').then();
       }
     });
   }

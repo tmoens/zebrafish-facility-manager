@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
 import {StockService} from '../stock.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
@@ -7,6 +6,7 @@ import {MutationService} from '../../mutation-manager/mutation.service';
 import {TransgeneService} from '../../transgene-manager/transgene.service';
 import {PrintService} from '../../printing/print.service';
 import {AppStateService} from "../../app-state.service";
+import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
 
 /**
  * Note to future self.
@@ -34,7 +34,6 @@ export class StockViewerComponent implements OnInit {
     private mutationService: MutationService,
     private transgeneService: TransgeneService,
     private printService: PrintService,
-    private readonly subEditor: MatDialog,
   ) {
     this.service.enterBrowseMode();
   }
@@ -53,13 +52,13 @@ export class StockViewerComponent implements OnInit {
       } else {
         // if there is no id in the route, see if a stock is already selected and if so, navigate to it.
         if (this.service.selected) {
-          this.router.navigateByUrl('stock_manager/view/' + this.service.selected.id, {replaceUrl: true});
+          this.router.navigateByUrl('stock_manager/view/' + this.service.selected.id, {replaceUrl: true}).then();
         } else {
           // we were not given an id to view and there is no "selected" id, final try is to
           // navigate to the first iem in the list...
           const firstId = this.service.getFirstFiltered();
           if (firstId) {
-            this.router.navigateByUrl('stock_manager/view/' + firstId, {replaceUrl: true});
+            this.router.navigateByUrl('stock_manager/view/' + firstId, {replaceUrl: true}).then();
           }
         }
       }
@@ -67,26 +66,32 @@ export class StockViewerComponent implements OnInit {
   }
 
   goTo(id: number) {
-    this.router.navigate(['stock_manager/view/' + id]);
+    this.router.navigate(['stock_manager/view/' + id]).then();
+  }
+
+  goToStock(instance: ZfGenericDto | null) {
+    if (instance) {
+      this.router.navigate(['stock_manager/view/' + instance.id]).then();
+    }
   }
 
   editStock() {
     this.router.navigate(['stock_manager/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
-    }]);
+    }]).then();
   }
 
   editMutations() {
-    this.router.navigate(['stock_manager/edit/genetics/' + this.service.selected.id]);
+    this.router.navigate(['stock_manager/edit/genetics/' + this.service.selected.id]).then();
   }
 
   editTransgenes() {
-    this.router.navigate(['stock_manager/edit/genetics/' + this.service.selected.id]);
+    this.router.navigate(['stock_manager/edit/genetics/' + this.service.selected.id]).then();
   }
 
   editSwimmers() {
-    this.router.navigate(['stock_manager/' + EditMode.EDIT + '/swimmers/' + this.service.selected.id]);
+    this.router.navigate(['stock_manager/' + EditMode.EDIT + '/swimmers/' + this.service.selected.id]).then();
   }
 
   /* print a tank label for this tank */

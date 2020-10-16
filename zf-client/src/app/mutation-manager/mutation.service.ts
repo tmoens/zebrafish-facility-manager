@@ -44,6 +44,16 @@ export class MutationService extends ZFGenericService<MutationDto, MutationDto, 
     })
   }
 
+  // convert a plain (json) object to a FullDTO
+  // I could not figure out how to do this in the generic service class
+  plain2FullClass(plain): MutationDto {
+    return plainToClass(MutationDto, plain);
+  }
+
+  plain2RegularClass(plain): MutationDto {
+    return plainToClass(MutationDto, plain);
+  }
+
   initialize() {
     const storedFilter = this.appState.getToolState(ZFTypes.MUTATION, ZFToolStates.FILTER);
     if (storedFilter) {

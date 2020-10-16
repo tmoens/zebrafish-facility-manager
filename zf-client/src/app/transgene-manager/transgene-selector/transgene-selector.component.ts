@@ -6,6 +6,7 @@ import {TransgeneFilter} from '../transgene-filter';
 import {Router} from '@angular/router';
 import {TransgeneDto} from "../transgene-dto";
 import {AppStateService} from "../../app-state.service";
+import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
 
 @Component({
   selector: 'app-transgene-selector',
@@ -17,6 +18,7 @@ export class TransgeneSelectorComponent implements OnInit {
 
   // Build the filter form.
   mfForm = this.fb.group(this.service.filter);
+
 
   constructor(
     public appState: AppStateService,
@@ -46,10 +48,10 @@ export class TransgeneSelectorComponent implements OnInit {
   //    If the selector is toggled open (as opposed to being fixed in place), it needs to
   //    toggle itself closed before
   // b) navigate to view the selected transgene
-  onSelect(instance: TransgeneDto | null) {
+  onSelect(instance: ZfGenericDto | null) {
     this.focusId = instance.id;
-    this.selected.emit(instance);
-    this.router.navigate(['transgene_manager/view/' + instance.id]);
+    this.selected.emit(instance as TransgeneDto);
+    this.router.navigate(['transgene_manager/view/' + instance.id]).then();
   }
 
   onPreselect(id) {

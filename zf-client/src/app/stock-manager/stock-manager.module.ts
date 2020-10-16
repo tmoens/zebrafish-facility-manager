@@ -32,9 +32,10 @@ import {MatCardModule} from "@angular/material/card";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {DateToAgePipe} from "./date-to-age.pipe";
 import {TankWalkerComponent} from "./tank-walker/tank-walker.component";
-import { StockMiniViewerComponent } from './stock-mini-viewer/stock-mini-viewer.component';
+import {StockMiniViewerComponent} from './stock-mini-viewer/stock-mini-viewer.component';
 import {MutationManagerModule} from "../mutation-manager/mutation-manager.module";
 import {TransgeneManagerModule} from "../transgene-manager/transgene-manager.module";
+import {ZfGenericModule} from "../zf-generic/zf-generic.module";
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import {TransgeneManagerModule} from "../transgene-manager/transgene-manager.mod
     MatSidenavModule,
     MutationManagerModule,
     TransgeneManagerModule,
+    ZfGenericModule,
   ],
   exports: [
     StockMenuComponent

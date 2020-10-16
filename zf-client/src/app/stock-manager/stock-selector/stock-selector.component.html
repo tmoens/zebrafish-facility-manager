@@ -17,22 +17,34 @@
       <div fxLayout="column" fxFlex="50%">
         <!-- First group of filter fields -->
         <mat-form-field>
-          <input matInput type="text" placeholder="Stock Number" formControlName="number">
+          <label>
+            <input formControlName="number" matInput placeholder="Stock Number" type="text">
+          </label>
           <button mat-button matSuffix mat-icon-button *ngIf="getFC('number').value"
-                  (click)="clearFormControl('number')"><mat-icon>close</mat-icon>
+                  (click)="clearFormControl('number')">
+            <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
 
-        <mat-form-field >
-          <input matInput type="text" placeholder="Researcher" formControlName="researcher" [matAutocomplete]="autoResearcher">
+        <mat-form-field>
+          <label>
+            <input [matAutocomplete]="autoResearcher" formControlName="researcher" matInput placeholder="Researcher"
+                   type="text">
+          </label>
           <button mat-button matSuffix mat-icon-button *ngIf="getFC('researcher').value"
-                  (click)="clearFormControl('researcher')"><mat-icon>close</mat-icon></button>
+                  (click)="clearFormControl('researcher')">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput type="text" placeholder="Tank Name" formControlName="tankName">
+          <label>
+            <input formControlName="tankName" matInput placeholder="Tank Name" type="text">
+          </label>
           <button mat-button matSuffix mat-icon-button *ngIf="getFC('tankName').value"
-                  (click)="clearFormControl('tankName')"><mat-icon>close</mat-icon></button>
+                  (click)="clearFormControl('tankName')">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
       </div>
 
@@ -40,16 +52,24 @@
       <div fxLayout="column" fxFlex="50%">
 
         <mat-form-field>
-          <input matInput type="text" placeholder="Search Text" formControlName="text">
+          <label>
+            <input formControlName="text" matInput placeholder="Search Text" type="text">
+          </label>
           <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
-                  (click)="clearFormControl('text')"><mat-icon>close</mat-icon></button>
+                  (click)="clearFormControl('text')">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput type="number" placeholder="Age (in days)" formControlName="age"
-                 min="0" step="20">
+          <label>
+            <input formControlName="age" matInput min="0" placeholder="Age (in days)"
+                   step="20" type="number">
+          </label>
           <button mat-button matSuffix mat-icon-button *ngIf="getFC('age').value"
-                  (click)="clearFormControl('age')"><mat-icon>close</mat-icon></button>
+                  (click)="clearFormControl('age')">
+            <mat-icon>close</mat-icon>
+          </button>
         </mat-form-field>
 
         <mat-form-field *ngIf="getFC('age').value > 0">
@@ -61,79 +81,45 @@
       </div>
     </div>
     <div>
-      <mat-form-field >
-        <input matInput type="text" placeholder="Mutation" [formControl]="mutationFilterFC"
-               [matAutocomplete]="autoMutation"
-               [value]="(mutationFilterFC.value) ?
-                   (mutationFilterFC.value.fullName) ?
-                      mutationFilterFC.value.fullName : mutationFilterFC.value : ''">
+      <mat-form-field>
+        <label>
+          <input [formControl]="mutationFilterFC" [matAutocomplete]="autoMutation" [value]="(mutationFilterFC.value) ?
+                     (mutationFilterFC.value.fullName) ?
+                        mutationFilterFC.value.fullName : mutationFilterFC.value : ''" matInput
+                 placeholder="Mutation"
+                 type="text">
+        </label>
         <button mat-button matSuffix mat-icon-button
-                (click)="clearMutationFilter()"><mat-icon>close</mat-icon></button>
+                (click)="clearMutationFilter()">
+          <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
 
-      <mat-form-field >
-        <input matInput type="text" placeholder="Transgene" [formControl]="transgeneFilterFC"
-               [matAutocomplete]="autoTransgene"
-               [value]="(transgeneFilterFC.value) ?
-                   (transgeneFilterFC.value.fullName) ?
-                      transgeneFilterFC.value.fullName : transgeneFilterFC.value : ''">
+      <mat-form-field>
+        <label>
+          <input [formControl]="transgeneFilterFC" [matAutocomplete]="autoTransgene" [value]="(transgeneFilterFC.value) ?
+                     (transgeneFilterFC.value.fullName) ?
+                        transgeneFilterFC.value.fullName : transgeneFilterFC.value : ''" matInput
+                 placeholder="Transgene"
+                 type="text">
+        </label>
         <button mat-button matSuffix mat-icon-button
-                (click)="clearTransgeneFilter()"><mat-icon>close</mat-icon></button>
+                (click)="clearTransgeneFilter()">
+          <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
     </div>
   </form>
   <mat-divider></mat-divider>
 
   <!-- The Filtered List part -->
-
-  <div *ngIf="service.filteredList.length > 0" >
-    <span class="zf-sub-title">Filtered List</span>
-
-    <!--When the selector is fixed in place-->
-    <div *ngIf="appState.selectorFixed">
-      <mat-list role="list" dense>
-        <mat-list-item
-          *ngFor="let stock of service.filteredList"
-          [class.selected]="service.selected && stock.id === service.selected.id"
-          class="zf-selection-item zf-list-item" mat-line
-          role="listitem"
-          (click)="onSelect(stock)">
-          <app-stock-mini-viewer [stock]="stock" mat-line></app-stock-mini-viewer>
-          <!--<div>-->
-          <!--  <span class="zf-clickable">{{stock.name}} </span> {{stock.description}}-->
-          <!--</div>-->
-        </mat-list-item>
-      </mat-list>
-    </div>
-
-    <!-- When the selector is toggleable (on a handset)-->
-    <div *ngIf="!appState.selectorFixed">
-      <mat-list role="list" dense>
-        <mat-list-item
-          *ngFor="let stock of service.filteredList"
-          [class.selected]="service.selected && stock.id === service.selected.id"
-          class="zf-selection-item truncate" role="listitem"
-          (click)="onPreselect(stock.id)">
-          <button *ngIf="focusId === stock.id" mat-mini-fab (click)="onSelect(stock)" color="primary">
-            <mat-icon>navigate_next</mat-icon>
-          </button>
-
-          <div *ngIf="stock.id !== focusId" mat-line>
-            <div mat-line>{{stock.name}} {{stock.description}}</div>
-          </div>
-
-          <div mat-line *ngIf="stock.id === focusId">
-            <app-stock-mini-viewer [stock]="stock" mat-line></app-stock-mini-viewer>
-          </div>
-        </mat-list-item>
-      </mat-list>
-    </div>
-
-  </div>
-  <div *ngIf="service.filteredList.length == 0">
-    <p>No stocks match the current filter,</p>
-    <p>try relaxing the filter criteria. </p>
-  </div>
+  <div class="zf-sub-title">Filtered List</div>
+  <app-zf-selector-list
+    (itemSelected)="onSelect($event)"
+    [list]="service.filteredList"
+    [service]="service"
+    emptyMessage="No matches. Try relaxing the filter.">
+  </app-zf-selector-list>
 </div>
 
 
@@ -156,9 +142,10 @@
 <mat-autocomplete #autoTransgene="matAutocomplete">
   <mat-option *ngFor="let option of filteredTransgeneOptions" [value]="option">
     <div>{{option.fullName}}</div>
-    <div class="option-detail" >
-      <span *ngIf="option.source">source: {{option.source}} </span>
+    <div class="option-detail">
       <span *ngIf="option.plasmid">plasmid: {{option.plasmid}}</span>
+      <span *ngIf="option.comment">{{option.comment}}</span>
+
     </div>
   </mat-option>
 </mat-autocomplete>

@@ -29,6 +29,7 @@
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
     "ngx-webstorage-service": "^4.1.0",
+    "reflect-metadata": "^0.1.13",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
     "xlsx": "^0.16.8",

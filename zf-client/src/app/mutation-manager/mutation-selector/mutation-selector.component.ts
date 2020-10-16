@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter, ViewChild, AfterViewInit, AfterContentInit, ElementRef, ViewChildren} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {MutationService} from '../mutation.service';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
@@ -7,6 +7,7 @@ import {debounceTime, map, startWith} from 'rxjs/operators';
 import {MutationFilter} from '../mutation-filter';
 import {MutationDto} from "../mutation-dto";
 import {AppStateService} from "../../app-state.service";
+import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
 
 @Component({
   selector: 'app-mutation-selector',
@@ -78,9 +79,9 @@ export class MutationSelectorComponent implements OnInit {
   //    If the selector is toggled open (as opposed to being fixed in place), it needs to
   //    toggle itself closed before
   // b) navigate to view the selected mutation
-  onSelect(m: MutationDto | null) {
-    this.selected.emit(m);
-    this.router.navigate(['mutation_manager/view/' + m.id]);
+  onSelect(instance: ZfGenericDto | null) {
+    this.selected.emit(instance as MutationDto);
+    this.router.navigate(['mutation_manager/view/' + instance.id]).then();
   }
 
   onPreselect(id) {

@@ -55,11 +55,22 @@ export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDt
     this.refresh();
   }
 
+  // convert a plain (json) object to a "Full" DTO
+  // I could not figure out how to do this in the generic service class
+  plain2FullClass(plain): TransgeneDto {
+    return plainToClass(TransgeneDto, plain);
+  }
+
+  plain2RegularClass(plain): TransgeneDto {
+    return plainToClass(TransgeneDto, plain);
+  }
+
+
   // This is used to populate a autocomplete field of transgenes
   getListFilteredByString(searchString: string): TransgeneDto[] {
     return this.all.filter((t: TransgeneDto) => {
       const ss: string = searchString.toLowerCase();
-      return(
+      return (
         (t.descriptor && t.descriptor.toLowerCase().includes(ss)) ||
         (t.allele && t.allele.toLowerCase().includes(ss)) ||
         (t.nickname && t.nickname.toLowerCase().includes(ss)));

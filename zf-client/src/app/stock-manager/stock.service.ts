@@ -7,8 +7,6 @@ import * as XLSX from 'xlsx';
 import {map} from 'rxjs/operators';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
 import {Observable} from 'rxjs';
-import {MutationService} from '../mutation-manager/mutation.service';
-import {TransgeneService} from '../transgene-manager/transgene.service';
 import {AppStateService, ZFToolStates} from '../app-state.service';
 import {plainToClass} from "class-transformer";
 import {ZFTypes} from "../helpers/zf-types";
@@ -42,8 +40,6 @@ export class StockService extends ZFGenericService<
     private appState: AppStateService,
     private authService: AuthService,
     private router: Router,
-    private mutationService: MutationService,
-    private transgeneService: TransgeneService,
   ) {
     super(ZFTypes.STOCK, loader, message, appState, authService, router);
     this.authService.loggedIn$.subscribe((loggedIn: boolean) => {
@@ -53,7 +49,18 @@ export class StockService extends ZFGenericService<
     })
   }
 
-  placeholder() {}
+  placeholder() {
+  }
+
+  // convert a plain (json) object to a StockFullDTO
+  // I could not figure out how to do this in the generic service class
+  plain2FullClass(plain): StockFullDto {
+    return plainToClass(StockFullDto, plain);
+  }
+
+  plain2RegularClass(plain): StockDto {
+    return plainToClass(StockDto, plain);
+  }
 
   // We cannot really initialize until the user logs in because we will not have the
   // authorization to go get the data we need from the server.  So we watch the login state
@@ -85,7 +92,7 @@ export class StockService extends ZFGenericService<
         // therefore will or will not be in the filtered list.
         this.setSelectedId(result.id);
         this.refresh();
-        this.router.navigateByUrl(this.appState.activeTool.route + '/view/' + result.id)
+        this.router.navigateByUrl(this.appState.activeTool.route + '/view/' + result.id).then();
       }
     });
   }
@@ -114,10 +121,10 @@ export class StockService extends ZFGenericService<
         ws['!cols'] = [ {wch: 8}, {wch: 30}, {wch: 20}, {wch: 9},
           {wch: 9}, {wch: 10}, {wch: 20}, {wch: 30}, {wch: 30}];
         XLSX.utils.book_append_sheet(wb, ws, 'Stocks');
-        // const now = moment().format('YYYY-MM-DD-HH-mm-ss');
+        const now = new Date().toISOString().substring(0, 10);
         const ws2 = XLSX.utils.json_to_sheet([this.filter]);
         XLSX.utils.book_append_sheet(wb, ws2, 'Filter');
-        XLSX.writeFile(wb, 'Stocks-x' + '.xlsx');
+        XLSX.writeFile(wb, 'Stocks-' + now + '.xlsx');
       });
   }
 

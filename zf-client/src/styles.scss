@@ -10,7 +10,7 @@
   flex: 1 1 auto;
 }
 
-// Untile we work out how we want to do the sidenav and nav content background...
+// Until we work out how we want to do the sidenav and nav content background...
 .mat-sidenav-container {
   background-color: white;
 }
@@ -82,8 +82,6 @@
 }
 
 .zf-selection-item {
-  cursor: pointer;
-  height: 30px;
 
   &:hover, &:active, &:focus {
     background-color: mat-color(map-get($zf-app-theme, background), hover);

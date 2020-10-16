@@ -11,6 +11,7 @@ import {MutationService} from "../../mutation-manager/mutation.service";
 import {MutationDto} from "../../mutation-manager/mutation-dto";
 import {TransgeneDto} from "../../transgene-manager/transgene-dto";
 import {TransgeneService} from "../../transgene-manager/transgene.service";
+import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
 
 /**
  * A two-part component: a filter for stocks and a list of filtered stocks.
@@ -37,7 +38,7 @@ export class StockSelectorComponent implements OnInit {
   // autocomplete field.  It allows the GUI to present a little extra info about that mutation.
   mutationInFocus: number;
 
-  // same for tansgenes
+  // same for transgenes
   transgeneInFocus: number;
 
   // Build the filter form.
@@ -81,13 +82,10 @@ export class StockSelectorComponent implements OnInit {
     this.mutationFilterFC.valueChanges.pipe(
       startWith(''),
       debounceTime(300)).subscribe((value: string | MutationDto) => {
-        console.log('type of value: ' + typeof(value));
         if (typeof(value) === 'string') {
           // if the filter is a string get a list of mutations that match the string
           // to be used as auto-complete options for the mutation filter.
           this.filteredMutationOptions = this.mutationService.getListFilteredByString(value);
-        } else {
-          console.log(value);
         }
         this.getFilteredStocks();
       }
@@ -97,13 +95,10 @@ export class StockSelectorComponent implements OnInit {
     this.transgeneFilterFC.valueChanges.pipe(
       startWith(''),
       debounceTime(300)).subscribe((value: string | TransgeneDto) => {
-        console.log('type of value: ' + typeof(value));
         if (typeof(value) === 'string') {
           // if the filter is a string get a list of transgenes that match the string
           // to be used as auto-complete options for the transgene filter.
           this.filteredTransgeneOptions = this.transgeneService.getListFilteredByString(value);
-        } else {
-          console.log(value);
         }
         this.getFilteredStocks();
       }
@@ -157,9 +152,9 @@ export class StockSelectorComponent implements OnInit {
   //    If the selector is toggled open (as opposed to being fixed in place), it needs to
   //    toggle itself closed before
   // b) navigate to view the selected transgene
-  onSelect(s: StockDto | null) {
-    this.selected.emit(s);
-    this.router.navigate(['stock_manager/view/' + s.id]);
+  onSelect(instance: ZfGenericDto | null) {
+    this.selected.emit(instance as StockDto);
+    this.router.navigate(['stock_manager/view/' + instance.id]).then();
   }
 
   onPreselect(id) {
