@@ -126,8 +126,6 @@ export class MutationEditorComponent implements OnInit {
       case EditMode.EDIT:
         this.service.getById(this.id).subscribe((m: MutationDto) => {
           this.item = m;
-          // TODO This seems wrong. Why can I not change the name of un-owned mutations?
-          this.mfForm.get('name').disable();
           this.mfForm.setValue(this.item);
         });
         break;
@@ -170,7 +168,7 @@ export class MutationEditorComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigateByUrl('mutation_manager/view');
+    this.router.navigateByUrl('mutation_manager/view').then();
   }
 
   revert() {
@@ -179,6 +177,9 @@ export class MutationEditorComponent implements OnInit {
   }
 
   nameValidator(control: AbstractControl): ValidationErrors | null {
+    if (!this.item) {
+      return null;
+    }
     if (this.service.nameIsInUse(control.value)) {
       return {'unique': {value: control.value}};
     } else {
