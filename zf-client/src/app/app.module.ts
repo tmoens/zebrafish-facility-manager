@@ -48,8 +48,7 @@ import {AuthModule} from "./auth/auth.module";
 import {LoginModule} from "./auth/login/login.module";
 import {AppStateService} from "./app-state.service";
 import {MatMomentDateModule} from "@angular/material-moment-adapter";
-import { TestnavComponent } from './testnav/testnav.component';
-import { LayoutModule } from '@angular/cdk/layout';
+import {LayoutModule} from '@angular/cdk/layout';
 import {AuthService} from "./auth/auth.service";
 import {QRCodeModule} from "angularx-qrcode";
 import {MatTooltipModule} from "@angular/material/tooltip";
@@ -77,7 +76,6 @@ export function authServiceProviderFactory(provider: AppStateService) {
     TopBarComponent,
     TankLabelComponent,
     SplashComponent,
-    TestnavComponent,
   ],
   imports: [
     AuthModule,
