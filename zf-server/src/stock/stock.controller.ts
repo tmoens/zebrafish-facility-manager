@@ -92,7 +92,11 @@ export class StockController {
 
   @Get('name/:name')
   async getByName(@Param() params): Promise<any> {
-    return await this.repo.findByName(params.name);
+    const stock = await this.repo.findByName(params.name);
+    if (stock) {
+      stock.alleleSummary = await this.repo.getAlleleSummaryForId(stock.id);
+    }
+    return stock;
   }
 
   @Role(USER_ROLE)

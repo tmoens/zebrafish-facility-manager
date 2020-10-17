@@ -12,33 +12,48 @@
         <!-- First group of fields pertain to the stock itself -->
         <div fxFlex="50" fxLayout="column">
           <mat-form-field>
-            <input matInput type="text" placeholder="Stock Number" name="sn" [(ngModel)]="stock.name" disabled>
+            <label>
+              <input [(ngModel)]="stock.name" disabled matInput name="sn" placeholder="Stock Number" type="text">
+            </label>
           </mat-form-field>
           <mat-form-field>
-            <input matInput type="text" placeholder="Description" name="desc" [(ngModel)]="stock.description" required
-                   maxlength="100">
+            <label>
+              <input [(ngModel)]="stock.description" matInput maxlength="100" name="desc" placeholder="Description"
+                     required
+                     type="text">
+            </label>
           </mat-form-field>
-          <mat-form-field >
-            <input matInput [matDatepicker]="picker" placeholder="Fertilization Date" name="fertDate"
-            [(ngModel)]="stock.fertilizationDate" [disabled]="stock.nextSubStockNumber > 1" required>
+          <mat-form-field>
+            <label>
+              <input [(ngModel)]="stock.fertilizationDate" [disabled]="stock.nextSubStockNumber > 1"
+                     [matDatepicker]="picker" matInput
+                     name="fertDate" placeholder="Fertilization Date" required>
+            </label>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
           <mat-form-field *ngIf="!appState.getState('hidePI')">
-            <input matInput type="text" placeholder="Primary Investigator" (keyup)="onPIChange()" name="pi"
-                   [(ngModel)]="stock.pi" [matAutocomplete]="autoPI"
-                   maxlength="25">
+            <label>
+              <input (keyup)="onPIChange()" [(ngModel)]="stock.pi" [matAutocomplete]="autoPI" matInput maxlength="25"
+                     name="pi" placeholder="Primary Investigator"
+                     type="text">
+            </label>
           </mat-form-field>
           <mat-form-field>
-            <input matInput type="text" placeholder="Researcher" (keyup)="onResearcherChange()" name="researcher"
-                   [(ngModel)]="stock.researcher" [matAutocomplete]="autoResearcher"
-                   maxlength="20">
+            <label>
+              <input (keyup)="onResearcherChange()" [(ngModel)]="stock.researcher" [matAutocomplete]="autoResearcher"
+                     matInput maxlength="20"
+                     name="researcher" placeholder="Researcher"
+                     type="text">
+            </label>
           </mat-form-field>
           <mat-form-field>
-        <textarea matInput placeholder="Comment" name="comment"
-                  maxlength="4000"
-                  [(ngModel)]="stock.comment"
-                  cdkTextareaAutosize="true" cdkAutosizeMaxRows="7"></textarea>
+            <label>
+<textarea [(ngModel)]="stock.comment" cdkAutosizeMaxRows="7" cdkTextareaAutosize="true"
+          matInput
+          maxlength="4000"
+          name="comment" placeholder="Comment"></textarea>
+            </label>
           </mat-form-field>
         </div>
 
@@ -54,27 +69,42 @@
             </mat-radio-group>
           <div *ngIf="momInternal" fxLayout="column">
             <mat-form-field>
-              <input matInput placeholder="Stock Number"
-                     (keyup)="onSetMatStock()"
-                     name="matStockNameF" #matStockNameF="ngModel" stockNameCheck
-                     [(ngModel)]="stock.matStock.name" [disabled]="!stock.parentsEditable">
+              <label>
+                <input #matStockNameF="ngModel" (keyup)="onSetMatStock()"
+                       [(ngModel)]="stock.matStock.name"
+                       [disabled]="!stock.parentsEditable" matInput name="matStockNameF"
+                       placeholder="Stock Number" stockNameCheck>
+              </label>
               <mat-error *ngIf="matStockNameF.errors">Stock name does not exist</mat-error>
             </mat-form-field>
             <mat-form-field>
-              <input matInput type="text" placeholder="Description" name="msd"
-                     [(ngModel)]="stock.matStock.description" disabled>
+              <label>
+                <input [(ngModel)]="stock.matStock.description" disabled matInput name="msd"
+                       placeholder="Description" type="text">
+              </label>
+            </mat-form-field>
+            <mat-form-field>
+              <label>
+                <input [(ngModel)]="stock.matStock.alleleSummary" disabled matInput name="mas"
+                       placeholder="Allele Summary" type="text">
+              </label>
             </mat-form-field>
           </div>
           <div *ngIf="!momInternal" fxLayout="column">
             <mat-form-field>
-              <input matInput name="extMomId" placeholder="External Identifier" type="text"
-                     [(ngModel)]="stock.externalMatId" [disabled]="!stock.parentsEditable"
-                     maxlength="20">
+              <label>
+                <input [(ngModel)]="stock.externalMatId" [disabled]="!stock.parentsEditable" matInput maxlength="20"
+                       name="extMomId" placeholder="External Identifier"
+                       type="text">
+              </label>
             </mat-form-field>
             <mat-form-field>
-              <input matInput name="extMomDesc" placeholder="Description" type="text"
-                     [(ngModel)]="stock.externalMatDescription" [disabled]="!stock.parentsEditable"
-                     maxlength="40">
+              <label>
+                <input [(ngModel)]="stock.externalMatDescription" [disabled]="!stock.parentsEditable" matInput
+                       maxlength="40"
+                       name="extMomDesc" placeholder="Description"
+                       type="text">
+              </label>
             </mat-form-field>
           </div>
 
@@ -87,27 +117,42 @@
             </mat-radio-group>
           <div *ngIf="dadInternal"  fxLayout="column">
             <mat-form-field>
-              <input matInput placeholder="Stock Number"
-                     name="patStockNameF" #patStockNameF="ngModel" stockNameCheck
-                     (keyup)="onSetPatStock()"
-                     [(ngModel)]="stock.patStock.name" [disabled]="!stock.parentsEditable">
+              <label>
+                <input #patStockNameF="ngModel" (keyup)="onSetPatStock()"
+                       [(ngModel)]="stock.patStock.name" [disabled]="!stock.parentsEditable" matInput
+                       name="patStockNameF"
+                       placeholder="Stock Number" stockNameCheck>
+              </label>
               <mat-error *ngIf="patStockNameF.errors">Stock name does not exist</mat-error>
             </mat-form-field>
             <mat-form-field>
-              <input matInput placeholder="Description" name="psd"
-                     [(ngModel)]="stock.patStock.description" disabled>
+              <label>
+                <input [(ngModel)]="stock.patStock.description" disabled matInput
+                       name="psd" placeholder="Description">
+              </label>
+            </mat-form-field>
+            <mat-form-field>
+              <label>
+                <input [(ngModel)]="stock.patStock.alleleSummary" disabled matInput name="pas"
+                       placeholder="Allele Summary" type="text">
+              </label>
             </mat-form-field>
           </div>
           <div *ngIf="!dadInternal" fxLayout="column">
             <mat-form-field>
-              <input matInput name="extPatId" placeholder="External Identifier" type="text"
-                     [(ngModel)]="stock.externalPatId" [disabled]="!stock.parentsEditable"
-                     maxlength="20">
+              <label>
+                <input [(ngModel)]="stock.externalPatId" [disabled]="!stock.parentsEditable" matInput maxlength="20"
+                       name="extPatId" placeholder="External Identifier"
+                       type="text">
+              </label>
             </mat-form-field>
             <mat-form-field>
-              <input matInput name="extMatId" placeholder="Description" type="text"
-                     [(ngModel)]="stock.externalPatDescription" [disabled]="!stock.parentsEditable"
-                     maxlength="40">
+              <label>
+                <input [(ngModel)]="stock.externalPatDescription" [disabled]="!stock.parentsEditable" matInput
+                       maxlength="40"
+                       name="extMatId" placeholder="Description"
+                       type="text">
+              </label>
             </mat-form-field>
           </div>
         </div>
