@@ -96,7 +96,6 @@ export class StockSelectorComponent implements OnInit {
 
     // the mutation filter can be a specific MutationDto or a string.
     this.mutationFilterFC.valueChanges.pipe(
-      startWith(''),
       debounceTime(300)).subscribe((value: string | MutationDto) => {
         if (typeof(value) === 'string') {
           // if the filter is a string get a list of mutations that match the string
@@ -109,7 +108,6 @@ export class StockSelectorComponent implements OnInit {
 
     // the transgene filter can be a specific TransgeneDTO or a string.
     this.transgeneFilterFC.valueChanges.pipe(
-      startWith(''),
       debounceTime(300)).subscribe((value: string | TransgeneDto) => {
         if (typeof(value) === 'string') {
           // if the filter is a string get a list of transgenes that match the string
@@ -167,9 +165,12 @@ export class StockSelectorComponent implements OnInit {
     this.transgeneFilterFC.setValue('')
   }
 
+  // when clearing everything, you dont want to simply set the value
+  // to an empty string because that will trigger additional filter
+  // reapplications.  That's what the emitEvent: false is all about.
   onClearFilters() {
-    this.clearTransgeneFilter();
-    this.clearMutationFilter();
+    this.mutationFilterFC.reset(null, {emitEvent: false});
+    this.transgeneFilterFC.reset(null, {emitEvent: false});
     this.mfForm.reset(); // which will cause the filter to reapply.
   }
 
