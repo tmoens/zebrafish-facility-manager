@@ -4,8 +4,9 @@ import {MutationService} from '../mutation.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {MutationDto} from "../mutation-dto";
-import {AppStateService} from "../../app-state.service";
+import {AppStateService, ZFToolStates} from "../../app-state.service";
 import {ScreenSizes} from "../../helpers/screen-sizes";
+import {ZFTypes} from "../../helpers/zf-types";
 
 /**
  * Show the details of the "selected" mutation.
@@ -77,16 +78,11 @@ export class MutationViewerComponent implements OnInit {
       if (id) {
         this.service.selectByIdAndLoad(id);
       } else {
-        // if there is no id in the route, lets see a mutation is already selected and if so, navigate to it.
-        if (this.service.selected) {
-          this.router.navigateByUrl('mutation_manager/view/' + this.service.selected.id, {replaceUrl: true}).then();
-        } else {
-          // we were not given an id to view and there is no "selected" id, final try is to
-          // navigate to the first iem in the list...
-          const firstId = this.service.getFirstFiltered();
-          if (firstId) {
-            this.router.navigateByUrl('mutation_manager/view/' + firstId, {replaceUrl: true}).then();
-          }
+        // if there is no id in the route, see if a stock is already in the app-state
+        // (e.g. on restart) and if so, navigate to it.
+        const storedId = this.appState.getToolState(ZFTypes.MUTATION, ZFToolStates.SELECTED_ID);
+        if (storedId) {
+          this.router.navigateByUrl('mutation_manager/view/' + storedId, {replaceUrl: true}).then();
         }
       }
     });

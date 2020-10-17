@@ -2,19 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {StockService} from '../stock.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
-import {MutationService} from '../../mutation-manager/mutation.service';
-import {TransgeneService} from '../../transgene-manager/transgene.service';
-import {PrintService} from '../../printing/print.service';
-import {AppStateService} from "../../app-state.service";
+import {AppStateService, ZFToolStates} from "../../app-state.service";
 import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
 import {ScreenSizes} from "../../helpers/screen-sizes";
+import {ZFTypes} from "../../helpers/zf-types";
 
-/**
- * Note to future self.
- * Why do we not simply view the selected stock in the service?
- * Because we want to navigate to each selected stock explicitly.  And we want
- * to do that because it gives us free forward/backward navigation in the browser.
- */
 @Component({
   selector: 'app-stock-viewer',
   templateUrl: './stock-viewer.component.html',
@@ -33,9 +25,6 @@ export class StockViewerComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public service: StockService,
-    private mutationService: MutationService,
-    private transgeneService: TransgeneService,
-    private printService: PrintService,
   ) {
     this.service.enterBrowseMode();
   }
@@ -52,16 +41,11 @@ export class StockViewerComponent implements OnInit {
       if (id) {
         this.service.selectByIdAndLoad(id);
       } else {
-        // if there is no id in the route, see if a stock is already selected and if so, navigate to it.
-        if (this.service.selected) {
-          this.router.navigateByUrl('stock_manager/view/' + this.service.selected.id, {replaceUrl: true}).then();
-        } else {
-          // we were not given an id to view and there is no "selected" id, final try is to
-          // navigate to the first iem in the list...
-          const firstId = this.service.getFirstFiltered();
-          if (firstId) {
-            this.router.navigateByUrl('stock_manager/view/' + firstId, {replaceUrl: true}).then();
-          }
+        // if there is no id in the route, see if a stock is already in the app-state
+        // (e.g. on restart) and if so, navigate to it.
+        const storedId = this.appState.getToolState(ZFTypes.STOCK, ZFToolStates.SELECTED_ID);
+        if (storedId) {
+          this.router.navigateByUrl('stock_manager/view/' + storedId, {replaceUrl: true}).then();
         }
       }
     });

@@ -159,8 +159,12 @@ export class ZFGenericService<
     }
   }
 
+  getSelectedId(): number | null {
+    return this.appStateService.getToolState(this.zfType, ZFToolStates.SELECTED_ID);
+  }
+
   loadSelected() {
-    const id = this.appStateService.getToolState(this.zfType, ZFToolStates.SELECTED_ID);
+    const id = this.getSelectedId();
     if (id) {
       this.getById(id).subscribe((item: FULL_OBJ) => {
         if (item) {
@@ -199,6 +203,11 @@ export class ZFGenericService<
     this.loaderService.getFilteredList(this.zfType, this.filter)
       .subscribe((dtoList: any[]) => {
         this._filteredList = dtoList.map(dto => this.plain2RegularClass(dto));
+        // If there is no object selected when this list comes back, go ahead and select
+        // the first item of the filtered list.
+        if (!this.getSelectedId() && this.filteredList.length > 0) {
+          this.selectByIdAndLoad(this.filteredList[0].id)
+        }
       });
   }
 

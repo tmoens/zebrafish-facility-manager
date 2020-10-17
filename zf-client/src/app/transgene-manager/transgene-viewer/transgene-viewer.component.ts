@@ -4,6 +4,8 @@ import {TransgeneService} from '../transgene.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {TransgeneDto} from "../transgene-dto";
+import {ZFTypes} from "../../helpers/zf-types";
+import {AppStateService, ZFToolStates} from "../../app-state.service";
 
 /**
  * Always view the selected item as held in the service.
@@ -38,6 +40,7 @@ export class TransgeneViewerComponent implements OnInit {
   });
 
   constructor(
+    private appState: AppStateService,
     private router: Router,
     private route: ActivatedRoute,
     public service: TransgeneService,
@@ -60,16 +63,11 @@ export class TransgeneViewerComponent implements OnInit {
       if (id) {
         this.service.selectByIdAndLoad(id);
       } else {
-        // if there is no id in the route, lets see a transgene is already selected and if so, navigate to it.
-        if (this.service.selected) {
-          this.router.navigateByUrl('transgene_manager/view/' + this.service.selected.id, {replaceUrl: true});
-        } else {
-          // we were not given an id to view and there is no "selected" id, final try is to
-          // navigate to the first iem in the list...
-          const firstId = this.service.getFirstFiltered();
-          if (firstId) {
-            this.router.navigateByUrl('transgene_manager/view/' + firstId, {replaceUrl: true});
-          }
+        // if there is no id in the route, see if a stock is already in the app-state
+        // (e.g. on restart) and if so, navigate to it.
+        const storedId = this.appState.getToolState(ZFTypes.TRANSGENE, ZFToolStates.SELECTED_ID);
+        if (storedId) {
+          this.router.navigateByUrl('transgene_manager/view/' + storedId, {replaceUrl: true}).then();
         }
       }
     });
