@@ -52,6 +52,7 @@ export class StockSelectorComponent implements OnInit {
   transgeneFilterFC: FormControl = new FormControl();
 
   filteredResearcherOptions: Observable<string[]>;
+  filteredPIOptions: Observable<string[]>;
   filteredMutationOptions: MutationDto[];
   filteredTransgeneOptions: TransgeneDto[];
 
@@ -94,15 +95,21 @@ export class StockSelectorComponent implements OnInit {
       map(value => this.service.fieldOptions.filterOptionsContaining('researcher', value))
     );
 
+    this.filteredPIOptions = this.mfForm.get('pi').valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      map(value => this.service.fieldOptions.filterOptionsContaining('pi', value))
+    );
+
     // the mutation filter can be a specific MutationDto or a string.
     this.mutationFilterFC.valueChanges.pipe(
       debounceTime(300)).subscribe((value: string | MutationDto) => {
-        if (typeof(value) === 'string') {
-          // if the filter is a string get a list of mutations that match the string
-          // to be used as auto-complete options for the mutation filter.
-          this.filteredMutationOptions = this.mutationService.getListFilteredByString(value);
-        }
-        this.getFilteredStocks();
+      if (typeof (value) === 'string') {
+        // if the filter is a string get a list of mutations that match the string
+        // to be used as auto-complete options for the mutation filter.
+        this.filteredMutationOptions = this.mutationService.getListFilteredByString(value);
+      }
+      this.getFilteredStocks();
       }
     );
 

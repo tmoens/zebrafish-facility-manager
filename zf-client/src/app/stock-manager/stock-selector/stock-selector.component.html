@@ -61,6 +61,17 @@
           </button>
         </mat-form-field>
 
+        <mat-form-field *ngIf="!appState.getState('hidePI')">
+          <label>
+            <input [matAutocomplete]="autoPI" formControlName="pi" matInput placeholder="Primary Investigator"
+                   type="text">
+          </label>
+          <button (click)="clearFormControl('pi')" *ngIf="getFC('pi').value" mat-button mat-icon-button matSuffix
+                  type=button>
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
         <mat-form-field>
           <label>
             <input formControlName="age" matInput min="0" placeholder="Age (in days)"
@@ -127,6 +138,12 @@
 <!-- Auto completes sent down here for easier reading of code-->
 <mat-autocomplete #autoResearcher="matAutocomplete">
   <mat-option *ngFor="let option of filteredResearcherOptions | async" [value]="option">
+    {{option}}
+  </mat-option>
+</mat-autocomplete>
+
+<mat-autocomplete #autoPI="matAutocomplete">
+  <mat-option *ngFor="let option of filteredPIOptions | async" [value]="option">
     {{option}}
   </mat-option>
 </mat-autocomplete>

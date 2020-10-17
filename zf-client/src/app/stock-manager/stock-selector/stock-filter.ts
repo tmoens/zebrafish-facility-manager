@@ -4,6 +4,7 @@ export class StockFilter {
   liveStocksOnly = false;
   number: string = null;
   researcher: string = null;
+  pi: string = null;
   tankName: string = null;
   mutation: string = null;
   mutationId: number = null;

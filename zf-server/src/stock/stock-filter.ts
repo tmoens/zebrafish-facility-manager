@@ -3,6 +3,7 @@ export class StockFilter {
   liveStocksOnly?: boolean;
   number?: string;
   researcher?: string;
+  pi?: string;
   tankName?: string;
   mutation?: string;
   mutationId?: number;
