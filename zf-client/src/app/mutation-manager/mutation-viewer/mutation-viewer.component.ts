@@ -4,6 +4,8 @@ import {MutationService} from '../mutation.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {MutationDto} from "../mutation-dto";
+import {AppStateService} from "../../app-state.service";
+import {ScreenSizes} from "../../helpers/screen-sizes";
 
 /**
  * Show the details of the "selected" mutation.
@@ -23,6 +25,8 @@ import {MutationDto} from "../mutation-dto";
   styleUrls: ['./mutation-viewer.component.scss']
 })
 export class MutationViewerComponent implements OnInit {
+  ScreenSizes = ScreenSizes;
+
   // Build the filter form.
   mfForm = this.fb.group({
     aaChange: [{value: '', disabled: true}],
@@ -50,6 +54,7 @@ export class MutationViewerComponent implements OnInit {
   });
 
   constructor(
+    public appState: AppStateService,
     private router: Router,
     private route: ActivatedRoute,
     public service: MutationService,
@@ -74,13 +79,13 @@ export class MutationViewerComponent implements OnInit {
       } else {
         // if there is no id in the route, lets see a mutation is already selected and if so, navigate to it.
         if (this.service.selected) {
-          this.router.navigateByUrl('mutation_manager/view/' + this.service.selected.id, {replaceUrl: true});
+          this.router.navigateByUrl('mutation_manager/view/' + this.service.selected.id, {replaceUrl: true}).then();
         } else {
           // we were not given an id to view and there is no "selected" id, final try is to
           // navigate to the first iem in the list...
           const firstId = this.service.getFirstFiltered();
           if (firstId) {
-            this.router.navigateByUrl('mutation_manager/view/' + firstId, {replaceUrl: true});
+            this.router.navigateByUrl('mutation_manager/view/' + firstId, {replaceUrl: true}).then();
           }
         }
       }
@@ -90,20 +95,20 @@ export class MutationViewerComponent implements OnInit {
   create() {
     this.router.navigate(['mutation_manager/' + EditMode.CREATE, {
       mode: EditMode.CREATE,
-    }]);
+    }]).then();
   }
 
   createNext() {
     this.router.navigate(['mutation_manager/' + EditMode.CREATE_NEXT, {
       mode: EditMode.CREATE_NEXT,
-    }]);
+    }]).then();
   }
 
   edit() {
     this.router.navigate(['mutation_manager/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
-    }]);
+    }]).then();
   }
 
   delete() {

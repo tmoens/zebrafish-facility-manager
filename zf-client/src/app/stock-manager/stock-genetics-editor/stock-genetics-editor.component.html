@@ -3,7 +3,7 @@
     <span class="zf-title">{{'Mutation & Transgene Editor for Stock ' + stock.name}}</span>
   </mat-toolbar>
 
-  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="50px">
+  <div [fxLayout]="(appState.screenSize > ScreenSizes.SMALL) ? 'row' : 'column'" fxLayoutGap="50px">
 
     <!--Mutations-->
     <div fxFlex="45%" fxGrow="0" fxLayout="column">

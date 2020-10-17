@@ -42,6 +42,22 @@ export class StockService extends ZFGenericService<
     private router: Router,
   ) {
     super(ZFTypes.STOCK, loader, message, appState, authService, router);
+    const storedFilter = this.appState.getToolState(ZFTypes.STOCK, ZFToolStates.FILTER);
+    if (storedFilter) {
+      const filter = plainToClass(StockFilter, storedFilter);
+      this.setFilter(filter);
+    } else {
+      const filter = plainToClass(StockFilter, {});
+      this.setFilter(filter);
+    }
+    this._fieldOptions = new FieldOptions({
+      'researcher': [],
+      'pi': [],
+    });
+
+    // We cannot really initialize until the user logs in because we will not have the
+    // authorization to go get the data we need from the server.  So we watch the login state
+    // and trigger initialization when the user logs in.
     this.authService.loggedIn$.subscribe((loggedIn: boolean) => {
       if (loggedIn) {
         this.initialize();
@@ -62,21 +78,7 @@ export class StockService extends ZFGenericService<
     return plainToClass(StockDto, plain);
   }
 
-  // We cannot really initialize until the user logs in because we will not have the
-  // authorization to go get the data we need from the server.  So we watch the login state
-  // and trigger this when the user logs in.
   initialize() {
-    const storedFilter = this.appState.getToolState(ZFTypes.STOCK, ZFToolStates.FILTER);
-    if (storedFilter) {
-      this.setFilter(storedFilter);
-    } else {
-      const filter = plainToClass(StockFilter, {});
-      this.setFilter(filter);
-    }
-    this._fieldOptions = new FieldOptions({
-      'researcher': [],
-    });
-
     this.refresh();
   }
 

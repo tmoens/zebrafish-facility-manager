@@ -47,14 +47,11 @@ export class StockMenuComponent implements OnInit {
   }
 
   /* print labels for all the tanks this stock is in */
-  printLabels() {
-    if (this.service.selected.swimmers && this.service.selected.swimmers.length > 0) {
-      const tanks = this.service.selected.swimmers.map( swimmer => String(swimmer.tankId) );
-      this.printService.printDocument('tankLabels', tanks);
-    }
+  printLabel() {
+    this.printService.printDocument('tankLabel');
   }
 
-  goToTankWalker(){
+  goToTankWalker() {
     this.router.navigateByUrl('stock_manager/stock_walker');
   }
 

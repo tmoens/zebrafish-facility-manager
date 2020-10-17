@@ -8,7 +8,8 @@
       </button>
     </mat-toolbar>
 
-    <form fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px" [formGroup]="mfForm">
+    <form [formGroup]="mfForm" [fxLayout]="(appState.screenSize > ScreenSizes.MEDIUM) ? 'row' : 'column'"
+          fxLayoutGap="10px">
 
       <div fxLayout="column" fxFlex="40%">
         <mat-form-field *ngIf="service.selected.gene">

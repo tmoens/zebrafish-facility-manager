@@ -5,7 +5,7 @@
   </mat-toolbar>
 
   <form [formGroup]="mfForm">
-    <div fxLayout="row" fxLayoutGap="20px">
+    <div [fxLayout]="(appState.screenSize > ScreenSizes.SMALL) ? 'row' : 'column'" fxLayoutGap="20px">
 
       <div fxLayout="column" fxFlex="30%">
         <mat-form-field>
@@ -66,6 +66,7 @@
             <input formControlName="actgChange" matInput maxlength="10"
                    placeholder="Nucleotide Change">
           </label>
+          <mat-hint *ngIf="getControl('actgChange').dirty">A2345G for example.</mat-hint>
         </mat-form-field>
 
         <mat-form-field>
@@ -73,6 +74,7 @@
             <input formControlName="aaChange" matInput maxlength="10"
                    placeholder="Amino Acid Change">
           </label>
+          <mat-hint *ngIf="getControl('aaChange').dirty">A316V for example.</mat-hint>
         </mat-form-field>
 
         <mat-form-field>
@@ -105,33 +107,29 @@
       <div fxLayout="column" fxLayoutGap="20px" fxFlex>
         <mat-form-field>
           <label>
-<textarea cdkAutosizeMaxRows="7" cdkTextareaAutosize="true" formControlName="comment"
-          matInput
-          maxlength="3000" placeholder="Comment"></textarea>
+            <textarea cdkAutosizeMaxRows="7" cdkTextareaAutosize="true" formControlName="comment"
+                      matInput maxlength="3000" placeholder="Comment"></textarea>
           </label>
         </mat-form-field>
 
         <mat-form-field>
           <label>
-<textarea cdkAutosizeMaxRows="3" cdkTextareaAutosize="true" formControlName="zfinURL"
-          matInput
-          maxlength="255" placeholder="ZFIN URL"></textarea>
+            <textarea cdkAutosizeMaxRows="3" cdkTextareaAutosize="true" formControlName="zfinURL"
+                      matInput maxlength="255" placeholder="ZFIN URL"></textarea>
           </label>
           <mat-error *ngIf="zfinURLControl.touched && zfinURLControl.invalid">{{getZfinURLError()}}</mat-error>
         </mat-form-field>
 
         <mat-form-field>
           <label>
-<textarea cdkAutosizeMaxRows="7" cdkTextareaAutosize="true" formControlName="phenotype"
-          matInput
-          maxlength="3000" placeholder="Phenotype"></textarea>
+            <textarea cdkAutosizeMaxRows="7" cdkTextareaAutosize="true" formControlName="phenotype"
+                      matInput maxlength="3000" placeholder="Phenotype"></textarea>
           </label>
         </mat-form-field>
         <mat-form-field>
           <label>
-<textarea cdkAutosizeMaxRows="7" cdkTextareaAutosize="true" formControlName="morphantPhenotype"
-          matInput
-          maxlength="3000" placeholder="Morphant Phenotype"></textarea>
+            <textarea cdkAutosizeMaxRows="7" cdkTextareaAutosize="true" formControlName="morphantPhenotype"
+                      matInput maxlength="3000" placeholder="Morphant Phenotype"></textarea>
           </label>
         </mat-form-field>
         <div class="fill-remaining-space"></div>

@@ -6,12 +6,13 @@ import {StockFilter} from './stock-filter';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {StockDto} from "../dto/stock-dto";
-import {AppStateService} from "../../app-state.service";
+import {AppStateService, ZFToolStates} from "../../app-state.service";
 import {MutationService} from "../../mutation-manager/mutation.service";
 import {MutationDto} from "../../mutation-manager/mutation-dto";
 import {TransgeneDto} from "../../transgene-manager/transgene-dto";
 import {TransgeneService} from "../../transgene-manager/transgene.service";
 import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
+import {ZFTypes} from "../../helpers/zf-types";
 
 /**
  * A two-part component: a filter for stocks and a list of filtered stocks.
@@ -64,7 +65,20 @@ export class StockSelectorComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+
+    const storedFilter: StockFilter = this.appState.getToolState(ZFTypes.STOCK, ZFToolStates.FILTER);
+    if (storedFilter && storedFilter.mutation) {
+      this.mutationFilterFC.setValue(storedFilter.mutation);
+    } else if (storedFilter && storedFilter.mutationId) {
+      const m = await this.mutationService.getById(storedFilter.mutationId).toPromise();
+      this.mutationFilterFC.setValue(m);
+    }
+    if (storedFilter && storedFilter.transgene) {
+      this.transgeneFilterFC.setValue(storedFilter.transgene);
+    } else if (storedFilter && storedFilter.transgeneId) {
+      this.transgeneFilterFC.setValue(await this.transgeneService.getById(storedFilter.transgeneId).toPromise());
+    }
     // any time a filter value changes, reapply it
     this.mfForm.valueChanges
       .pipe(debounceTime(300))
@@ -112,16 +126,26 @@ export class StockSelectorComponent implements OnInit {
     if (this.mutationFilterFC.value) {
       if (typeof (this.mutationFilterFC.value) === 'string') {
         stockFilter.mutation = this.mutationFilterFC.value;
+        stockFilter.mutationId = null;
       } else {
         stockFilter.mutationId = this.mutationFilterFC.value.id;
+        stockFilter.mutation = null;
       }
+    } else {
+      stockFilter.mutationId = null;
+      stockFilter.mutation = null;
     }
     if (this.transgeneFilterFC.value) {
       if (typeof (this.transgeneFilterFC.value) === 'string') {
         stockFilter.transgene = this.transgeneFilterFC.value;
+        stockFilter.transgeneId = null;
       } else {
         stockFilter.transgeneId = this.transgeneFilterFC.value.id;
+        stockFilter.transgene = null;
       }
+    } else {
+      stockFilter.transgeneId = null;
+      stockFilter.transgene = null;
     }
     this.service.setFilter(stockFilter);
     this.service.applyFilter();

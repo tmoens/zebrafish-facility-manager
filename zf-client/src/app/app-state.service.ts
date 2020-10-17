@@ -4,6 +4,7 @@ import {LOCAL_STORAGE, StorageService} from "ngx-webstorage-service";
 import {ZFTool} from "./helpers/zf-tool";
 import {Router} from "@angular/router";
 import {ZFTypes} from "./helpers/zf-types";
+import {ScreenSizes} from "./helpers/screen-sizes";
 
 /**
  * This maintains the state of the application.  It does a few main things.
@@ -24,13 +25,19 @@ export enum ZFToolStates {
 
 export class AppStateService {
   // for storing arbitrary state data and arbitrary state data that persists over restarts
-  state: {[name: string]: any } = {};
-  persistentState: {[name: string]: any } = {};
-  selectorFixed: boolean = false;
+  state: { [name: string]: any } = {};
+  persistentState: { [name: string]: any } = {};
+  selectorFixed: boolean = true;
+  screenSize: ScreenSizes = ScreenSizes.LARGE;
 
   private _activeTool$: BehaviorSubject<ZFTool> = new BehaviorSubject<ZFTool>(ZFTool.SPLASH_LOGIN);
-  private get activeTool$() { return this._activeTool$; }
-  public get activeTool() { return this.activeTool$.value; }
+  private get activeTool$() {
+    return this._activeTool$;
+  }
+
+  public get activeTool() {
+    return this.activeTool$.value;
+  }
 
   // other state information is just held in an indexed array
   constructor(

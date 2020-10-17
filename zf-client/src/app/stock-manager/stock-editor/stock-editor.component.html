@@ -7,7 +7,7 @@
     <form #stockEditForm="ngForm">
       <!-- Editor form has two sets of fields. Put them side by side on larger screens and in a -->
       <!-- column on smaller ones. -->
-      <div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="0px">
+      <div [fxLayout]="(appState.screenSize > ScreenSizes.SMALL) ? 'row' : 'column'" fxLayoutGap="20px">
 
         <!-- First group of fields pertain to the stock itself -->
         <div fxFlex="50" fxLayout="column">

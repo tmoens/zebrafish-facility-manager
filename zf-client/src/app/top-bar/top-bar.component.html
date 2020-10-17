@@ -3,7 +3,7 @@
   <div class="zf-full-width">
 
     <!-- For anything bigger than a tablet we spread out the main choices -->
-    <div fxHide.lt-md>
+    <div *ngIf="appState.screenSize >= ScreenSizes.LARGE">
       <mat-toolbar *ngIf="authService.loggedIn$ | async" fxLayoutGap="10px">
         <span>Zebrafish Facility Manager for {{appState.getState('facilityName')}}</span>
         <span class="fill-remaining-space"></span>
@@ -40,7 +40,7 @@
     </div>
 
     <!-- For small screens, we abbreviate what we can and put the main options in a menu -->
-    <div fxHide.gt-sm>
+    <div *ngIf="appState.screenSize < ScreenSizes.LARGE">
       <mat-toolbar *ngIf="authService.loggedIn$ | async" fxLayoutGap="10px">
         <span>ZFM for {{appState.getState('facilityAbbrv')}}</span>
         <span class="fill-remaining-space"></span>

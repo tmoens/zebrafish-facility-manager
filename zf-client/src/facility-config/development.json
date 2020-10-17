@@ -1,12 +1,10 @@
 {
   "facilityName": "development",
   "facilityAbbrv": "dev",
-
   "hidePI": false,
-
-  "tankNumberingHint": "Legal tank numbers run from blah blahblah",
+  "tankNumberingHint": "Legal tank numbers are to be determined yet.",
   "tankLabelConfig": {
-    "fontPointSize": 12,
+    "fontPointSize": 10,
     "showQrCode": true,
     "layout": [
       [

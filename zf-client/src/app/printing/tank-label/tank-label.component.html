@@ -1,18 +1,19 @@
-<div fxFlex fxLayout="row"  class="tankLabel"
-     *ngFor="let label of tankLabels.labels">
+<div class="tankLabel" fxFlex fxLayout="row">
   <!-- The next line prevents the QR code from getting chopped off on the left.
        I could not make this happen with margins or padding.  What's more,
        this trick does not even work if I it inside the next div.
        This just screams that I have no idea what I am doing. -->
   <div fxFlex="2%"></div>
-  <div  *ngIf="appState.getState('tankLabelQrCode')" >
-    <qrcode [qrdata]="stockUrl" scale="2" width="10" errorCorrectionLevel="M"
-            elementType="url"></qrcode>
+  <div *ngIf="appState.getState('tankLabelQrCode')">
+    <qrcode
+      [qrdata]="stockUrl"
+      elementType="url" errorCorrectionLevel="M"
+      scale="2"
+      width="10">
+    </qrcode>
   </div>
-  <div fxFlex fxLayout="column"
-       [ngStyle]="{ 'font-size.pt': tankLabels.fontPointSize }">
-    <div fxLayout="row" fxLayoutAlign="space-between"
-         *ngFor="let row of label.rows">
+  <div [ngStyle]="{ 'font-size.pt': appState.getState('tankLabelPointSize') }" fxFlex fxLayout="column">
+    <div *ngFor="let row of label.rows" fxLayout="row" fxLayoutAlign="space-between">
       <div *ngFor="let s of row">{{s}}</div>
     </div>
   </div>

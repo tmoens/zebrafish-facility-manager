@@ -21,7 +21,7 @@
       <button (click)="onClearFilters()" color="primary" mat-button type="button">Clear Filters</button>
     </div>
 
-    <div fxLayout="row" fxLayout.lt-md="column">
+    <div [fxLayout]="(appState.screenSize > ScreenSizes.MEDIUM) ? 'row' : 'column'">
 
       <div fxLayout="column" fxFlex="50%">
 

@@ -12,6 +12,8 @@ import {classToClass} from "class-transformer";
 import {MutationDto} from "../../mutation-manager/mutation-dto";
 import {TransgeneDto} from "../../transgene-manager/transgene-dto";
 import {debounceTime, startWith} from "rxjs/operators";
+import {ScreenSizes} from "../../helpers/screen-sizes";
+import {AppStateService} from "../../app-state.service";
 
 /**
  * This dialog allows the user to indicate which mutations/transgenes (markers) are present
@@ -28,6 +30,8 @@ import {debounceTime, startWith} from "rxjs/operators";
   styleUrls: ['./stock-genetics-editor.component.scss']
 })
 export class StockGeneticsEditorComponent implements OnInit {
+  ScreenSizes = ScreenSizes;
+
   id: number;
   highlightId: number;
 
@@ -71,6 +75,7 @@ export class StockGeneticsEditorComponent implements OnInit {
   saved = false;
 
   constructor(
+    public appState: AppStateService,
     private fb: FormBuilder,
     public service: StockService,
     public mutationService: MutationService,
@@ -100,7 +105,6 @@ export class StockGeneticsEditorComponent implements OnInit {
     this.newMutationFC.valueChanges.pipe(
       startWith(''),
       debounceTime(300)).subscribe((value: string | MutationDto) => {
-        console.log('type of value: ' + typeof (value));
         if (typeof (value) === 'string') {
           // if the filter is a string get a list of mutations that match the string
           // to be used as auto-complete options for the mutation filter.
@@ -116,7 +120,6 @@ export class StockGeneticsEditorComponent implements OnInit {
     this.newTransgeneFC.valueChanges.pipe(
       startWith(''),
       debounceTime(300)).subscribe((value: string | TransgeneDto) => {
-        console.log('type of value: ' + typeof (value));
         if (typeof (value) === 'string') {
           // if the filter is a string get a list of transgenes that match the string
           // to be used as auto-complete options for the transgene filter.
@@ -191,7 +194,7 @@ export class StockGeneticsEditorComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['stock_manager/view']);
+    this.router.navigate(['stock_manager/view']).then();
   }
 
   hasOwnListChanged(): boolean {

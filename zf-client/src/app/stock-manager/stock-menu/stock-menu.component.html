@@ -33,11 +33,9 @@
     <mat-divider></mat-divider>
 
     <!--  Print labels for this stock-->
-    <button mat-menu-item (click)="printLabels()"
-            matTooltip="One label for each tank holding this stock."
-            [disabled]="!service.selected.swimmers || service.selected.swimmers.length < 1">
+    <button (click)="printLabel()" mat-menu-item>
       <mat-icon>print</mat-icon>
-      <span>Print Label(s)</span>
+      <span>Print Label</span>
     </button>
 
     <button mat-menu-item (click)="goToTankWalker()"

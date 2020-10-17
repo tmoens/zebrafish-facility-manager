@@ -9,8 +9,8 @@
       </button>
     </mat-toolbar>
 
-    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px" >
-      <div fxLayout="column" fxFlex="45" >
+    <div [fxLayout]="(appState.screenSize > ScreenSizes.MEDIUM) ? 'row' : 'column'" fxLayoutGap="10px">
+      <div fxLayout="column" fxFlex="45">
         <!-- Main stock information-->
         <mat-form-field>
           <label>
@@ -137,9 +137,6 @@
         <mat-list *ngIf="service.selected.swimmers && service.selected.swimmers.length > 0" dense>
           <mat-list-item *ngFor="let t of service.selected.swimmers">
             {{t.tank.name}}: {{t.number}} fish
-            <button mat-icon-button (click)="printLabel(t.tank.id)">
-              <mat-icon>print</mat-icon>
-            </button>
           </mat-list-item>
         </mat-list>
         <mat-list *ngIf="service.selected.swimmers.length < 1" dense>

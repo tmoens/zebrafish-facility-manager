@@ -79,12 +79,12 @@ export class MutationService extends ZFGenericService<MutationDto, MutationDto, 
     return this._fieldOptions.options.name.includes(name);
   }
 
-  nicknameIsInUse(nickname: string, exceptingId: number): boolean {
+  nicknameIsInUse(nickname: string): boolean {
     if (nickname === null) {
       return false;
     }
     for (const t of this.all) {
-      if (t.id !== exceptingId && t.nickname === nickname) {
+      if (t.nickname === nickname) {
         return true;
       }
     }

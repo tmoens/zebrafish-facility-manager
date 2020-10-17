@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Location} from "@angular/common";
 
@@ -14,23 +14,22 @@ export class PrintService {
     private location: Location,
   ) { }
 
-  printDocument(documentName: string, documentData: string[]) {
+  printDocument(documentName: string) {
     this.isPrinting = true;
     this.router.navigate(['/',
-      { outlets: {
-          'print': ['print', documentName, documentData.join()]
-        }}]);
-    // this.router.navigate(['/',
-    //   { outlets: {
-    //       'preview': ['preview', documentName, documentData.join()]
-    //     }}]);
+      {
+        outlets: {
+          'print': ['print', documentName]
+        }
+      }]);
   }
 
   onDataReady() {
     setTimeout(() => {
       window.print();
       this.isPrinting = false;
-      this.location.back();
+      // this.location.back();
+      this.router.navigate([{outlets: {print: null}}]);
     });
   }
 }

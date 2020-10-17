@@ -7,6 +7,7 @@ import {TransgeneService} from '../../transgene-manager/transgene.service';
 import {PrintService} from '../../printing/print.service';
 import {AppStateService} from "../../app-state.service";
 import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
+import {ScreenSizes} from "../../helpers/screen-sizes";
 
 /**
  * Note to future self.
@@ -21,6 +22,7 @@ import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
 })
 
 export class StockViewerComponent implements OnInit {
+  ScreenSizes = ScreenSizes;
   id: number = null;
   highlightStock: number;
   highlightMutation: number;
@@ -92,12 +94,5 @@ export class StockViewerComponent implements OnInit {
 
   editSwimmers() {
     this.router.navigate(['stock_manager/' + EditMode.EDIT + '/swimmers/' + this.service.selected.id]).then();
-  }
-
-  /* print a tank label for this tank */
-  printLabel(tankId) {
-    // this.router.navigateByUrl('preview/tankLabels/' + tankId)
-    this.printService.printDocument('tankLabels', [tankId]);
-
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {PrintService} from '../print.service';
 import {AppStateService} from '../../app-state.service';
@@ -6,25 +6,13 @@ import {TankLabelOption} from './tank-label';
 import {StockService} from '../../stock-manager/stock.service';
 
 export class TankLabel {
-  qrCode
+  qrCode;
   rows: string[][] = [];
+  fontPointSize: number;
   addRow(row: string[]) {
     this.rows.push(row);
   }
 }
-
-
-export class TankLabels {
-  height: number;
-  width: number;
-  fontPointSize: number;
-  labels: TankLabel[] = [];
-
-  addLabel(l: TankLabel) {
-    this.labels.push(l);
-  }
-}
-
 
 
 @Component({
@@ -33,9 +21,8 @@ export class TankLabels {
   styleUrls: ['./tank-label.component.scss']
 })
 export class TankLabelComponent implements OnInit {
-  tankIds: string[];
-  tankLabels: TankLabels = new TankLabels();
   stockUrl: string;
+  label: TankLabel;
 
   constructor(
     route: ActivatedRoute,
@@ -43,28 +30,23 @@ export class TankLabelComponent implements OnInit {
     private printService: PrintService,
     public appState: AppStateService,
   ) {
-    this.tankIds = route.snapshot.params['tankIds']
-      .split(',');
   }
 
   ngOnInit() {
 
-    this.tankLabels.fontPointSize =
-      this.appState.getState('tankLabelPointSize');
-    for (const tankId of this.tankIds) {
-      this.tankLabels.addLabel(this.makeLabel(tankId));
-    }
-    console.log(JSON.stringify(this.tankLabels));
+    this.label = this.makeLabel();
+    this.stockUrl = location.origin + '/stock_manager/view/' + this.stockService.selected.id;
+
+    console.log(JSON.stringify(this.label));
     this.printService.onDataReady();
 
     // We are going to make a QR code from this so that users can see all the
     // stock details by pointing their camera at said code on a label
-    this.stockUrl = location.origin + '/stock_manager/view/' + this.stockService.selected.id;
 
 
   }
 
-  makeLabel(tankId: string): TankLabel {
+  makeLabel(): TankLabel {
     const label = new TankLabel();
     for (const row of this.appState.getState('tankLabelLayout')) {
       const labelRow = [];
@@ -111,13 +93,9 @@ export class TankLabelComponent implements OnInit {
               .join(', ')
             );
             break;
-          case TankLabelOption.TANK_NUMBER:
-            labelRow.push('oopsy');
-            break;
           default:
             labelRow.push(field);
             break;
-
         }
       }
       label.addRow(labelRow);

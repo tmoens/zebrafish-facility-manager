@@ -9,6 +9,8 @@ import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {DialogService} from '../../dialog.service';
 import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {ZF_DATE_FORMATS} from "../../helpers/dateFormats";
+import {ScreenSizes} from "../../helpers/screen-sizes";
+import {AppStateService} from "../../app-state.service";
 
 
 @Component({
@@ -20,6 +22,7 @@ import {ZF_DATE_FORMATS} from "../../helpers/dateFormats";
   ],
 })
 export class MutationEditorComponent implements OnInit {
+  ScreenSizes = ScreenSizes;
   item: MutationDto;
   editMode: EditMode;
   id: number;
@@ -66,6 +69,7 @@ export class MutationEditorComponent implements OnInit {
   spermFreezeOptions: string[];
 
   constructor(
+    public appState: AppStateService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
@@ -180,6 +184,10 @@ export class MutationEditorComponent implements OnInit {
     if (!this.item) {
       return null;
     }
+    // do not do an inUse check against your own name.
+    if (this.item.name === control.value) {
+      return null;
+    }
     if (this.service.nameIsInUse(control.value)) {
       return {'unique': {value: control.value}};
     } else {
@@ -191,7 +199,11 @@ export class MutationEditorComponent implements OnInit {
     if (!this.item) {
       return null;
     }
-    if (this.service.nicknameIsInUse(control.value, this.item.id)) {
+    // do not do a nickname in use check against your own nickname.
+    if (this.item.nickname === control.value) {
+      return null;
+    }
+    if (this.service.nicknameIsInUse(control.value)) {
       return {'unique': {value: control.value}};
     } else {
       return null;
@@ -228,10 +240,14 @@ export class MutationEditorComponent implements OnInit {
     }
   }
 
+  getControl(controlName: string) {
+    return this.mfForm.get(controlName);
+  }
 
   /* To support deactivation check  */
+
   /* Contrary to tsLint's perspective, this function *is* invoked by the deactivation guard */
-  canDeactivate(): boolean | Observable<boolean> |Promise <boolean> {
+  canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
     if (this.saved) {
       return true;
     }

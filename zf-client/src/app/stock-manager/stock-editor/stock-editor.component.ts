@@ -10,6 +10,7 @@ import {ZF_DATE_FORMATS} from "../../helpers/dateFormats";
 import {AppStateService} from "../../app-state.service";
 import {StockDto} from "../dto/stock-dto";
 import {StockFullDto} from "../dto/stock-full-dto";
+import {ScreenSizes} from "../../helpers/screen-sizes";
 
 @Component({
   selector: 'app-stock-editor',
@@ -22,6 +23,8 @@ import {StockFullDto} from "../dto/stock-full-dto";
 
 
 export class StockEditorComponent implements OnInit {
+  ScreenSizes = ScreenSizes;
+
   // EDIT the stock, CREATE the stock, or CREATE a sub-stock from the stock
   editMode: EditMode;
 

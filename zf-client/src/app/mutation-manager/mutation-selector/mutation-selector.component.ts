@@ -8,6 +8,7 @@ import {MutationFilter} from '../mutation-filter';
 import {MutationDto} from "../mutation-dto";
 import {AppStateService} from "../../app-state.service";
 import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
+import {ScreenSizes} from "../../helpers/screen-sizes";
 
 @Component({
   selector: 'app-mutation-selector',
@@ -15,6 +16,8 @@ import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
   styleUrls: ['./mutation-selector.component.scss']
 })
 export class MutationSelectorComponent implements OnInit {
+  ScreenSizes = ScreenSizes;
+
   @Output() selected = new EventEmitter<MutationDto>();
   focusId: number;
 

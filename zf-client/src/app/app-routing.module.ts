@@ -13,12 +13,8 @@ const routes: Routes = [
     component: SplashComponent,
   },
   {
-    path: 'print/tankLabels/:tankIds',
+    path: 'print/tankLabel',
     outlet: 'print',
-    component: TankLabelComponent,
-  },
-  {
-    path: 'preview/tankLabels/:tankIds',
     component: TankLabelComponent,
   },
   {
