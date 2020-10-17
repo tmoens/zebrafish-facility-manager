@@ -8,7 +8,7 @@
       <mat-checkbox  formControlName="liveStocksOnly" color="primary">
         Live Stocks Only
       </mat-checkbox>
-      <button mat-button (click)="onClearFilters()" color="primary">
+      <button (click)="onClearFilters()" color="primary" mat-button type=button>
         Clear Filters
       </button>
     </div>
@@ -20,7 +20,7 @@
           <label>
             <input formControlName="number" matInput placeholder="Stock Number" type="text">
           </label>
-          <button mat-button matSuffix mat-icon-button *ngIf="getFC('number').value"
+          <button *ngIf="getFC('number').value" mat-button mat-icon-button matSuffix type=button
                   (click)="clearFormControl('number')">
             <mat-icon>close</mat-icon>
           </button>
@@ -31,7 +31,7 @@
             <input [matAutocomplete]="autoResearcher" formControlName="researcher" matInput placeholder="Researcher"
                    type="text">
           </label>
-          <button mat-button matSuffix mat-icon-button *ngIf="getFC('researcher').value"
+          <button *ngIf="getFC('researcher').value" mat-button mat-icon-button matSuffix type=button
                   (click)="clearFormControl('researcher')">
             <mat-icon>close</mat-icon>
           </button>
@@ -41,7 +41,7 @@
           <label>
             <input formControlName="tankName" matInput placeholder="Tank Name" type="text">
           </label>
-          <button mat-button matSuffix mat-icon-button *ngIf="getFC('tankName').value"
+          <button *ngIf="getFC('tankName').value" mat-button mat-icon-button matSuffix type=button
                   (click)="clearFormControl('tankName')">
             <mat-icon>close</mat-icon>
           </button>
@@ -55,7 +55,7 @@
           <label>
             <input formControlName="text" matInput placeholder="Search Text" type="text">
           </label>
-          <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
+          <button *ngIf="getFC('text').value" mat-button mat-icon-button matSuffix type=button
                   (click)="clearFormControl('text')">
             <mat-icon>close</mat-icon>
           </button>
@@ -66,7 +66,7 @@
             <input formControlName="age" matInput min="0" placeholder="Age (in days)"
                    step="20" type="number">
           </label>
-          <button mat-button matSuffix mat-icon-button *ngIf="getFC('age').value"
+          <button *ngIf="getFC('age').value" mat-button mat-icon-button matSuffix type=button
                   (click)="clearFormControl('age')">
             <mat-icon>close</mat-icon>
           </button>
@@ -89,7 +89,7 @@
                  placeholder="Mutation"
                  type="text">
         </label>
-        <button mat-button matSuffix mat-icon-button
+        <button mat-button mat-icon-button matSuffix type=button
                 (click)="clearMutationFilter()">
           <mat-icon>close</mat-icon>
         </button>
@@ -103,13 +103,14 @@
                  placeholder="Transgene"
                  type="text">
         </label>
-        <button mat-button matSuffix mat-icon-button
+        <button mat-button mat-icon-button matSuffix type=button
                 (click)="clearTransgeneFilter()">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
     </div>
   </form>
+
   <mat-divider></mat-divider>
 
   <!-- The Filtered List part -->

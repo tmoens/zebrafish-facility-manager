@@ -19,7 +19,7 @@
         <label>
           <input formControlName="text" matInput placeholder="Search all fields" type="text">
         </label>
-        <button mat-button matSuffix mat-icon-button *ngIf="getFC('text').value"
+        <button *ngIf="getFC('text').value" mat-button mat-icon-button matSuffix type="button"
                 (click)="clearFormControl('text')">
           <mat-icon>close</mat-icon>
         </button>

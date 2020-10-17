@@ -66,9 +66,11 @@ export class StockSelectorComponent implements OnInit {
 
   ngOnInit() {
     // any time a filter value changes, reapply it
-    this.mfForm.valueChanges.pipe(debounceTime(300)).subscribe(() => {
-      this.getFilteredStocks();
-    });
+    this.mfForm.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe(() => {
+        this.getFilteredStocks();
+      });
 
     // when the user types something in the researcher part of the filter,
     // change the auto-complete options available.
