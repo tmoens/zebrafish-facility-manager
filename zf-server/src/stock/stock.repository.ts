@@ -359,6 +359,11 @@ export class StockRepository extends Repository<Stock> {
       q = q.andWhere('stock.researcher LIKE :r', {r: '%' + filter.researcher + '%'});
     }
 
+    // a filter on the researcher matches any par of the researcher's name
+    if (filter.pi) {
+      q = q.andWhere('stock.pi LIKE :r', {r: '%' + filter.pi + '%'});
+    }
+
     // a filter on text looks anywhere in the stocks comment or description only.
     if (filter.text) {
       const text = '%' + filter.text + '%';
