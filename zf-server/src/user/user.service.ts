@@ -20,11 +20,11 @@ export class UserService {
     private mailerService: ZFMailerService,
     private configService: ConfigService,
   ) {
-    this.makeSureAdminExists();
+    this.makeSureAdminExists().then();
   }
 
   // when a system starts up, it needs at least one user, in this case the admin user
-  // with the password "admin" set up so that the user must change her password when
+  // and password are set up so that the user must change her password when
   // she first logs in.
   // FWIW, the config file checker ensures that the configuration fields are present.
   async makeSureAdminExists() {
@@ -53,25 +53,22 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.repo.find();
+    return this.repo.find({order: {'email': 'ASC'}});
   }
 
   async findFiltered(filter?: string): Promise<User[]> {
-    console.log('user filter: ' + filter)
     if (!filter) {
       return await this.findAll();
     }
     const f = "%" + filter + "%";
-    const res = await this.repo.createQueryBuilder("u")
+    return await this.repo.createQueryBuilder("u")
       .where("u.name LIKE :f", {f: f})
       .orWhere("u.email LIKE :f", {f: f})
       .orWhere("u.role LIKE :f", {f: f})
-      .orWhere("u.email LIKE :f", {f: f})
       .orWhere("u.phone LIKE :f", {f: f})
       .orWhere("u.username LIKE :f", {f: f})
+      .orderBy("u.email")
       .getMany();
-    console.log('result: ' + JSON.stringify(res));
-    return res;
   }
 
   findOne(id: string): Promise<User> {

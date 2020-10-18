@@ -43,7 +43,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('filtered')
   async findAll(): Promise<User[]> {
-    console.log('nofilter');
     return await this.service.findFiltered();
   }
 
@@ -51,7 +50,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('filtered/:filter')
   async findFiltered(@Param('filter') filter: string): Promise<User[]> {
-    console.log('user filter at controller: ' + filter);
     return await this.service.findFiltered(filter);
   }
 
