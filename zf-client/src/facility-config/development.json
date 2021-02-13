@@ -5,6 +5,7 @@
   "tankNumberingHint": "Legal tank numbers are to be determined yet.",
   "tankLabelConfig": {
     "fontPointSize": 10,
+    "fontFamily": "Arial Narrow",
     "showQrCode": true,
     "layout": [
       [

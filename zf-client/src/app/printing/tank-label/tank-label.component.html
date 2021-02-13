@@ -12,7 +12,9 @@
       width="10">
     </qrcode>
   </div>
-  <div [ngStyle]="{ 'font-size.pt': appState.getState('tankLabelPointSize') }" fxFlex fxLayout="column">
+  <div  fxFlex fxLayout="column"
+        [ngStyle]="{ 'font-size.pt': appState.getState('tankLabelPointSize'),
+                     'font-family': appState.getState('tankLabelFontFamily')}">
     <div *ngFor="let row of label.rows" fxLayout="row" fxLayoutAlign="space-between">
       <div *ngFor="let s of row">{{s}}</div>
     </div>
