@@ -97,3 +97,5 @@ to the zf_server to index.html *before* the ProxyPass rule would take effect.
 
 Consequently, we have decided to implement proxying to
 the server with a RewriteRule.
+
+### ToDo add a not on redirecting http traffic to https automatically.

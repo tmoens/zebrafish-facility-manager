@@ -1,5 +1,9 @@
 # Updating the System
 
+## Back up your database(s)
+
+## Introduction
+
 Assuming you have written and tested some changes and pushed them
 to github,
 how do you go about updating a running system.

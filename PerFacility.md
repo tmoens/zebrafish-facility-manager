@@ -73,7 +73,7 @@ certificate for the first time and for subsequent facilities when you are
 extending the certificate to secure new facilities.
 
 Reminder: for every facility you are going to support you need to have a working
-sub-domain and a fully configured Virtual Host.
+sub-domain and a fully configured Apache Virtual Host.
 
 #### First facility(ies)
 
@@ -115,7 +115,7 @@ To do so, you need to issue a new certbot command that includes
 all the existing supported domains!
 
 ```bash
-certbot --expand -d examplezfm.com -d test.examplezfm.com -d demo.examplezfm.com -d eue.examplezfm.com
+sudo certbot --expand -d examplezfm.com -d test.examplezfm.com -d demo.examplezfm.com -d eue.examplezfm.com
 ```
 Certbot will guide you through the rest of the process of installing the certificate.
 Again, we recommend that you allow it to redirect all http traffic to https.
@@ -218,7 +218,7 @@ Here is a suggested procedure:
 First, example content for the service config file for _eue_.
 Note that only the lines marked with *** differ between servers for each facility.
 The other lines repeat in every service config file.
-```
+```q
 [Unit]
 # *** The next line should be different for each facility
 Description=EUE Zebrafish Server
@@ -263,7 +263,7 @@ sudo vi /etc/systemd/system/zfm-eue.service
 # paste it in the editor and edit as appropriate. Save the file
 
 # enable the service
-sudo systemclt enable zfm-eue
+sudo systemctl enable zfm-eue
 
 # start the service
 sudo systemctl start zfm-eue
