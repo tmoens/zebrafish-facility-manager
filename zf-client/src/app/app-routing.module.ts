@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {TankLabelComponent} from "./printing/tank-label/tank-label.component";
-import {SplashComponent} from "./splash/splash.component";
+import {TankLabelComponent} from './printing/tank-label/tank-label.component';
+import {SplashComponent} from './splash/splash.component';
 
 const routes: Routes = [
   {
@@ -24,7 +24,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {relativeLinkResolution: 'legacy'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -1,16 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { TankLabelComponent } from './tank-label.component';
+import {TankLabelComponent} from './tank-label.component';
 
 describe('TankLabelComponent', () => {
   let component: TankLabelComponent;
   let fixture: ComponentFixture<TankLabelComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TankLabelComponent ]
+      declarations: [TankLabelComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,16 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { UserViewerComponent } from './user-viewer.component';
+import {UserViewerComponent} from './user-viewer.component';
 
 describe('UserViewerComponent', () => {
   let component: UserViewerComponent;
   let fixture: ComponentFixture<UserViewerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserViewerComponent ]
+      declarations: [UserViewerComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
