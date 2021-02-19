@@ -26,6 +26,9 @@ export class User {
   @Column({nullable: true})
   name: string;
 
+  @Column({nullable: true})
+  initials: string;
+
   @Column({
     nullable: false,
     default: GUEST_ROLE,
@@ -55,6 +58,16 @@ export class User {
   })
   isLoggedIn: boolean;
 
+  @Column({
+    default: false,
+  })
+  isPrimaryInvestigator: boolean;
+
+  @Column({
+    default: true,
+  })
+  isResearcher: boolean;
+
   initializeSalt() {
     this.salt = crypto.randomBytes(16).toString('hex');
   }
@@ -81,4 +94,6 @@ export class User {
     }
     return crypto.scryptSync(rawPassword, this.salt, 64, {N: 1024}).toString('hex');
   }
+
+  isDeletable: boolean = false;
 }

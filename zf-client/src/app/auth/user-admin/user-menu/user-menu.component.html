@@ -37,7 +37,9 @@
       <mat-icon></mat-icon>
       <span>Force logout </span>
     </button>
-    <button (click)="delete(service.selected.id)" mat-menu-item>
+
+    <!-- Delete a user -->
+    <button (click)="delete(service.selected.id)" [disabled]="!user.isDeletable"  mat-menu-item>
       <mat-icon>delete</mat-icon>
       <span>Delete {{service.selected.email}}</span>
     </button>

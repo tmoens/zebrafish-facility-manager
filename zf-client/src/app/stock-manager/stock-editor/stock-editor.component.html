@@ -25,9 +25,10 @@
           </mat-form-field>
           <mat-form-field>
             <label>
-              <input [(ngModel)]="stock.fertilizationDate" [disabled]="stock.nextSubStockNumber > 1"
+              <input [(ngModel)]="fertilizationDate" [disabled]="stock.nextSubStockNumber > 1"
                      [matDatepicker]="picker" matInput
-                     name="fertDate" placeholder="Fertilization Date" required>
+                     name="fertDate" placeholder="Fertilization Date" required
+                     (dateChange)="onFertilizationDateChange()">
             </label>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -39,6 +40,14 @@
                      type="text">
             </label>
           </mat-form-field>
+          <mat-form-field *ngIf="!appState.getState('hidePI')">
+            <mat-select [(ngModel)]="stock.piUser" name="piUser" placeholder="Primary Investigator">
+              <mat-option [value]=null>--None--</mat-option>
+              <mat-option *ngFor="let option of pis" [value]="option">
+                <div>{{option.name}}</div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
           <mat-form-field>
             <label>
               <input (keyup)="onResearcherChange()" [(ngModel)]="stock.researcher" [matAutocomplete]="autoResearcher"
@@ -48,11 +57,18 @@
             </label>
           </mat-form-field>
           <mat-form-field>
+            <mat-select [(ngModel)]="stock.researcherUser" name="researcherUser" placeholder="Researcher">
+              <mat-option [value]=null>--None--</mat-option>
+              <mat-option *ngFor="let option of researchers" [value]="option">
+                <div>{{option.name}}</div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
             <label>
-<textarea [(ngModel)]="stock.comment" cdkAutosizeMaxRows="7" cdkTextareaAutosize="true"
-          matInput
-          maxlength="4000"
-          name="comment" placeholder="Comment"></textarea>
+              <textarea [(ngModel)]="stock.comment" cdkAutosizeMaxRows="7" cdkTextareaAutosize="true"
+                        matInput maxlength="4000"
+                        name="comment" placeholder="Comment"></textarea>
             </label>
           </mat-form-field>
         </div>
@@ -62,11 +78,11 @@
         <div class="zf-full-width" fxLayout="column">
           <!--  Mother --------------------------------------->
           <span class="zf-sub-title">Mom</span>
-            <mat-radio-group [(ngModel)]="momInternal" color="primary" name="mom"
-                             [disabled]="!stock.parentsEditable">
-              <mat-radio-button class="zf-radio-button" [value]=true>Internal</mat-radio-button>
-              <mat-radio-button class="zf-radio-button" [value]=false>External</mat-radio-button>
-            </mat-radio-group>
+          <mat-radio-group [(ngModel)]="momInternal" color="primary" name="mom"
+                           [disabled]="!stock.parentsEditable">
+            <mat-radio-button class="zf-radio-button" [value]=true>Internal</mat-radio-button>
+            <mat-radio-button class="zf-radio-button" [value]=false>External</mat-radio-button>
+          </mat-radio-group>
           <div *ngIf="momInternal" fxLayout="column">
             <mat-form-field>
               <label>
@@ -109,12 +125,12 @@
           </div>
 
           <!--  Father --------------------------------------->
-            <span class="zf-sub-title">Dad</span>
-            <mat-radio-group [(ngModel)]="dadInternal" color="primary" name="dad"
-                             [disabled]="!stock.parentsEditable">
-              <mat-radio-button class="zf-radio-button" [value]=true>Internal</mat-radio-button>
-              <mat-radio-button class="zf-radio-button" [value]=false>External</mat-radio-button>
-            </mat-radio-group>
+          <span class="zf-sub-title">Dad</span>
+          <mat-radio-group [(ngModel)]="dadInternal" color="primary" name="dad"
+                           [disabled]="!stock.parentsEditable">
+            <mat-radio-button class="zf-radio-button" [value]=true>Internal</mat-radio-button>
+            <mat-radio-button class="zf-radio-button" [value]=false>External</mat-radio-button>
+          </mat-radio-group>
           <div *ngIf="dadInternal"  fxLayout="column">
             <mat-form-field>
               <label>

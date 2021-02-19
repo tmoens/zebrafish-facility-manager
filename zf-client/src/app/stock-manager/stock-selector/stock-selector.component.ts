@@ -5,14 +5,16 @@ import {StockService} from '../stock.service';
 import {StockFilter} from './stock-filter';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
-import {StockDto} from "../dto/stock-dto";
-import {AppStateService, ZFToolStates} from "../../app-state.service";
-import {MutationService} from "../../mutation-manager/mutation.service";
-import {MutationDto} from "../../mutation-manager/mutation-dto";
-import {TransgeneDto} from "../../transgene-manager/transgene-dto";
-import {TransgeneService} from "../../transgene-manager/transgene.service";
-import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
-import {ZFTypes} from "../../helpers/zf-types";
+import {StockDto} from '../dto/stock-dto';
+import {AppStateService, ZFToolStates} from '../../app-state.service';
+import {MutationService} from '../../mutation-manager/mutation.service';
+import {MutationDto} from '../../mutation-manager/mutation-dto';
+import {TransgeneDto} from '../../transgene-manager/transgene-dto';
+import {TransgeneService} from '../../transgene-manager/transgene.service';
+import {ZfGenericDto} from '../../zf-generic/zfgeneric-dto';
+import {ZFTypes} from '../../helpers/zf-types';
+import {UserDTO} from '../../auth/UserDTO';
+import {AuthApiService} from '../../auth/auth-api.service';
 
 /**
  * A two-part component: a filter for stocks and a list of filtered stocks.
@@ -56,8 +58,12 @@ export class StockSelectorComponent implements OnInit {
   filteredMutationOptions: MutationDto[];
   filteredTransgeneOptions: TransgeneDto[];
 
+  researchers: UserDTO[];
+  pis: UserDTO[];
+
   constructor(
     public appState: AppStateService,
+    private authApiService: AuthApiService,
     private router: Router,
     private fb: FormBuilder,
     public service: StockService,
@@ -124,6 +130,17 @@ export class StockSelectorComponent implements OnInit {
         this.getFilteredStocks();
       }
     );
+
+    this.authApiService.getUsersByType('EXTANT_PRIMARY_INVESTIGATOR')
+      .subscribe((data: UserDTO[]) => {
+        this.pis = data;
+      });
+
+    this.authApiService.getUsersByType('EXTANT_RESEARCHER')
+      .subscribe((data: UserDTO[]) => {
+        this.researchers = data;
+      });
+
   }
 
   getFilteredStocks() {

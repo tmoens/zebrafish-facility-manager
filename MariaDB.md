@@ -11,6 +11,7 @@ operations to what is presented here.
 Following the running example, 
 1. you are setting up a database for the the Example University of Examples
 1. you plan to use _eue_ as an abbreviation for the university.
+1. we will assume that you set up the admin user with the password "x238JJp21Mo"
 
 ## Database Creation
 
@@ -28,7 +29,7 @@ you would use your own values instead of _zf_eue_ and _very_bad_eue_password_.
 
 ```bash 
 # Log into the MariaDB server
-mysql -u admin -p
+mysql -u admin -p x238JJp21Mo
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
 Your MariaDB connection id is 90
 Server version: 10.2.10-MariaDB mariadb.org binary distribution

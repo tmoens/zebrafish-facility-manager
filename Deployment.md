@@ -64,6 +64,21 @@ You must remember the password for that administrative user.
 
 We leave it to you to make sure you back up your databases to a remote file server.
 
+###Database Backup
+
+This is up to you.
+However, I installed automysqlbackup and by default it gives you exactly what you need.
+Daily backups rotated every week, weekly backups rotated every 5 weeks and monthly backups
+that are never rotated.
+
+FWIW, the script lives in /etc/sbin/autmysqlbackup and the config file lives in
+/etc/default/automysqlbackup (you need to edit the user credentials in there).
+
+By default the backups go to /var/lib/automysqlbackup where the daily weekly and monthly
+directories are nicely split up by database.
+
+Of course you also want to do remote storage of the backups, but I leve that to you.
+
 ### Web Server
 
 The system uses a web server to:

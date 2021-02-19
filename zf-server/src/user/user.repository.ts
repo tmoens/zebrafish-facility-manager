@@ -8,8 +8,4 @@ export class UserRepository extends Repository<User> {
     super();
   }
 
-  async findActive(id: string): Promise<User> {
-    return this.findOne({where: {id: id, isActive: true}});
-  }
-
 }

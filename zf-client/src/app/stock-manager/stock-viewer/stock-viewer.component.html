@@ -38,9 +38,21 @@
                    matInput placeholder="Primary Investigator">
           </label>
         </mat-form-field>
+        <mat-form-field *ngIf="!appState.getState('hidePI') && service.selected.piUser">
+          <label>
+            <input [value]="service.selected.piUser.name" disabled
+                   matInput placeholder="Primary Investigator">
+          </label>
+        </mat-form-field>
         <mat-form-field *ngIf="service.selected.researcher">
           <label>
             <input [value]="service.selected.researcher" disabled
+                   matInput placeholder="Researcher">
+          </label>
+        </mat-form-field>
+        <mat-form-field *ngIf="service.selected.researcherUser">
+          <label>
+            <input [value]="service.selected.researcherUser.name" disabled
                    matInput placeholder="Researcher">
           </label>
         </mat-form-field>
@@ -64,10 +76,11 @@
         <div *ngIf="!service.selected.matStock">
           <div class="zf-sub-title">Mom (External)</div>
           <mat-list dense>
-            <mat-list-item style="height: fit-content">
-              <span *ngIf="!service.selected.externalMatId">Id: {{service.selected.externalMatId}} </span>
-              <span
-                *ngIf="service.selected.externalMatDescription">Desc: {{service.selected.externalMatDescription}}</span>
+            <mat-list-item style="height: fit-content" *ngIf="service.selected.externalMatId">
+              Id: {{service.selected.externalMatId}}
+            </mat-list-item>
+            <mat-list-item style="height: fit-content" *ngIf="service.selected.externalMatDescription">
+              Desc: {{service.selected.externalMatDescription}}
             </mat-list-item>
           </mat-list>
         </div>
@@ -84,10 +97,11 @@
         <div *ngIf="!service.selected.patStock">
           <div class="zf-sub-title">Dad (External)</div>
           <mat-list dense>
-            <mat-list-item style="height: fit-content">
-              <span *ngIf="!service.selected.externalPatId">Id: {{service.selected.externalPatId}}</span>
-              <span
-                *ngIf="service.selected.externalPatDescription">Desc: {{service.selected.externalPatDescription}}</span>
+            <mat-list-item style="height: fit-content" *ngIf="service.selected.externalPatId" style="height: fit-content" >
+              Id: {{service.selected.externalPatId}}
+            </mat-list-item>
+            <mat-list-item *ngIf="service.selected.externalPatDescription" style="height: fit-content" >
+              Desc: {{service.selected.externalPatDescription}}
             </mat-list-item>
           </mat-list>
         </div>

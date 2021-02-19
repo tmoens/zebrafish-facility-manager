@@ -8,10 +8,11 @@ import {JwtModule} from "@nestjs/jwt";
 import {ConfigModule} from "../config/config.module";
 import {ConfigService} from "../config/config.service";
 import {ZFMailerService} from "../mailer/mailer-service";
+import {StockRepository} from '../stock/stock.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, UserRepository]),
+    TypeOrmModule.forFeature([User, UserRepository, StockRepository]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

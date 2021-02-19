@@ -1,14 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {EditMode} from "../../../zf-generic/zf-edit-modes";
-import {UserDTO} from "../../UserDTO";
-import {AbstractControl, AsyncValidatorFn, FormBuilder, ValidationErrors, Validators} from "@angular/forms";
-import {ActivatedRoute, ParamMap, Router} from "@angular/router";
-import {DialogService} from "../../../dialog.service";
-import {UserAdminService} from "../user-admin.service";
-import {Observable, of} from "rxjs";
-import {map} from "rxjs/operators";
-import {AppRoles} from "../../app-roles";
-import {AuthService} from "../../auth.service";
+import {EditMode} from '../../../zf-generic/zf-edit-modes';
+import {UserDTO} from '../../UserDTO';
+import {AbstractControl, AsyncValidatorFn, FormBuilder, ValidationErrors, Validators} from '@angular/forms';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {DialogService} from '../../../dialog.service';
+import {UserAdminService} from '../user-admin.service';
+import {Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {AppRoles} from '../../app-roles';
+import {AuthService} from '../../auth.service';
 
 @Component({
   selector: 'app-user-editor',
@@ -35,11 +35,15 @@ export class UserEditorComponent implements OnInit {
     id: [null],
     isActive: [{value: true, disabled: true}],
     isLoggedIn: [{value: false, disabled: true}],
-    name: [null],
+    name: [null, [Validators.required], [existingNameValidatorFn(this)]],
     passwordChangeRequired: [{value: false, disabled: true}],
     phone: [null],
     role: ['guest', [Validators.required]],
     username: [null, [Validators.required], [existingUsernameValidatorFn(this)]],
+    isPrimaryInvestigator: [false],
+    isResearcher: [false],
+    initials: [null, [Validators.required], [existingInitialsValidatorFn(this)]],
+    isDeletable: [{value: '', disabled: true}],
   } );
 
   constructor(
@@ -127,26 +131,16 @@ export class UserEditorComponent implements OnInit {
     this.getFC(name).setValue(null);
   }
 
-  emailErrorMessage(): string {
-    const eFC = this.getFC('email');
+  getErrorMessage(fcName:string): string {
+    const eFC = this.getFC(fcName);
     if (eFC.hasError('required')) {
-      return 'email is required';
+      return 'field is required';
     }
     if (eFC.hasError('email')) {
       return 'Invalid email';
     }
     if (eFC.hasError('inUse')) {
-      return 'Another user is using that e-mail';
-    }
-  }
-
-  usernameErrorMessage(): string {
-    const eFC = this.getFC('username');
-    if (eFC.hasError('required')) {
-      return 'email is required';
-    }
-    if (eFC.hasError('inUse')) {
-      return 'That username is taken';
+      return 'already in use';
     }
   }
 }
@@ -168,6 +162,30 @@ function existingUsernameValidatorFn(t: UserEditorComponent): AsyncValidatorFn {
     // don't bother with the going to the server if the username belongs to the user being edited.
     if (t.user && t.user.username && t.user.username === control.value) { return of(null); }
     return t.service.isUsernameInUse(control.value).pipe(
+      map((result: boolean) => {
+        return result ? {inUse: true} : null;
+      })
+    );
+  };
+}
+
+function existingNameValidatorFn(t: UserEditorComponent): AsyncValidatorFn {
+  return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+    // don't bother with the going to the server if the name belongs to the user being edited.
+    if (t.user && t.user.name && t.user.name === control.value) { return of(null); }
+    return t.service.isNameInUse(control.value).pipe(
+      map((result: boolean) => {
+        return result ? {inUse: true} : null;
+      })
+    );
+  };
+}
+
+function existingInitialsValidatorFn(t: UserEditorComponent): AsyncValidatorFn {
+  return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+    // don't bother with the going to the server if the initials belong to the user being edited.
+    if (t.user && t.user.initials && t.user.initials === control.value) { return of(null); }
+    return t.service.isInitialsInUse(control.value).pipe(
       map((result: boolean) => {
         return result ? {inUse: true} : null;
       })

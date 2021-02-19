@@ -5,12 +5,14 @@ import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {classToClass} from 'class-transformer';
 import {DialogService} from '../../dialog.service';
 import {Observable} from 'rxjs';
-import {MAT_DATE_FORMATS} from "@angular/material/core";
-import {ZF_DATE_FORMATS} from "../../helpers/dateFormats";
-import {AppStateService} from "../../app-state.service";
-import {StockDto} from "../dto/stock-dto";
-import {StockFullDto} from "../dto/stock-full-dto";
-import {ScreenSizes} from "../../helpers/screen-sizes";
+import {MAT_DATE_FORMATS} from '@angular/material/core';
+import {ZF_DATE_FORMATS} from '../../helpers/dateFormats';
+import {AppStateService} from '../../app-state.service';
+import {StockDto} from '../dto/stock-dto';
+import {StockFullDto} from '../dto/stock-full-dto';
+import {ScreenSizes} from '../../helpers/screen-sizes';
+import {UserDTO} from '../../auth/UserDTO';
+import {AuthApiService} from '../../auth/auth-api.service';
 
 @Component({
   selector: 'app-stock-editor',
@@ -52,12 +54,20 @@ export class StockEditorComponent implements OnInit {
   filteredResearcherOptions: string[];
   filteredPIOptions: string[];
 
+  pis: UserDTO[];
+  researchers: UserDTO[];
+
+  // Model for fertilization date picker.  It uses Dates, the
+  // stock object uses string.
+  fertilizationDate: Date = null;
+
   // Flag allows deactivation after saving changes.
   saved = false;
 
   constructor(
     public appState: AppStateService,
     public service: StockService,
+    public authApiService: AuthApiService,
     private route: ActivatedRoute,
     private router: Router,
     private deactivationDialogService: DialogService,
@@ -89,12 +99,58 @@ export class StockEditorComponent implements OnInit {
     });
   }
 
+  loadPIsAndResearchers() {
+    this.authApiService.getUsersByType('ACTIVE_PRIMARY_INVESTIGATOR')
+      .subscribe((data: UserDTO[]) => {
+        this.pis = data;
+        // You may look at this and say "What the heck is going on here"
+        // a) The piUser in the stock is not exactly the same object as the
+        // same pi in the list of PIs. As such it will not show up properly
+        // in the selector.  So we make them the same (in the for loop).
+        // b) The stock's piUser may no longer be a valid piUser (not in the
+        // list of PIs) because they have moved on to another lab or retired. So
+        // *for this stock* we have to add the stock's piUser to the list of valid PIs.
+        // That is all.
+        if (this.stock.piUser) {
+          let matchFound = false;
+          for (const pi of this.pis) {
+            if (this.stock.piUser.id === pi.id) {
+              this.stock.piUser = pi;
+              matchFound = true;
+              break;
+            }
+          }
+          if (!matchFound) {
+            this.pis.unshift(this.stock.piUser);
+          }
+        }
+      });
+    this.authApiService.getUsersByType('ACTIVE_RESEARCHER')
+      .subscribe((data: UserDTO[]) => {
+        this.researchers = data;
+        if (this.stock.researcherUser) {
+          let matchFound = false;
+          for (const researcher of this.researchers) {
+            if (this.stock.researcherUser.id === researcher.id) {
+              this.stock.researcherUser = researcher;
+              matchFound = true;
+              break;
+            }
+          }
+          if (!matchFound) {
+            this.researchers.unshift(this.stock.researcherUser);
+          }
+        }
+      });
+  }
 
   // When editing an existing stock, make a working copy from the initial stock.
   initializeForEdit() {
     this.editMode = EditMode.EDIT;
     this.stock = classToClass(this.initialStock);
     this.title = 'Editing Stock ' + this.stock.name;
+    this.momInternal = !!this.stock.matIdInternal;
+    this.dadInternal = !!this.stock.patIdInternal;
     this.prepParents();
   }
 
@@ -125,26 +181,36 @@ export class StockEditorComponent implements OnInit {
     this.stock.subNumber = this.baseStock.nextSubStockNumber;
     this.stock.nextSubStockNumber++; // required: ensures parents and fertilizationDate not editable.
     this.stock.name = this.stock.number + '.' + this.stock.subNumber;
-    // when creating a sub-selected, we get the transgenes and mutations automatically
+    // when creating a sub-stock, we get the transgenes and mutations automatically
     // but we need to make sure we don't get any live instances in tanks.
     this.stock.swimmers = [];
     this.title = 'Creating Sub-Stock ' + this.stock.name;
     // you can never edit the parents of a sub-stock
     this.stock.parentsEditable = false;
+    this.momInternal = !!this.stock.matIdInternal;
+    this.dadInternal = !!this.stock.patIdInternal;
     this.prepParents();
   }
 
   prepParents() {
     if (!this.stock.matStock) { this.stock.matStock = new StockDto(); }
     if (!this.stock.patStock) { this.stock.patStock = new StockDto(); }
-    // this.momInternal = !!this.stock.matIdInternal;
-    // this.dadInternal = !!this.stock.patIdInternal;
+    this.loadPIsAndResearchers();
+    if (this.stock.fertilizationDate) {
+      this.fertilizationDate = new Date(this.stock.fertilizationDate + "T00:00:00");
+    } else {
+      this.fertilizationDate = null;
+    }
+
     this.filteredResearcherOptions =
       this.service.fieldOptions.filterOptionsContaining('researcher', this.stock.researcher);
     this.filteredPIOptions =
       this.service.fieldOptions.filterOptionsContaining('pi', this.stock.pi);
   }
 
+  onFertilizationDateChange() {
+    this.stock.fertilizationDate = this.fertilizationDate.toISOString().substr(0,10);
+  }
   onResearcherChange() {
     this.filteredResearcherOptions =
       this.service.fieldOptions.filterOptionsContaining('researcher', this.stock.researcher);
@@ -198,6 +264,7 @@ export class StockEditorComponent implements OnInit {
       this.stock.patIdInternal = null;
       this.stock.patStock = null;
     }
+    this.title.substr(0,2);
     switch (this.editMode) {
       case EditMode.CREATE_NEXT:
         this.service.create(this.stock);
@@ -270,11 +337,29 @@ export class StockEditorComponent implements OnInit {
         }
         if (!this.dadInternal) {
           if (
-            this.stock.externalMatId !== this.initialStock.externalPatId ||
-            this.stock.externalMatDescription !== this.initialStock.externalPatDescription
+            this.stock.externalPatId !== this.initialStock.externalPatId ||
+            this.stock.externalPatDescription !== this.initialStock.externalPatDescription
           ) {
             return false;
           }
+        }
+        if (this.stock.piUser) {
+          if (!this.initialStock.piUser) {
+            return false;
+          } else if (this.stock.piUser.id !== this.initialStock.piUser.id) {
+            return false;
+          }
+        } else if (this.initialStock.piUser) {
+          return false;
+        }
+        if (this.stock.researcherUser) {
+          if (!this.initialStock.researcherUser) {
+            return false;
+          } else if (this.stock.researcherUser.id !== this.initialStock.researcherUser.id) {
+            return false;
+          }
+        } else if (this.initialStock.researcherUser) {
+          return false;
         }
         return true;
       case EditMode.CREATE_NEXT:

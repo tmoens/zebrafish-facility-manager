@@ -11,4 +11,6 @@ export class StockFilter {
   transgeneId?: number;
   age?: number;
   ageModifier?: string;
+  researcherId?: string;
+  piId?: string;
 }

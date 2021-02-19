@@ -8,6 +8,10 @@ export class UserDTO {
   phone?: string;
   role?: string;
   username?: string;
+  isPrimaryInvestigator?: boolean;
+  isResearcher?: boolean;
+  initials?: string;
+  isDeletable?: boolean;
 }
 
 export class ResetPasswordDTO{

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
@@ -6,8 +6,10 @@ import {catchError} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {Observable, of} from 'rxjs';
 import {ResetPasswordDTO, UserDTO, UserPasswordChangeDTO} from './UserDTO';
-import {AuthService} from "./auth.service";
-import {AppStateService} from "../app-state.service";
+import {AuthService} from './auth.service';
+import {AppStateService} from '../app-state.service';
+import {UserFilter} from './user-admin/user-filter';
+import {convertObjectToHTTPQueryParams} from '../loader.service';
 
 @Injectable({
   providedIn: 'root'
@@ -97,6 +99,20 @@ export class AuthApiService {
       );
   }
 
+  isNameInUse(email: string): Observable<any> {
+    return this.http.get(this.serverURL + '/user/isNameInUse/' + email)
+      .pipe(
+        catchError(this.handleError('check user\'s name uniqueness', null))
+      );
+  }
+
+  isInitialsInUse(email: string): Observable<any> {
+    return this.http.get(this.serverURL + '/user/isInitialsInUse/' + email)
+      .pipe(
+        catchError(this.handleError('check initials uniqueness', null))
+      );
+  }
+
   // ----------------------------- User Admin Operations ------------------------------
   getInstance(id: string): Observable<any> {
     if (!id) {
@@ -115,12 +131,21 @@ export class AuthApiService {
       );
   }
 
-  getUsers(filter: string): Observable<any> {
-    return this.http.get(this.serverURL + '/user/filtered' + ((filter) ? '/' + filter : ''))
+  getUsers(filter: UserFilter): Observable<any> {
+    const q = convertObjectToHTTPQueryParams(filter);
+    return this.http.get(this.serverURL + '/user' +  q)
       .pipe(
         catchError(this.handleError('Get User' + '.', []))
       );
   }
+
+  getUsersByType(userType: string): Observable<any> {
+    return this.http.get(this.serverURL + '/user/findUsers/' + userType)
+      .pipe(
+        catchError(this.handleError('Get researchers' + '.', []))
+      );
+  }
+
 
   delete(id: number | string) {
     return this.http.delete(this.serverURL + '/user/' + id)

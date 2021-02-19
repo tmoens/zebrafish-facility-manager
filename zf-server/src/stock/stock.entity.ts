@@ -11,10 +11,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import {Exclude, Expose, Transform, Type} from 'class-transformer';
+import {Exclude, Expose, Type} from 'class-transformer';
 import {Mutation} from '../mutation/mutation.entity';
 import {Transgene} from '../transgene/transgene.entity';
 import {Stock2tank} from '../stock2tank/stock-to-tank.entity';
+import {User} from '../user/user.entity';
 
 @Entity({
   orderBy: {number: 'DESC', subNumber: 'ASC'},
@@ -62,7 +63,6 @@ export class Stock {
     nullable: true,
     comment: 'The date on which the stock was fertilized.',
   })
-  @Transform(value => (value) ? String(value).substr(0, 10) : null, { toClassOnly: true })
   fertilizationDate: string;
 
   @Column({
@@ -71,11 +71,27 @@ export class Stock {
   })
   pi: string;
 
+  @Type(() => User)
+  @ManyToOne(type => User)
+  @JoinColumn({
+    name: 'piId',
+  })
+  piUser: User;
+
+
   @Column({
     nullable: true,
     comment: 'Who the stock is for.',
   })
   researcher: string;
+
+  @Type(() => User)
+  @ManyToOne(type => User)
+  @JoinColumn({
+    name: 'researcherId',
+  })
+  researcherUser: User;
+
 
   // Expose the internal id of the mother without having to join the tables.
   // Makes searches for children of a stock much more efficient.

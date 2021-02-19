@@ -1,7 +1,12 @@
 import {ZfGenericFilter} from '../../zf-generic/zfgeneric-filter';
 
 export class UserFilter extends ZfGenericFilter {
-  filter: string = null;
+  text: string = null;
+  inactiveOnly = false;
+  activeOnly = false;
+  researcherOnly = false;
+  piOnly = false;
+  isLoggedIn = false;
 
   public constructor( init?: Partial<UserFilter>) {
     super();
@@ -9,7 +14,8 @@ export class UserFilter extends ZfGenericFilter {
   }
 
   isEmpty(): boolean {
-    return !(this.filter);
+    return !(this.text || this.inactiveOnly || this.activeOnly ||
+      this.researcherOnly || this.piOnly || this.isLoggedIn);
   }
 
 }

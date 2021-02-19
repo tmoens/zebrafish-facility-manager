@@ -14,6 +14,10 @@
       <input matInput type="text" placeholder="Name" formControlName="name">
     </mat-form-field>
 
+    <mat-form-field *ngIf="service.selected.initials">
+      <input matInput type="text" placeholder="Preferred Initials" formControlName="initials">
+    </mat-form-field>
+
     <mat-form-field >
       <input matInput type="email" placeholder="Email" formControlName="email">
     </mat-form-field>
@@ -26,6 +30,8 @@
       <input matInput type="text" placeholder="Role" formControlName="role">
     </mat-form-field>
 
+    <mat-checkbox formControlName="isPrimaryInvestigator" color="primary">Primary Investigator</mat-checkbox>
+    <mat-checkbox formControlName="isResearcher" color="primary">Researcher</mat-checkbox>
     <mat-checkbox formControlName="isActive" color="primary">Activated</mat-checkbox>
     <mat-checkbox color="primary" formControlName="isLoggedIn">Currently Logged In</mat-checkbox>
     <mat-checkbox formControlName="passwordChangeRequired" color="primary">Requires password change</mat-checkbox>

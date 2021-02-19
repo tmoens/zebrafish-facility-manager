@@ -29,6 +29,8 @@ export class Mutation {
   })
   nickname: string;
 
+  // TODO The semantics of this field are more like "Source" than researcher
+  // we may change the name in the db at some point.
   @Column({
     nullable: true,
     comment: 'Researcher or owner of this mutation.',

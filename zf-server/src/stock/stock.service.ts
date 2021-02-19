@@ -5,8 +5,8 @@ import {StockRepository} from './stock.repository';
 import {GenericService} from '../Generics/generic-service';
 import {Stock} from './stock.entity';
 import {plainToClassFromExist} from 'class-transformer';
-import {Logger} from "winston";
-import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
+import {Logger} from 'winston';
+import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
 
 @Injectable()
 export class StockService extends GenericService {
@@ -99,14 +99,12 @@ export class StockService extends GenericService {
     delete stock.matStock;
     delete stock.patStock;
     if (stock.matIdInternal) {
-      const matStock = await this.repo.mustExist(stock.matIdInternal);
-      stock.matStock = matStock;
+      stock.matStock = await this.repo.mustExist(stock.matIdInternal);
       stock.externalMatId = null;
       stock.externalMatDescription = null;
     }
     if (stock.patIdInternal) {
-      const patStock = await this.repo.mustExist(stock.patIdInternal);
-      stock.patStock = patStock;
+      stock.patStock = await this.repo.mustExist(stock.patIdInternal);
       stock.externalPatId = null;
       stock.externalPatDescription = null;
     }

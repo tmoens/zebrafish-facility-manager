@@ -44,6 +44,7 @@ export class StockRepository extends Repository<Stock> {
         'transgenes', 'mutations', 'swimmers', 'swimmers.tank',
         'matStock', 'matStock.mutations', 'matStock.transgenes',
         'patStock', 'patStock.mutations', 'patStock.transgenes',
+        'piUser', 'researcherUser',
       ]
     });
     if (!stock) {
@@ -348,6 +349,16 @@ export class StockRepository extends Repository<Stock> {
   // function need to agree on the names of the fields in the quoted strings.
   buildWhereConditions(q: SelectQueryBuilder<any>, filter: StockFilter): SelectQueryBuilder<any> {
     q = q.where('1');
+
+    // filter on a specific researcher
+    if (filter.researcherId) {
+      q = q.andWhere('stock.researcherId = :id', {id: filter.researcherId});
+    }
+
+    // filter on a specific pi
+    if (filter.piId) {
+      q = q.andWhere('stock.piId = :id', {id: filter.piId});
+    }
 
     // a filter on the stock number matches the start of the number
     if (filter.number) {

@@ -12,6 +12,8 @@ export class StockFilter {
   transgeneId: number = null;
   age: number = null;
   ageModifier: string = null;
+  researcherId: string = null;
+  piId: string = null;
 
   public constructor( init?: Partial<StockFilter>) {
     Object.assign(this, init);

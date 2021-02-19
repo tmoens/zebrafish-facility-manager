@@ -4,13 +4,28 @@
     <div fxFlex="20px"></div>
 
     <mat-form-field>
-      <input formControlName="username" matInput placeholder="Username" required type="text">
-      <mat-error *ngIf="getFC('email').invalid">{{usernameErrorMessage()}}</mat-error>
+      <label>
+        <input formControlName="username" matInput placeholder="Username" required type="text">
+      </label>
+      <mat-error *ngIf="getFC('username').invalid">{{getErrorMessage('username')}}</mat-error>
+      <mat-hint>Used to log in</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input formControlName="name" matInput placeholder="Full Name" required type="text">
+      <mat-error *ngIf="getFC('name').invalid">{{getErrorMessage('name')}}</mat-error>
+      <mat-hint>Used throughout the user interface</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input formControlName="initials" matInput placeholder="Preferred Initials" required type="text">
+      <mat-error *ngIf="getFC('name').invalid">{{getErrorMessage('initials')}}</mat-error>
+      <mat-hint>Used on tank labels</mat-hint>
     </mat-form-field>
 
     <mat-form-field>
       <input formControlName="email" matInput placeholder="Email" required type="email">
-      <mat-error *ngIf="getFC('email').invalid">{{emailErrorMessage()}}</mat-error>
+      <mat-error *ngIf="getFC('email').invalid">{{getErrorMessage('email')}}</mat-error>
     </mat-form-field>
 
 
@@ -24,12 +39,19 @@
       </mat-select>
     </mat-form-field>
 
+      <mat-checkbox  formControlName="isPrimaryInvestigator" color="primary">
+        Primary Investigator
+      </mat-checkbox>
+      <mat-checkbox  formControlName="isResearcher" color="primary">
+        Researcher
+      </mat-checkbox>
+
     <div fxLayout="row" fxLayoutGap="10px">
       <div class="fill-remaining-space"></div>
       <button mat-button (click)="cancel()" color="primary">Cancel</button>
       <button mat-button (click)="revert()" color="primary"
               [disabled]='mfForm.pristine'>Revert</button>
-      <button mat-button (click)="save()"color="primary"
+      <button mat-button (click)="save() "color="primary"
               [disabled]='!mfForm.valid || mfForm.pristine'>Save</button>
     </div>
   </form>

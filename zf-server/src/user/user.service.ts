@@ -10,11 +10,15 @@ import {UserRepository} from "./user.repository";
 import {ZFMailerService} from "../mailer/mailer-service";
 import {ConfigService} from "../config/config.service";
 import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
+import {UserFilter} from './user-filter';
+import {Brackets, SelectQueryBuilder} from 'typeorm';
+import {StockRepository} from '../stock/stock.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserRepository) private readonly repo: UserRepository,
+    @InjectRepository(StockRepository) private readonly stockRepo: StockRepository,
     @Inject('winston') private readonly logger: Logger,
     private jwtService: JwtService,
     private mailerService: ZFMailerService,
@@ -56,27 +60,101 @@ export class UserService {
     return this.repo.find({order: {'email': 'ASC'}});
   }
 
-  async findFiltered(filter?: string): Promise<User[]> {
-    if (!filter) {
-      return await this.findAll();
+  async findFiltered(filter: UserFilter): Promise<User[]> {
+    let q: SelectQueryBuilder<User> = this.repo.createQueryBuilder('user')
+      .where('1');
+    if (filter.activeOnly) {
+      q = q.andWhere('user.isActive = :active', {active: true});
     }
-    const f = "%" + filter + "%";
-    return await this.repo.createQueryBuilder("u")
-      .where("u.name LIKE :f", {f: f})
-      .orWhere("u.email LIKE :f", {f: f})
-      .orWhere("u.role LIKE :f", {f: f})
-      .orWhere("u.phone LIKE :f", {f: f})
-      .orWhere("u.username LIKE :f", {f: f})
-      .orderBy("u.email")
-      .getMany();
+    if (filter.inactiveOnly) {
+      q = q.andWhere('user.isActive = :inactive', {inactive: false});
+    }
+    if (filter.piOnly) {
+      q = q.andWhere('user.isPrimaryInvestigator = :pi', {pi: true});
+    }
+    if (filter.researcherOnly) {
+      q = q.andWhere('user.isResearcher = :researcher', {researcher: true});
+    }
+    if (filter.isLoggedIn) {
+      q = q.andWhere('user.isLoggedIn = :loggedIn', {loggedIn: true});
+    }
+    if (filter.text) {
+      const textFilter: string = '%' + filter.text + '%';
+      q = q.andWhere(new Brackets(qb => {
+        qb.where("user.name LIKE :f", {f: textFilter})
+          .orWhere("user.email LIKE :f", {f: textFilter})
+          .orWhere("user.role LIKE :f", {f: textFilter})
+          .orWhere("user.phone LIKE :f", {f: textFilter})
+          .orWhere("user.initials LIKE :f", {f: textFilter})
+          .orWhere("user.username LIKE :f", {f: textFilter})
+
+      }))
+    }
+    q = q.orderBy('user.email');
+    return await q.getMany()
   }
 
-  findOne(id: string): Promise<User> {
-    return this.repo.findOne(id);
+  async findUsers(userType: string): Promise<UserDTO[]> {
+    let q: SelectQueryBuilder<User> = this.repo.createQueryBuilder('user')
+      .orderBy('user.name');
+
+    if (userType === 'ACTIVE_PRIMARY_INVESTIGATOR') {
+      // users who are designated as PIs AND who are active
+      q = q.where('user.isActive')
+        .andWhere('user.isPrimaryInvestigator');
+
+    } else if (userType === 'ACTIVE_RESEARCHER') {
+      // users who are designated as researchers AND who are active
+      q = q.where('user.isActive')
+        .andWhere('user.isResearcher');
+
+    } else if (userType === 'EXTANT_RESEARCHER') {
+      // users who are associated as researchers for at lest one stock
+      q = q.innerJoin('stock', 'stock', 'user.id = stock.researcherId')
+        .groupBy('user.id');
+
+    } else if (userType === 'EXTANT_PRIMARY_INVESTIGATOR') {
+      // users who are associated as researchers for at lest one stock
+      q = q.innerJoin('stock', 'stock', 'user.id = stock.piId')
+        .groupBy('user.id');
+    } else {
+      return [];
+    }
+    return await q.getMany();
+  }
+
+  // A user cannot be deleted if active or if any stocks refer to it.
+  async isDeletable(user: User): Promise<boolean> {
+    if (user.isActive) {
+      return false;
+    }
+    const res = await this.stockRepo.createQueryBuilder('s')
+      .select('1')
+      .where('researcherId = :rid', {rid: user.id})
+      .orWhere('piId = :pid', {pid: user.id})
+      .getRawOne();
+
+    return (res) ? false : true;
+  }
+
+  async findOne(id: string): Promise<User> {
+    const u = await this.repo.findOne(id);
+    u.isDeletable = await this.isDeletable(u);
+    return u;
   }
 
   async doesUsernameExist(username: string): Promise<boolean> {
     const u: User = await this.repo.findOne({where: {username: username}});
+    return !!(u);
+  }
+
+  async doesNameExist(name: string): Promise<boolean> {
+    const u: User = await this.repo.findOne({where: {name: name}});
+    return !!(u);
+  }
+
+  async doesInitialsExist(initials: string): Promise<boolean> {
+    const u: User = await this.repo.findOne({where: {initials: initials}});
     return !!(u);
   }
 
@@ -86,11 +164,7 @@ export class UserService {
   }
 
   async findActiveUser(id: string): Promise<User> {
-    return this.repo.findActive(id);
-  }
-
-  async remove(id: string): Promise<void> {
-    await this.repo.delete(id);
+    return this.repo.findOne({where: {id: id, isActive: true}});
   }
 
   async create(dto: UserDTO): Promise<User> {
@@ -193,7 +267,12 @@ export class UserService {
   }
 
   async delete(id: string): Promise<any> {
-    const u: User = await this.repo.findOneOrFail(id);
+    const u: User = await this.findOne(id);
+    if (!u || !u.isDeletable) {
+      const message = "Tried to delete a user you shouldn't have been able to!";
+      this.logger.error(message);
+      throw new BadRequestException(message);
+    }
     return await this.repo.remove(u);
   }
 

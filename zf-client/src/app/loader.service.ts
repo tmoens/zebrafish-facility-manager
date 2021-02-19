@@ -3,12 +3,12 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError} from 'rxjs/operators';
-import {environment} from "../environments/environment"
-import {AppStateService} from "./app-state.service";
-import {ZFTypes} from "./helpers/zf-types";
-import {Router} from "@angular/router";
-import {AuthService} from "./auth/auth.service";
-import {StockFullDto} from "./stock-manager/dto/stock-full-dto";
+import {environment} from '../environments/environment'
+import {AppStateService} from './app-state.service';
+import {ZFTypes} from './helpers/zf-types';
+import {Router} from '@angular/router';
+import {AuthService} from './auth/auth.service';
+import {StockFullDto} from './stock-manager/dto/stock-full-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -224,7 +224,7 @@ export class LoaderService {
         this.message.open('Your session has ended unexpectedly',
           null, {duration: this.appState.confirmMessageDuration});
         this.authService.onLogout();
-        this.router.navigateByUrl('/login')
+        this.router.navigateByUrl('/login').then();
       } else {
         this.message.open(operation + '. ' + error.error.message || error.status,
           null, {duration: this.appState.confirmMessageDuration});
@@ -233,12 +233,10 @@ export class LoaderService {
       return of(result as T);
     };
   }
-
 }
 
 // this assumes that the params are scalar. Which they are.
-// TODO use classToPlain?
-function convertObjectToHTTPQueryParams(params: any) {
+export function convertObjectToHTTPQueryParams(params: any) {
   const paramArray: string[] = [];
   Object.keys(params).forEach(key => {
     if (params[key]) {

@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from "@angular/router";
-import {FormBuilder} from "@angular/forms";
-import {EditMode} from "../../../zf-generic/zf-edit-modes";
-import {UserAdminService} from "../user-admin.service";
-import {UserDTO} from "../../UserDTO";
-import {AuthService} from "../../auth.service";
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {FormBuilder} from '@angular/forms';
+import {EditMode} from '../../../zf-generic/zf-edit-modes';
+import {UserAdminService} from '../user-admin.service';
+import {UserDTO} from '../../UserDTO';
+import {AuthService} from '../../auth.service';
 
 @Component({
   selector: 'app-user-viewer',
@@ -23,6 +23,10 @@ export class UserViewerComponent implements OnInit {
     phone: [{value: '', disabled: true}],
     role: [{value: '', disabled: true}],
     username: [{value: '', disabled: true}],
+    isPrimaryInvestigator: [{value: '', disabled: true}],
+    isResearcher: [{value: '', disabled: true}],
+    initials: [{value: '', disabled: true}],
+    isDeletable: [{value: '', disabled: true}],
   });
 
   user: UserDTO = null;

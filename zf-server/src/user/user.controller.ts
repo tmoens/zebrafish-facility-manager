@@ -6,7 +6,7 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Put, Query,
   Request,
   UseGuards,
   UseInterceptors
@@ -21,6 +21,8 @@ import {ADMIN_ROLE} from "../common/auth/zf-roles";
 import {RoleGuard} from "../guards/role-guard.service";
 import {LocalAuthGuard} from "../guards/local-auth.guard";
 import {ZFMailerService} from "../mailer/mailer-service";
+import {plainToClass} from 'class-transformer';
+import {UserFilter} from './user-filter';
 
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -41,30 +43,43 @@ export class UserController {
 
   @Role(ADMIN_ROLE)
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get('filtered')
-  async findAll(): Promise<User[]> {
-    return await this.service.findFiltered();
-  }
-
-  @Role(ADMIN_ROLE)
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get('filtered/:filter')
-  async findFiltered(@Param('filter') filter: string): Promise<User[]> {
+  @Get()
+  async findFiltered(@Query() params): Promise<any[]> {
+    const filter: UserFilter = plainToClass(UserFilter, params);
     return await this.service.findFiltered(filter);
   }
 
-  @Role(ADMIN_ROLE)
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get('isUsernameInUse/:username')
-  async doesUsernameExist(@Param('username')  username: string): Promise<boolean> {
-    return await this.service.doesUsernameExist(username);
+  @Get('findUsers/:userType')
+  async findUsers(@Param('userType')  userType: string): Promise<UserDTO[]> {
+    return await this.service.findUsers(userType);
   }
 
   @Role(ADMIN_ROLE)
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get('isEmailInUse/:email')
-  async doesEmailExist(@Param('email')  email: string): Promise<boolean> {
-    return await this.service.doesEmailExist(email);
+  @Get('isUsernameInUse/:test')
+  async doesUsernameExist(@Param('test')  test: string): Promise<boolean> {
+    return await this.service.doesUsernameExist(test);
+  }
+
+  @Role(ADMIN_ROLE)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Get('isNameInUse/:test')
+  async doesNameExist(@Param('test')  test: string): Promise<boolean> {
+    return await this.service.doesNameExist(test);
+  }
+
+  @Role(ADMIN_ROLE)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Get('isInitialsInUse/:test')
+  async doesInitialsExist(@Param('test')  test: string): Promise<boolean> {
+    return await this.service.doesInitialsExist(test);
+  }
+
+  @Role(ADMIN_ROLE)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Get('isEmailInUse/:test')
+  async doesEmailExist(@Param('test')  test: string): Promise<boolean> {
+    return await this.service.doesEmailExist(test);
   }
 
   // This one is strange the way it is now, anyone anywhere could reset anyone else's password by knowing
@@ -142,6 +157,7 @@ export class UserController {
   }
 
   // Note the special AuthGuard, it does not check for the "requiresPasswordChange" state.
+  // Otherwise the user would be permanently blocked if they lost their initial start-up message.
   @UseGuards(JwtAuthGuard2)
   @Put('changePassword')
   async changePassword(@Request() req, @Body() dto: UserPasswordChangeDTO): Promise<{ access_token: string }> {

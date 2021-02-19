@@ -5,6 +5,7 @@ import {ZfGenericDto} from '../../zf-generic/zfgeneric-dto';
 import {StockSwimmerDto} from '../../tank-manager/stock-swimmer-dto';
 import {Type} from 'class-transformer';
 import 'reflect-metadata';
+import {UserDTO} from '../../auth/UserDTO';
 
 export class StockFullDto extends ZfGenericDto {
   name: string = null;
@@ -36,6 +37,11 @@ export class StockFullDto extends ZfGenericDto {
   nextSubStockNumber: number = null;
   parentsEditable: boolean = false;
   alleleSummary: string = null;
+  @Type(() => UserDTO)
+  researcherUser: UserDTO = null;
+  @Type(() => UserDTO)
+  piUser: UserDTO = null;
+
 
   constructor() {
     super();
