@@ -2,10 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {StockService} from '../stock.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
-import {AppStateService, ZFToolStates} from "../../app-state.service";
-import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
-import {ScreenSizes} from "../../helpers/screen-sizes";
-import {ZFTypes} from "../../helpers/zf-types";
+import {AppStateService, ZFToolStates} from '../../app-state.service';
+import {ZfGenericDto} from '../../zf-generic/zfgeneric-dto';
+import {ScreenSizes} from '../../helpers/screen-sizes';
+import {ZFTypes} from '../../helpers/zf-types';
 
 @Component({
   selector: 'app-stock-viewer',
@@ -16,9 +16,6 @@ import {ZFTypes} from "../../helpers/zf-types";
 export class StockViewerComponent implements OnInit {
   ScreenSizes = ScreenSizes;
   id: number = null;
-  highlightStock: number;
-  highlightMutation: number;
-  highlightTransgene: number;
 
   constructor(
     public appState: AppStateService,

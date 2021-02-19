@@ -4,10 +4,10 @@ import {Stock} from './stock.entity';
 import {StockReportDTO} from './dto/stock-report.dto';
 import {StockFilter} from './stock-filter';
 import {StockMiniDto} from '../common/Stock/stockMiniDto';
-import {Logger} from "winston";
-import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
-import {Transgene} from "../transgene/transgene.entity";
-import {Mutation} from "../mutation/mutation.entity";
+import {Logger} from 'winston';
+import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
+import {Transgene} from '../transgene/transgene.entity';
+import {Mutation} from '../mutation/mutation.entity';
 import moment = require('moment');
 
 
@@ -219,7 +219,7 @@ export class StockRepository extends Repository<Stock> {
   // The complexity comes from the fact that the filter can be on objects associated
   // with the stock (like it's transgenes) and not simply on the stock itself.
   async findFiltered(filter: StockFilter): Promise<StockMiniDto[]> {
-    // console.log('Filter: ' + JSON.stringify(filter));
+    // console.log('Filter: ' + JSON.stringify(filter, null, 2));
 
     // For this query we only look at a few fields
     let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
@@ -395,13 +395,14 @@ export class StockRepository extends Repository<Stock> {
     }
 
     // if the filter is for a particular mutationId, you do not need to filter for names.
-    // a filter for "mutation" looks in the name and gene fields
+    // a filter for "mutation" looks in the name and gene and nickname and alternateGeneName fields
     if (filter.mutationId) {
       q = q.andWhere('mutation.id = ' + filter.mutationId);
     } else if (filter.mutation) {
       q = q.andWhere(new Brackets(qb => {
-        qb.where('mutation.name LIKE :mt OR mutation.gene LIKE :mt OR mutation.nickname LIKE :mt',
-          {mt: "%" + filter.mutation + "%"});
+        qb.where('mutation.name LIKE :mt OR mutation.gene LIKE :mt ' +
+          'OR mutation.nickname LIKE :mt OR mutation.alternateGeneName LIKE :mt',
+          {mt: '%' + filter.mutation + '%'});
       }));
     }
 
