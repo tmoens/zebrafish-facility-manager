@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
   VersionColumn
 } from 'typeorm';
-import {Exclude, Expose, Transform, Type} from 'class-transformer';
+import {Exclude, Expose, Type} from 'class-transformer';
 import {Stock} from '../stock/stock.entity';
 
 @Entity()
@@ -91,7 +91,6 @@ export class Mutation {
     nullable: true,
     name: 'thaw_date',
   })
-  @Transform(value => (value) ? String(value).substr(0, 10) : null, { toClassOnly: true })
   thawDate: Date;
 
   @Column({

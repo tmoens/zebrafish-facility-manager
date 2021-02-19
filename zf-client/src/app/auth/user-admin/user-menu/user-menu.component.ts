@@ -24,7 +24,6 @@ export class UserMenuComponent implements OnInit {
   ngOnInit(): void {
     this.service.selected$.subscribe((u: UserDTO) => {
       this.user = u;
-      console.log (JSON.stringify(this.user, null, 2))
     });
   }
 

@@ -29,7 +29,7 @@
         </mat-form-field>
 
         <mat-form-field *ngIf="service.selected.researcher">
-          <input required matInput type="text" placeholder="Researcher" formControlName="researcher">
+          <input formControlName="researcher" matInput placeholder="Source" required type="text">
         </mat-form-field>
 
         <mat-form-field *ngIf="service.selected.mutationType">
