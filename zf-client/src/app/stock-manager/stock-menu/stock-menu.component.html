@@ -38,6 +38,12 @@
       <span>Print Label</span>
     </button>
 
+    <!--  Print a label for a cross between two stocks -->
+    <button (click)="makeCrossLabel()" mat-menu-item>
+      <mat-icon>print</mat-icon>
+      <span>Print Cross Label</span>
+    </button>
+
     <button mat-menu-item (click)="goToTankWalker()"
             matTooltip="Leads you through the selected stocks in tank order in the facility.">
       <mat-icon>assignment</mat-icon>

@@ -14,6 +14,8 @@ export enum TankLabelOption {
 export class TankLabelConfig {
   fontPointSize: number = 12;
   fontFamily: string = 'Helvetica';
+  heightInInches: number = 1.25;
+  widthInInches: number = 3.5;
   showQrCode: boolean = false;
   layout: string[][];
 }

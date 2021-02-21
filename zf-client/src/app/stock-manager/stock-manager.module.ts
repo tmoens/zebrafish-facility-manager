@@ -27,15 +27,16 @@ import {StockGeneticsEditorComponent} from './stock-genetics-editor/stock-geneti
 import {StockSwimmersEditorComponent} from './stock-swimmers-editor/stock-swimmers-editor.component';
 import {TankNameValidator} from './validators/tankNameValidator';
 import {StockNameCheckValidator} from './validators/stockNameCheck';
-import {AuthModule} from "../auth/auth.module";
-import {MatCardModule} from "@angular/material/card";
-import {MatSidenavModule} from "@angular/material/sidenav";
-import {DateToAgePipe} from "./date-to-age.pipe";
-import {TankWalkerComponent} from "./tank-walker/tank-walker.component";
+import {AuthModule} from '../auth/auth.module';
+import {MatCardModule} from '@angular/material/card';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {DateToAgePipe} from './date-to-age.pipe';
+import {TankWalkerComponent} from './tank-walker/tank-walker.component';
 import {StockMiniViewerComponent} from './stock-mini-viewer/stock-mini-viewer.component';
-import {MutationManagerModule} from "../mutation-manager/mutation-manager.module";
-import {TransgeneManagerModule} from "../transgene-manager/transgene-manager.module";
-import {ZfGenericModule} from "../zf-generic/zf-generic.module";
+import {MutationManagerModule} from '../mutation-manager/mutation-manager.module';
+import {TransgeneManagerModule} from '../transgene-manager/transgene-manager.module';
+import {ZfGenericModule} from '../zf-generic/zf-generic.module';
+import {CrossLabelMakerComponent} from './cross-label-maker/cross-label-maker.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import {ZfGenericModule} from "../zf-generic/zf-generic.module";
     StockNameCheckValidator,
     DateToAgePipe,
     StockMiniViewerComponent,
+    CrossLabelMakerComponent,
   ],
   imports: [
     StockManagerRoutingModule,

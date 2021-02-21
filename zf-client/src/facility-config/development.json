@@ -6,6 +6,8 @@
   "tankLabelConfig": {
     "fontPointSize": 10,
     "fontFamily": "Arial Narrow",
+    "widthInInches": 3.5,
+    "heightInInches": 1.25,
     "showQrCode": true,
     "layout": [
       [

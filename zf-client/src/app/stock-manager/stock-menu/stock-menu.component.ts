@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {StockService} from '../stock.service';
 import {Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
-import {ZFTool} from "../../helpers/zf-tool";
-import {PrintService} from "../../printing/print.service";
+import {ZFTool} from '../../helpers/zf-tool';
+import {PrintService} from '../../printing/print.service';
 
 @Component({
   selector: 'app-stock-menu',
@@ -30,13 +30,13 @@ export class StockMenuComponent implements OnInit {
   }
 
   createSubStock() {
-    this.router.navigate(['stock_manager/' + EditMode.CREATE_SUB_STOCK, {
+    this.router.navigate([ZFTool.STOCK_MANAGER.route + '/' + EditMode.CREATE_SUB_STOCK, {
       mode: EditMode.CREATE_SUB_STOCK,
     }]);
   }
 
   onEdit(): void {
-    this.router.navigate(['stock_manager/' + EditMode.EDIT, {
+    this.router.navigate([ZFTool.STOCK_MANAGER.route + '/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
     }]);
@@ -46,13 +46,20 @@ export class StockMenuComponent implements OnInit {
     this.service.delete(this.service.selected.id);
   }
 
-  /* print labels for all the tanks this stock is in */
+  /* print a label for this stock  */
   printLabel() {
     this.printService.printDocument('tankLabel');
   }
 
+  makeCrossLabel() {
+    this.router.navigate([ZFTool.STOCK_MANAGER.route + '/cross-label', {
+      id: this.service.selected.id,
+      mode: EditMode.EDIT,
+    }]);
+  }
+
   goToTankWalker() {
-    this.router.navigateByUrl('stock_manager/stock_walker');
+    this.router.navigateByUrl(ZFTool.STOCK_MANAGER.route + '/stock_walker');
   }
 
   onStockReport(): void {

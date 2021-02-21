@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {TankLabelComponent} from './printing/tank-label/tank-label.component';
 import {SplashComponent} from './splash/splash.component';
+import {CrossLabelComponent} from './printing/cross-label/cross-label.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,11 @@ const routes: Routes = [
     path: 'print/tankLabel',
     outlet: 'print',
     component: TankLabelComponent,
+  },
+  {
+    path: 'print/crossLabel',
+    outlet: 'print',
+    component: CrossLabelComponent,
   },
   {
     path: '**',

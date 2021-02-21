@@ -5,4 +5,5 @@ export class AccessTokenPayload {
   exp?: number;
   role?: string;
   passwordChangeRequired: boolean;
+  name: string;
 }

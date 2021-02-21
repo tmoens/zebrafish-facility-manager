@@ -1,0 +1,32 @@
+<div class="cross-label" fxFlex fxLayout="row">
+  <!-- The next line prevents the label from being cut off on the left.
+     This just screams that I have no idea what I am doing. -->
+  <div fxFlex="2%"></div>
+
+  <div [ngStyle]="{ 'font-size.pt': crossLabel.fontSize, 'font-family': crossLabel.fontFamily }" fxFlex
+       fxLayout="column">
+
+    <!-- Researcher and Date-->
+    <div fxLayout="row" fxLayoutAlign="space-between">
+      <div>{{crossLabel.researcherName}}</div>
+      <div>{{crossLabel.dateString}}</div>
+    </div>
+
+    <!-- Mom -->
+    <div fxLayout="row" fxLayoutAlign="start" fxLayoutAlign="space-between">
+      <div fxFlex="15%">♀ {{crossLabel.momName}}</div>
+      <div fxFlex>{{crossLabel.momLabelDescription}}</div>
+      <div *ngIf="crossLabel.momTank" fxFlex="15%">{{crossLabel.momTank}}</div>
+    </div>
+
+    <!-- Dad -->
+    <div fxLayout="row" fxLayoutAlign="start" fxLayoutAlign="space-between">
+      <div fxFlex="15%">♂ {{crossLabel.dadName}}</div>
+      <div fxFlex>{{crossLabel.dadLabelDescription}}</div>
+      <div *ngIf="crossLabel.dadTank" fxFlex="15%">{{crossLabel.dadTank}}</div>
+    </div>
+
+    <!-- Extra notes -->
+    <div *ngIf="crossLabel.note">{{crossLabel.note}}</div>
+  </div>
+</div>

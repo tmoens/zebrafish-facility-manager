@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { User } from '../user/user.entity';
-import { JwtService } from '@nestjs/jwt';
+import {Injectable} from '@nestjs/common';
+import {User} from '../user/user.entity';
+import {JwtService} from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   private _loggedIn: { [userId: string]: string } = {};
+
   constructor(
     private jwtService: JwtService,
-  ) {}
+  ) {
+  }
 
   login(user: User): string {
     const token = this.buildToken(user);
@@ -20,7 +22,13 @@ export class AuthService {
   }
 
   buildToken(user: User): string {
-    const payload = { username: user.username, sub: user.id, role: user.role, passwordChangeRequired: user.passwordChangeRequired};
+    const payload = {
+      username: user.username,
+      sub: user.id,
+      role: user.role,
+      passwordChangeRequired: user.passwordChangeRequired,
+      name: user.name
+    };
     const token = this.jwtService.sign(payload);
     this._loggedIn[user.id] = token;
     return token;

@@ -53,6 +53,7 @@ import {AuthService} from './auth/auth.service';
 import {QRCodeModule} from 'angularx-qrcode';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {UserAdminService} from './auth/user-admin/user-admin.service';
+import {CrossLabelComponent} from './printing/cross-label/cross-label.component';
 
 export function appStateProviderFactory(provider: AppStateService) {
   return () => provider.initialize();
@@ -81,6 +82,7 @@ export function authServiceProviderFactory(provider: AppStateService) {
     TopBarComponent,
     TankLabelComponent,
     SplashComponent,
+    CrossLabelComponent,
   ],
   imports: [
     AuthModule,
