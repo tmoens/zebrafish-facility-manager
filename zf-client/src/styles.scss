@@ -34,6 +34,15 @@
   white-space: pre-line;
 }
 
+// For label printing
+.zf-label {
+  background-color: lightgray;
+  margin-right: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  page-break-after: auto;
+}
+
 // mat-radio buttons come out squished for some reason.
 // so deal with it like this...
 .zf-radio-button {

@@ -51,7 +51,7 @@
                  ' (' + (inFocusStock.fertilizationDate | dateToAge) + ' days)'"
              disabled>
     </mat-form-field>
-    <mat-form-field *ngIf="!appState.getState('hidePI') && inFocusStock.pi">
+    <mat-form-field *ngIf="!appState.facilityConfig.hidePI && inFocusStock.pi">
       <input matInput placeholder="Primary Investigator"
              [value]="inFocusStock.pi" disabled>
     </mat-form-field>

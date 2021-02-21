@@ -70,7 +70,7 @@
           </button>
         </mat-form-field>
 
-        <mat-form-field *ngIf="!appState.getState('hidePI')">
+        <mat-form-field *ngIf="!appState.facilityConfig.hidePI">
           <label>
             <input [matAutocomplete]="autoPI" formControlName="pi" matInput placeholder="Primary Investigator"
                    type="text">

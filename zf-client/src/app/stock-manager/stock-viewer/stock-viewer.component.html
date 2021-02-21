@@ -32,13 +32,13 @@
                    placeholder="Fertilization Date">
           </label>
         </mat-form-field>
-        <mat-form-field *ngIf="!appState.getState('hidePI') && service.selected.pi">
+        <mat-form-field *ngIf="!appState.facilityConfig.hidePI && service.selected.pi">
           <label>
             <input [value]="service.selected.pi" disabled
                    matInput placeholder="Primary Investigator">
           </label>
         </mat-form-field>
-        <mat-form-field *ngIf="!appState.getState('hidePI') && service.selected.piUser">
+        <mat-form-field *ngIf="!appState.facilityConfig.hidePI && service.selected.piUser">
           <label>
             <input [value]="service.selected.piUser.name" disabled
                    matInput placeholder="Primary Investigator">

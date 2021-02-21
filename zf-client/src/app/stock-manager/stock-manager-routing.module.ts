@@ -12,6 +12,7 @@ import {USER_ROLE} from '../auth/app-roles';
 import {StockGeneticsEditorComponent} from './stock-genetics-editor/stock-genetics-editor.component';
 import {TankWalkerComponent} from './tank-walker/tank-walker.component';
 import {CrossLabelMakerComponent} from './cross-label-maker/cross-label-maker.component';
+import {TankLabelMakerComponent} from './tank-label-maker/tank-label-maker.component';
 
 const stockManagerRoutes: Routes = [
   {
@@ -90,6 +91,10 @@ const stockManagerRoutes: Routes = [
       {
         path: 'stock_walker',
         component: TankWalkerComponent,
+      },
+      {
+        path: 'tank-label',
+        component: TankLabelMakerComponent,
       },
       {
         path: 'cross-label',

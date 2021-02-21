@@ -9,7 +9,7 @@
         <mat-form-field>
           <input matInput type="text" placeholder="Tank" required formControlName="tankName"
                  validateTankName
-                 matTooltip="{{appState.getState('tankNumberingHint')}}" matTooltipClass="ttnl">
+                 matTooltip="{{appState.facilityConfig.tankNumberingHint}}" matTooltipClass="ttnl">
           <mat-error *ngIf="tankNameFC.invalid && (tankNameFC.dirty || tankNameFC.touched)">
             {{getTankNameErrorMessage()}}
           </mat-error>

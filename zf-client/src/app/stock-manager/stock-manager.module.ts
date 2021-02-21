@@ -37,6 +37,8 @@ import {MutationManagerModule} from '../mutation-manager/mutation-manager.module
 import {TransgeneManagerModule} from '../transgene-manager/transgene-manager.module';
 import {ZfGenericModule} from '../zf-generic/zf-generic.module';
 import {CrossLabelMakerComponent} from './cross-label-maker/cross-label-maker.component';
+import {TankLabelMakerComponent} from './tank-label-maker/tank-label-maker.component';
+import {QRCodeModule} from 'angularx-qrcode';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import {CrossLabelMakerComponent} from './cross-label-maker/cross-label-maker.co
     DateToAgePipe,
     StockMiniViewerComponent,
     CrossLabelMakerComponent,
+    TankLabelMakerComponent,
   ],
   imports: [
     StockManagerRoutingModule,
@@ -82,6 +85,7 @@ import {CrossLabelMakerComponent} from './cross-label-maker/cross-label-maker.co
     MutationManagerModule,
     TransgeneManagerModule,
     ZfGenericModule,
+    QRCodeModule,
   ],
   exports: [
     StockMenuComponent

@@ -3,27 +3,21 @@
   "facilityAbbrv": "dev",
   "hidePI": false,
   "tankNumberingHint": "Legal tank numbers are to be determined yet.",
-  "tankLabelConfig": {
-    "fontPointSize": 10,
-    "fontFamily": "Arial Narrow",
-    "widthInInches": 3.5,
+  "labelPrintingDefaults": {
+    "fontPointSize": 11,
+    "fontFamily": "Arial",
     "heightInInches": 1.25,
+    "widthInInches": 3.5
+  },
+  "tankLabelLayoutDefaults": {
     "showQrCode": true,
-    "layout": [
-      [
-        "STOCK_NUMBER",
-        "STOCK_RESEARCHER_INITIALS",
-        "STOCK_FERTILIZATION_DATE"
-      ],
-      [
-        "STOCK_DESCRIPTION"
-      ],
-      [
-        "STOCK_MUTATIONS"
-      ],
-      [
-        "STOCK_TRANSGENES"
-      ]
-    ]
+    "showStockNumber": true,
+    "showPiName": false,
+    "showPiInitials": true,
+    "showResearcherName": true,
+    "showResearcherInitials": false,
+    "showFertilizationDate": true,
+    "showMutations": true,
+    "showTransgenes": true
   }
 }

@@ -93,7 +93,7 @@
           <mat-icon>arrow_drop_down</mat-icon>
         </button>
       </div>
-      <div class="cross-label" fxLayout="row">
+      <div class="zf-label" fxLayout="row">
         <!-- The next line prevents the label from being cut off on the left.
            This just screams that I have no idea what I am doing. -->
         <div fxFlex="2%"></div>
@@ -109,14 +109,14 @@
           </div>
 
           <!-- Mom -->
-          <div *ngIf="mom" fxLayout="row" fxLayoutAlign="start" fxLayoutAlign="space-between">
+          <div *ngIf="mom" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
             <div fxFlex="15%">♀ {{crossLabel.momName}}</div>
             <div fxFlex>{{crossLabel.momLabelDescription}}</div>
             <div *ngIf="crossLabel.momTank" fxFlex="15%">{{crossLabel.momTank}}</div>
           </div>
 
           <!-- Dad -->
-          <div *ngIf="dad" fxLayout="row" fxLayoutAlign="start" fxLayoutAlign="space-between">
+          <div *ngIf="dad" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
             <div fxFlex="15%">♂ {{crossLabel.dadName}}</div>
             <div fxFlex>{{crossLabel.dadLabelDescription}}</div>
             <div *ngIf="crossLabel.dadTank" fxFlex="15%">{{crossLabel.dadTank}}</div>

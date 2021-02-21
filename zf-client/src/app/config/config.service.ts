@@ -51,29 +51,16 @@ export class ConfigService {
       }
       this.http
         .get(url)
-        .subscribe((response: ConfigModel) => {
+        .subscribe((facilityConfig: ConfigModel) => {
           // Get the default configuration data
           const defaultConfig = new ConfigModel();
 
           // Merge in the data from the facility specific configuration
-          response = plainToClassFromExist(defaultConfig, response);
+          facilityConfig = plainToClassFromExist(defaultConfig, facilityConfig);
 
-          // Put the configuration information into the application state
-          // I'm not really sure why I did it this way instead of just sticking
-          // the config data in as a plain json object and letting interested parties suck
-          // it out as an json object and then go get the bits of interest.  If I had to
-          // I would do better, but since there are at present so few fields, I'll just
-          // live with it as is.
-          this.appStateService.setState('facilityName', response.facilityName);
-          this.appStateService.setState('facilityAbbrv', response.facilityAbbrv);
-          this.appStateService.setState('tankNumberingHint', response.tankNumberingHint);
-          this.appStateService.setState('tankLabelLayout', response.tankLabelConfig.layout);
-          this.appStateService.setState('tankLabelPointSize', response.tankLabelConfig.fontPointSize);
-          this.appStateService.setState('tankLabelFontFamily', response.tankLabelConfig.fontFamily);
-          this.appStateService.setState('tankLabelWidth', response.tankLabelConfig.widthInInches);
-          this.appStateService.setState('tankLabelHeight', response.tankLabelConfig.heightInInches);
-          this.appStateService.setState('tankLabelQrCode', response.tankLabelConfig.showQrCode);
-          this.appStateService.setState('hidePI', !!(response.hidePI));
+          // Put the whole default facility config in the appState as a first class object.
+          this.appStateService.facilityConfig = facilityConfig;
+
           resolve(true);
         })
     })

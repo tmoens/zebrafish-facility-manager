@@ -287,18 +287,15 @@ So for eue.examplezfm.com, the file would live in:
 zf-client/src/facility-config/eue.examplezfm.com.json
 ```
 
-This file automatically gets copied to the 'dist/zf-client' when you build the client an then
-copied to your hosting service's directory when you deploy the client.
+This file automatically gets copied to the 'dist/zf-client' when you build the client and then copied to your hosting
+service's directory when you deploy the client.
 
-You do not need to rebuild and redeploy the client when you add a new client config file.  Just add
-it in the directory as described above and copy it to the deployment directory
-which might be /var/www/zf-client/facility-config
+You do not need to rebuild and redeploy the client when you add a new client config file. Just add it in the directory
+as described above and copy it to the deployment directory which might be /var/www/zf-client/facility-config
 
-Detailed instructions for the file have not been written yet.  The only non obvious part
-is creating the label layout.  The label layout is just an array of array of tags.
-Each tag indicates what bit of information you can put on a tank label.  Each row of the array
-gets printed out as a separate line on the label.  The items within the row are spread out
-across the width of the label.
+Detailed instructions for the file have not been written yet, but the example files should make it pretty clear what's
+happening.
 
-The set of supported tags are found here: zf-client/src/app/printing/tank-label/tank-label.ts
+One thing that is worth noting is that you should set up the label width and height to match the standard labels printed
+at that facility. This allows the system to mock up labels visually without actually trying to print them.
 

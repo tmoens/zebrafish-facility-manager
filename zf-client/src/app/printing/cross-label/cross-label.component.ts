@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PrintService} from '../print.service';
 import {AppStateService} from '../../app-state.service';
-import {CrossLabel} from '../../stock-manager/cross-label-maker/cross-label-maker.component';
+import {CrossLabel} from './cross-label';
 
 @Component({
   selector: 'app-cross-label',

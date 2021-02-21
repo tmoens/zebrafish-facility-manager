@@ -1,21 +1,28 @@
-export enum TankLabelOption {
-  TANK_NUMBER = 'TANK_NUMBER',
-  STOCK_NUMBER = 'STOCK_NUMBER',
-  STOCK_DESCRIPTION = 'STOCK_DESCRIPTION',
-  STOCK_FERTILIZATION_DATE = 'STOCK_FERTILIZATION_DATE',
-  STOCK_RESEARCHER = 'STOCK_RESEARCHER',
-  STOCK_RESEARCHER_INITIALS = 'STOCK_RESEARCHER_INITIALS',
-  STOCK_PI = 'STOCK_PI',
-  STOCK_PI_INITIALS = 'STOCK_PI_INITIALS',
-  STOCK_MUTATIONS = 'STOCK_MUTATIONS',
-  STOCK_TRANSGENES = 'STOCK_TRANSGENES',
-}
+import {LabelPrintingConfig} from '../label-printing-config';
+import {TankLabelConfig} from './tank-label-config';
+import {classToClass} from 'class-transformer';
+import {ConfigModel} from '../../config/config-model';
 
-export class TankLabelConfig {
-  fontPointSize: number = 12;
-  fontFamily: string = 'Helvetica';
-  heightInInches: number = 1.25;
-  widthInInches: number = 3.5;
-  showQrCode: boolean = false;
-  layout: string[][];
+export class TankLabel {
+  printConfig: LabelPrintingConfig;
+  layoutConfig: TankLabelConfig;
+  stockUrl: string = null;
+  name: string = null;
+  piName: string = null;
+  piInitials: string = null;
+  researcherName: string = null;
+  researcherInitials: string = null;
+  fertilizationDate: string = null;
+  description: string = null;
+  mutations: string = null;
+  transgenes: string = null;
+  additionalNote: string = null;
+
+  constructor(
+    private facilityConfig: ConfigModel,
+  ) {
+    this.printConfig = classToClass(this.facilityConfig.labelPrintingDefaults);
+    this.layoutConfig = classToClass(this.facilityConfig.tankLabelLayoutDefaults)
+  }
+
 }

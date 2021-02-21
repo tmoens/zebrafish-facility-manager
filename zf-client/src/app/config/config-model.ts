@@ -1,4 +1,5 @@
-import {TankLabelConfig} from '../printing/tank-label/tank-label';
+import {TankLabelConfig} from '../printing/tank-label/tank-label-config';
+import {LabelPrintingConfig} from '../printing/label-printing-config';
 
 // This is the configuration information associated with a particular zebrafish facility
 // The defaults provided should be overridden in the "per facility" config file in
@@ -7,10 +8,12 @@ import {TankLabelConfig} from '../printing/tank-label/tank-label';
 export class ConfigModel {
   facilityName = 'TBD';
   facilityAbbrv = 'TBD';
-  facilityPrefix = 'XXX';
 
   hidePI = false;
 
   tankNumberingHint: string = 'No tank numbering hint available'
-  tankLabelConfig: TankLabelConfig = new TankLabelConfig();
+
+  labelPrintingDefaults: LabelPrintingConfig = new LabelPrintingConfig();
+
+  tankLabelLayoutDefaults: TankLabelConfig = new TankLabelConfig();
 }

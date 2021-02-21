@@ -8,6 +8,7 @@ import {AuthService} from '../../auth/auth.service';
 import {Router} from '@angular/router';
 import {PrintService} from '../../printing/print.service';
 import {StockFullDto} from '../dto/stock-full-dto';
+import {CrossLabel} from '../../printing/cross-label/cross-label';
 
 @Component({
   selector: 'app-cross-label-maker',
@@ -39,21 +40,36 @@ export class CrossLabelMakerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.researcherId = this.authService.loggedInUserId();
-    this.crossLabel.dateString = this.date.toISOString().substr(0, 10);
-    if (this.service.selected) {
-      this.crossLabel.momName = this.service.selected.name;
-      this.onSetMatStock();
-    }
+    // Get a list of active researchers to populate researcher selection menu
     this.authApiService.getUsersByType('ACTIVE_RESEARCHER')
       .subscribe((data: UserDTO[]) => {
         this.researchers = data;
         this.onSelectResearcher();
       });
-    this.labelHeight = this.appState.getState('tankLabelHeight');
-    this.labelWidth = this.appState.getState('tankLabelWidth');
-    this.crossLabel.fontSize = this.appState.getState('tankLabelPointSize');
-    this.crossLabel.fontFamily = this.appState.getState('tankLabelFontFamily');
+
+    // The default researcher is the one who is logged in.
+    this.researcherId = this.authService.loggedInUserId();
+
+    // The default date is today
+    this.crossLabel.dateString = this.date.toISOString().substr(0, 10);
+
+    // by default, the stock last viewed is the mom of the cross. This is just a guess
+    // and the user can change it easily.  Someone will complain that I guessed wrong.
+    if (this.service.selected) {
+      this.crossLabel.momName = this.service.selected.name;
+      this.onSetMatStock();
+    }
+
+    // For making a mock-up of the label, go look up the facility default label size
+    // This *does not* get passed to the tank label printing component because over there it will
+    // use the label printer's *actual* label size, which, with luck, will match the defaults.
+    this.labelHeight = this.appState.facilityConfig.labelPrintingDefaults.heightInInches;
+    this.labelWidth = this.appState.facilityConfig.labelPrintingDefaults.widthInInches;
+
+    // Go get the default font and font size.  The user is allowed to muck around with this
+    // a bit so it *does* get sent along to the tank label printing component as part of the label.
+    this.crossLabel.fontSize = this.appState.facilityConfig.labelPrintingDefaults.fontPointSize;
+    this.crossLabel.fontFamily = this.appState.facilityConfig.labelPrintingDefaults.fontFamily;
   }
 
   onSelectResearcher() {
@@ -120,31 +136,12 @@ export class CrossLabelMakerComponent implements OnInit {
   };
 
   print() {
-    // We just stick the cross label in the appState before we go to print it.
+    // We just stick the crossLabel in the appState before we go to print it.
     // The printer just fetches from there.  This is the easiest way to get the
-    // data for the label from her to there.  We could do it through navigation
+    // data for the label from here to there.  We could do it through navigation
     // parameters, but that is just a pain in the ass, and since the app state
     // is around anyway - this seems like a good idea.
     this.appState.setState('crossLabel', this.crossLabel, false);
     this.printService.printDocument('crossLabel');
   };
-}
-
-// A cross label is just a bunch of data that describes a cross between
-// two stocks and a bit of ancillary data like which researcher is doing the work.
-// The data for a cross label is totally transient.  It is never stored in the
-// the database.  It is basically an aide for people with bad handwriting to put
-// a whole bunch of text on a small label in a consistent and legible way.
-export class CrossLabel {
-  researcherName: string;
-  momName: string = null;
-  dadName: string = null;
-  momTank: string;
-  dadTank: string;
-  momLabelDescription: string = '';
-  dadLabelDescription: string = '';
-  dateString: string;
-  note: string = '';
-  fontFamily: number;
-  fontSize: number;
 }

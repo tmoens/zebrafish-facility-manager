@@ -1,22 +1,31 @@
-<div class="tankLabel" fxFlex fxLayout="row">
-  <!-- The next line prevents the QR code from getting chopped off on the left.
-       I could not make this happen with margins or padding.  What's more,
-       this trick does not even work if I it inside the next div.
-       This just screams that I have no idea what I am doing. -->
+<div class="zf-label" fxLayout="row">
+  <!-- The next line prevents the label from being cut off on the left.
+     This just screams that I have no idea what I am doing. -->
   <div fxFlex="2%"></div>
-  <div *ngIf="appState.getState('tankLabelQrCode')">
+
+
+  <div *ngIf="label.layoutConfig.showQrCode" fxLayout="column" fxLayoutAlign="center">
     <qrcode
-      [qrdata]="stockUrl"
+      [qrdata]="label.stockUrl"
       elementType="url" errorCorrectionLevel="M"
       scale="2"
       width="10">
     </qrcode>
   </div>
-  <div  fxFlex fxLayout="column"
-        [ngStyle]="{ 'font-size.pt': appState.getState('tankLabelPointSize'),
-                     'font-family': appState.getState('tankLabelFontFamily')}">
-    <div *ngFor="let row of label.rows" fxLayout="row" fxLayoutAlign="space-between">
-      <div *ngFor="let s of row">{{s}}</div>
+
+  <div [ngStyle]="{ 'font-size.pt': label.printConfig.fontPointSize, 'font-family': label.printConfig.fontFamily}"
+       fxFlex fxLayout="column">
+    <div fxLayout="row" fxLayoutGap="10px">
+      <div>{{label.name}}</div>
+      <div *ngIf="label.layoutConfig.showPiInitials">{{label.piInitials}}</div>
+      <div *ngIf="label.layoutConfig.showPiName">{{label.piName}}</div>
+      <div *ngIf="label.layoutConfig.showResearcherInitials">{{label.researcherInitials}}</div>
+      <div *ngIf="label.layoutConfig.showResearcherName">{{label.researcherName}}</div>
+      <div>{{label.fertilizationDate}}</div>
     </div>
+    <div *ngIf="label.layoutConfig.showDescription && label.description">{{label.description}}</div>
+    <div *ngIf="label.layoutConfig.showMutations && label.mutations">{{label.mutations}}</div>
+    <div *ngIf="label.layoutConfig.showTransgenes && label.transgenes">{{label.transgenes}}</div>
+    <div *ngIf="label.layoutConfig.showAdditionalNote && label.additionalNote">{{label.additionalNote}}</div>
   </div>
 </div>

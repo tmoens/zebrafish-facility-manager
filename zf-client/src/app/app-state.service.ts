@@ -1,10 +1,11 @@
 import {Inject, Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {LOCAL_STORAGE, StorageService} from "ngx-webstorage-service";
-import {ZFTool} from "./helpers/zf-tool";
-import {Router} from "@angular/router";
-import {ZFTypes} from "./helpers/zf-types";
-import {ScreenSizes} from "./helpers/screen-sizes";
+import {LOCAL_STORAGE, StorageService} from 'ngx-webstorage-service';
+import {ZFTool} from './helpers/zf-tool';
+import {Router} from '@angular/router';
+import {ZFTypes} from './helpers/zf-types';
+import {ScreenSizes} from './helpers/screen-sizes';
+import {ConfigModel} from './config/config-model';
 
 /**
  * This maintains the state of the application.  It does a few main things.
@@ -24,6 +25,9 @@ export enum ZFToolStates {
 })
 
 export class AppStateService {
+  // We store the facility configuration info here when we get it.
+  facilityConfig: ConfigModel;
+
   // for storing arbitrary state data and arbitrary state data that persists over restarts
   state: { [name: string]: any } = {};
   persistentState: { [name: string]: any } = {};

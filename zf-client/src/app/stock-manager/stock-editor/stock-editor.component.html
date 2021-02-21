@@ -33,14 +33,14 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
-          <mat-form-field *ngIf="!appState.getState('hidePI')">
+          <mat-form-field *ngIf="!appState.facilityConfig.hidePI">
             <label>
               <input (keyup)="onPIChange()" [(ngModel)]="stock.pi" [matAutocomplete]="autoPI" matInput maxlength="25"
                      name="pi" placeholder="Primary Investigator"
                      type="text">
             </label>
           </mat-form-field>
-          <mat-form-field *ngIf="!appState.getState('hidePI')">
+          <mat-form-field *ngIf="!appState.facilityConfig.hidePI">
             <mat-select [(ngModel)]="stock.piUser" name="piUser" placeholder="Primary Investigator">
               <mat-option [value]=null>--None--</mat-option>
               <mat-option *ngFor="let option of pis" [value]="option">

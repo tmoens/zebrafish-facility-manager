@@ -1,0 +1,146 @@
+<form #crossEditForm="ngForm">
+  <div fxLayout="column" fxLayoutGap="10px">
+
+    <!--------------- Title and menu --------------------->
+    <mat-toolbar class="zf-mini-toolbar">Customize Tank Label</mat-toolbar>
+
+    <!-- Stock Description -->
+    <div fxLayoutAlign="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <mat-checkbox [(ngModel)]="label.layoutConfig.showDescription" color="primary" name="showDescription">
+      </mat-checkbox>
+      <mat-form-field fxFlex>
+        <label>
+          <input [(ngModel)]="label.description" matInput name="description"
+                 placeholder="Description" type="text">
+        </label>
+        <mat-hint>Customize the description for label printing</mat-hint>
+      </mat-form-field>
+    </div>
+    <!-- Mutations -->
+    <div fxLayoutAlign="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <mat-checkbox [(ngModel)]="label.layoutConfig.showMutations" color="primary" name="showMuts">
+      </mat-checkbox>
+      <mat-form-field fxFlex>
+        <label>
+          <input [(ngModel)]="label.mutations" matInput name="mutations"
+                 placeholder="Mutations" type="text">
+        </label>
+        <mat-hint>Customize the mutations for label printing</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- Transgenes -->
+    <div fxLayoutAlign="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <mat-checkbox [(ngModel)]="label.layoutConfig.showTransgenes" color="primary" name="showTGs">
+      </mat-checkbox>
+      <mat-form-field fxFlex>
+        <label>
+          <input [(ngModel)]="label.transgenes" matInput name="transgenes"
+                 placeholder="Transgenes" type="text">
+        </label>
+        <mat-hint>Customize the transgenes for label printing</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- Label Note -->
+    <div fxLayoutAlign="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <mat-checkbox [(ngModel)]="label.layoutConfig.showAdditionalNote" color="primary" name="showNote">
+      </mat-checkbox>
+      <mat-form-field fxFlex>
+        <label>
+          <input [(ngModel)]="label.additionalNote" matInput name="note"
+                 placeholder="Additional notes" type="text">
+        </label>
+        <mat-hint>Any extra notes for the label</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!--Toggle the QR code-->
+    <div fxLayoutAlign="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+      <mat-checkbox [(ngModel)]="label.layoutConfig.showQrCode" color="primary" name="shoqQrCode">
+        QR Code
+      </mat-checkbox>
+      <mat-checkbox *ngIf="!appState.facilityConfig.hidePI" [(ngModel)]="label.layoutConfig.showPiInitials"
+                    color="primary" name="showPiI">
+        Show PI Initials
+      </mat-checkbox>
+      <mat-checkbox *ngIf="!appState.facilityConfig.hidePI" [(ngModel)]="label.layoutConfig.showPiName" color="primary"
+                    name="ShowPiN">
+        PI Name
+      </mat-checkbox>
+      <mat-checkbox [(ngModel)]="label.layoutConfig.showResearcherInitials" color="primary" name="showRI">
+        Researcher Initials
+      </mat-checkbox>
+      <mat-checkbox [(ngModel)]="label.layoutConfig.showResearcherName" color="primary" name="showRN">
+        Researcher Name
+      </mat-checkbox>
+    </div>
+
+    <!--Half-assed simulation of what the label might look like...-->
+    <div class="zf-mini-title">Label mock-up</div>
+    <div fxLayoutAlign="center center" fxLayoutGap="10px" fxlayout="row">
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <button (click)="changeFontSize(1)" aria-label="Increase font size" color="primary" mat-icon-button>
+          <mat-icon>arrow_drop_up</mat-icon>
+        </button>
+        <div>{{label.printConfig.fontPointSize}}pt</div>
+        <button (click)="changeFontSize(-1)" aria-label="Decrease font size" color="primary" mat-icon-button>
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+      </div>
+      <div [ngStyle]="{'width.in': label.printConfig.widthInInches, 'height.in': label.printConfig.heightInInches}"
+           class="zf-label"
+           fxLayout="row"
+      >
+        <!-- The next line prevents the label from being cut off on the left.
+           This just screams that I have no idea what I am doing. -->
+        <div fxFlex="2%"></div>
+
+
+        <div *ngIf="label.layoutConfig.showQrCode" fxLayout="column" fxLayoutAlign="center">
+          <qrcode
+            [qrdata]="label.stockUrl"
+            elementType="url" errorCorrectionLevel="M"
+            scale="2"
+            width="10">
+          </qrcode>
+        </div>
+        <div [ngStyle]="{ 'font-size.pt': label.printConfig.fontPointSize, 'font-family': label.printConfig.fontFamily}"
+             fxFlex fxLayout="column">
+          <div fxLayout="row" fxLayoutAlign="space-between">
+            <div>{{label.name}}</div>
+            <div *ngIf="label.layoutConfig.showPiInitials">{{label.piInitials}}</div>
+            <div *ngIf="label.layoutConfig.showPiName">{{label.piName}}</div>
+            <div *ngIf="label.layoutConfig.showResearcherInitials">{{label.researcherInitials}}</div>
+            <div *ngIf="label.layoutConfig.showResearcherName">{{label.researcherName}}</div>
+            <div>{{label.fertilizationDate}}</div>
+          </div>
+          <div *ngIf="label.layoutConfig.showDescription && label.description">{{label.description}}</div>
+          <div *ngIf="label.layoutConfig.showMutations && label.mutations">{{label.mutations}}</div>
+          <div *ngIf="label.layoutConfig.showTransgenes && label.transgenes">{{label.transgenes}}</div>
+          <div *ngIf="label.layoutConfig.showAdditionalNote && label.additionalNote">{{label.additionalNote}}</div>
+
+        </div>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <mat-form-field>
+          <mat-select [(ngModel)]="label.printConfig.fontFamily" name="fontFamily">
+            <mat-option *ngFor="let option of fonts" [value]="option">
+              <div>{{option}}</div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- buttons -->
+    <div class="fill-remaining-space"></div>
+    <div fxLayout="row" fxLayoutGap="20px">
+      <div class="fill-remaining-space"></div>
+      <button (click)="done()" color="primary" mat-button>Done</button>
+      <button (click)="revert()" color="primary" mat-button>Revert</button>
+      <button (click)="print()" color="primary" mat-button>Print Tank Label</button>
+    </div>
+  </div>
+</form>
