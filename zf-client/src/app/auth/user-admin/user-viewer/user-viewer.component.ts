@@ -5,6 +5,7 @@ import {EditMode} from '../../../zf-generic/zf-edit-modes';
 import {UserAdminService} from '../user-admin.service';
 import {UserDTO} from '../../UserDTO';
 import {AuthService} from '../../auth.service';
+import {AppStateService} from '../../../app-state.service';
 
 @Component({
   selector: 'app-user-viewer',
@@ -31,6 +32,7 @@ export class UserViewerComponent implements OnInit {
 
   user: UserDTO = null;
   constructor(
+    public appState: AppStateService,
     private router: Router,
     private route: ActivatedRoute,
     public service: UserAdminService,

@@ -132,7 +132,7 @@ The file will look like this:
 ```bash
 <VirtualHost *:80>
     ServerName eue.examplezfm.com
-    Redirect permanent / httpd:eue.examplezfm.com
+    Redirect permanent / https://eue.examplezfm.com
 </VirtualHost>
 ```
 

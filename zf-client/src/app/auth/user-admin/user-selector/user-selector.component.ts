@@ -8,6 +8,7 @@ import {UserAdminService} from '../user-admin.service';
 import {debounceTime} from 'rxjs/operators';
 import {ScreenSizes} from '../../../helpers/screen-sizes';
 import {UserFilter} from '../user-filter';
+import {AppStateService} from '../../../app-state.service';
 
 @Component({
   selector: 'app-user-selector',
@@ -28,7 +29,9 @@ import {UserFilter} from '../user-filter';
           </mat-form-field>
           <mat-checkbox formControlName="activeOnly" color="primary">Active users</mat-checkbox>
           <mat-checkbox formControlName="inactiveOnly" color="primary">Inactive users</mat-checkbox>
-          <mat-checkbox formControlName="piOnly" color="primary">Primary Investigators</mat-checkbox>
+          <mat-checkbox *ngIf="!appState.facilityConfig.hidePI"
+                        formControlName="piOnly" color="primary">Primary Investigators
+          </mat-checkbox>
           <mat-checkbox formControlName="researcherOnly" color="primary">Researchers</mat-checkbox>
           <mat-checkbox formControlName="isLoggedIn" color="primary">Logged In</mat-checkbox>
         </div>
@@ -69,12 +72,12 @@ export class UserSelectorComponent implements OnInit {
 
   users: UserDTO[] = [];
   constructor(
+    public appState: AppStateService,
     private readonly loader: LoaderService,
     private snackBar: MatSnackBar,
     private router: Router,
     public service: UserAdminService,
     private fb: FormBuilder,
-
   ) { }
 
   ngOnInit(): void {

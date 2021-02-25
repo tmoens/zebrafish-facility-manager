@@ -3,7 +3,6 @@
      This just screams that I have no idea what I am doing. -->
   <div fxFlex="2%"></div>
 
-
   <div *ngIf="label.layoutConfig.showQrCode" fxLayout="column" fxLayoutAlign="center">
     <qrcode
       [qrdata]="label.stockUrl"
@@ -16,7 +15,7 @@
   <div [ngStyle]="{ 'font-size.pt': label.printConfig.fontPointSize, 'font-family': label.printConfig.fontFamily}"
        fxFlex fxLayout="column">
     <div fxLayout="row" fxLayoutGap="10px">
-      <div>{{label.name}}</div>
+      <div><strong>S{{label.name}}</strong></div>
       <div *ngIf="label.layoutConfig.showPiInitials">{{label.piInitials}}</div>
       <div *ngIf="label.layoutConfig.showPiName">{{label.piName}}</div>
       <div *ngIf="label.layoutConfig.showResearcherInitials">{{label.researcherInitials}}</div>

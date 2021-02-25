@@ -2,14 +2,14 @@ import {BadRequestException, Inject, Injectable, UnauthorizedException} from '@n
 import {InjectRepository} from '@nestjs/typeorm';
 import {User} from './user.entity';
 import {plainToClass} from 'class-transformer';
-import {ResetPasswordDTO, UserDTO, UserPasswordChangeDTO} from "../common/user/UserDTO";
-import {Logger} from "winston";
-import {ADMIN_ROLE} from "../common/auth/zf-roles";
-import {JwtService} from "@nestjs/jwt";
-import {UserRepository} from "./user.repository";
-import {ZFMailerService} from "../mailer/mailer-service";
-import {ConfigService} from "../config/config.service";
-import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
+import {ResetPasswordDTO, UserDTO, UserPasswordChangeDTO} from '../common/user/UserDTO';
+import {Logger} from 'winston';
+import {ADMIN_ROLE} from '../common/auth/zf-roles';
+import {JwtService} from '@nestjs/jwt';
+import {UserRepository} from './user.repository';
+import {ZFMailerService} from '../mailer/mailer-service';
+import {ConfigService} from '../config/config.service';
+import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
 import {UserFilter} from './user-filter';
 import {Brackets, SelectQueryBuilder} from 'typeorm';
 import {StockRepository} from '../stock/stock.repository';
@@ -91,7 +91,7 @@ export class UserService {
       }))
     }
     q = q.orderBy('user.email');
-    return await q.getMany()
+    return await q.getMany();
   }
 
   async findUsers(userType: string): Promise<UserDTO[]> {

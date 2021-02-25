@@ -9,6 +9,7 @@ import {Observable, of} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AppRoles} from '../../app-roles';
 import {AuthService} from '../../auth.service';
+import {AppStateService} from '../../../app-state.service';
 
 @Component({
   selector: 'app-user-editor',
@@ -47,13 +48,13 @@ export class UserEditorComponent implements OnInit {
   } );
 
   constructor(
+    public appState: AppStateService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
     public service: UserAdminService,
     private deactivationDialogService: DialogService,
     private authService: AuthService,
-
   ) {}
 
   ngOnInit(): void {

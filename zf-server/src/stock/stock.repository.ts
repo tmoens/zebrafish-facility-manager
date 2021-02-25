@@ -318,9 +318,12 @@ export class StockRepository extends Repository<Stock> {
       .leftJoin('stock.transgenes', 'transgene')
       .leftJoin('stock.swimmers', 'swimmers')
       .leftJoin('swimmers.tank', 'tank')
+      .leftJoin('stock.researcherUser', 'researcher')
+      .leftJoin('stock.piUser', 'pi')
       .select('stock.name', 'Stock')
       .addSelect('stock.description', 'Description')
-      .addSelect('stock.researcher', 'Researcher')
+      .addSelect('researcher.name', 'Researcher')
+      .addSelect('pi.name', 'PI')
       .addSelect('DATE_FORMAT(stock.fertilizationDate, "%Y-%m-%d")', 'DOB')
       .addSelect('mom.name', 'Mother')
       .addSelect('dad.name', 'Father')
@@ -425,3 +428,5 @@ export class StockRepository extends Repository<Stock> {
     return q;
   }
 }
+
+

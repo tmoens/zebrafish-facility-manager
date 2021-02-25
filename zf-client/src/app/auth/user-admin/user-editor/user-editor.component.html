@@ -1,6 +1,6 @@
 <div fxFlex class="zf-full-width" *ngIf="service.selected">
   <div class="zf-title">Edit User {{getFC('username').value}}</div>
-  <form [formGroup]="mfForm" fxLayout="column">
+  <form [formGroup]="mfForm" fxLayout="column" fxLayoutGap="20px">
     <div fxFlex="20px"></div>
 
     <mat-form-field>
@@ -39,9 +39,9 @@
       </mat-select>
     </mat-form-field>
 
-      <mat-checkbox  formControlName="isPrimaryInvestigator" color="primary">
-        Primary Investigator
-      </mat-checkbox>
+    <mat-checkbox *ngIf="!appState.facilityConfig.hidePI" color="primary" formControlName="isPrimaryInvestigator">
+      Primary Investigator
+    </mat-checkbox>
       <mat-checkbox  formControlName="isResearcher" color="primary">
         Researcher
       </mat-checkbox>

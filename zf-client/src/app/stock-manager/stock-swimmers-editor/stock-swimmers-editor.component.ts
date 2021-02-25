@@ -8,7 +8,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {forkJoin, Observable} from 'rxjs';
 import {DialogService} from '../../dialog.service';
-import {AppStateService} from "../../app-state.service";
+import {AppStateService} from '../../app-state.service';
 
 /**
  * This Component allows the user to indicate tanks a particular stock is in.
@@ -212,7 +212,7 @@ export class StockSwimmersEditorComponent implements OnInit {
 
     // after changes complete, force the reload of the updated stock by re-selecting it.
     forkJoin(responses).subscribe(_ => this.stockService.selectByIdAndLoad(this.stockId));
-    this.router.navigateByUrl('stock_manager/view');
+    this.router.navigateByUrl('stock_manager/view').then();
   }
 
   cancel() {

@@ -7,30 +7,44 @@
   </div>
   <form fxLayout="column" [formGroup]="mfForm">
     <mat-form-field>
-      <input type="text" matInput placeholder="Username" formControlName="username">
+      <label>
+        <input formControlName="username" matInput placeholder="Username" type="text">
+      </label>
     </mat-form-field>
 
     <mat-form-field *ngIf="service.selected.name">
-      <input matInput type="text" placeholder="Name" formControlName="name">
+      <label>
+        <input formControlName="name" matInput placeholder="Name" type="text">
+      </label>
     </mat-form-field>
 
     <mat-form-field *ngIf="service.selected.initials">
-      <input matInput type="text" placeholder="Preferred Initials" formControlName="initials">
-    </mat-form-field>
-
-    <mat-form-field >
-      <input matInput type="email" placeholder="Email" formControlName="email">
-    </mat-form-field>
-
-    <mat-form-field *ngIf="service.selected.phone">
-      <input matInput type="text" placeholder="Phone" formControlName="phone">
+      <label>
+        <input formControlName="initials" matInput placeholder="Preferred Initials" type="text">
+      </label>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput type="text" placeholder="Role" formControlName="role">
+      <label>
+        <input formControlName="email" matInput placeholder="Email" type="email">
+      </label>
     </mat-form-field>
 
-    <mat-checkbox formControlName="isPrimaryInvestigator" color="primary">Primary Investigator</mat-checkbox>
+    <mat-form-field *ngIf="service.selected.phone">
+      <label>
+        <input formControlName="phone" matInput placeholder="Phone" type="text">
+      </label>
+    </mat-form-field>
+
+    <mat-form-field>
+      <label>
+        <input formControlName="role" matInput placeholder="Role" type="text">
+      </label>
+    </mat-form-field>
+
+    <mat-checkbox *ngIf="!appState.facilityConfig.hidePI"
+                  color="primary" formControlName="isPrimaryInvestigator">Primary Investigator
+    </mat-checkbox>
     <mat-checkbox formControlName="isResearcher" color="primary">Researcher</mat-checkbox>
     <mat-checkbox formControlName="isActive" color="primary">Activated</mat-checkbox>
     <mat-checkbox color="primary" formControlName="isLoggedIn">Currently Logged In</mat-checkbox>
