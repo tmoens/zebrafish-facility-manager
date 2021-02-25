@@ -1,17 +1,17 @@
 export class UserDTO {
-  id?: string;
-  email?: string;
-  isActive?: boolean;
-  isLoggedIn?: boolean;
-  name?: string;
-  passwordChangeRequired?: boolean;
-  phone?: string;
-  role?: string;
-  username?: string;
-  isPrimaryInvestigator?: boolean;
-  isResearcher?: boolean;
-  initials?: string;
-  isDeletable?: boolean;
+  id = '';
+  email = '';
+  isActive = true;
+  isLoggedIn = false;
+  name = '';
+  passwordChangeRequired = false;
+  phone = '';
+  role = '';
+  username = '';
+  isPrimaryInvestigator = false;
+  isResearcher = true;
+  initials = '';
+  isDeletable = true;
 }
 
 export class ResetPasswordDTO{

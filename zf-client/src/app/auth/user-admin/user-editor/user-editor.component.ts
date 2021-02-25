@@ -74,6 +74,7 @@ export class UserEditorComponent implements OnInit {
           this.user.isActive = true;
           this.user.isLoggedIn = false;
           this.user.passwordChangeRequired = true;
+          this.user.role = 'guest';
           this.editMode = EditMode.CREATE;
           this.initialize();
           break;

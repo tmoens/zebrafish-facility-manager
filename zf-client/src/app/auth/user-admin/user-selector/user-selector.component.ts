@@ -92,7 +92,7 @@ export class UserSelectorComponent implements OnInit {
   onSelect(instance: UserDTO | null) {
     this.selected.emit(instance);
     this.service.select(instance);
-    this.router.navigateByUrl('user_admin/view');
+    this.router.navigateByUrl('user_admin/view/' + instance.id);
   }
 
 

@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {AppStateService} from "../../app-state.service";
-import {ZFTool} from "../../helpers/zf-tool";
-import {UserAdminService} from "./user-admin.service";
-import {Observable} from "rxjs";
-import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
-import {map, shareReplay} from "rxjs/operators";
-import {AuthService} from "../auth.service";
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AppStateService} from '../../app-state.service';
+import {ZFTool} from '../../helpers/zf-tool';
+import {UserAdminService} from './user-admin.service';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'app-user-admin',
