@@ -1,6 +1,6 @@
 {
   "name": "zf-client",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4242",
@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "ngcc",
+    "postinstall": "ngcc"
   },
   "private": true,
   "dependencies": {
