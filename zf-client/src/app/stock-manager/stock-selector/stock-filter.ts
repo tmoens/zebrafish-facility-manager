@@ -3,8 +3,6 @@ export class StockFilter {
   text: string = null;
   liveStocksOnly = false;
   number: string = null;
-  researcher: string = null;
-  pi: string = null;
   tankName: string = null;
   mutation: string = null;
   mutationId: number = null;
@@ -21,7 +19,9 @@ export class StockFilter {
 
   isEmpty(): boolean {
     return !(
-      this.text || this.liveStocksOnly || this.number || this.researcher ||
-      this.tankName || this.mutation || this.transgene);
+      this.text || this.liveStocksOnly || this.number ||
+      this.tankName || this.mutation || this.transgene ||
+      this.mutationId || this.transgeneId || this.age ||
+      this.researcherId || this.piId);
   }
 }

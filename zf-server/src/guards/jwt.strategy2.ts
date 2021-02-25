@@ -2,15 +2,15 @@ import {ExtractJwt, Strategy} from 'passport-jwt';
 import {PassportStrategy} from '@nestjs/passport';
 import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {ConfigService} from '../config/config.service';
-import {AuthService} from "../auth/auth.service";
-import {UserService} from "../user/user.service";
+import {AuthService} from '../auth/auth.service';
+import {UserService} from '../user/user.service';
 
 // I'm so sorry. I lack understanding so I am employing a hammer.
-// The problem: the normal jwt strategy validates the jwt and checks that
-// the user is not supposed to change their password.
+// The problem: the normal jwt strategy validates the jwt and checks
+// if the user is supposed to change their password.
 // EXCEPT for the password change request itself.
-// The problem was that I did not see how to make that exception
-// in the jwt strategy. So I made this whole new strategy
+// The difficulty is that I did not see how to make that exception
+// within the jwt strategy. So I made this whole new strategy
 // that does not check the "passwordChangeRequired" state and
 // use it to make a Guard for exactly one route - the change password route.
 @Injectable()
@@ -41,13 +41,9 @@ export class JwtStrategy2 extends PassportStrategy(Strategy, 'jwt2') {
     //   throw new UnauthorizedException('Password change required.');
     // }
 
-    // TODO we are not actually checking the user's stored token, just that they have one.
     if (!user.isLoggedIn) {
       throw new UnauthorizedException('Token does not identify a logged in user.');
     }
-    // if (!this.authService.isLoggedIn(user)) {
-    //   throw new UnauthorizedException('Token does not identify a logged in user.');
-    // }
 
     // passport will stick the user in the request object for us.
     return user;

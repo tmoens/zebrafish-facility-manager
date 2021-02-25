@@ -62,6 +62,8 @@ export class StockRepository extends Repository<Stock> {
         'transgenes', 'mutations',
         'matStock',
         'patStock',
+        'piUser',
+        'researcherUser'
       ]});
     if (!stock) {
       const msg = 'Stock does not exist. Id: ' + id;
@@ -170,10 +172,15 @@ export class StockRepository extends Repository<Stock> {
 
   // values that can be used to auto-complete various fields in the GUI
   async getAutoCompleteOptions(): Promise<AutoCompleteOptions> {
-    const options: any = {};
-    options.researcher = await this.getAutocompleteOption('researcher');
-    options.pi = await this.getAutocompleteOption('pi');
-    return options;
+    // once upon a time when researchers and PIs were just strings, we
+    // used to fetch all the strings for researchers and PI strings
+    // that were extant in the database.
+    // Nowadays this researchers and pis are references to users.
+    // const options: any = {};
+    // options.researcher = await this.getAutocompleteOption('researcher');
+    // options.pi = await this.getAutocompleteOption('pi');
+    // return options;
+    return {};
   }
 
   async getAutocompleteOption(field: string): Promise<string[]> {
@@ -223,11 +230,13 @@ export class StockRepository extends Repository<Stock> {
 
     // For this query we only look at a few fields
     let q: SelectQueryBuilder<Stock> = this.createQueryBuilder('stock')
-      .select('stock.id, stock.name, stock.pi, stock.description, stock.researcher, stock.comment, stock.fertilizationDate')
+      .leftJoin('stock.researcherUser', 'ru')
+      .select('stock.id, stock.name, stock.description, stock.comment, stock.fertilizationDate')
+      .addSelect('ru.name', 'researcher')
       .groupBy('stock.id');
 
     // We have to join a bunch of relationships based on what we are filtering for.
-    // So, if the filter does not include mutations, we do not need to join that table.
+    // So, for example, if the filter does not include mutations, we do not need to join that table.
     if (filter.mutationId || filter.mutation) {
       q = q.leftJoin('stock.mutations', 'mutation');
     }
@@ -366,16 +375,6 @@ export class StockRepository extends Repository<Stock> {
     // a filter on the stock number matches the start of the number
     if (filter.number) {
       q = q.andWhere('stock.name LIKE :n', {n: filter.number + "%"});
-    }
-
-    // a filter on the researcher matches any par of the researcher's name
-    if (filter.researcher) {
-      q = q.andWhere('stock.researcher LIKE :r', {r: '%' + filter.researcher + '%'});
-    }
-
-    // a filter on the researcher matches any par of the researcher's name
-    if (filter.pi) {
-      q = q.andWhere('stock.pi LIKE :r', {r: '%' + filter.pi + '%'});
     }
 
     // a filter on text looks anywhere in the stocks comment or description only.

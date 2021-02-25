@@ -32,7 +32,6 @@ import {MatCardModule} from '@angular/material/card';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {DateToAgePipe} from './date-to-age.pipe';
 import {TankWalkerComponent} from './tank-walker/tank-walker.component';
-import {StockMiniViewerComponent} from './stock-mini-viewer/stock-mini-viewer.component';
 import {MutationManagerModule} from '../mutation-manager/mutation-manager.module';
 import {TransgeneManagerModule} from '../transgene-manager/transgene-manager.module';
 import {ZfGenericModule} from '../zf-generic/zf-generic.module';
@@ -54,7 +53,6 @@ import {QRCodeModule} from 'angularx-qrcode';
     TankNameValidator,
     StockNameCheckValidator,
     DateToAgePipe,
-    StockMiniViewerComponent,
     CrossLabelMakerComponent,
     TankLabelMakerComponent,
   ],

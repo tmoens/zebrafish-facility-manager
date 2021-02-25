@@ -1,9 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl} from '@angular/forms';
-import {debounceTime, map, startWith} from 'rxjs/operators';
+import {debounceTime} from 'rxjs/operators';
 import {StockService} from '../stock.service';
 import {StockFilter} from './stock-filter';
-import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {StockDto} from '../dto/stock-dto';
 import {AppStateService, ZFToolStates} from '../../app-state.service';
@@ -53,11 +52,12 @@ export class StockSelectorComponent implements OnInit {
   mutationFilterFC: FormControl = new FormControl();
   transgeneFilterFC: FormControl = new FormControl();
 
-  filteredResearcherOptions: Observable<string[]>;
-  filteredPIOptions: Observable<string[]>;
+  // a list of mutations that updates as the user types in the mutation filter area.
   filteredMutationOptions: MutationDto[];
   filteredTransgeneOptions: TransgeneDto[];
 
+  // List of researchers and primary investigators who currently appear in stocks.
+  // The user can specify a researcher or pi in the filter.
   researchers: UserDTO[];
   pis: UserDTO[];
 
@@ -92,20 +92,6 @@ export class StockSelectorComponent implements OnInit {
       .subscribe(() => {
         this.getFilteredStocks();
       });
-
-    // when the user types something in the researcher part of the filter,
-    // change the auto-complete options available.
-    this.filteredResearcherOptions = this.mfForm.get('researcher').valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      map(value => this.service.fieldOptions.filterOptionsContaining('researcher', value))
-    );
-
-    this.filteredPIOptions = this.mfForm.get('pi').valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      map(value => this.service.fieldOptions.filterOptionsContaining('pi', value))
-    );
 
     // the mutation filter can be a specific MutationDto or a string.
     this.mutationFilterFC.valueChanges.pipe(

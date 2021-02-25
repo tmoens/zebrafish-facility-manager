@@ -8,14 +8,14 @@ import {map} from 'rxjs/operators';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
 import {Observable} from 'rxjs';
 import {AppStateService, ZFToolStates} from '../app-state.service';
-import {plainToClass} from "class-transformer";
-import {ZFTypes} from "../helpers/zf-types";
-import {Router} from "@angular/router";
-import {AuthService} from "../auth/auth.service";
-import {StockDto} from "./dto/stock-dto";
-import {StockFullDto} from "./dto/stock-full-dto";
-import {MutationDto} from "../mutation-manager/mutation-dto";
-import {TransgeneDto} from "../transgene-manager/transgene-dto";
+import {plainToClass} from 'class-transformer';
+import {ZFTypes} from '../helpers/zf-types';
+import {Router} from '@angular/router';
+import {AuthService} from '../auth/auth.service';
+import {StockDto} from './dto/stock-dto';
+import {StockFullDto} from './dto/stock-full-dto';
+import {MutationDto} from '../mutation-manager/mutation-dto';
+import {TransgeneDto} from '../transgene-manager/transgene-dto';
 
 /**
  * This is the model for stock information displayed in the GUI.
@@ -51,8 +51,6 @@ export class StockService extends ZFGenericService<
       this.setFilter(filter);
     }
     this._fieldOptions = new FieldOptions({
-      'researcher': [],
-      'pi': [],
     });
 
     // We cannot really initialize until the user logs in because we will not have the
@@ -111,7 +109,6 @@ export class StockService extends ZFGenericService<
     return Number(this.likelyNextName);
   }
 
-  // TODO fix file names
   // To make the excel report happen, you gotta go get all stocks that meet the current filter
   getStockReport() {
     this.loader.getReport(ZFTypes.STOCK, this.filter)
@@ -173,7 +170,6 @@ export class StockService extends ZFGenericService<
   }
 
   dataCleanlinessReport() {
-    super.dataCleanlinessReport(['researcher', 'pi'], 'StockDataCleanliness');
+    super.dataCleanlinessReport([], 'StockDataCleanliness');
   }
-
 }

@@ -13,8 +13,6 @@ export class StockFullDto extends ZfGenericDto {
   subNumber: number = null;
   description: string = null;
   fertilizationDate: string = null;
-  pi: string = null;
-  researcher: string = null;
   matIdInternal: number = null;
   externalMatId: string = null;
   externalMatDescription: string = null;

@@ -65,6 +65,8 @@ export class Stock {
   })
   fertilizationDate: string;
 
+  // No longer in use as the PI is now a reference to a User object.
+  @Exclude()
   @Column({
     nullable: true,
     comment: 'Primary investigator for this stock.',
@@ -78,7 +80,8 @@ export class Stock {
   })
   piUser: User;
 
-
+  // No longer in use as the PI is now a reference to a User object.
+  @Exclude()
   @Column({
     nullable: true,
     comment: 'Who the stock is for.',

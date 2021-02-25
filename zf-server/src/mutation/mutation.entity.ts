@@ -29,11 +29,13 @@ export class Mutation {
   })
   nickname: string;
 
-  // TODO The semantics of this field are more like "Source" than researcher
-  // we may change the name in the db at some point.
+  // This field began life as "researcher" field because it was meant to be
+  // used as the researcher interested in the mutation.  However, it evolved
+  // to be come "the place or person we got the mutation from originally"
+  // The UI calls it "source", but we did not change the db schema.
   @Column({
     nullable: true,
-    comment: 'Researcher or owner of this mutation.',
+    comment: 'The source (researcher/lab/organization) of this mutation.',
   })
   researcher: string;
 

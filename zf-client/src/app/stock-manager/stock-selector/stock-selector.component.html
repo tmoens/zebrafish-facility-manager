@@ -27,17 +27,6 @@
         </mat-form-field>
 
         <mat-form-field>
-          <label>
-            <input [matAutocomplete]="autoResearcher" formControlName="researcher" matInput placeholder="Researcher"
-                   type="text">
-          </label>
-          <button *ngIf="getFC('researcher').value" mat-button mat-icon-button matSuffix type=button
-                  (click)="clearFormControl('researcher')">
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-form-field>
-
-        <mat-form-field>
           <mat-select formControlName="researcherId" placeholder="Researcher">
             <mat-option [value]=null>--None--</mat-option>
             <mat-option *ngFor="let option of researchers" [value]="option.id">
@@ -66,17 +55,6 @@
           </label>
           <button *ngIf="getFC('text').value" mat-button mat-icon-button matSuffix type=button
                   (click)="clearFormControl('text')">
-            <mat-icon>close</mat-icon>
-          </button>
-        </mat-form-field>
-
-        <mat-form-field *ngIf="!appState.facilityConfig.hidePI">
-          <label>
-            <input [matAutocomplete]="autoPI" formControlName="pi" matInput placeholder="Primary Investigator"
-                   type="text">
-          </label>
-          <button (click)="clearFormControl('pi')" *ngIf="getFC('pi').value" mat-button mat-icon-button matSuffix
-                  type=button>
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
@@ -154,18 +132,6 @@
 
 
 <!-- Auto completes sent down here for easier reading of code-->
-<mat-autocomplete #autoResearcher="matAutocomplete">
-  <mat-option *ngFor="let option of filteredResearcherOptions | async" [value]="option">
-    {{option}}
-  </mat-option>
-</mat-autocomplete>
-
-<mat-autocomplete #autoPI="matAutocomplete">
-  <mat-option *ngFor="let option of filteredPIOptions | async" [value]="option">
-    {{option}}
-  </mat-option>
-</mat-autocomplete>
-
 <mat-autocomplete #autoMutation="matAutocomplete">
   <mat-option *ngFor="let option of filteredMutationOptions" [value]="option">
     <div>{{option.fullName}}</div>
@@ -181,7 +147,6 @@
     <div class="option-detail">
       <span *ngIf="option.plasmid">plasmid: {{option.plasmid}}</span>
       <span *ngIf="option.comment">{{option.comment}}</span>
-
     </div>
   </mat-option>
 </mat-autocomplete>

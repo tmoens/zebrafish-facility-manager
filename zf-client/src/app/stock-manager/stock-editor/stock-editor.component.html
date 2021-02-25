@@ -34,27 +34,12 @@
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
           <mat-form-field *ngIf="!appState.facilityConfig.hidePI">
-            <label>
-              <input (keyup)="onPIChange()" [(ngModel)]="stock.pi" [matAutocomplete]="autoPI" matInput maxlength="25"
-                     name="pi" placeholder="Primary Investigator"
-                     type="text">
-            </label>
-          </mat-form-field>
-          <mat-form-field *ngIf="!appState.facilityConfig.hidePI">
             <mat-select [(ngModel)]="stock.piUser" name="piUser" placeholder="Primary Investigator">
               <mat-option [value]=null>--None--</mat-option>
               <mat-option *ngFor="let option of pis" [value]="option">
                 <div>{{option.name}}</div>
               </mat-option>
             </mat-select>
-          </mat-form-field>
-          <mat-form-field>
-            <label>
-              <input (keyup)="onResearcherChange()" [(ngModel)]="stock.researcher" [matAutocomplete]="autoResearcher"
-                     matInput maxlength="20"
-                     name="researcher" placeholder="Researcher"
-                     type="text">
-            </label>
           </mat-form-field>
           <mat-form-field>
             <mat-select [(ngModel)]="stock.researcherUser" name="researcherUser" placeholder="Researcher">
@@ -184,15 +169,3 @@
     </form>
   </div>
 </div>
-
-<mat-autocomplete #autoResearcher="matAutocomplete">
-  <mat-option *ngFor="let option of filteredResearcherOptions" [value]="option">
-    {{option}}
-  </mat-option>
-</mat-autocomplete>
-
-<mat-autocomplete #autoPI="matAutocomplete">
-  <mat-option *ngFor="let option of filteredPIOptions" [value]="option">
-    {{option}}
-  </mat-option>
-</mat-autocomplete>

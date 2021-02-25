@@ -49,11 +49,7 @@ export class StockEditorComponent implements OnInit {
   momInternal: boolean = true;
   dadInternal: boolean = true;
 
-  // the list of known researchers that match what has been entered in
-  // the researcher field so far
-  filteredResearcherOptions: string[];
-  filteredPIOptions: string[];
-
+  // list of primary investigators and researcher that can be used for the stock.
   pis: UserDTO[];
   researchers: UserDTO[];
 
@@ -201,24 +197,10 @@ export class StockEditorComponent implements OnInit {
     } else {
       this.fertilizationDate = null;
     }
-
-    this.filteredResearcherOptions =
-      this.service.fieldOptions.filterOptionsContaining('researcher', this.stock.researcher);
-    this.filteredPIOptions =
-      this.service.fieldOptions.filterOptionsContaining('pi', this.stock.pi);
   }
 
   onFertilizationDateChange() {
     this.stock.fertilizationDate = this.fertilizationDate.toISOString().substr(0,10);
-  }
-  onResearcherChange() {
-    this.filteredResearcherOptions =
-      this.service.fieldOptions.filterOptionsContaining('researcher', this.stock.researcher);
-  }
-
-  onPIChange() {
-    this.filteredPIOptions =
-      this.service.fieldOptions.filterOptionsContaining('pi', this.stock.pi);
   }
 
   onSetMatStock() {
@@ -311,8 +293,6 @@ export class StockEditorComponent implements OnInit {
       case EditMode.EDIT:
         if (
           this.stock.description !== this.initialStock.description ||
-          this.stock.pi !== this.initialStock.pi ||
-          this.stock.researcher !== this.initialStock.researcher ||
           this.stock.fertilizationDate !== this.initialStock.fertilizationDate ||
           this.stock.comment !== this.initialStock.comment) {
           return false;
@@ -365,8 +345,6 @@ export class StockEditorComponent implements OnInit {
       case EditMode.CREATE_NEXT:
         // because most of the fields start as empty, if anything is in them, it's touched.
         return !(this.stock.description ||
-          this.stock.pi ||
-          this.stock.researcher ||
           this.stock.fertilizationDate ||
           this.stock.comment ||
           !this.momInternal ||

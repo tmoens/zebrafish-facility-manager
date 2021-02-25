@@ -178,7 +178,6 @@ export class UserService {
     return this.repo.save(u);
   }
 
-  // TODO convey the new password to the user.
   async resetPassword(dto: ResetPasswordDTO): Promise<User> {
     const u: User = await this.findByUsernameOrEmail(dto.usernameOrEmail);
     if (!u) {

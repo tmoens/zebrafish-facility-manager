@@ -2,6 +2,7 @@ import {MutationDto} from '../../mutation-manager/mutation-dto';
 import {TransgeneDto} from '../../transgene-manager/transgene-dto';
 import {StockDto} from './stock-dto';
 import {ZfGenericDto} from '../../zf-generic/zfgeneric-dto';
+import {UserDTO} from '../../auth/UserDTO';
 
 // This is like the stockFullDto, but it does not include the offspring
 // or swimmers for the stock.
@@ -14,8 +15,6 @@ export class StockMediumDto extends ZfGenericDto {
   subNumber: number = null;
   description: string = null;
   fertilizationDate: string = null;
-  pi: string = null;
-  researcher: string = null;
   matIdInternal: number = null;
   externalMatId: string = null;
   externalMatDescription: string = null;
@@ -30,6 +29,8 @@ export class StockMediumDto extends ZfGenericDto {
   offspringCount: number = null;
   nextSubStockNumber: number = null;
   parentsEditable: boolean = false;
+  researcherUser: UserDTO = null;
+  piUser: UserDTO = null;
 }
 
 
