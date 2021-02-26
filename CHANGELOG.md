@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.0.2...v2.1.0) (2021-02-26)
+
+
+### Features
+
+* **doc:** Add user documentation ([059d5a7](https://github.com/tmoens/zebrafish-facility-manager/commit/059d5a713274b30967fe10a52d4abe96532579a7))
+
 ### [2.0.2](https://github.com/tmoens/zebrafish-facility-manager/compare/v0.0.4...v2.0.2) (2021-02-26)
 
 
