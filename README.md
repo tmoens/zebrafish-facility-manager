@@ -34,7 +34,7 @@ It also provides reports to support things like auditing a zebrafish facility.
 
 ## Deploying the system
 
-There are a lot of moving parts to this system so the deployment itself is quite
+There are a lot of moving parts to this system, so the deployment itself is quite
 a lot of work.  Follow the [Deplyoment Guide](Deployment.md) to learn how to deploy the system.
 
 A single deployment can be used to manage several zebrafish facilities.
@@ -55,5 +55,3 @@ for each facility.
 - [TypeORM](https://typeorm.delightful.studio/) provides the orm
 - [MariaDB](https://mariadb.com/) is used by default
 
-## TODO
-After each step add a little something to say how to verify that you did it right.

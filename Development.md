@@ -1,37 +1,42 @@
 #Zebrafish Facility Manager Development
 
-If you are developing, I don't need to hold your hand.  Pretty much everything goes as per
-the normal deployment environment.  However, there are a few things to be aware of.
+If you are developing, I don't need to hold your hand.  
+Its a prerequisite of this document that you read the production deployment documentation.
+Pretty much everything goes as per the normal deployment environment.  
+However, there are a few things to be aware of.
 
 ## Running in Development mode on localhost
 
 ### Running the client
 
-You are going to be running the client with ng serve which will mean it 
-is running at http://localhost:some_port and every time you save the code,
+You are going to be running the client with 
+```
+ng serve
+```
+which will mean it is running at http://localhost:some_port
+and every time you save the code,
 Angular rebuilds and runs it for you.
 
 #### Where to put the client's *facility config file*
 
-In production the client gets its facility configuration from a file in
+In production, the client gets its facility configuration from a file in
 /your_deployment_root/zf-client/facility-config/facility_sub_domain.json
 
 This works really well because supporting a new facility does not require
 a new instance of the zf-client, nor worse, a recompile.
 
-However, in development the client is not running in a proper subdomain, but is running at
-http://localhost:some_port_number.  Which means the convention for naming the
-client's facility config file will not work because the client's domain name has a colon in it.
+However, during development the client is not running in a proper subdomain,
+but is running at http://localhost:the_port_you_configured.
+This means the convention for naming the client's facility config file will
+not work because the client's domain name has a colon in it.
 
 So if running in development, the code automatically looks for a facility config
-file here: /localhost:some_port/zf-client/facility-config/development.json
+file here: /your_deployment_root/zf-client/facility-config/development.json
 
-So if you need to make changes to the client's facility configuration during development,
+If you need to make changes to the client's facility configuration during development,
 that's the place to do it.
 
 ### Running the server
-
-During development there are a couple of things to be aware of.
 
 In production, the client expects the server to be at
 facility_sub_domain/zf-server.
@@ -52,11 +57,26 @@ export FACILITY=some_facility_name
 npm run start:dev
 ```
 
+You can equally well run the server from within your IDE, even in debug mode.
+This is fine and normal, just make sure that the configuration for running it
+includes setting the FACILITY environment variable to match a configuration file
+int the server's environment directory.
+
 Note that during development there are some corners being cut!
 
-1. You do not need an Apache server to be set up, the client talks directly to the server.
-1. We have to use http rather than https, so take a little care to validate the server is
-doing the right thing in production.
+1. You do not need an Apache vhost to be set up to redirect client traffic
+   to the server. The client talks directly to the server on port 3005.
+1. We use http rather than https, between the client and server so take
+   a little care to validate the server is doing the right thing in production.
+   
+### Running the Documentation
+
+Go to the zf-docs directory.  
+You can build and deploy the documentation as per production, but you can also use:
+```
+mkdocs serve
+```
+Which will constantly rebuild your documentation and run it at localhost:8000.
 
 ## Running in Production Mode locally
 

@@ -1,0 +1,12 @@
+site_name: Zebrafish Facility Manager
+
+nav:
+  - User Documentation: index.md
+  - Stocks and Substocks: stocks.md
+  - Mutations and Transgenes: mutations.md
+  - Release Notes: release-history.md
+
+theme:
+  name: material
+  features:
+    - navigation.instant
