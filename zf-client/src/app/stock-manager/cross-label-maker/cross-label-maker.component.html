@@ -7,7 +7,7 @@
 
     <!-- Researcher -->
     <mat-form-field>
-      <mat-select (ngModelChange)="onSelectResearcher()" [(ngModel)]="researcherId" name="researcherId"
+      <mat-select (ngModelChange)="onSelectResearcher($event)" [(ngModel)]="researcherId" name="researcherId"
                   placeholder="Researcher"
                   required>
         <mat-option [value]=null>--None--</mat-option>

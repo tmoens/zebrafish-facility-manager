@@ -40,15 +40,15 @@ export class CrossLabelMakerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // The default researcher is the one who is logged in.
+    this.researcherId = this.authService.loggedInUserId();
+
     // Get a list of active researchers to populate researcher selection menu
     this.authApiService.getUsersByType('ACTIVE_RESEARCHER')
       .subscribe((data: UserDTO[]) => {
         this.researchers = data;
-        this.onSelectResearcher();
+        this.onSelectResearcher(this.researcherId);
       });
-
-    // The default researcher is the one who is logged in.
-    this.researcherId = this.authService.loggedInUserId();
 
     // The default date is today
     this.crossLabel.dateString = this.date.toISOString().substr(0, 10);
@@ -72,10 +72,10 @@ export class CrossLabelMakerComponent implements OnInit {
     this.crossLabel.fontFamily = this.appState.facilityConfig.labelPrintingDefaults.fontFamily;
   }
 
-  onSelectResearcher() {
+  onSelectResearcher(researcherId: string) {
     this.crossLabel.researcherName = '';
     this.researchers.map((r: UserDTO) => {
-      if (r.id === this.researcherId) {
+      if (r.id === researcherId) {
         this.crossLabel.researcherName = r.name;
       }
     })
