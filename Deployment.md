@@ -141,6 +141,30 @@ The result of this operation will be a directory called /dist/zf-client.
 You need to deploy the directory to your Web Server.  Assuming the
 root of your web server is _/var/www/_, just deploy zf-client directory there.
 
+### zf-user-docs
+
+The user doumentation describes best parctices for using the zebrafish facility management application.
+It is written in MarkDown and built into a static HTML website using [MkDocs](https://mkdocs.org).
+MkDocs is written in Python, so you will need to install that inorder to build the documentation.
+The installation process is documented [here](https://mkdocs.org/#installation);
+
+Once that's done, you build the website:
+
+```shell
+# navigate to the root of the repository
+cd zf-user-docs
+mkdocs build
+```
+
+This generates (or overwrites) the /site directory in zf-usage-docs.
+The /site directory is straight HTML, so I won't go into how to deploy
+it - you just have to copy the content to an appropriate directory
+on a web host.
+You will later be required to configure each facility server with a link
+to the documentation in its configuration file.
+There is nothing facility specific in the documentation so all servers
+can be associated with the same doc site.
+
 ## GMAIL Sender
 
 The application needs to send emails. Example:
