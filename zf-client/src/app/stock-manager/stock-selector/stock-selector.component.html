@@ -28,7 +28,7 @@
 
         <mat-form-field>
           <mat-select formControlName="researcherId" placeholder="Researcher">
-            <mat-option [value]=null>--None--</mat-option>
+            <mat-option [value]=null>--Any--</mat-option>
             <mat-option *ngFor="let option of researchers" [value]="option.id">
               <div>{{option.name}}</div>
             </mat-option>
@@ -61,7 +61,7 @@
 
         <mat-form-field *ngIf="!appState.facilityConfig.hidePI">
           <mat-select formControlName="piId" placeholder="Primary Investigator">
-            <mat-option [value]=null>--None--</mat-option>
+            <mat-option [value]=null>--Any--</mat-option>
             <mat-option *ngFor="let option of pis" [value]="option.id">
               <div>{{option.name}}</div>
             </mat-option>
