@@ -7,16 +7,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* **GUI:** reseacher seelection not properly updating researche on cross-label ([e28b4d4](https://github.com/tmoens/zebrafish-facility-manager/commit/e28b4d441d6305325a4d2366387e0423b2aa1e19))
-* **GUI:** Stock filter for any researcher chaned to ANY not NONE. PI too ([a3d714f](https://github.com/tmoens/zebrafish-facility-manager/commit/a3d714ff548846291903e6384bc938d5f2df1fbc))
+* **GUI:** reseacher selection not properly updating researcher on cross-label ([e28b4d4](https://github.com/tmoens/zebrafish-facility-manager/commit/e28b4d441d6305325a4d2366387e0423b2aa1e19))
+* **GUI:** Stock filter for any researcher changed to ANY not NONE. PI too ([a3d714f](https://github.com/tmoens/zebrafish-facility-manager/commit/a3d714ff548846291903e6384bc938d5f2df1fbc))
 
-### [2.1.1](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.1.0...v2.1.1) (2021-02-27)
-
-
-### Bug Fixes
-
-* **GUI:** reseacher seelection not properly updating researche on cross-label ([e28b4d4](https://github.com/tmoens/zebrafish-facility-manager/commit/e28b4d441d6305325a4d2366387e0423b2aa1e19))
-* **GUI:** Stock filter for any researcher chaned to ANY not NONE. PI too ([a3d714f](https://github.com/tmoens/zebrafish-facility-manager/commit/a3d714ff548846291903e6384bc938d5f2df1fbc))
 
 ## [2.1.0](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.0.2...v2.1.0) (2021-02-26)
 

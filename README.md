@@ -32,17 +32,41 @@ so that absolute consistency is maintained throughout the system.
 
 It also provides reports to support things like auditing a zebrafish facility.
 
+## Deployment Documentation
+
+The deployment documentation is written in markdown. You can use it as is.
+Alternately you use [MkDocs](https://mkdocs.org) to build a static doc site
+complete with nice navigation.
+
+MkDocs is written in Python, so you will need to install Python3 (and pip) inorder to build the documentation.
+The installation process is documented [here](https://mkdocs.org/#installation);
+
+I also use the mkdocs-material theme, so you will have to install that too.
+See [here](https://squidfunk.github.io/mkdocs-material/getting-started/#with-pip)
+
+Once that's done, you build the documentation website:
+
+```shell
+# navigate to the root of the repository
+cd /var/www/zfm/staging/zebrafish-facility-manager/zf-deployment-docs
+mkdocs build
+```
+
+This generates (or overwrites) the /site sub-directory in zf-deployment-docs.
+The /site directory is straight HTML, so I won't go into detail on how to deploy
+it.
+
 ## Deploying the system
 
 There are a lot of moving parts to this system, so the deployment itself is quite
-a lot of work.  Follow the [Deplyoment Guide](Deployment.md) to learn how to deploy the system.
+a lot of work.  Follow the [InitialDeplyoment Guide](zf-deployment-docs/docs/InitialDeployment.md) to learn how to deploy the system.
 
 A single deployment can be used to manage several zebrafish facilities.
 
 ## Per Facility Configuration
 
 Once your system is deployed, you need to configure it for each facility you want to manage.
-Follow the [Facility ConfigurationGuide](PerFacility.md) to learn how to configure the system
+Follow the [Facility ConfigurationGuide](zf-deployment-docs/docs/PerFacility.md) to learn how to configure the system
 for each facility.
 
 ## License

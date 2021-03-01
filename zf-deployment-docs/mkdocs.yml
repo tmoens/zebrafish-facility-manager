@@ -1,0 +1,12 @@
+site_name: Zebrafish Facility Manager Deployment Docs
+
+nav:
+  - Zebrafish Facility Management: index.md
+  - Initial Deployment Guide: InitialDeployment.md
+  - Per Facility Guide: PerFacility.md
+  - Update: Update.md
+
+theme:
+  name: material
+  features:
+    - navigation.instant
