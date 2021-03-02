@@ -110,14 +110,16 @@
 
           <!-- Mom -->
           <div *ngIf="mom" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
-            <div fxFlex="18%">M:{{crossLabel.momName}}</div>
+            <div fxFlex="4%"><mat-icon>female</mat-icon></div>
+            <div fxFlex="14%">{{crossLabel.momName}}</div>
             <div fxFlex>{{crossLabel.momLabelDescription}}</div>
             <div *ngIf="crossLabel.momTank" fxFlex="15%">T:{{crossLabel.momTank}}</div>
           </div>
 
           <!-- Dad -->
           <div *ngIf="dad" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
-            <div fxFlex="18%">F:{{crossLabel.dadName}}</div>
+            <div fxFlex="4%"><mat-icon>male</mat-icon></div>
+            <div fxFlex="14%">{{crossLabel.dadName}}</div>
             <div fxFlex>{{crossLabel.dadLabelDescription}}</div>
             <div *ngIf="crossLabel.dadTank" fxFlex="15%">T:{{crossLabel.dadTank}}</div>
           </div>
