@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.1.3...v2.2.0) (2021-03-03)
+
+
+### Features
+
+* **config:** Remove client configuration files, all configuration loaded by server ([3fa438d](https://github.com/tmoens/zebrafish-facility-manager/commit/3fa438dd53ed01fd096ed3e7846a4c57a12845db))
+
 ### [2.1.3](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.1.2...v2.1.3) (2021-03-02)
 
 ### [2.1.2](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.1.0...v2.1.2) (2021-02-27)
