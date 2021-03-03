@@ -5,6 +5,7 @@ import {TypeOrmModuleOptions, TypeOrmOptionsFactory} from '@nestjs/typeorm';
 import {LoggerOptions} from 'typeorm/logger/LoggerOptions';
 import {MailerOptions, MailerOptionsFactory} from "@nestjs-modules/mailer";
 import {HandlebarsAdapter} from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
+import {ClientConfig} from '../common/config/client-config';
 
 export interface EnvConfig {
   [prop: string]: string;
@@ -109,7 +110,7 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
       DB_USER: Joi.string().required(),
       DB_PASSWORD: Joi.string().required(),
 
-      TYPEORM_SYNC_DATABASE: Joi.boolean().default(false),
+      TYPEORM_SYNC_DATABASE: Joi.boolean().default(true),
       TYPEORM_LOG_QUERIES: Joi.boolean().default(false),
 
       JWT_SECRET: Joi.string().required(),
@@ -123,6 +124,24 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
       DEFAULT_ADMIN_USER_PASSWORD: Joi.string().required(),
 
       BEST_PRACTICES_SITE: Joi.string().default('https://zebrafishfacilitymanager.com'),
+
+      HIDE_PRIMARY_INVESTIGATOR: Joi.boolean().default(false),
+      TANK_NUMBERING_HINT: Joi.string().default('Tank numbering hint not configured'),
+      LABEL_FONT_SIZE: Joi.number().default(11),
+      LABEL_FONT_FAMILY: Joi.string().default('Helvetica'),
+      LABEL_HEIGHT_IN_INCHES: Joi.number().default(1.25),
+      LABEL_WIDTH_IN_INCHES: Joi.number().default(3.5),
+      LABEL_SHOW_QR_CODE: Joi.boolean().default(true),
+      LABEL_SHOW_STOCK_NUMBER: Joi.boolean().default(true),
+      LABEL_SHOW_PRIMARY_INVESTIGATOR_NAME: Joi.boolean().default(false),
+      LABEL_SHOW_PRIMARY_INVESTIGATOR_INITIALS: Joi.boolean().default(true),
+      LABEL_SHOW_RESEARCHER_NAME: Joi.boolean().default(true),
+      LABEL_SHOW_RESEARCHER_INITIALS: Joi.boolean().default(false),
+      LABEL_SHOW_FERTILIZATION_DATE: Joi.boolean().default(true),
+      LABEL_SHOW_DESCRIPTION: Joi.boolean().default(true),
+      LABEL_SHOW_MUTATIONS: Joi.boolean().default(true),
+      LABEL_SHOW_TRANSGENES: Joi.boolean().default(true),
+      LABEL_SHOW_ADDITIONAL_NOTES: Joi.boolean().default(true),
     });
 
     const {error, value: validatedEnvConfig} = envVarsSchema.validate(
@@ -174,5 +193,30 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
         },
       },
     }
+  }
+
+  // This is used to build a ClientConfig object to send to the client
+  get clientConfig(): ClientConfig {
+    const c = new ClientConfig();
+    c.facilityName = this.envConfig.FACILITY_NAME;
+    c.facilityAbbrv = this.envConfig.FACILITY_SHORT_NAME;
+    c.hidePI = Boolean(this.envConfig.HIDE_PRIMARY_INVESTIGATOR);
+    c.tankNumberingHint = this.envConfig.TANK_NUMBERING_HINT;
+    c.labelPrinting.fontPointSize = Number(this.envConfig.LABEL_FONT_SIZE);
+    c.labelPrinting.fontFamily = this.envConfig.LABEL_FONT_FAMILY;
+    c.labelPrinting.heightInInches = Number(this.envConfig.LABEL_HEIGHT_IN_INCHES);
+    c.labelPrinting.widthInInches = Number(this.envConfig.LABEL_WIDTH_IN_INCHES);
+    c.tankLabel.showQrCode = Boolean(this.envConfig.LABEL_SHOW_QR_CODE);
+    c.tankLabel.showStockNumber = Boolean(this.envConfig.LABEL_SHOW_STOCK_NUMBER);
+    c.tankLabel.showPiName = Boolean(this.envConfig.LABEL_SHOW_PRIMARY_INVESTIGATOR_NAME);
+    c.tankLabel.showPiInitials = Boolean(this.envConfig.LABEL_SHOW_PRIMARY_INVESTIGATOR_INITIALS);
+    c.tankLabel.showResearcherName= Boolean(this.envConfig.LABEL_SHOW_RESEARCHER_NAME);
+    c.tankLabel.showResearcherInitials = Boolean(this.envConfig.LABEL_SHOW_RESEARCHER_INITIALS);
+    c.tankLabel.showFertilizationDate = Boolean(this.envConfig.LABEL_SHOW_FERTILIZATION_DATE);
+    c.tankLabel.showDescription = Boolean(this.envConfig.LABEL_SHOW_DESCRIPTION);
+    c.tankLabel.showMutations = Boolean(this.envConfig.LABEL_SHOW_MUTATIONS);
+    c.tankLabel.showTransgenes = Boolean(this.envConfig.LABEL_SHOW_TRANSGENES);
+    c.tankLabel.showAdditionalNote = Boolean(this.envConfig.LABEL_SHOW_ADDITIONAL_NOTES);
+    return c;
   }
 }

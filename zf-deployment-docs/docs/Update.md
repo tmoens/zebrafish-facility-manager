@@ -103,9 +103,9 @@ will not be working at all.
 
 ## Migrate Configuration Files
 
-You have to copy client and server config files from the live system to the staging system.
+You have to copy config files from the live system to the staging system.
 
-If there have been changes to the format of the configuration files or an expansion
+If there have been changes to the format of the configuration file or an expansion
 of the available configuration knobs and buttons, now is the time to edit
 the configuration files. See the Per Facility guide for details on config files.
 
@@ -113,7 +113,6 @@ the configuration files. See the Per Facility guide for details on config files.
 # from the root of the staging build, 
 # copy the config files from live system to the staging system.
 cd /var/www/staging/zebrafish-facility-manager
-cp ../../live/zebrafish-facility-manager/zf-client/src/facility-config/*.json zf-client/src/facility-config
 cp ../../live/zebrafish-facility-manager/zf-server/environments/*.env zf-server/environments
 ```
 
@@ -127,9 +126,6 @@ npm run build
 ```
 
 ### zf-client build
-
-Make sure you edit client configuration files *before* you build the client because the build process
-deploys the configuration files.
 
 ```shell
 # navigate to the the zf-client sub-directory
@@ -149,13 +145,14 @@ sudo cp -R zf-client /var/www/zfm/staging
 ```
 
 At this point in the proceeding there is a new client available.
-Because we use the logical "staging" directory to configure the documentation
-root for all the facilities that use the "staging" build, all those facilities
-should now have a working client - but those clients have no servers to talk to.
+Because we use the logical "staging" directory to configure the
+DocumentationRoot for all the facilities that use the "staging" build,
+all those facilities should now have a working client - but those
+clients have no servers to talk to.
 
 ### Restart any facility servers that use the "staging" build
 
-Double check that you are happy with both the client and server config files for each facility that
+Double check that you are happy with the config files for each facility that
 uses the staging build.
 
 You now need to restart the servers that rely on the staging build (i.e. the ones you stopped earlier)
@@ -197,32 +194,15 @@ This process can be quite quick and have very little impact on your customers.
 Because all your "live" facilities will be working off the same zf-server executable,
 you are going to migrate all the "live" facilities at once.
 
+Make sure that you are happy with the config files for all the facilities that use the
+"live" build.
+
 ### Schedule a date and inform your customers
 
 Make sure that they know there is going to be an update and tell them what kind of outage they can
 expect.
 
 The upgrade should only take a couple of minutes, especially if you write some scripts to help.
-
-### Edit config files, if necessary
-
-Even if the new release introduces a new configuration knob, you generally only need to change
-configuration files for facilities that want to use something other than the default setting
-for the knob.
-
-With that said, you should do any required editing now.
-
----
-**Note**
-
-Because the client configuration files are copied to the deployment
-directory system during the build,
-you should rerun the client build and copy the resulting dist/zf-client
-directory as described above if you change any client config files.
-Alternately you can skip the build and just copy the config files
-from the src directory to the dist
-directory and then on to the deployment directory if you want.
----
 
 ### Server - Stop all running services you have.
 

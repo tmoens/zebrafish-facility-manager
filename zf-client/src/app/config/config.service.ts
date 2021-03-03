@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import {ConfigModel} from './config-model';
+import {ClientConfig} from '../common/config/client-config';
 import {HttpBackend, HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {AppStateService} from '../app-state.service';
 import {plainToClassFromExist} from 'class-transformer';
+import {LoaderService} from '../loader.service';
 
 /*
  * This service loads configuration information for a particular zebrafish facility.
@@ -23,46 +24,21 @@ import {plainToClassFromExist} from 'class-transformer';
 })
 export class ConfigService {
 
-  public config: ConfigModel = null;
-  private http: HttpClient;
+  public config: ClientConfig = null;
 
-  // Note that the use of HttpBackend here is done specifically to
-  // avoid the AuthTokenInterceptor being fired before configuration is loaded.
   constructor(
-    private handler: HttpBackend,
     private appStateService: AppStateService,
+    private loader: LoaderService,
   ) {
-    this.http = new HttpClient(handler);
-  }
-
-  public getConfig(): ConfigModel {
-    return this.config;
+    this.appStateService.facilityConfig = new ClientConfig();
   }
 
   // Load the facility specific client configuration data.
   // I hope the fields are self-explanatory.
   load() {
-    return new Promise((resolve, reject) => {
-      let url: string;
-      if (environment.production) {
-        url = location.origin + '/facility-config/' + location.host + '.json';
-      } else {
-        url = location.origin + '/facility-config/development.json';
-      }
-      this.http
-        .get(url)
-        .subscribe((facilityConfig: ConfigModel) => {
-          // Get the default configuration data
-          const defaultConfig = new ConfigModel();
-
-          // Merge in the data from the facility specific configuration
-          facilityConfig = plainToClassFromExist(defaultConfig, facilityConfig);
-
-          // Put the whole default facility config in the appState as a first class object.
-          this.appStateService.facilityConfig = facilityConfig;
-
-          resolve(true);
-        })
-    })
+    this.loader.getClientConfig().subscribe((config: ClientConfig) => {
+      console.log(JSON.stringify(config, null, 2));
+      this.appStateService.facilityConfig = config
+    });
   }
 }

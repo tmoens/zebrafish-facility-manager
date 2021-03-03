@@ -168,8 +168,4 @@ export class StockService extends ZFGenericService<
   getStockWalkerList(): Observable<any> {
     return this.loader.getTankWalkerList(this.filter)
   }
-
-  dataCleanlinessReport() {
-    super.dataCleanlinessReport([], 'StockDataCleanliness');
-  }
 }

@@ -9,6 +9,7 @@ import {ZFTypes} from './helpers/zf-types';
 import {Router} from '@angular/router';
 import {AuthService} from './auth/auth.service';
 import {StockFullDto} from './stock-manager/dto/stock-full-dto';
+import {ClientConfig} from './common/config/client-config';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,14 @@ export class LoaderService {
     } else {
       this.serverURL = 'http://localhost:3005';
     }
+  }
+
+  // get client configuration from the server, if it fails return a default config object.
+  getClientConfig(): Observable<any> {
+    return this.http.get(this.serverURL + '/app/clientConfig')
+      .pipe(
+        catchError(this.handleError('Loading client configuration', new ClientConfig()))
+      );
   }
 
   getFilteredList(type: ZFTypes, filter: any): Observable<any> {

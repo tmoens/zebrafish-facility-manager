@@ -1,7 +1,7 @@
-import {LabelPrintingConfig} from '../label-printing-config';
-import {TankLabelConfig} from './tank-label-config';
+import {LabelPrintingConfig} from '../../common/config/label-printing-config';
+import {TankLabelConfig} from '../../common/config/tank-label-config';
 import {classToClass} from 'class-transformer';
-import {ConfigModel} from '../../config/config-model';
+import {ClientConfig} from '../../common/config/client-config';
 
 export class TankLabel {
   printConfig: LabelPrintingConfig;
@@ -19,10 +19,10 @@ export class TankLabel {
   additionalNote: string = null;
 
   constructor(
-    private facilityConfig: ConfigModel,
+    private facilityConfig: ClientConfig,
   ) {
-    this.printConfig = classToClass(this.facilityConfig.labelPrintingDefaults);
-    this.layoutConfig = classToClass(this.facilityConfig.tankLabelLayoutDefaults)
+    this.printConfig = classToClass(this.facilityConfig.labelPrinting);
+    this.layoutConfig = classToClass(this.facilityConfig.tankLabel)
   }
 
 }
