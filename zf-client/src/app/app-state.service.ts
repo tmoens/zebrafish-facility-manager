@@ -50,7 +50,7 @@ export class AppStateService {
   ) {
   }
 
-  // The services refresh their data every hour or so (by default).  There is a random
+  // The services refresh their cache every hour or so (by default).  There is a random
   // stagger of 20 to 70 seconds so that all the services don't refresh simultaneously.
   // This should probably be a configuration constant, but anyway.
   // Even better, we could do this with "push notifications" from the server

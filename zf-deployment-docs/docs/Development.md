@@ -1,9 +1,22 @@
 #Zebrafish Facility Manager Development
 
 If you are developing, I don't need to hold your hand.  
-Its a prerequisite of this document that you read the production deployment documentation.
+It's a prerequisite of this document that you read the production deployment documentation.
 Pretty much everything goes as per the normal deployment environment.  
 However, there are a few things to be aware of.
+
+## Domain Name Service/Apache
+
+You may not have a DNS running in your local environment, but you need host names
+for any facilities you want to run simultaneously.
+There are several ways to do this, but I found that my local router could
+be configured to make a map from a name to a static IP address.
+So, I make sure that any computer that is going to run servers is granted
+a reserved IP addres by DHCP and then I can make as many
+maps to that address as I want.
+
+I also set up apache vhosts for any name I create on my local network and then
+I can set up as many facilities as I want.
 
 ## Running in Development mode on localhost
 

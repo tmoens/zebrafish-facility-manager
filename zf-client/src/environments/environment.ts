@@ -4,9 +4,6 @@
 
 // production is true or false depending on if you want production build
 // or a working build more suitable for debugging.
-
-// configServerPrefix is a URL to which the client will go to get
-// configuration information for a particular zebrafish facility.
 export const environment = {
   production: false,
 };

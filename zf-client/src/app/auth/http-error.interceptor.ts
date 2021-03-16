@@ -23,7 +23,6 @@ export class ErrorInterceptor implements HttpInterceptor {
             {duration: this.appState.errorMessageDuration});
           if (err.status === 401) {
             // auto logout if 401 response returned from api
-            console.log("401");
             this.authService.onLogout();
           }
           const error = err.error.message || err.statusText;

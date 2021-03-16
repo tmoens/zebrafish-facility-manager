@@ -101,7 +101,7 @@ At this point in the proceeding, the staging server has been stopped and there i
 client so any user trying to access the client for any facility that uses the staging build
 will not be working at all.
 
-## Migrate Configuration Files
+### Migrate Configuration Files
 
 You have to copy config files from the live system to the staging system.
 
@@ -191,7 +191,7 @@ Once you are happy, it's time to update the "live" facilities.
 ## Update "live" facilities
 
 This process can be quite quick and have very little impact on your customers.
-Because all your "live" facilities will be working off the same zf-server executable,
+Because all your "live" facilities execute the same zf-server executable,
 you are going to migrate all the "live" facilities at once.
 
 Make sure that you are happy with the config files for all the facilities that use the

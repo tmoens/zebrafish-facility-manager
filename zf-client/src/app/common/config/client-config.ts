@@ -13,4 +13,6 @@ export class ClientConfig {
   labelPrinting: LabelPrintingConfig = new LabelPrintingConfig();
 
   tankLabel: TankLabelConfig = new TankLabelConfig();
+
+  backgroundColor: string = null;
 }

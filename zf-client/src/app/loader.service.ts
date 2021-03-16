@@ -132,7 +132,6 @@ export class LoaderService {
   }
 
   getFieldOptions(type: ZFTypes) {
-    console.log('get field options for ' + type);
     return this.http.get(this.serverURL + '/' + type + '/autoCompleteOptions')
       .pipe(
         catchError(this.handleError(`Get ${type} autocomplete options.`, {}))

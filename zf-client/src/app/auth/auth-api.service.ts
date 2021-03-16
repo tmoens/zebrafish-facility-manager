@@ -69,7 +69,6 @@ export class AuthApiService {
   }
 
   resetPassword(dto: ResetPasswordDTO): Observable<any> {
-    console.log(dto);
     return this.http.put(this.serverURL + '/user/resetPassword', dto)
       .pipe(
         catchError(this.handleError('Reset Password', null))

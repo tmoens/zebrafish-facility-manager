@@ -33,6 +33,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
         }
       });
     } else {
+      // TODO Log this.
       // console.log("No token available for url: " + request.url);
     }
     return next.handle(request).toPromise();
