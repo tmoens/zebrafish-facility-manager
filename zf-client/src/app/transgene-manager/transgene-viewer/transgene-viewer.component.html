@@ -10,12 +10,12 @@
 
 
   <form fxLayout="column" [formGroup]="mfForm">
-    <mat-form-field *ngIf="service.selected.descriptor">
-      <input matInput type="text" placeholder="Construct" formControlName="descriptor">
-    </mat-form-field>
-
     <mat-form-field *ngIf="service.selected.allele">
       <input matInput type="text"  placeholder="Genomic feature name" formControlName="allele">
+    </mat-form-field>
+
+    <mat-form-field *ngIf="service.selected.descriptor">
+      <input matInput type="text" placeholder="Construct" formControlName="descriptor">
     </mat-form-field>
 
     <mat-form-field *ngIf="service.selected.nickname">
@@ -36,12 +36,6 @@
       </textarea>
     </mat-form-field>
 
-    <mat-form-field *ngIf="service.selected.zfinURL">
-      <textarea matInput placeholder="ZFIN URL" formControlName="zfinURL"
-                cdkTextareaAutosize="true"  cdkAutosizeMaxRows="3">
-      </textarea>
-    </mat-form-field>
-
     <mat-form-field *ngIf="service.selected.spermFreezePlan">
       <input matInput type="text" placeholder="Sperm Freeze Plan" formControlName="spermFreezePlan">
     </mat-form-field>
@@ -50,5 +44,8 @@
       <input matInput type="text" placeholder="Number of vials frozen" formControlName="vialsFrozen">
     </mat-form-field>
   </form>
+    <div *ngIf="service.selected.hasExternalLink">
+      <a href="{{service.selected.externalLinkURL}}" target="_blank">View {{service.selected.fullName}} in ZFIN</a>
+    </div>
   </div>
 </div>

@@ -28,6 +28,8 @@ import {MailerModule} from "@nestjs-modules/mailer";
 import {ZFMailerService} from "./mailer/mailer-service";
 import {MutationTypeModule} from './mutation-type/mutation-type.module';
 import {ScreenTypeModule} from './screen-type/screen-type.module';
+import {ZfinModule} from './zfin/zfin.module';
+import {ZfinController} from './zfin/zfin.controller';
 
 
 const rotatingFileLog = new DailyRotateFile({
@@ -57,6 +59,7 @@ const consoleLog = new (winston.transports.Console)({
     TankModule,
     TransgeneModule,
     UserModule,
+    ZfinModule,
     PassportModule,
     TypeOrmModule.forRootAsync(
       {
@@ -92,6 +95,6 @@ export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes(StockController, AuthController, MutationController, TransgeneController, UserController);
+      .forRoutes(StockController, AuthController, MutationController, TransgeneController, UserController, ZfinController);
   }
 }

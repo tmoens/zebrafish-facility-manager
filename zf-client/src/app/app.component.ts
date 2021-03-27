@@ -41,7 +41,6 @@ export class AppComponent implements OnInit{
   }
 
   getStyle(): string {
-    console.log(JSON.stringify(this.appState.facilityConfig,null,2));
     return "backgroundColor: " + this.appState.facilityConfig.backgroundColor;
   }
 }

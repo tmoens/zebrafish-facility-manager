@@ -3,6 +3,7 @@ import {MutationService} from '../mutation.service';
 import {Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {ZFTool} from "../../helpers/zf-tool";
+import {ZFTypes} from '../../helpers/zf-types';
 
 @Component({
   selector: 'app-mutation-menu',
@@ -43,6 +44,11 @@ export class MutationMenuComponent implements OnInit {
   delete() {
     this.service.delete(this.service.selected.id);
   }
+
+  import() {
+    this.router.navigate(['mutation_manager/import/', {zfType: ZFTypes.MUTATION}]);
+  }
+
 
   goToBestPractices(): void {
     window.open('https://zebrafishfacilitymanager.com/mutations');

@@ -62,7 +62,6 @@ describe('TransgeneService testing', () => {
     transgeneRepo = module.get<TransgeneRepository>(TransgeneRepository);
     mutationRepo = module.get<MutationRepository>(MutationRepository);
     service = new TransgeneService(logger, configService, transgeneRepo, mutationRepo);
-    console.log("here");
   });
 
   describe('4974046 creation of "owned" transgenes', () => {

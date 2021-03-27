@@ -5,8 +5,8 @@ import {MutationDto} from "../mutation-dto";
   selector: 'app-mutation-mini-viewer',
   template: `
     <div class="zf-mini-title">{{mutation.fullName}}
-      <span *ngIf="mutation.zfinURL">
-        <a href="{{mutation.zfinURL}}" target="_blank">ZFIN</a>
+      <span *ngIf="mutation.hasExternalLink">
+        <a href="{{mutation.externalLinkURL}}" target="_blank">{{mutation.externalLinkLabel}}</a>
       </span>
     </div>
     <div *ngIf="mutation.nickname" class="zf-mini-row truncate">{{mutation.gene}}^{{mutation.name}}</div>

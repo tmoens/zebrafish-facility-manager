@@ -53,8 +53,7 @@ export class StockEditorComponent implements OnInit {
   pis: UserDTO[];
   researchers: UserDTO[];
 
-  // Model for fertilization date picker.  It uses Dates, the
-  // stock object uses string.
+  // Model for fertilization date picker.  It uses Dates, the stock object uses a string.
   fertilizationDate: Date = null;
 
   // Flag allows deactivation after saving changes.

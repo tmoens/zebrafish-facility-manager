@@ -66,7 +66,6 @@ export class MutationService extends ZFGenericService<MutationDto, MutationDto, 
     this.loader.getScreenTypes().subscribe((mts: ScreenTypeDto[]) => this.screenTypes = mts);
 
     this._fieldOptions = new FieldOptions({
-      'researcher': [],
       'name': [],
       'gene': [],
       'screenType': [],

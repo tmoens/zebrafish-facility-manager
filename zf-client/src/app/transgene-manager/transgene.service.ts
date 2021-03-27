@@ -77,11 +77,12 @@ export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDt
     });
   }
 
-
+  // TODO - should go to the server for this
   uniquenessValidator(name: string): boolean {
     return this._fieldOptions.options.nameValidation.includes(name);
   }
 
+  //TODO Really should go to the server for this
   nicknameIsInUse(nickname: string, exceptingId: number): boolean {
     if (nickname === null) {
       return false;

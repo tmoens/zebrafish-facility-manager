@@ -8,6 +8,8 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {DialogService} from '../../dialog.service';
 import {TransgeneDto} from "../transgene-dto";
+import {LoaderService} from '../../loader.service';
+import {ZfinTransgeneDto} from '../../common/zfin/zfin-transgene.dto';
 
 @Component({
   selector: 'app-transgene-editor',
@@ -20,7 +22,14 @@ export class TransgeneEditorComponent implements OnInit {
   id: number;
   saved = false;
 
-  urlPattern = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+  // There is a zfinTransgene AND it differs from our local thoughts on the
+  // transgene - offer the user an update from ZFIN
+  zfinTg: ZfinTransgeneDto;
+  canUpdateFromZfin = false;
+  zfinAlleleHint: string;
+  zfinConstructNameHint: string;
+  zfinIdHint: string;
+  zfinScreenTypeHint: string;
 
   // Build the edit form.
   mfForm = this.fb.group({
@@ -34,7 +43,7 @@ export class TransgeneEditorComponent implements OnInit {
     source: [{value: ''}],
     spermFreezePlan: [''],
     vialsFrozen: [0],
-    zfinURL: [null, Validators.pattern(this.urlPattern)],
+    zfinId: [null],
 
     id: [null],
     isDeletable: [true],
@@ -48,6 +57,7 @@ export class TransgeneEditorComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     public service: TransgeneService,
+    public loader: LoaderService,
     private deactivationDialogService: DialogService,
   ) {
     this.service.enterEditMode();
@@ -70,6 +80,7 @@ export class TransgeneEditorComponent implements OnInit {
               this.mfForm.get('allele').enable();
             }
             this.initialize();
+            this.checkZfin();
           });
           break;
         case EditMode.CREATE:
@@ -84,6 +95,7 @@ export class TransgeneEditorComponent implements OnInit {
           this.editMode = EditMode.CREATE_NEXT;
           this.mfForm.get('allele').disable();
           this.initialize();
+          this.checkZfin();
           break;
         default:
       }
@@ -119,7 +131,7 @@ export class TransgeneEditorComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['transgene_manager/view']);
+    this.router.navigate(['transgene_manager/view']).then();
   }
   revert() {
     this.initialize();
@@ -156,7 +168,7 @@ export class TransgeneEditorComponent implements OnInit {
 
   getUniquenessError() {
     if (this.mfForm.hasError('unique')) {
-      return 'Descriptor + allele must be unique.';
+      return 'Feature name plus construct must be unique.';
     }
   }
 
@@ -181,23 +193,21 @@ export class TransgeneEditorComponent implements OnInit {
     }
   }
 
-  get zfinURLControl() {
-    return this.mfForm.get('zfinURL');
-  }
-
-  getZfinURLError() {
-    if (this.zfinURLControl.hasError('pattern')) {
-      return 'Please enter a valid URL';
-    }
-  }
-
   clearFormControl(name: string) {
-    this.getFC(name).setValue(null);
-    this.getFC(name).markAsDirty();
+    this.getControl(name).setValue(null);
+    this.getControl(name).markAsDirty();
   }
 
-  getFC(name: string): AbstractControl {
+  getControl(name: string): AbstractControl {
     return this.mfForm.get(name);
+  }
+
+  getControlValue(controlName: string) {
+    return this.getControl(controlName).value;
+  }
+
+  setControlValue(controlName: string, value) {
+    return this.getControl(controlName).setValue(value);
   }
 
 
@@ -212,6 +222,54 @@ export class TransgeneEditorComponent implements OnInit {
       return this.deactivationDialogService.confirm('There are unsaved changes to the transgene you are editing.');
     }
   }
+
+
+  // If the transgene allele is "known to ZFIN" and the local fields differ from what ZFIN thinks they
+  // should be - let the user know that the differences exist and give them the opportunity
+  // to use the ZFIN values as a group.
+  // trigger this on initialization and if someone changes the allele
+  checkZfin() {
+    this.canUpdateFromZfin = false;
+    this.zfinAlleleHint = null;
+    this.zfinConstructNameHint = null;
+    this.zfinIdHint = null;
+    this.loader.getZfinTransgeneByName(this.getControlValue('allele'))
+      .subscribe((zt: ZfinTransgeneDto) => {
+      if (!zt) {
+        this.zfinTg = null;
+        return;
+      } else {
+        this.zfinTg = zt;
+        if (this.getControlValue('allele') !== zt.symbol) {
+          this.canUpdateFromZfin = true;
+          this.zfinAlleleHint = `ZFIN name is ${zt.symbol}`
+        }
+        if (this.getControlValue('descriptor') !== zt.constructs[0].symbol) {
+          this.canUpdateFromZfin = true;
+          this.zfinConstructNameHint = `ZFIN construct name is ${zt.constructs[0].symbol}`
+        }
+        if (this.getControlValue('zfinId') !== zt.featureId) {
+          this.canUpdateFromZfin = true;
+          this.zfinIdHint = `ZFIN Id is ${zt.featureId}`
+        }
+      }
+    })
+  }
+
+  updateFromZfin() {
+    const zt = this.zfinTg;
+    this.mfForm.markAsDirty();
+    this.setControlValue('allele', zt.symbol);
+    if (zt.constructs[0].symbol !== this.getControlValue('descriptor')) {
+      if (! this.getControlValue('nickname')) {
+        this.setControlValue('nickname', this.getControlValue('descriptor'));
+      }
+      this.setControlValue('descriptor', zt.constructs[0].symbol);
+    }
+    this.setControlValue('zfinId', zt.featureId);
+    this.checkZfin();
+  }
+
 }
 
 function removeErrorFromControl(control: AbstractControl, error: string) {

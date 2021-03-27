@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {TransgeneService} from '../transgene.service';
+import {ZFTypes} from '../../helpers/zf-types';
 
 @Component({
   selector: 'app-transgene-menu',
@@ -41,6 +42,14 @@ export class TransgeneMenuComponent implements OnInit {
 
   delete() {
     this.service.delete(this.service.selected.id);
+  }
+
+  import() {
+    this.router.navigate(['transgene_manager/import/', {zfType: ZFTypes.TRANSGENE}]);
+  }
+
+  migrate() {
+    this.router.navigate(['transgene_manager/import/', {zfType: ZFTypes.STOCKBOOK_MIGRATION}]);
   }
 
   goToBestPractices(): void {

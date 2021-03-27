@@ -5,5 +5,6 @@ export enum ZFTypes {
   TANK = 'tank',
   SWIMMER = 'swimmer',
   STOCK = 'stock',
-  USER = 'user'
+  USER = 'user',
+  STOCKBOOK_MIGRATION = 'stockbook',
 }

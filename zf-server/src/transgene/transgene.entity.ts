@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToMany } from 'typeorm';
-import {Expose, Type} from 'class-transformer';
+import {Exclude, Expose, Type} from 'class-transformer';
 import { Stock } from '../stock/stock.entity';
 
 @Entity()
@@ -47,12 +47,22 @@ export class Transgene {
   })
   comment: string;
 
+  // Storing the URL was a bad idea and is superceded by storing the ZFIN Id
+  // which can easily be converted to a URL.
+  @Exclude()
   @Column({
     type: 'varchar',
     nullable: true,
     length: 255,
   })
   zfinURL: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    length: 255,
+  })
+  zfinId: string;
 
   @Column({
     type: 'int',
@@ -94,7 +104,7 @@ export class Transgene {
     }
     if (this.descriptor) { name.push(this.descriptor); }
     if (this.allele) { name.push(this.allele); }
-    return name.join(': ');
+    return name.join('^');
   }
 
   @Expose()

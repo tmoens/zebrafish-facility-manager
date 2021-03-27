@@ -20,6 +20,7 @@ import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {Role} from "../guards/role.decorator";
 import {ADMIN_ROLE, USER_ROLE} from "../common/auth/zf-roles";
 import {RoleGuard} from "../guards/role-guard.service";
+import {ErrorResponse} from '../common/error-response';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
@@ -54,6 +55,13 @@ export class MutationController {
   @Get(':id')
   async findById(@Param('id', new ParseIntPipe())  id: number): Promise<Mutation> {
     return await this.mutationService.findById(id);
+  }
+
+  @Role(USER_ROLE)
+  @UseGuards(RoleGuard)
+  @Post('usingZfin')
+  async createUsingZfin(@Body() newObj: Mutation): Promise<ErrorResponse> {
+    return await this.mutationService.createUsingZfin(newObj);
   }
 
   @Role(USER_ROLE)

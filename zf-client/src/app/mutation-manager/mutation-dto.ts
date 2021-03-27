@@ -1,4 +1,5 @@
 import {ZfGenericDto} from "../zf-generic/zfgeneric-dto";
+import {ZFIN_URL_PREFIX} from '../common/zfin/zfin-url';
 
 export class MutationDto extends ZfGenericDto {
   alternateGeneName: string = null;
@@ -18,7 +19,7 @@ export class MutationDto extends ZfGenericDto {
   thawDate: Date = null;
   tillingMaleNumber: number = null;
   vialsFrozen: number = null;
-  zfinURL: string = null;
+  zfinId: string = null;
 
   constructor() {
     super();
@@ -37,20 +38,19 @@ export class MutationDto extends ZfGenericDto {
   }
 
   get hasExternalLink(): boolean {
-    return !!this.zfinURL;
-
+    return !!this.zfinId;
   }
 
   get externalLinkLabel(): string {
-    if (this.zfinURL) {
+    if (this.hasExternalLink) {
       return "ZFIN";
     }
     return null;
   }
 
   get externalLinkURL(): string {
-    if (this.zfinURL) {
-      return this.zfinURL;
+    if (this.hasExternalLink) {
+      return ZFIN_URL_PREFIX + this.zfinId;
     }
     return null;
   }

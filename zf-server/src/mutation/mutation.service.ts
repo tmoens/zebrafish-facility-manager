@@ -1,4 +1,4 @@
-import {BadRequestException, Inject, Injectable} from '@nestjs/common';
+import {BadRequestException, forwardRef, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ConfigService} from '../config/config.service';
 import {MutationRepository} from './mutation.repository';
@@ -7,9 +7,12 @@ import {Mutation} from './mutation.entity';
 import {plainToClassFromExist} from 'class-transformer';
 import {MutationFilter} from './mutation.filter';
 import {GenericService} from '../Generics/generic-service';
-import {Logger} from "winston";
-import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
-import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
+import {Logger} from 'winston';
+import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
+import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
+import {ZfinService} from '../zfin/zfin.service';
+import {TransgeneService} from '../transgene/transgene.service';
+import {ErrorResponse} from '../common/error-response';
 
 
 @Injectable()
@@ -19,6 +22,9 @@ export class MutationService extends GenericService {
     private readonly configService: ConfigService,
     @InjectRepository(MutationRepository) private readonly repo: MutationRepository,
     @InjectRepository(TransgeneRepository) private readonly tgRepo: TransgeneRepository,
+    private readonly zfinService: ZfinService,
+    @Inject(forwardRef(() => TransgeneService))
+    private readonly tgService: TransgeneService,
   ) {
     super();
   }
@@ -41,6 +47,7 @@ export class MutationService extends GenericService {
         String(await this.getNextSerialNumber()),
     };
   }
+
   // creating NON "owned" mutations
   async validateAndCreate(dto: any): Promise<Mutation> {
     convertEmptyStringToNull(dto);
@@ -67,7 +74,31 @@ export class MutationService extends GenericService {
     return await this.repo.save(candidate);
   }
 
-  // for updating, make sure the tg is there
+
+  // for bulk loading, when we create a mutant we can look to ZFIN for help in filling in
+  // some of the fields and we may be getting some "owned" mutations with serial numbers
+  async createUsingZfin(dto: any): Promise<ErrorResponse> {
+    const response: ErrorResponse = new ErrorResponse();
+    convertEmptyStringToNull(dto);
+    this.ignoreAttribute(dto, 'id');
+
+    // create a mutation from the dto we received
+    let candidate: Mutation = new Mutation();
+    candidate = plainToClassFromExist(candidate, dto);
+
+    // if possible, fill in some data using ZFIN
+    candidate = await this.zfinService.updateMutationUsingZfin(candidate);
+
+    const errors = await this.validateForCreate(candidate);
+    if (errors.length > 0) {
+      response.errors = errors;
+    } else {
+      this.repo.save(candidate);
+    }
+    return response;
+  }
+
+  // for updating, make sure the mutation is there
   async validateAndUpdate(dto: any): Promise<Mutation> {
     convertEmptyStringToNull(dto);
     this.mustHaveAttribute(dto, 'id');
@@ -87,6 +118,7 @@ export class MutationService extends GenericService {
     candidate = plainToClassFromExist(candidate, dto);
     return await this.repo.save(candidate);
   }
+
 
   async validateAndRemove(id: any): Promise<any> {
     const candidate: Mutation = await this.mustExist(id);
@@ -126,8 +158,68 @@ export class MutationService extends GenericService {
       const msg = '9893064 attempt to create a transgene with a name that already exists.';
       this.logger.error(msg);
       throw new BadRequestException(msg);
+    } else {
+      return true;
     }
-    return true;
+  }
+
+  async validateForCreate(m: Mutation): Promise<string[]> {
+    const errors: string[] = [];
+    if (!m.name) {
+      errors.push('Cannot create mutation without a name.');
+      return errors;
+    }
+
+    const nameInUse = await this.nameInUse(m.name);
+    if (nameInUse) errors.push(nameInUse);
+
+    if (m.serialNumber) {
+      let snInUse = await this.serialNumberInUse(m.serialNumber);
+      if (snInUse) errors.push(snInUse);
+      snInUse = await this.tgService.serialNumberInUse(m.serialNumber);
+      if (snInUse) errors.push(snInUse);
+    }
+
+    if (m.nickname) {
+      let nickNameInUse = await this.nickNameInUse(m.nickname);
+      if (nickNameInUse) errors.push(nickNameInUse);
+      nickNameInUse = await this.tgService.nickNameInUse(m.nickname);
+      if (nickNameInUse) errors.push(nickNameInUse);
+    }
+    return errors;
+  }
+
+  async nameInUse(name: string): Promise<string> {
+    const m: Mutation[] = await this.repo.find({
+      where: {name}
+    });
+    if (m.length > 0) {
+      return `Mutation name "${name}" is already in use.`;
+    } else {
+      return null;
+    }
+  }
+
+  async serialNumberInUse(serialNumber: number): Promise<string> {
+    const m: Mutation[] = await this.repo.find({
+      where: {serialNumber}
+    });
+    if (m.length > 0) {
+      return `Serial number "${serialNumber}" is already in use mutation ${m[0].name}`;
+    } else {
+      return null;
+    }
+  }
+
+  async nickNameInUse(nickname: string): Promise<string> {
+    const m: Mutation[] = await this.repo.find({
+      where: {nickname}
+    });
+    if (m.length > 0) {
+      return `Nickname "${nickname}" is already in use  for mutation ${m[0].name}`;
+    } else {
+      return null;
+    }
   }
 
   // for manually assigned names, make sure the name does not conflict with
@@ -165,7 +257,7 @@ export class MutationService extends GenericService {
   // So it is all very ugly.
   async findById(id: number): Promise<Mutation> {
     const m: Mutation = await this.repo.findById(id);
-    m.isDeletable = await this.repo.isDeletable(id);
+    if (m) m.isDeletable = await this.repo.isDeletable(id);
     return m;
   }
 

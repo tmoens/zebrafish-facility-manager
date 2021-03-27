@@ -118,12 +118,22 @@ export class Mutation {
   })
   phenotype: string;
 
+  // Storing the URL was a bad idea and is superceded by storing the ZFIN Id
+  // which can easily be converted to a URL.
+  @Exclude()
   @Column({
     type: 'varchar',
     nullable: true,
     length: 255,
   })
   zfinURL: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    length: 255,
+  })
+  zfinId: string;
 
   @Column({
     type: 'varchar',
@@ -198,7 +208,7 @@ export class Mutation {
     if (this.nickname) {
       return this.nickname;
     } else {
-      return this.gene + ': ' + this.name;
+      return this.gene + '^' + this.name;
     }
   }
 }

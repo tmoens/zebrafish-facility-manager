@@ -10,6 +10,8 @@ import {Router} from '@angular/router';
 import {AuthService} from './auth/auth.service';
 import {StockFullDto} from './stock-manager/dto/stock-full-dto';
 import {ClientConfig} from './common/config/client-config';
+import {ZfinMutationDto} from './common/zfin/zfin-mutation.dto';
+import {ZfinTransgeneDto} from './common/zfin/zfin-transgene.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -109,6 +111,13 @@ export class LoaderService {
       );
   }
 
+  createUsingZfin(type: ZFTypes, thing: any): Observable<Object> {
+    return this.http.post(this.serverURL + '/' + type + '/usingZfin/', thing)
+      .pipe(
+        catchError(this.handleError('Create ' + type + ' failed.', null))
+      );
+  }
+
   // just like create but ask to auto-create the name using the next sequential name.
   createNext(type: ZFTypes, m: any) {
     return this.http.post(this.serverURL + '/' + type + '/next', m)
@@ -177,6 +186,22 @@ export class LoaderService {
     return this.http.get(this.serverURL + '/swimmer/tank/' + tankId)
       .pipe(
         catchError(this.handleError('Get swimmers for tank ' + tankId, []))
+      );
+  }
+
+  // =========== ZFIN Specific requests ===============
+
+  getZfinMutationByName(alleleName: string): Observable<ZfinMutationDto> {
+    return this.http.get(this.serverURL + '/zfin/mutationByName/' + alleleName)
+      .pipe(
+        catchError(this.handleError('Looking for Zfin Mutation for allele: ' + alleleName, null))
+      );
+  }
+
+  getZfinTransgeneByName(alleleName: string): Observable<ZfinTransgeneDto> {
+    return this.http.get(this.serverURL + '/zfin/transgeneByName/' + alleleName)
+      .pipe(
+        catchError(this.handleError('Looking for Zfin Transgene for allele: ' + alleleName, null))
       );
   }
 

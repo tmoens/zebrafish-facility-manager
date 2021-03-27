@@ -1,4 +1,5 @@
 import {ZfGenericDto} from '../zf-generic/zfgeneric-dto';
+import {ZFIN_URL_PREFIX} from '../common/zfin/zfin-url';
 
 export class TransgeneDto extends ZfGenericDto {
   allele: string = null;
@@ -10,7 +11,7 @@ export class TransgeneDto extends ZfGenericDto {
   source: string = null;
   spermFreezePlan: string = null;
   vialsFrozen: number = null;
-  zfinURL: string = null;
+  zfinId: string = null;
 
   constructor() {
     super();
@@ -32,20 +33,20 @@ export class TransgeneDto extends ZfGenericDto {
   }
 
   get hasExternalLink(): boolean {
-    return !!this.zfinURL;
+    return !!this.zfinId;
 
   }
 
   get externalLinkLabel(): string {
-    if (this.zfinURL) {
+    if (this.hasExternalLink) {
       return "ZFIN";
     }
     return null;
   }
 
   get externalLinkURL(): string {
-    if (this.zfinURL) {
-      return this.zfinURL;
+    if (this.hasExternalLink) {
+      return ZFIN_URL_PREFIX + this.zfinId;
     }
     return null;
   }

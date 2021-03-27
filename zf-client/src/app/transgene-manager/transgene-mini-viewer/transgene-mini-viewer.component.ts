@@ -7,8 +7,8 @@ import {TransgeneDto} from "../transgene-dto";
   selector: 'app-transgene-mini-viewer',
   template: `
     <div class="zf-mini-title">{{transgene.fullName}}
-      <span *ngIf="transgene.zfinURL">
-        <a href="{{transgene.zfinURL}}" target="_blank">ZFIN</a>
+      <span *ngIf="transgene.hasExternalLink">
+        <a href="{{transgene.externalLinkURL}}" target="_blank">{{transgene.externalLinkLabel}}</a>
       </span>
     </div>
     <div *ngIf="transgene.nickname" class="zf-mini-row truncate">{{transgene.descriptor}}^{{transgene.allele}}</div>

@@ -26,16 +26,17 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MutationMiniViewerComponent} from './mutation-mini-viewer/mutation-mini-viewer.component';
 import {MutationTinyViewerComponent} from "./mutation-mini-viewer/mutation-tiny-viewer.component";
 import {ZfGenericModule} from "../zf-generic/zf-generic.module";
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
     MutationEditorComponent,
     MutationManagerComponent,
     MutationMenuComponent,
-    MutationSelectorComponent,
-    MutationViewerComponent,
     MutationMiniViewerComponent,
+    MutationSelectorComponent,
     MutationTinyViewerComponent,
+    MutationViewerComponent,
   ],
   imports: [
     MutationManagerRoutingModule,
@@ -59,6 +60,7 @@ import {ZfGenericModule} from "../zf-generic/zf-generic.module";
     MatCheckboxModule,
     MatSidenavModule,
     ZfGenericModule,
+    MatProgressBarModule,
   ],
   exports: [
     MutationMenuComponent,

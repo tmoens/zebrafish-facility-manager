@@ -7,16 +7,19 @@
   <form [formGroup]="mfForm">
 
     <div fxLayout="column">
-      <mat-form-field>
-        <input required matInput type="text" placeholder="Construct" formControlName="descriptor"
-               maxlength="50">
+      <mat-form-field >
+        <input required matInput type="text" placeholder="Genomic feature name"
+               formControlName="allele"
+               maxlength="20" (focusout)="checkZfin()">
         <mat-error *ngIf="!mfForm.valid">{{getUniquenessError()}}</mat-error>
+        <mat-hint *ngIf="zfinAlleleHint">{{zfinAlleleHint}}</mat-hint>
       </mat-form-field>
 
-      <mat-form-field >
-        <input required matInput type="text" placeholder="Genomic feature name" formControlName="allele"
-               maxlength="20">
+      <mat-form-field>
+        <input required matInput type="text" placeholder="Construct" formControlName="descriptor"
+               maxlength="150">
         <mat-error *ngIf="!mfForm.valid">{{getUniquenessError()}}</mat-error>
+        <mat-hint *ngIf="zfinConstructNameHint">{{zfinConstructNameHint}}</mat-hint>
       </mat-form-field>
 
       <mat-form-field>
@@ -36,7 +39,7 @@
         <input matInput type="text" placeholder="Source" formControlName="source"
                 [matAutocomplete]="autoSource"
                maxlength="40">
-        <button mat-button matSuffix mat-icon-button *ngIf="getFC('source').value"
+        <button mat-button matSuffix mat-icon-button *ngIf="getControl('source').value"
                 (click)="clearFormControl('source')">
           <mat-icon>close</mat-icon>
         </button>
@@ -61,15 +64,19 @@
       </mat-form-field>
 
       <mat-form-field>
-        <textarea matInput placeholder="ZFIN URL" formControlName="zfinURL"
-                  maxlength="225" cdkTextareaAutosize="true"  cdkAutosizeMaxRows="3">
-        </textarea>
+        <label>
+          <input formControlName="zfinId" matInput maxlength="40" placeholder="ZFIN Id">
+        </label>
+        <mat-hint *ngIf="zfinIdHint">{{zfinIdHint}}</mat-hint>
       </mat-form-field>
 
     </div>
   </form>
   <div fxLayout="row" fxLayoutGap="10px">
     <div class="fill-remaining-space"></div>
+    <button mat-button color="primary" [disabled]='!canUpdateFromZfin' (click)="updateFromZfin()">
+      Update from ZFIN
+    </button>
     <button mat-button color="primary" (click)="cancel()">Cancel</button>
     <button mat-button color="primary" [disabled]='mfForm.pristine' (click)="revert()">Revert</button>
     <button mat-button type="submit" color="primary" [disabled]='!mfForm.valid || mfForm.pristine'

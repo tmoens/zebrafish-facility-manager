@@ -1,4 +1,4 @@
-import {BadRequestException, Inject, Injectable} from '@nestjs/common';
+import {BadRequestException, forwardRef, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ConfigService} from '../config/config.service';
 import {TransgeneRepository} from './transgene.repository';
@@ -10,6 +10,9 @@ import {GenericService} from '../Generics/generic-service';
 import {Logger} from "winston";
 import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
 import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
+import {ZfinService} from '../zfin/zfin.service';
+import {ErrorResponse} from '../common/error-response';
+import {MutationService} from '../mutation/mutation.service';
 
 @Injectable()
 export class TransgeneService extends GenericService {
@@ -18,6 +21,9 @@ export class TransgeneService extends GenericService {
     private readonly configService: ConfigService,
     @InjectRepository(TransgeneRepository) private readonly repo: TransgeneRepository,
     @InjectRepository(MutationRepository) private readonly mutationRepo: MutationRepository,
+    private readonly zfinService: ZfinService,
+    @Inject(forwardRef(() => MutationService))
+    private readonly mutationService: MutationService,
   ) {
     super();
   }
@@ -41,6 +47,7 @@ export class TransgeneService extends GenericService {
     };
   }
 
+  // TODO Convert all creation validation to use validateForCreate.
   // creating NON "owned" transgenes
   async validateAndCreate(dto: any): Promise<Transgene> {
     convertEmptyStringToNull(dto);
@@ -55,6 +62,7 @@ export class TransgeneService extends GenericService {
     return await this.repo.save(candidate);
   }
 
+  // TODO Convert all creation validation to use validateForCreate.
   // for creating the next "owned" transgene, we auto-create the name
   async validateAndCreateOwned(dto: any): Promise<Transgene> {
     convertEmptyStringToNull(dto);
@@ -66,6 +74,54 @@ export class TransgeneService extends GenericService {
     let candidate: Transgene = new Transgene();
     candidate = plainToClassFromExist(candidate, dto);
     return await this.repo.save(candidate);
+  }
+
+  // for bulk loading, when we create a mutant we can look to ZFIN for help in filling in
+  // some of the fields and we may be getting some "owned" mutations with serial numbers
+  async createUsingZfin(dto: any): Promise<ErrorResponse> {
+    const response: ErrorResponse = new ErrorResponse();
+    convertEmptyStringToNull(dto);
+    this.ignoreAttribute(dto, 'id');
+
+    // create a mutation from the dto we received
+    let candidate: Transgene = new Transgene();
+    candidate = plainToClassFromExist(candidate, dto);
+
+    // if possible, fill in some data using ZFIN
+    candidate = await this.zfinService.updateTransgeneUsingZfin(candidate);
+    const errors = await this.validateForCreate(candidate);
+    if (errors.length > 0) {
+      response.errors = errors;
+    } else {
+      this.repo.save(candidate);
+    }
+    return response;
+  }
+
+  async validateForCreate(t: Transgene): Promise<string[]> {
+    const errors: string[] = [];
+    if (!t.allele) {
+      errors.push('Cannot create transgene without an allele name.');
+      return errors;
+    }
+
+    const nameInUse = await this.nameInUse(t.allele);
+    if (nameInUse) errors.push(nameInUse);
+
+    if (t.serialNumber) {
+      let snInUse = await this.serialNumberInUse(t.serialNumber);
+      if (snInUse) errors.push(snInUse);
+      snInUse = await this.mutationService.serialNumberInUse(t.serialNumber);
+      if (snInUse) errors.push(snInUse);
+    }
+
+    if (t.nickname) {
+      let nickNameInUse = await this.nickNameInUse(t.nickname);
+      if (nickNameInUse) errors.push(nickNameInUse);
+      nickNameInUse = await this.mutationService.nickNameInUse(t.nickname);
+      if (nickNameInUse) errors.push(nickNameInUse);
+    }
+    return errors;
   }
 
   // for updating, make sure the tg is there
@@ -131,6 +187,39 @@ export class TransgeneService extends GenericService {
     return true;
   }
 
+  async nameInUse(allele: string): Promise<string> {
+    const tg: Transgene[] = await this.repo.find({
+      where: {allele}
+    });
+    if (tg.length > 0) {
+      return `Transgene name "${allele}" is already in use`;
+    } else {
+      return null;
+    }
+  }
+
+  async serialNumberInUse(serialNumber: number): Promise<string> {
+    const tg: Transgene[] = await this.repo.find({
+      where: {serialNumber}
+    });
+    if (tg.length > 0) {
+      return `Serial number "${serialNumber}" is already in use for transgene ${tg[0].name}`;
+    } else {
+      return null;
+    }
+  }
+
+  async nickNameInUse(nickname: string): Promise<string> {
+    const tg: Transgene[] = await this.repo.find({
+      where: {nickname}
+    });
+    if (tg.length > 0) {
+      return `Nickname "${nickname}" is already in use for transgene ${tg[0].name}`;
+    } else {
+      return null;
+    }
+  }
+
   // for manually assigned alleles, make sure the name does not conflict with
   // the "owned" allele names for this facility.
   checkAlleleValidity(allele: string) {
@@ -162,7 +251,7 @@ export class TransgeneService extends GenericService {
   // So it is all very ugly.
   async findById(id: number): Promise<Transgene> {
     const m: Transgene = await this.repo.findById(id);
-    m.isDeletable = await this.repo.isDeletable(id);
+    if (m) m.isDeletable = await this.repo.isDeletable(id);
     return m;
   }
 

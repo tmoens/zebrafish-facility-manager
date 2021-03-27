@@ -4,13 +4,14 @@ import {Observable} from 'rxjs';
 import {AbstractControl, FormBuilder, FormControl, ValidationErrors, Validators} from '@angular/forms';
 import {MutationService} from '../mutation.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {map, startWith} from 'rxjs/operators';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {DialogService} from '../../dialog.service';
 import {MAT_DATE_FORMATS} from "@angular/material/core";
 import {ZF_DATE_FORMATS} from "../../helpers/dateFormats";
 import {ScreenSizes} from "../../helpers/screen-sizes";
 import {AppStateService} from "../../app-state.service";
+import {LoaderService} from '../../loader.service';
+import {ZfinMutationDto} from '../../common/zfin/zfin-mutation.dto';
 
 
 @Component({
@@ -28,9 +29,15 @@ export class MutationEditorComponent implements OnInit {
   id: number;
   saved = false;
 
-  mutationTypeFC: FormControl = new FormControl();
+  // There is a zfinMutation AND it differs from our local thoughts on the
+  // mutation - offer the user an update from ZFIN
+  zfinMutation: ZfinMutationDto;
+  canUpdateFromZfin = false;
+  zfinGeneNameHint: string;
+  zfinIdHint: string;
+  zfinScreenTypeHint: string;
 
-  urlPattern = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
+  mutationTypeFC: FormControl = new FormControl();
 
   // Build the edit form.
   // Even though the form does not support editing of every field,
@@ -47,14 +54,14 @@ export class MutationEditorComponent implements OnInit {
     name: ['', [Validators.required, this.nameValidator.bind(this)]],
     nickname: ['', [this.nicknameValidator.bind(this)]],
     phenotype: [''],
-    researcher: ['', Validators.required],
+    researcher: [''],
     screenType: [''],
     serialNumber: [null],
     spermFreezePlan: [''],
     thawDate: [null],
     tillingMaleNumber: [null],
     vialsFrozen: [0],
-    zfinURL: [null, Validators.pattern(this.urlPattern)],
+    zfinId: [null],
 
     id: [null],
     isDeletable: [true],
@@ -74,6 +81,7 @@ export class MutationEditorComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     public service: MutationService,
+    public loader: LoaderService,
     private deactivationDialogService: DialogService,
   ) {
     this.service.enterEditMode();
@@ -96,34 +104,8 @@ export class MutationEditorComponent implements OnInit {
       }
       this.initialize();
     });
-
-    this.spermFreezeOptions = this.service.spermFreezeOptions;
-
-    // Again for the addled brain: this bit just watches what the user has typed in
-    // the gene field and when it changes, it recalculates the set of remaining values
-    // that kinda match what the user has typed.
-    this.filteredResearcherOptions = this.mfForm.get('researcher').valueChanges.pipe(
-      startWith(''),
-      map(value => this.service.fieldOptions.filterOptionsContaining('researcher', value))
-    );
-
-    this.filteredGeneOptions = this.mfForm.get('gene').valueChanges.pipe(
-      startWith(''),
-      map(value => this.service.fieldOptions.filterOptionsContaining('gene', value))
-    );
-
-    this.filteredScreenTypeOptions = this.mfForm.get('screenType').valueChanges.pipe(
-      startWith(''),
-      map(value => this.service.fieldOptions.filterOptionsContaining('screenType', value))
-    );
-
-    this.filteredMutationTypeOptions = this.mfForm.get('mutationType').valueChanges.pipe(
-      startWith(''),
-      map(value => this.service.fieldOptions.filterOptionsContaining('mutationType', value))
-    );
   }
 
-  // watch for changes in the route parameters.  That is, a new navigation to the mutation editor
   initialize() {
     switch (this.editMode) {
       // in EDIT mode, get a copy of the item to edit.
@@ -131,6 +113,7 @@ export class MutationEditorComponent implements OnInit {
         this.service.getById(this.id).subscribe((m: MutationDto) => {
           this.item = m;
           this.mfForm.setValue(this.item);
+          this.checkZfin();
         });
         break;
 
@@ -151,6 +134,7 @@ export class MutationEditorComponent implements OnInit {
         this.item.name = this.service.likelyNextName;
         this.mfForm.get('name').disable();
         this.mfForm.setValue(this.item);
+        this.checkZfin();
     }
   }
 
@@ -184,7 +168,7 @@ export class MutationEditorComponent implements OnInit {
     if (!this.item) {
       return null;
     }
-    // do not do an inUse check against your own name.
+    // do not do a "name in use" check against your own name.
     if (this.item.name === control.value) {
       return null;
     }
@@ -199,7 +183,7 @@ export class MutationEditorComponent implements OnInit {
     if (!this.item) {
       return null;
     }
-    // do not do a nickname in use check against your own nickname.
+    // do not do a "nickname in use" check against your own nickname.
     if (this.item.nickname === control.value) {
       return null;
     }
@@ -225,23 +209,21 @@ export class MutationEditorComponent implements OnInit {
   }
 
   getNicknameError() {
-    if (this.nicknameControl.hasError('unique')) {
+    if (this.getControl('nickname').hasError('unique')) {
       return 'The nickname ' + this.nicknameControl.value + ' is already in use.';
-    }
-  }
-
-  get zfinURLControl() {
-    return this.mfForm.get('zfinURL');
-  }
-
-  getZfinURLError() {
-    if (this.zfinURLControl.hasError('pattern')) {
-      return 'Please enter a valid URL';
     }
   }
 
   getControl(controlName: string) {
     return this.mfForm.get(controlName);
+  }
+
+  getControlValue(controlName: string) {
+    return this.getControl(controlName).value;
+  }
+
+  setControlValue(controlName: string, value) {
+    return this.getControl(controlName).setValue(value);
   }
 
   /* To support deactivation check  */
@@ -256,6 +238,51 @@ export class MutationEditorComponent implements OnInit {
     } else {
       return this.deactivationDialogService.confirm('There are unsaved changes to the mutation you are editing.');
     }
+  }
+
+  // If the allele is "known to ZFIN" and the local fields differ from what ZFIN thinks they
+  // should be - let the user know that the differences exist and give them the opportunity
+  // to use the ZFIN values as a group.
+  // trigger this on initialization and if someone changes the allele
+  checkZfin() {
+    this.canUpdateFromZfin = false;
+    this.zfinGeneNameHint = null;
+    this.zfinIdHint = null;
+    this.zfinScreenTypeHint = null;
+    this.loader.getZfinMutationByName(this.getControlValue('name'))
+      .subscribe((zm: ZfinMutationDto) => {
+      if (!zm) {
+        this.zfinMutation = null;
+        return;
+      } else {
+        this.zfinMutation = zm;
+        if (this.getControlValue('gene') !== zm.genes[0].symbol) {
+          this.canUpdateFromZfin = true;
+          this.zfinGeneNameHint = `ZFIN gene name is ${zm.genes[0].symbol}`
+        }
+        if (zm.mutagen && this.getControlValue('screenType') !== zm.mutagen) {
+          this.canUpdateFromZfin = true;
+          this.zfinScreenTypeHint = `ZFIN screen type is ${zm.mutagen}`
+        }
+        if (this.getControlValue('zfinId') !== zm.featureId) {
+          this.canUpdateFromZfin = true;
+          this.zfinIdHint = `ZFIN Id is ${zm.featureId}`
+        }
+      }
+    })
+  }
+
+  updateFromZfin() {
+    this.mfForm.markAsDirty();
+    const zm = this.zfinMutation;
+    if (zm.genes[0].symbol) {
+      this.setControlValue('gene', zm.genes[0].symbol);
+    }
+    if (zm.mutagen) {
+      this.setControlValue('screenType', zm.mutagen);
+    }
+    this.setControlValue('zfinId', zm.featureId);
+    this.checkZfin();
   }
 }
 
