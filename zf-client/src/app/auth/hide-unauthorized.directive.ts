@@ -16,12 +16,12 @@ export class HideUnauthorizedDirective {
 
   ngOnInit() {
     if (!this.authService.canPerformRole(this.requiredRole)) {
-      // this.el.nativeElement.style.display = 'none';
+      this.el.nativeElement.style.display = 'none';
       // for debugging, highlight disallowed light red
-      this.el.nativeElement.style.display = '#ff9989';
+      // this.el.nativeElement.style.display = '#ff9989';
     } else {
       // for debugging highlight allowed light green
-      this.el.nativeElement.style.backgroundColor = '#b5ffb5'
+      // this.el.nativeElement.style.backgroundColor = '#b5ffb5'
     }
   }
 }
