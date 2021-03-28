@@ -31,7 +31,6 @@
 
     <mat-divider></mat-divider>
 
-
     <button mat-menu-item zfmHideUnauthorized="user" (click)="service.toExcel()"
             matTooltip="A spreadsheet of transgenes known in this facility.">
       <mat-icon>cloud_download</mat-icon>
@@ -47,16 +46,6 @@
   </button>
 
   <mat-divider></mat-divider>
-
-  <!--  Upload transgenes -->
-  <button mat-menu-item zfmHideUnauthorized="admin" (click)="import()">
-    <mat-icon>upload</mat-icon>
-    <span>Import Transgenes</span>
-  </button>
-  <button mat-menu-item zfmHideUnauthorized="admin" (click)="migrate()">
-    <mat-icon>upload</mat-icon>
-    <span>Migrate</span>
-  </button>
 
   <button (click)="goToBestPractices()" mat-menu-item
           matTooltip="For information on best practices.">

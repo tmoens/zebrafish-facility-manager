@@ -8,7 +8,6 @@ import {CanDeactivateGuard} from '../guards/can-deactivate-guard';
 import {LoginGuardService as LoginGuard} from "../auth/guards/login-guard.service";
 import {RoleGuardService as RoleGuard} from "../auth/guards/role-guard.service";
 import {ADMIN_ROLE, USER_ROLE} from '../auth/app-roles';
-import {ExcelImporterComponent} from '../excel-importer/excel-importer.component';
 
 
 /**
@@ -73,16 +72,6 @@ const mutationManagerRoutes: Routes = [
           permittedRole: USER_ROLE
         }
       },
-      {
-        path: 'import',
-        component: ExcelImporterComponent,
-        canDeactivate: [CanDeactivateGuard],
-        canActivate: [RoleGuard],
-        data: {
-          permittedRole: ADMIN_ROLE
-        }
-      },
-
     ]
   }
 ];

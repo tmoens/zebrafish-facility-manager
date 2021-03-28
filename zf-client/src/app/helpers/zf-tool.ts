@@ -23,6 +23,10 @@ export class ZFTool {
     'transgene_manager',
     ZFTypes.TRANSGENE,
     'Transgenes');
+  static readonly IMPORT_TOOL  = new ZFTool(
+    'importer',
+    ZFTypes.MUTATION,
+    'Import Tool');
 
   // private to disallow creating other instances than the static ones above.
   private constructor(

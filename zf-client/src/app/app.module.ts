@@ -54,8 +54,8 @@ import {QRCodeModule} from 'angularx-qrcode';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {UserAdminService} from './auth/user-admin/user-admin.service';
 import {CrossLabelComponent} from './printing/cross-label/cross-label.component';
-import { ExcelImporterComponent } from './excel-importer/excel-importer.component';
-import {MatProgressBar, MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {ImporterModule} from './importer/importer.module';
 
 export function appStateProviderFactory(provider: AppStateService) {
   return () => provider.initialize();
@@ -85,7 +85,6 @@ export function authServiceProviderFactory(provider: AppStateService) {
     TankLabelComponent,
     SplashComponent,
     CrossLabelComponent,
-    ExcelImporterComponent,
   ],
   imports: [
     AuthModule,
@@ -95,7 +94,7 @@ export function authServiceProviderFactory(provider: AppStateService) {
     StockManagerModule,
     TransgeneManagerModule,
     UserAdminModule,
-    AppRoutingModule,
+    ImporterModule,
     BrowserAnimationsModule,
     BrowserModule,
     FlexLayoutModule,
@@ -123,10 +122,10 @@ export function authServiceProviderFactory(provider: AppStateService) {
     MatToolbarModule,
     QRCodeModule,
     ReactiveFormsModule,
-    AppRoutingModule,
     StorageServiceModule,
     LayoutModule,
     MatTooltipModule,
+    AppRoutingModule,
   ],
   entryComponents: [
     StockGeneticsEditorComponent,

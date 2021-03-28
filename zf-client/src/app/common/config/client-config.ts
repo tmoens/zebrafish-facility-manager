@@ -5,6 +5,7 @@ import {TankLabelConfig} from './tank-label-config';
 export class ClientConfig {
   facilityName = 'Facility name not configured';
   facilityAbbrv = 'Facility abbreviation not configured';
+  allowExcelImports = false;
 
   hidePI = false;
 

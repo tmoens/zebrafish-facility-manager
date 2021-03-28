@@ -1,12 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import * as XLSX from 'xlsx';
 import {ParsingOptions, WorkBook, WorkSheet} from 'xlsx';
-import {ZfGenericDto} from '../zf-generic/zfgeneric-dto';
-import {ZFTypes} from '../helpers/zf-types';
-import {LoaderService} from '../loader.service';
-import {ErrorResponse} from '../common/error-response';
-import {ActivatedRoute, ParamMap} from '@angular/router';
-import {keyframes} from '@angular/animations';
+import {ZfGenericDto} from '../../zf-generic/zfgeneric-dto';
+import {ZFTypes} from '../../helpers/zf-types';
+import {LoaderService} from '../../loader.service';
+import {ErrorResponse} from '../../common/error-response';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-excel-importer',
@@ -37,7 +36,8 @@ import {keyframes} from '@angular/animations';
   styleUrls: ['./excel-importer.component.scss']
 })
 export class ExcelImporterComponent implements OnInit {
-  @Input() zfType: ZFTypes = ZFTypes.MUTATION;
+  ZFTypes = ZFTypes;
+  zfType: ZFTypes;
 
   // Can't select a file while one is being processed
   canSelectFile = true;
@@ -56,9 +56,7 @@ export class ExcelImporterComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((pm: ParamMap) => {
-      this.zfType = pm.get('zfType') as ZFTypes;
-    })
+    this.zfType = ZFTypes.MUTATION;
     this.problems = [];
   }
 
@@ -265,7 +263,7 @@ class TokenData {
   ) {
   }
   hasQuality(tq: TokenQuality) {
-    return !!(tq === this.quality);
+    return (tq === this.quality);
   }
   bump() {
     this.count = this.count + 1;
@@ -273,7 +271,6 @@ class TokenData {
   }
   dump() {
     console.log(`count: ${this.count}, quality: ${this.quality}`);
-
   }
 }
 enum TokenQuality{

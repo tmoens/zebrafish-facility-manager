@@ -44,14 +44,6 @@ export class TransgeneMenuComponent implements OnInit {
     this.service.delete(this.service.selected.id);
   }
 
-  import() {
-    this.router.navigate(['transgene_manager/import/', {zfType: ZFTypes.TRANSGENE}]);
-  }
-
-  migrate() {
-    this.router.navigate(['transgene_manager/import/', {zfType: ZFTypes.STOCKBOOK_MIGRATION}]);
-  }
-
   goToBestPractices(): void {
     window.open('https://zebrafishfacilitymanager.com/mutations');
   }

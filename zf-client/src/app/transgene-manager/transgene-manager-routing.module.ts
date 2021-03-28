@@ -7,8 +7,7 @@ import {EditMode} from '../zf-generic/zf-edit-modes';
 import {CanDeactivateGuard} from '../guards/can-deactivate-guard';
 import {LoginGuardService as LoginGuard} from "../auth/guards/login-guard.service";
 import {RoleGuardService as RoleGuard} from "../auth/guards/role-guard.service";
-import {ADMIN_ROLE, USER_ROLE} from '../auth/app-roles';
-import {ExcelImporterComponent} from '../excel-importer/excel-importer.component';
+import {USER_ROLE} from '../auth/app-roles';
 
 const transgeneManagerRoutes: Routes = [
   {
@@ -64,24 +63,6 @@ const transgeneManagerRoutes: Routes = [
         canActivate: [RoleGuard],
         data: {
           permittedRole: USER_ROLE
-        }
-      },
-      {
-        path: 'import',
-        component: ExcelImporterComponent,
-        canDeactivate: [CanDeactivateGuard],
-        canActivate: [RoleGuard],
-        data: {
-          permittedRole: ADMIN_ROLE
-        }
-      },
-      {
-        path: 'migrate',
-        component: ExcelImporterComponent,
-        canDeactivate: [CanDeactivateGuard],
-        canActivate: [RoleGuard],
-        data: {
-          permittedRole: ADMIN_ROLE
         }
       },
     ]
