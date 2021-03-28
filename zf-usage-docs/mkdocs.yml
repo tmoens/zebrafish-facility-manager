@@ -5,6 +5,7 @@ nav:
   - Stocks and Substocks: stocks.md
   - Mutations and Transgenes: mutations.md
   - Release Notes: release-history.md
+  - Why use ZFM: why-zfm.md
 
 theme:
   name: material
