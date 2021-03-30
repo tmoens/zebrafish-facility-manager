@@ -7,11 +7,11 @@ import {Transgene} from './transgene.entity';
 import {plainToClassFromExist} from 'class-transformer';
 import {TransgeneFilter} from './transgene.filter';
 import {GenericService} from '../Generics/generic-service';
-import {Logger} from "winston";
-import {convertEmptyStringToNull} from "../helpers/convertEmptyStringsToNull";
-import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
+import {Logger} from 'winston';
+import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
+import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
 import {ZfinService} from '../zfin/zfin.service';
-import {ErrorResponse} from '../common/error-response';
+import {ImportResponse} from '../common/import-response';
 import {MutationService} from '../mutation/mutation.service';
 
 @Injectable()
@@ -78,8 +78,8 @@ export class TransgeneService extends GenericService {
 
   // for bulk loading, when we create a mutant we can look to ZFIN for help in filling in
   // some of the fields and we may be getting some "owned" mutations with serial numbers
-  async createUsingZfin(dto: any): Promise<ErrorResponse> {
-    const response: ErrorResponse = new ErrorResponse();
+  async import(dto: any): Promise<ImportResponse<Transgene>> {
+    const response: ImportResponse<Transgene> = new ImportResponse<Transgene>();
     convertEmptyStringToNull(dto);
     this.ignoreAttribute(dto, 'id');
 
@@ -93,7 +93,7 @@ export class TransgeneService extends GenericService {
     if (errors.length > 0) {
       response.errors = errors;
     } else {
-      this.repo.save(candidate);
+      response.object = await this.repo.save(candidate);
     }
     return response;
   }

@@ -16,11 +16,11 @@ import {Transgene} from './transgene.entity';
 import {TransgeneService} from './transgene.service';
 import {plainToClass} from 'class-transformer';
 import {TransgeneFilter} from './transgene.filter';
-import {JwtAuthGuard} from "../guards/jwt-auth.guard";
-import {Role} from "../guards/role.decorator";
-import {USER_ROLE} from "../common/auth/zf-roles";
-import {RoleGuard} from "../guards/role-guard.service";
-import {ErrorResponse} from '../common/error-response';
+import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {Role} from '../guards/role.decorator';
+import {USER_ROLE} from '../common/auth/zf-roles';
+import {RoleGuard} from '../guards/role-guard.service';
+import {ImportResponse} from '../common/import-response';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
@@ -54,9 +54,9 @@ export class TransgeneController {
 
   @Role(USER_ROLE)
   @UseGuards(RoleGuard)
-  @Post('usingZfin')
-  async createUsingZfin(@Body() newObj: Transgene): Promise<ErrorResponse> {
-    return await this.transgeneService.createUsingZfin(newObj);
+  @Post('import')
+  async import(@Body() newObj: Transgene): Promise<ImportResponse<Transgene>> {
+    return await this.transgeneService.import(newObj);
   }
 
   @Role(USER_ROLE)

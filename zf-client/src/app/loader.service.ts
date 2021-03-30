@@ -111,8 +111,8 @@ export class LoaderService {
       );
   }
 
-  createUsingZfin(type: ZFTypes, thing: any): Observable<Object> {
-    return this.http.post(this.serverURL + '/' + type + '/usingZfin/', thing)
+  import(type: ZFTypes, thing: any): Observable<Object> {
+    return this.http.post(this.serverURL + '/' + type + '/import/', thing)
       .pipe(
         catchError(this.handleError('Create ' + type + ' failed.', null))
       );

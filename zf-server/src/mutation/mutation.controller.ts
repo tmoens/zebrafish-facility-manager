@@ -16,11 +16,11 @@ import {Mutation} from './mutation.entity';
 import {MutationService} from './mutation.service';
 import {plainToClass} from 'class-transformer';
 import {MutationFilter} from './mutation.filter';
-import {JwtAuthGuard} from "../guards/jwt-auth.guard";
-import {Role} from "../guards/role.decorator";
-import {ADMIN_ROLE, USER_ROLE} from "../common/auth/zf-roles";
-import {RoleGuard} from "../guards/role-guard.service";
-import {ErrorResponse} from '../common/error-response';
+import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {Role} from '../guards/role.decorator';
+import {ADMIN_ROLE, USER_ROLE} from '../common/auth/zf-roles';
+import {RoleGuard} from '../guards/role-guard.service';
+import {ImportResponse} from '../common/import-response';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
@@ -59,9 +59,9 @@ export class MutationController {
 
   @Role(USER_ROLE)
   @UseGuards(RoleGuard)
-  @Post('usingZfin')
-  async createUsingZfin(@Body() newObj: Mutation): Promise<ErrorResponse> {
-    return await this.mutationService.createUsingZfin(newObj);
+  @Post('import')
+  async import(@Body() newObj: Mutation): Promise<ImportResponse<Mutation>> {
+    return await this.mutationService.import(newObj);
   }
 
   @Role(USER_ROLE)

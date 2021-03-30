@@ -1,25 +1,23 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit, SimpleChange} from '@angular/core';
 import * as XLSX from 'xlsx';
 import {ParsingOptions, WorkBook, WorkSheet} from 'xlsx';
 import {ZfGenericDto} from '../../zf-generic/zfgeneric-dto';
 import {ZFTypes} from '../../helpers/zf-types';
 import {LoaderService} from '../../loader.service';
-import {ErrorResponse} from '../../common/error-response';
 import {ActivatedRoute} from '@angular/router';
+import {ImportResponse} from '../../common/import-response';
 
 @Component({
   selector: 'app-excel-importer',
   template: `
-    <mat-toolbar class="zf-mini-toolbar">
-      <span class="zf-title">{{zfType}} Importer</span>
-    </mat-toolbar>
+    <h1>{{zfType}}</h1>
     <button mat-button color="primary" (click)="openFileChooser()">
       <label disabled="!canSelectFile">Select {{zfType}} upload file...</label>
     </button>
     <input id="fileToImport" type="file" hidden (change)="fileSelected($event)">
     <div *ngIf="toDo > 0" fxLayout="row" fxLayoutAlign="space-between center">
       <div>Done: {{done}}</div>
-      <div *ngIf="toDo < done">Loading </div>
+      <div *ngIf="toDo < done">Loading</div>
       <div>To Do: {{toDo}}</div>
     </div>
     <mat-progress-bar *ngIf="toDo > 0" [value]="progress" mode="determinate"></mat-progress-bar>
@@ -36,8 +34,18 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./excel-importer.component.scss']
 })
 export class ExcelImporterComponent implements OnInit {
+  private _zfType: ZFTypes;
+
+  @Input()
+  get zfType(): ZFTypes {
+    return this._zfType;
+  }
+
+  set zfType(zfType: ZFTypes) {
+    this._zfType = (zfType);
+  }
+
   ZFTypes = ZFTypes;
-  zfType: ZFTypes;
 
   // Can't select a file while one is being processed
   canSelectFile = true;
@@ -50,14 +58,20 @@ export class ExcelImporterComponent implements OnInit {
 
 
   selectedFileName: string;
+
   constructor(
     private service: LoaderService,
     private route: ActivatedRoute,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.zfType = ZFTypes.MUTATION;
     this.problems = [];
+  }
+
+  ngOnChanges(changes: SimpleChange) {
+
   }
 
   /* Note to future self that cost me about three hours 2018-10-05.
@@ -93,10 +107,11 @@ export class ExcelImporterComponent implements OnInit {
     this.toDo = dtos.length;
     this.done = 0;
     for (const dto of dtos) {
-      const response: ErrorResponse = await this.service.createUsingZfin(this.zfType, dto).toPromise();
+      const response: ImportResponse<any> = await this.service.import(this.zfType, dto).toPromise();
       if (response.errors) {
         this.problems.push(<ImportProblem>{worksheetRow: this.done + 2, dto: dto, problems: response.errors})
       }
+      if (response.object) console.log('===> ' + JSON.stringify(response.object, null, 2));
       this.done = this.done + 1;
       this.progress = this.done / this.toDo * 100;
     }
@@ -290,3 +305,4 @@ class ImportProblem {
   dto: ZfGenericDto;
   problems: string[];
 }
+

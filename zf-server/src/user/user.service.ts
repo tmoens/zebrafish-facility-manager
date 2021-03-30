@@ -13,6 +13,7 @@ import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
 import {UserFilter} from './user-filter';
 import {Brackets, SelectQueryBuilder} from 'typeorm';
 import {StockRepository} from '../stock/stock.repository';
+import {ImportResponse} from '../common/import-response';
 
 @Injectable()
 export class UserService {
@@ -134,7 +135,7 @@ export class UserService {
       .orWhere('piId = :pid', {pid: user.id})
       .getRawOne();
 
-    return (res) ? false : true;
+    return (!res);
   }
 
   async findOne(id: string): Promise<User> {
@@ -167,8 +168,8 @@ export class UserService {
     return this.repo.findOne({where: {id: id, isActive: true}});
   }
 
+  // TODO - use the
   async create(dto: UserDTO): Promise<User> {
-    // TODO remember this is where you were thinking of using @hapi/joi
     convertEmptyStringToNull(dto);
     delete dto.id; // a new user can not have an id.
     const u: User = plainToClass(User, dto);
@@ -176,6 +177,59 @@ export class UserService {
     console.log('Setting random password for ' + u.username + ': ' + newPassword);
     this.mailerService.newUser(u, newPassword);
     return this.repo.save(u);
+  }
+
+  async import(dto: UserDTO): Promise<ImportResponse<User>> {
+    const response: ImportResponse<User> = new ImportResponse<User>();
+    convertEmptyStringToNull(dto);
+    delete dto.id; // a new user can not have an id.
+    const candidate: User = plainToClass(User, dto);
+    const errors: string[] = await this.validateForCreate(candidate);
+    if (errors.length > 0) {
+      response.errors = errors;
+    } else {
+      const newPassword = candidate.setRandomPassword();
+      response.object = await this.repo.save(candidate);
+      console.log('Setting random password for ' + candidate.username + ': ' + newPassword);
+
+      response.object = await this.repo.save(candidate);
+    }
+    return response;
+  }
+
+  // TODO syntactical checks for length and valid e-mail etc.
+  async validateForCreate(user: UserDTO): Promise<string[]> {
+    const errors: string[] = [];
+
+    // user's name is required and must be unique
+    if (!user.name) {
+      errors.push('no "name" field');
+    } else if (await this.doesNameExist(user.name)) {
+      errors.push(`name "${user.name}" is already in use.`);
+    }
+
+    // user's username is required and must be unique
+    if (!user.username) {
+      errors.push('no "username" field');
+    } else if (await this.doesUsernameExist(user.username)) {
+      errors.push(`username "${user.username}" is already in use.`);
+    }
+
+    // user's e-mail is required and must be unique
+    if (!user.email) {
+      errors.push('no "email" field');
+    } else if (await this.doesEmailExist(user.email)) {
+      errors.push(`email "${user.email}" is already in use.`);
+    }
+
+    // user's initials are required and must be unique
+    if (!user.initials) {
+      errors.push('no "initials" field');
+    } else if (await this.doesInitialsExist(user.initials)) {
+      errors.push(`initials "${user.initials}" is already in use.`);
+    }
+
+    return errors;
   }
 
   async resetPassword(dto: ResetPasswordDTO): Promise<User> {

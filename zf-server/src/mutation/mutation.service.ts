@@ -12,7 +12,7 @@ import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
 import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
 import {ZfinService} from '../zfin/zfin.service';
 import {TransgeneService} from '../transgene/transgene.service';
-import {ErrorResponse} from '../common/error-response';
+import {ImportResponse} from '../common/import-response';
 
 
 @Injectable()
@@ -77,8 +77,8 @@ export class MutationService extends GenericService {
 
   // for bulk loading, when we create a mutant we can look to ZFIN for help in filling in
   // some of the fields and we may be getting some "owned" mutations with serial numbers
-  async createUsingZfin(dto: any): Promise<ErrorResponse> {
-    const response: ErrorResponse = new ErrorResponse();
+  async import(dto: any): Promise<ImportResponse<Mutation>> {
+    const response: ImportResponse<Mutation> = new ImportResponse();
     convertEmptyStringToNull(dto);
     this.ignoreAttribute(dto, 'id');
 
@@ -93,7 +93,7 @@ export class MutationService extends GenericService {
     if (errors.length > 0) {
       response.errors = errors;
     } else {
-      this.repo.save(candidate);
+      response.object = await this.repo.save(candidate);
     }
     return response;
   }

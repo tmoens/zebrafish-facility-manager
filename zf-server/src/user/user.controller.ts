@@ -6,23 +6,25 @@ import {
   Get,
   Param,
   Post,
-  Put, Query,
+  Put,
+  Query,
   Request,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import {UserService} from './user.service';
 import {User} from './user.entity';
-import {ResetPasswordDTO, UserDTO, UserPasswordChangeDTO} from "../common/user/UserDTO";
-import {JwtAuthGuard} from "../guards/jwt-auth.guard";
-import {JwtAuthGuard2} from "../guards/jwt-auth.guard2";
-import {Role} from "../guards/role.decorator";
-import {ADMIN_ROLE} from "../common/auth/zf-roles";
-import {RoleGuard} from "../guards/role-guard.service";
-import {LocalAuthGuard} from "../guards/local-auth.guard";
-import {ZFMailerService} from "../mailer/mailer-service";
+import {ResetPasswordDTO, UserDTO, UserPasswordChangeDTO} from '../common/user/UserDTO';
+import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {JwtAuthGuard2} from '../guards/jwt-auth.guard2';
+import {Role} from '../guards/role.decorator';
+import {ADMIN_ROLE} from '../common/auth/zf-roles';
+import {RoleGuard} from '../guards/role-guard.service';
+import {LocalAuthGuard} from '../guards/local-auth.guard';
+import {ZFMailerService} from '../mailer/mailer-service';
 import {plainToClass} from 'class-transformer';
 import {UserFilter} from './user-filter';
+import {ImportResponse} from '../common/import-response';
 
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -88,6 +90,14 @@ export class UserController {
   @Put('resetPassword')
   async resetPassword(@Body() dto: ResetPasswordDTO): Promise<User> {
     return this.service.resetPassword(dto);
+  }
+
+  @Role(ADMIN_ROLE)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Post('import')
+  async import(@Body() dto: UserDTO): Promise<ImportResponse<User>> {
+    console.log(JSON.stringify(dto));
+    return this.service.import(dto);
   }
 
   @Role(ADMIN_ROLE)
