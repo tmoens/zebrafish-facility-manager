@@ -10,7 +10,7 @@ import {AuthService} from '../../auth/auth.service';
     <div fxLayout="row" fxLayoutAlign="center" *ngIf="authService.loggedIn$ | async">
       <div class="zf-full-width">
         <mat-toolbar color="primary">
-          {{typeToImport}} Importer - Never use on a live system
+          Importer - Never use on a live system
           <span class="fill-remaining-space"></span>
           <div>
             <button mat-button [matMenuTriggerFor]="importMenu">
@@ -26,17 +26,17 @@ import {AuthService} from '../../auth/auth.service';
 
       <button mat-menu-item zfmHideUnauthorized="admin" (click)="typeToUpload(ZFTypes.MUTATION)">
         <mat-icon>upload</mat-icon>
-        <span>Upoad Mutations</span>
+        <span>Upload Mutations</span>
       </button>
 
       <button mat-menu-item zfmHideUnauthorized="admin" (click)="typeToUpload(ZFTypes.TRANSGENE)">
         <mat-icon>upload</mat-icon>
-        <span>Upoad Transgenes</span>
+        <span>Upload Transgenes</span>
       </button>
 
       <button mat-menu-item zfmHideUnauthorized="admin" (click)="typeToUpload(ZFTypes.USER)">
         <mat-icon>upload</mat-icon>
-        <span>Upoad Users</span>
+        <span>Upload Users</span>
       </button>
 
       <button mat-menu-item zfmHideUnauthorized="admin" (click)="typeToUpload(ZFTypes.TANK)">

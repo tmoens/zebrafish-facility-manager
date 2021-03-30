@@ -58,8 +58,6 @@ export class MutationEditorComponent implements OnInit {
     screenType: [''],
     serialNumber: [null],
     spermFreezePlan: [''],
-    thawDate: [null],
-    tillingMaleNumber: [null],
     vialsFrozen: [0],
     zfinId: [null],
 

@@ -44,8 +44,6 @@ export class MutationViewerComponent implements OnInit {
     screenType: [{value: '', disabled: true}],
     serialNumber: [{value: null, disabled: true}],
     spermFreezePlan: [{value: '', disabled: true}],
-    thawDate: [{value: null, disabled: true}],
-    tillingMaleNumber: [{value: null, disabled: true}],
     vialsFrozen: [{value: '', disabled: true}],
     zfinId: [{value: '', disabled: true}],
 

@@ -16,8 +16,6 @@ export class MutationDto extends ZfGenericDto {
   screenType: string = null;
   spermFreezePlan: string = null;
   serialNumber: number = null;
-  thawDate: Date = null;
-  tillingMaleNumber: number = null;
   vialsFrozen: number = null;
   zfinId: string = null;
 

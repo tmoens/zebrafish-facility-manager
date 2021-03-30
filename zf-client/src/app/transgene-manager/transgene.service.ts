@@ -98,10 +98,15 @@ export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDt
   toExcel() {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(this.all.map((m: TransgeneDto) => {
-      return {Descriptor: m.descriptor, Allele: m.allele, Source: m.source, Plasmid: m.plasmid, Comment: m.comment};
+      return {id: m.id, descriptor: m.descriptor, allele: m.allele, nickName: m.nickname, source: m.source,
+        plasmid: m.plasmid, comment: m.comment, serialNumber: m.serialNumber, zfinId: m.zfinId,
+        spermFreezePlan: m.spermFreezePlan, vialsFrozen: m.vialsFrozen,
+      };
     }));
     XLSX.utils.book_append_sheet(wb, ws, 'Transgenes');
-    ws['!cols'] = [ {wch: 35}, {wch: 8}, {wch: 24}, {wch: 50}, {wch: 50}];
+    ws['!cols'] = [ {wch: 4}, {wch: 35}, {wch: 8}, {wch: 20}, {wch: 24},
+      {wch: 20}, {wch: 50}, {wch: 8}, {wch: 15},
+      {wch: 8}, {wch: 8}];
 
     let data: string [][];
     if (!this.filter || this.filter.isEmpty()) {

@@ -88,21 +88,26 @@ export class Mutation {
   })
   comment: string;
 
+  // Vestigial
   @Column({
     type: 'date',
     nullable: true,
     name: 'thaw_date',
   })
+  @Exclude()
   thawDate: Date;
 
+  // Vestigial
   @Column({
     type: 'int',
     nullable: true,
     comment: 'If the male was one of the TILLing ENU mutagenized males, then this is its id.',
     name: 'tilling_male_number',
   })
+  @Exclude()
   tillingMaleNumber: number;
 
+  //Vestigial
   @Column({
     type: 'date',
     nullable: true,

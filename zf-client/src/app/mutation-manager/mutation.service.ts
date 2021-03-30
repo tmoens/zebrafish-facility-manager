@@ -105,12 +105,19 @@ export class MutationService extends ZFGenericService<MutationDto, MutationDto, 
   toExcel() {
     const wb = XLSX.utils.book_new();
     const mutationSheet = XLSX.utils.json_to_sheet(this.filteredList.map((m: MutationDto) => {
-      return {Allele: m.name, Gene: m.gene, 'Alt Gene': m.alternateGeneName, Researcher: m.researcher,
-        'AA Change': m.aaChange, 'BP Change': m.actgChange, Plan: m.spermFreezePlan, Frozen: m.vialsFrozen,
-        Comment: m.comment, Phenotype: m.phenotype, 'Morphant Phenotype': m.morphantPhenotype};
+      return {id: m.id, serialNumber: m.serialNumber,
+        name: m.name, gene: m.gene, 'Alt Gene': m.alternateGeneName, researcher: m.researcher,
+        'aaChange': m.aaChange, 'actgChange': m.actgChange, spermFreezePlan: m.spermFreezePlan, vialsFrozen: m.vialsFrozen,
+        comment: m.comment, phenotype: m.phenotype, 'morphantPhenotype': m.morphantPhenotype,
+        mutationType: m.mutationType, screenType: m.screenType, zfinId: m.zfinId,
+      };
     }));
-    mutationSheet['!cols'] = [ {wch: 10}, {wch: 10}, {wch: 16}, {wch: 13}, {wch: 12}, {wch: 12},
-      {wch: 8}, {wch: 8}, {wch: 50}, {wch: 50}, {wch: 50}];
+    mutationSheet['!cols'] = [ {wch: 4}, {wch: 6},
+      {wch: 10}, {wch: 10}, {wch: 16}, {wch: 13},
+      {wch: 12}, {wch: 12}, {wch: 8}, {wch: 8},
+      {wch: 50}, {wch: 50}, {wch: 50},
+      {wch: 8}, {wch: 8}, {wch: 8}, {wch: 20 },
+    ];
     XLSX.utils.book_append_sheet(wb, mutationSheet, 'Mutations');
 
     const filterSheet = XLSX.utils.aoa_to_sheet([
