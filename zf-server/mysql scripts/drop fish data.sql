@@ -9,3 +9,7 @@ drop table if exists mutation;
 drop table if exists stock;
 drop table if exists transgene;
 drop table if exists tank;
+drop table if exists background;
+drop table if exists mutation_type;
+drop table if exists screen_type;
+drop table if exists user;
