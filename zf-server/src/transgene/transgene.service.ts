@@ -11,7 +11,6 @@ import {Logger} from 'winston';
 import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
 import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
 import {ZfinService} from '../zfin/zfin.service';
-import {ImportResponse} from '../common/import-response';
 import {MutationService} from '../mutation/mutation.service';
 
 @Injectable()
@@ -78,8 +77,7 @@ export class TransgeneService extends GenericService {
 
   // for bulk loading, when we create a mutant we can look to ZFIN for help in filling in
   // some of the fields and we may be getting some "owned" mutations with serial numbers
-  async import(dto: any): Promise<ImportResponse<Transgene>> {
-    const response: ImportResponse<Transgene> = new ImportResponse<Transgene>();
+  async import(dto: any): Promise<Transgene> {
     convertEmptyStringToNull(dto);
     this.ignoreAttribute(dto, 'id');
 
@@ -89,25 +87,20 @@ export class TransgeneService extends GenericService {
 
     // if possible, fill in some data using ZFIN
     candidate = await this.zfinService.updateTransgeneUsingZfin(candidate);
-    const errors = await this.validateForCreate(candidate);
-    if (errors.length > 0) {
-      response.errors = errors;
-    } else {
-      response.object = await this.repo.save(candidate);
-    }
-    return response;
+    await this.validateForImport(candidate);
+    return this.repo.save(candidate);
   }
 
-  async validateForCreate(t: Transgene): Promise<string[]> {
-    const errors: string[] = [];
+  async validateForImport(t: Transgene): Promise<boolean> {
     if (!t.allele) {
-      errors.push('Cannot create transgene without an allele name.');
-      return errors;
+      throw new BadRequestException('Cannot create transgene without an allele name.');
     }
 
+    const errors: string[] = [];
     const nameInUse = await this.nameInUse(t.allele);
     if (nameInUse) errors.push(nameInUse);
 
+    // For imports we allow serial numbers
     if (t.serialNumber) {
       let snInUse = await this.serialNumberInUse(t.serialNumber);
       if (snInUse) errors.push(snInUse);
@@ -121,7 +114,11 @@ export class TransgeneService extends GenericService {
       nickNameInUse = await this.mutationService.nickNameInUse(t.nickname);
       if (nickNameInUse) errors.push(nickNameInUse);
     }
-    return errors;
+
+    if (errors.length > 0) {
+      throw new BadRequestException(errors.join("; "));
+    }
+    return true;
   }
 
   // for updating, make sure the tg is there

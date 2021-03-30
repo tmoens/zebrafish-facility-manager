@@ -112,10 +112,9 @@ export class LoaderService {
   }
 
   import(type: ZFTypes, thing: any): Observable<Object> {
-    return this.http.post(this.serverURL + '/' + type + '/import/', thing)
-      .pipe(
-        catchError(this.handleError('Create ' + type + ' failed.', null))
-      );
+    // Note - we do not do the normal error handling here but let the importer
+    // do that as it needs to accumulate  error messages.
+    return this.http.post(this.serverURL + '/' + type + '/import/', thing);
   }
 
   // just like create but ask to auto-create the name using the next sequential name.

@@ -20,7 +20,6 @@ import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {Role} from '../guards/role.decorator';
 import {USER_ROLE} from '../common/auth/zf-roles';
 import {RoleGuard} from '../guards/role-guard.service';
-import {ImportResponse} from '../common/import-response';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
@@ -55,8 +54,8 @@ export class TransgeneController {
   @Role(USER_ROLE)
   @UseGuards(RoleGuard)
   @Post('import')
-  async import(@Body() newObj: Transgene): Promise<ImportResponse<Transgene>> {
-    return await this.transgeneService.import(newObj);
+  async import(@Body() dto: Transgene): Promise<Transgene> {
+    return await this.transgeneService.import(dto);
   }
 
   @Role(USER_ROLE)

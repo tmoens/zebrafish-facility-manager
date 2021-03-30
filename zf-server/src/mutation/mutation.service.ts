@@ -12,7 +12,6 @@ import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
 import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
 import {ZfinService} from '../zfin/zfin.service';
 import {TransgeneService} from '../transgene/transgene.service';
-import {ImportResponse} from '../common/import-response';
 
 
 @Injectable()
@@ -74,11 +73,9 @@ export class MutationService extends GenericService {
     return await this.repo.save(candidate);
   }
 
-
   // for bulk loading, when we create a mutant we can look to ZFIN for help in filling in
   // some of the fields and we may be getting some "owned" mutations with serial numbers
-  async import(dto: any): Promise<ImportResponse<Mutation>> {
-    const response: ImportResponse<Mutation> = new ImportResponse();
+  async import(dto: any): Promise<Mutation> {
     convertEmptyStringToNull(dto);
     this.ignoreAttribute(dto, 'id');
 
@@ -89,13 +86,8 @@ export class MutationService extends GenericService {
     // if possible, fill in some data using ZFIN
     candidate = await this.zfinService.updateMutationUsingZfin(candidate);
 
-    const errors = await this.validateForCreate(candidate);
-    if (errors.length > 0) {
-      response.errors = errors;
-    } else {
-      response.object = await this.repo.save(candidate);
-    }
-    return response;
+    await this.validateForImport(candidate);
+    return this.repo.save(candidate);
   }
 
   // for updating, make sure the mutation is there
@@ -163,16 +155,16 @@ export class MutationService extends GenericService {
     }
   }
 
-  async validateForCreate(m: Mutation): Promise<string[]> {
-    const errors: string[] = [];
+  async validateForImport(m: Mutation): Promise<boolean> {
     if (!m.name) {
-      errors.push('Cannot create mutation without a name.');
-      return errors;
+      throw new BadRequestException('Cannot create mutation without a name.');
     }
 
+    const errors: string[] = [];
     const nameInUse = await this.nameInUse(m.name);
     if (nameInUse) errors.push(nameInUse);
 
+    // For imports we allow serial numbers
     if (m.serialNumber) {
       let snInUse = await this.serialNumberInUse(m.serialNumber);
       if (snInUse) errors.push(snInUse);
@@ -186,7 +178,11 @@ export class MutationService extends GenericService {
       nickNameInUse = await this.tgService.nickNameInUse(m.nickname);
       if (nickNameInUse) errors.push(nickNameInUse);
     }
-    return errors;
+
+    if (errors.length > 0) {
+      throw new BadRequestException(errors.join("; "));
+    }
+    return true;
   }
 
   async nameInUse(name: string): Promise<string> {

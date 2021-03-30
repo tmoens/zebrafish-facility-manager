@@ -20,7 +20,6 @@ import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {Role} from '../guards/role.decorator';
 import {ADMIN_ROLE, USER_ROLE} from '../common/auth/zf-roles';
 import {RoleGuard} from '../guards/role-guard.service';
-import {ImportResponse} from '../common/import-response';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
@@ -60,8 +59,8 @@ export class MutationController {
   @Role(USER_ROLE)
   @UseGuards(RoleGuard)
   @Post('import')
-  async import(@Body() newObj: Mutation): Promise<ImportResponse<Mutation>> {
-    return await this.mutationService.import(newObj);
+  async import(@Body() dto: Mutation): Promise<Mutation> {
+    return await this.mutationService.import(dto);
   }
 
   @Role(USER_ROLE)

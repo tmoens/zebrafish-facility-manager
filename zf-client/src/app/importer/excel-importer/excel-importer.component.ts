@@ -3,8 +3,9 @@ import * as XLSX from 'xlsx';
 import {ParsingOptions} from 'xlsx';
 import {ZFTypes} from '../../helpers/zf-types';
 import {LoaderService} from '../../loader.service';
-import {ImportResponse} from '../../common/import-response';
 import {StockbookMigrator} from './stockbook-migrator';
+import {catchError} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 @Component({
   selector: 'app-excel-importer',
@@ -110,12 +111,16 @@ export class ExcelImporterComponent implements OnInit {
     this.toDo = this.dtos.length;
     this.done = 0;
     for (const dto of this.dtos) {
-      const response: ImportResponse<any> = await this.service.import(this.zfType, dto).toPromise();
-      if (response.errors) {
-        dto.importResult = 'Failure: ' + response.errors.join("; ");
-      }
-      if (response.object) {
-        dto.id = response.object.id;
+      const response = await this.service.import(this.zfType, dto)
+        .pipe(
+          catchError(err => {
+            dto.importResult = 'Failure: ' + err.error.message;
+            return of(null);
+          })
+        )
+        .toPromise();
+      if (response) {
+        dto.id = response.id;
         dto.importResult = 'Success';
       }
       this.done = this.done + 1;

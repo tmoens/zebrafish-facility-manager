@@ -13,10 +13,10 @@ import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
 import {UserFilter} from './user-filter';
 import {Brackets, SelectQueryBuilder} from 'typeorm';
 import {StockRepository} from '../stock/stock.repository';
-import {ImportResponse} from '../common/import-response';
+import {GenericService} from '../Generics/generic-service';
 
 @Injectable()
-export class UserService {
+export class UserService extends GenericService {
   constructor(
     @InjectRepository(UserRepository) private readonly repo: UserRepository,
     @InjectRepository(StockRepository) private readonly stockRepo: StockRepository,
@@ -25,6 +25,7 @@ export class UserService {
     private mailerService: ZFMailerService,
     private configService: ConfigService,
   ) {
+    super();
     this.makeSureAdminExists().then();
   }
 
@@ -168,7 +169,6 @@ export class UserService {
     return this.repo.findOne({where: {id: id, isActive: true}});
   }
 
-  // TODO - use the
   async create(dto: UserDTO): Promise<User> {
     convertEmptyStringToNull(dto);
     delete dto.id; // a new user can not have an id.
@@ -179,26 +179,19 @@ export class UserService {
     return this.repo.save(u);
   }
 
-  async import(dto: UserDTO): Promise<ImportResponse<User>> {
-    const response: ImportResponse<User> = new ImportResponse<User>();
+  async import(dto: UserDTO): Promise<User> {
     convertEmptyStringToNull(dto);
-    delete dto.id; // a new user can not have an id.
+    this.ignoreAttribute(dto, 'id');
     const candidate: User = plainToClass(User, dto);
-    const errors: string[] = await this.validateForCreate(candidate);
-    if (errors.length > 0) {
-      response.errors = errors;
-    } else {
-      const newPassword = candidate.setRandomPassword();
-      response.object = await this.repo.save(candidate);
-      console.log('Setting random password for ' + candidate.username + ': ' + newPassword);
+    const newPassword = candidate.setRandomPassword();
+    console.log('Setting random password for ' + candidate.username + ': ' + newPassword);
 
-      response.object = await this.repo.save(candidate);
-    }
-    return response;
+    await this.validateForImport(candidate);
+    return this.repo.save(candidate);
   }
 
   // TODO syntactical checks for length and valid e-mail etc.
-  async validateForCreate(user: UserDTO): Promise<string[]> {
+  async validateForImport(user: UserDTO): Promise<boolean> {
     const errors: string[] = [];
 
     // user's name is required and must be unique
@@ -229,7 +222,10 @@ export class UserService {
       errors.push(`initials "${user.initials}" is already in use.`);
     }
 
-    return errors;
+    if (errors.length > 0) {
+      throw new BadRequestException(errors.join("; "));
+    }
+    return true;
   }
 
   async resetPassword(dto: ResetPasswordDTO): Promise<User> {

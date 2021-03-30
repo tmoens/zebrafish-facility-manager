@@ -24,7 +24,6 @@ import {LocalAuthGuard} from '../guards/local-auth.guard';
 import {ZFMailerService} from '../mailer/mailer-service';
 import {plainToClass} from 'class-transformer';
 import {UserFilter} from './user-filter';
-import {ImportResponse} from '../common/import-response';
 
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -95,7 +94,7 @@ export class UserController {
   @Role(ADMIN_ROLE)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('import')
-  async import(@Body() dto: UserDTO): Promise<ImportResponse<User>> {
+  async import(@Body() dto: UserDTO): Promise<User> {
     console.log(JSON.stringify(dto));
     return this.service.import(dto);
   }

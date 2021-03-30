@@ -8,7 +8,7 @@ export class GenericService {
   // validation helpers for checking inbound request DTOs
   mustHaveAttribute(dto: any, attribute: string) {
     if (!dto[attribute]) {
-      const msg = '9706311 Cannot create a mutation without ' + attribute + '.';
+      const msg = '9706311 Cannot create without attribute: ' + attribute + '.';
       throw new BadRequestException(msg);
     }
   }
