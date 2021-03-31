@@ -1,4 +1,4 @@
-import {BadRequestException, Inject, Injectable} from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ConfigService} from '../config/config.service';
 import {StockRepository} from './stock.repository';
@@ -16,7 +16,7 @@ export class StockService extends GenericService {
     @InjectRepository(StockRepository)
     private readonly repo: StockRepository,
   ) {
-    super();
+    super(logger);
   }
 
   // For creation, create a fresh stock, merge in the DTO and save.
@@ -50,7 +50,7 @@ export class StockService extends GenericService {
           candidate.number +
           ' does not exist.';
         this.logger.error(msg);
-        throw new BadRequestException(msg);
+        this.logAndThrowException(msg);
       }
       candidate.subNumber = await this.repo.getNextSubStockNumber(candidate.number);
       // For sub-stock creation, take all the transgenes and mutations from the original stock
@@ -127,10 +127,8 @@ export class StockService extends GenericService {
     if (child.fertilizationDate &&
       parent.fertilizationDate &&
       child.fertilizationDate <= parent.fertilizationDate) {
-      const msg: string = 'Child stock (' + child.name + ') older than ' +
-        'parent stock (' + parent.name + ').';
-      this.logger.error(msg);
-      throw new BadRequestException(msg);
+      this.logAndThrowException('Child stock (' + child.name + ') older than ' +
+        'parent stock (' + parent.name + ').');
     }
   }
 
@@ -162,10 +160,8 @@ export class StockService extends GenericService {
   async validateAndRemove(stockId: any): Promise<any> {
     const stock: Stock = await this.repo.getStockWithRelations(stockId);
     if (!stock.isDeletable) {
-      const msg = 'Attempt to delete stock that either has descendants, or is alive in ' +
-        'some tank or has subStocks.';
-      this.logger.error(msg);
-      throw new BadRequestException(msg);
+      this.logAndThrowException('Attempt to delete stock that either has descendants, or is alive in ' +
+        'some tank or has subStocks.');
     }
     return await this.repo.remove(stock);
   }

@@ -17,5 +17,4 @@ export class UserFilter extends ZfGenericFilter {
     return !(this.text || this.inactiveOnly || this.activeOnly ||
       this.researcherOnly || this.piOnly || this.isLoggedIn);
   }
-
 }

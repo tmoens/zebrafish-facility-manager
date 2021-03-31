@@ -83,7 +83,7 @@ export class UserController {
     return await this.service.doesEmailExist(test);
   }
 
-  // This one is strange the way it is now, anyone anywhere could reset anyone else's password by knowing
+  // This one is strange the way it is now. Anyone anywhere could reset anyone else's password by knowing
   // another user's username.  Seems wrong.  But we cannot guard it with a normal JwtAuthGuard because
   // then the user would have to log in in order to be able to reset their forgotten password.
   @Put('resetPassword')
@@ -91,6 +91,7 @@ export class UserController {
     return this.service.resetPassword(dto);
   }
 
+  // Users can be created through import or from the GUI
   @Role(ADMIN_ROLE)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('import')

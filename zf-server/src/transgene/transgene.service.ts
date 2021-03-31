@@ -1,4 +1,4 @@
-import {BadRequestException, Inject, Injectable} from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ConfigService} from '../config/config.service';
 import {TransgeneRepository} from './transgene.repository';
@@ -21,7 +21,7 @@ export class TransgeneService extends GenericService {
     @InjectRepository(MutationRepository) private readonly mutationRepo: MutationRepository,
     private readonly zfinService: ZfinService,
   ) {
-    super();
+    super(logger);
   }
 
   // The next "owned" serial number comes from the max serial number from
@@ -90,7 +90,7 @@ export class TransgeneService extends GenericService {
 
   async validateForImport(t: Transgene): Promise<boolean> {
     if (!t.allele) {
-      throw new BadRequestException('Cannot create transgene without an allele name.');
+      this.logAndThrowException('Cannot create transgene without an allele name.');
     }
 
     const errors: string[] = [];
@@ -111,7 +111,7 @@ export class TransgeneService extends GenericService {
     }
 
     if (errors.length > 0) {
-      throw new BadRequestException(errors.join("; "));
+      this.logAndThrowException(errors.join("; "));
     }
     return true;
   }
@@ -140,12 +140,10 @@ export class TransgeneService extends GenericService {
   async validateAndRemove(id: any): Promise<any> {
     const candidate: Transgene = await this.mustExist(id);
     if (!(await this.repo.isDeletable(candidate.id))) {
-      const msg =
+      this.logAndThrowException(
         '3147643 attempt to delete transgene that exists in one or more stocks.' +
         ' Transgene id: ' +
-        candidate.id;
-      this.logger.error(msg);
-      throw new BadRequestException(msg);
+        candidate.id);
     }
 
     // When you use remove, TypeORM returns the object you deleted with the
@@ -160,9 +158,7 @@ export class TransgeneService extends GenericService {
   async mustExist(id: number): Promise<Transgene> {
     const candidate: Transgene = await this.repo.findOne(id);
     if (!candidate) {
-      const msg = '7684423 update a non-existent mutation.';
-      this.logger.error(msg);
-      throw new BadRequestException(msg);
+      this.logAndThrowException('7684423 update a non-existent transgene.');
     }
     return candidate;
   }
@@ -172,9 +168,7 @@ export class TransgeneService extends GenericService {
       where: {allele, descriptor}
     });
     if (t.length > 0) {
-      const msg = '9893064 attempt to create a transgene with a name that already exists.';
-      this.logger.error(msg);
-      throw new BadRequestException(msg);
+      this.logAndThrowException('9893064 attempt to create a transgene with a name that already exists.');
     }
     return true;
   }
@@ -205,11 +199,10 @@ export class TransgeneService extends GenericService {
   // the "owned" allele names for this facility.
   checkAlleleValidity(allele: string) {
     if (allele.startsWith(this.configService.facilityInfo.prefix)) {
-      const msg =
+      this.logAndThrowException(
         'You cannot name a transgene allele starting with ' +
         this.configService.facilityInfo.prefix +
-        '.';
-      throw new BadRequestException(msg);
+        '.');
     }
   }
 

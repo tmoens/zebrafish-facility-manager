@@ -1,4 +1,4 @@
-import {BadRequestException, Inject, Injectable, UnauthorizedException} from '@nestjs/common';
+import {Inject, Injectable, UnauthorizedException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {User} from './user.entity';
 import {plainToClass} from 'class-transformer';
@@ -25,14 +25,14 @@ export class UserService extends GenericService {
     private mailerService: ZFMailerService,
     private configService: ConfigService,
   ) {
-    super();
+    super(logger);
     this.makeSureAdminExists().then();
   }
 
-  // when a system starts up, it needs at least one user, in this case the admin user
-  // and password are set up so that the user must change her password when
+  // When a system starts up, it needs at least one user.
+  // If it is missing, we create one according to the settings in the config file.
+  // The account is set up so that the user must change her password when
   // she first logs in.
-  // FWIW, the config file checker ensures that the configuration fields are present.
   async makeSureAdminExists() {
     if (!await this.findByUserName(this.configService.defaultAdminUserName)) {
       const admin: User = await this.create({
@@ -45,6 +45,7 @@ export class UserService extends GenericService {
     }
   }
 
+  //====================== Operations =====================
   async login(user: User): Promise<string> {
     const token = this.buildToken(user);
     user.isLoggedIn = true;
@@ -58,8 +59,43 @@ export class UserService extends GenericService {
     return true;
   }
 
+  async validateUserByPassword(username: string, pass: string): Promise<User> {
+    const user = await this.findByUserName(username);
+    if (user && user.validatePassword(pass)) {
+      // Note we return the user with encrypted password and salt. We could remove those here.
+      // However, the user is ultimately returned with ClassSerializerInterceptor which applies
+      // the @Exclude annotation on these fields.  So bottom line, they do not get exported.
+      return user;
+    }
+    return null;
+  }
+
+  async findByUserName(username: string): Promise<User | undefined> {
+    return await this.repo.findOne({where: {username: username}});
+  }
+
+  //====================== Searches =====================
   async findAll(): Promise<User[]> {
     return this.repo.find({order: {'email': 'ASC'}});
+  }
+
+  async findOne(id: string): Promise<User> {
+    const u = await this.repo.findOne(id);
+    u.isDeletable = await this.isDeletable(u);
+    return u;
+  }
+
+  async findByUsernameOrEmail(usernameOrEmail: string): Promise<User | undefined> {
+    return await this.repo.findOne({
+      where: [
+        {username: usernameOrEmail},
+        {email: usernameOrEmail},
+      ],
+    });
+  }
+
+  async findActiveUser(id: string): Promise<User> {
+    return this.repo.findOne({where: {id: id, isActive: true}});
   }
 
   async findFiltered(filter: UserFilter): Promise<User[]> {
@@ -125,6 +161,7 @@ export class UserService extends GenericService {
     return await q.getMany();
   }
 
+  //================== Atomic Validation Checks ==================
   // A user cannot be deleted if active or if any stocks refer to it.
   async isDeletable(user: User): Promise<boolean> {
     if (user.isActive) {
@@ -137,12 +174,6 @@ export class UserService extends GenericService {
       .getRawOne();
 
     return (!res);
-  }
-
-  async findOne(id: string): Promise<User> {
-    const u = await this.repo.findOne(id);
-    u.isDeletable = await this.isDeletable(u);
-    return u;
   }
 
   async doesUsernameExist(username: string): Promise<boolean> {
@@ -165,33 +196,30 @@ export class UserService extends GenericService {
     return !!(u);
   }
 
-  async findActiveUser(id: string): Promise<User> {
-    return this.repo.findOne({where: {id: id, isActive: true}});
-  }
-
+  //========================== Creation ==================
   async create(dto: UserDTO): Promise<User> {
     convertEmptyStringToNull(dto);
-    delete dto.id; // a new user can not have an id.
-    const u: User = plainToClass(User, dto);
-    const newPassword = u.setRandomPassword();
-    console.log('Setting random password for ' + u.username + ': ' + newPassword);
-    this.mailerService.newUser(u, newPassword);
-    return this.repo.save(u);
+    this.ignoreAttribute(dto, 'id');
+    const candidate: User = plainToClass(User, dto);
+    await this.validateForCreate(candidate);
+    const newPassword = candidate.setRandomPassword();
+    console.log('Setting random password for ' + candidate.username + ': ' + newPassword);
+    this.mailerService.newUser(candidate, newPassword);
+    return this.repo.save(candidate);
   }
 
   async import(dto: UserDTO): Promise<User> {
     convertEmptyStringToNull(dto);
     this.ignoreAttribute(dto, 'id');
     const candidate: User = plainToClass(User, dto);
+    await this.validateForCreate(candidate);
     const newPassword = candidate.setRandomPassword();
     console.log('Setting random password for ' + candidate.username + ': ' + newPassword);
-
-    await this.validateForImport(candidate);
     return this.repo.save(candidate);
   }
 
   // TODO syntactical checks for length and valid e-mail etc.
-  async validateForImport(user: UserDTO): Promise<boolean> {
+  async validateForCreate(user: UserDTO): Promise<boolean> {
     const errors: string[] = [];
 
     // user's name is required and must be unique
@@ -223,11 +251,12 @@ export class UserService extends GenericService {
     }
 
     if (errors.length > 0) {
-      throw new BadRequestException(errors.join("; "));
+      this.logAndThrowException(errors.join("; "));
     }
     return true;
   }
 
+  //========================== Update ==================
   async resetPassword(dto: ResetPasswordDTO): Promise<User> {
     const u: User = await this.findByUsernameOrEmail(dto.usernameOrEmail);
     if (!u) {
@@ -237,21 +266,11 @@ export class UserService extends GenericService {
     return this.repo.save(u);
   }
 
-  async findByUsernameOrEmail(usernameOrEmail: string): Promise<User | undefined> {
-    return await this.repo.findOne({
-      where: [
-        {username: usernameOrEmail},
-        {email: usernameOrEmail},
-      ],
-    });
-  }
-
+  // TODO Validate for Update
   async update(dto: UserDTO): Promise<User> {
     convertEmptyStringToNull(dto)
     if (!dto.id) {
-      const message = "Received a user update without a user id!";
-      this.logger.error(message);
-      throw new BadRequestException(message);
+      this.logAndThrowException("Received a user update without a user id!");
     }
     const u: User = await this.repo.findOneOrFail(dto.id);
     // we do not update passwords this way...
@@ -261,9 +280,7 @@ export class UserService extends GenericService {
 
   async activate(dto: UserDTO): Promise<User> {
     if (!dto.id) {
-      const message = "Received a user update without a user id!";
-      this.logger.error(message);
-      throw new BadRequestException(message);
+      this.logAndThrowException("Received a user update without a user id!");
     }
     const u: User = await this.repo.findOneOrFail(dto.id);
     u.isActive = true;
@@ -272,9 +289,7 @@ export class UserService extends GenericService {
 
   async deactivate(dto: UserDTO): Promise<User> {
     if (!dto.id) {
-      const message = "Received a user update without a user id!";
-      this.logger.error(message);
-      throw new BadRequestException(message);
+      this.logAndThrowException("Received a user update without a user id!");
     }
     const u: User = await this.repo.findOneOrFail(dto.id);
     u.isActive = false;
@@ -284,49 +299,30 @@ export class UserService extends GenericService {
 
   async forceLogout(dto: UserDTO): Promise<User> {
     if (!dto.id) {
-      const message = "Received a user update without a user id!";
-      this.logger.error(message);
-      throw new BadRequestException(message);
+      this.logAndThrowException("Received a user update without a user id!");
     }
     const u: User = await this.repo.findOneOrFail(dto.id);
     u.isLoggedIn = false;
     return this.repo.save(u);
   }
 
-  async validateUserByPassword(username: string, pass: string): Promise<User> {
-    const user = await this.findByUserName(username);
-    if (user && user.validatePassword(pass)) {
-      // Note we return the user with encrypted password and salt. We could remove those here.
-      // However, the user is ultimately returned with ClassSerializerInterceptor which applies
-      // the @Exclude annotation on these fields.  So bottom line, they do not get exported.
-      return user;
-    }
-    return null;
-  }
-
   async changePassword(u: User, dto: UserPasswordChangeDTO): Promise<string> {
     if (!u.validatePassword(dto.currentPassword)) {
-      const message = 'Attempted password change for ' + u.username + ' with incorrect current password';
-      this.logger.error(message);
-      throw new BadRequestException(message);
+      this.logAndThrowException(
+        'Attempted password change for ' + u.username + ' with incorrect current password');
     }
     u.setPassword(dto.newPassword);
     await this.repo.save(u);
     return this.buildToken(u);
   }
 
+  //========================== Delete ==================
   async delete(id: string): Promise<any> {
     const u: User = await this.findOne(id);
     if (!u || !u.isDeletable) {
-      const message = "Tried to delete a user you shouldn't have been able to!";
-      this.logger.error(message);
-      throw new BadRequestException(message);
+      this.logAndThrowException("Tried to delete a user you shouldn't have been able to!");
     }
     return await this.repo.remove(u);
-  }
-
-  async findByUserName(username: string): Promise<User | undefined> {
-    return await this.repo.findOne({where: {username: username}});
   }
 
   buildToken(user: User): string {
@@ -338,5 +334,4 @@ export class UserService extends GenericService {
     };
     return this.jwtService.sign(payload);
   }
-
 }

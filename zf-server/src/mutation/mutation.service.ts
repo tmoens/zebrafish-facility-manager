@@ -22,7 +22,7 @@ export class MutationService extends GenericService {
     @InjectRepository(TransgeneRepository) private readonly tgRepo: TransgeneRepository,
     private readonly zfinService: ZfinService,
   ) {
-    super();
+    super(logger);
   }
 
   // The next "owned" serial number comes from the max serial number from
@@ -44,6 +44,7 @@ export class MutationService extends GenericService {
     };
   }
 
+  //====================== Create =====================
   // creating NON "owned" mutations
   async validateAndCreate(dto: any): Promise<Mutation> {
     convertEmptyStringToNull(dto);
@@ -61,12 +62,13 @@ export class MutationService extends GenericService {
   // for creating the next "owned" mutation, we auto-create the name
   async validateAndCreateOwned(dto: any): Promise<Mutation> {
     convertEmptyStringToNull(dto);
+    this.ignoreAttribute(dto, 'id');
     dto.serialNumber = await this.getNextSerialNumber();
     // auto name "owned" mutations
-    dto.name =
-      this.configService.facilityInfo.prefix + String(dto.serialNumber);
+    dto.name = this.configService.facilityInfo.prefix + String(dto.serialNumber);
     let candidate: Mutation = new Mutation();
     candidate = plainToClassFromExist(candidate, dto);
+    await this.mustNotExist(candidate.name); // not that it can, given how we made it.
     return await this.repo.save(candidate);
   }
 
@@ -112,12 +114,10 @@ export class MutationService extends GenericService {
   async validateAndRemove(id: any): Promise<any> {
     const candidate: Mutation = await this.mustExist(id);
     if (!(await this.repo.isDeletable(candidate.id))) {
-      const msg =
+      this.logAndThrowException(
         '3147643 attempt to delete mutation that exists in one or more stocks.' +
         ' Mutation id: ' +
-        candidate.id;
-      this.logger.error(msg);
-      throw new BadRequestException(msg);
+        candidate.id);
     }
 
     // When you use remove, TypeORM returns the object you deleted with the
@@ -132,9 +132,7 @@ export class MutationService extends GenericService {
   async mustExist(id: number): Promise<Mutation> {
     const candidate: Mutation = await this.repo.findOne(id);
     if (!candidate) {
-      const msg = '7684423 update a non-existent mutation.';
-      this.logger.error(msg);
-      throw new BadRequestException(msg);
+      this.logAndThrowException('7684423 update a non-existent mutation.');
     }
     return candidate;
   }
@@ -144,9 +142,7 @@ export class MutationService extends GenericService {
       where: {name}
     });
     if (m.length > 0) {
-      const msg = '9893064 attempt to create a transgene with a name that already exists.';
-      this.logger.error(msg);
-      throw new BadRequestException(msg);
+      this.logAndThrowException('9893064 attempt to create a transgene with a name that already exists.');
     } else {
       return true;
     }
@@ -175,7 +171,7 @@ export class MutationService extends GenericService {
     }
 
     if (errors.length > 0) {
-      throw new BadRequestException(errors.join("; "));
+      this.logAndThrowException(errors.join("; "));
     }
     return true;
   }
@@ -206,11 +202,10 @@ export class MutationService extends GenericService {
   // the "owned" names for this facility.
   checkNameValidity(name: string) {
     if (name.startsWith(this.configService.facilityInfo.prefix)) {
-      const msg =
+      this.logAndThrowException(
         'You cannot name a mutation starting with ' +
         this.configService.facilityInfo.prefix +
-        '.';
-      throw new BadRequestException(msg);
+        '.');
     }
   }
 

@@ -18,11 +18,15 @@ export class TankController {
     private readonly repo: TankRepository,
   ) {}
 
+  // TODO use the service, not the repo
   @Get()
   async findFiltered(@Query() params): Promise<Tank[]> {
     return await this.repo.findFiltered(params);
   }
 
+  // TODO get the next free tanks (after a given tank name or partial name)
+
+  // TODO use the service, not the repo
   @Get('auditReport')
   async getReport(): Promise<any[]> {
     return await this.repo.getAuditReport();
@@ -33,4 +37,8 @@ export class TankController {
   async import(@Body() dto: TankDto): Promise<Tank> {
     return this.service.import(dto);
   }
+
+  // For now, there are no CRUD operations for tanks.
+  // The only way to get more is to "import"  them and the
+  // only way to remove them is with a direct database query.
 }
