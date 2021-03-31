@@ -1,9 +1,9 @@
 import {EntityRepository, Repository} from 'typeorm';
 import {Transgene} from './transgene.entity';
 import {TransgeneFilter} from './transgene.filter';
-import {Logger} from "winston";
-import {Inject} from "@nestjs/common";
-import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
+import {Logger} from 'winston';
+import {Inject} from '@nestjs/common';
+import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
 
 @EntityRepository(Transgene)
 export class TransgeneRepository extends Repository<Transgene> {
@@ -65,17 +65,32 @@ export class TransgeneRepository extends Repository<Transgene> {
     const x = await this.createQueryBuilder('m')
       .select('m.id')
       .innerJoin('m.stocks', 'stock')
-      .where('m.id = :id', { id })
+      .where('m.id = :id', {id})
       .getOne();
     return !x;
   }
 
-  // What is the next available sequence number for "owned" transgenes
+  // What max serial number in use for "owned" transgenes
   async getMaxSerialNumber(): Promise<number> {
     const latest = await this.createQueryBuilder('m')
       .select('MAX(m.serialNumber)', 'max')
       .getRawOne();
-    return Number(latest.max) + 1;
+    if (!latest) {
+      return 0;
+    } else {
+      return Number(latest.max);
+    }
+  }
+
+  async serialNumberInUse(serialNumber: number): Promise<string> {
+    const tg: Transgene[] = await this.find({
+      where: {serialNumber}
+    });
+    if (tg.length > 0) {
+      return `Serial number "${serialNumber}" is already in use for transgene ${tg[0].name}`;
+    } else {
+      return null;
+    }
   }
 
   // values that can be used to auto-complete various fields in the GUI

@@ -1,4 +1,4 @@
-import {BadRequestException, forwardRef, Inject, Injectable} from '@nestjs/common';
+import {BadRequestException, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ConfigService} from '../config/config.service';
 import {MutationRepository} from './mutation.repository';
@@ -11,7 +11,6 @@ import {Logger} from 'winston';
 import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
 import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
 import {ZfinService} from '../zfin/zfin.service';
-import {TransgeneService} from '../transgene/transgene.service';
 
 
 @Injectable()
@@ -22,8 +21,6 @@ export class MutationService extends GenericService {
     @InjectRepository(MutationRepository) private readonly repo: MutationRepository,
     @InjectRepository(TransgeneRepository) private readonly tgRepo: TransgeneRepository,
     private readonly zfinService: ZfinService,
-    @Inject(forwardRef(() => TransgeneService))
-    private readonly tgService: TransgeneService,
   ) {
     super();
   }
@@ -34,8 +31,8 @@ export class MutationService extends GenericService {
     const nextMutationNumber = await this.repo.getMaxSerialNumber();
     const nextTransgeneNumber = await this.tgRepo.getMaxSerialNumber();
     return nextMutationNumber > nextTransgeneNumber
-      ? nextMutationNumber
-      : nextTransgeneNumber;
+      ? nextMutationNumber + 1
+      : nextTransgeneNumber + 1;
   }
 
   // Function to tell find the next available name for an "owned" mutation.
@@ -166,16 +163,14 @@ export class MutationService extends GenericService {
 
     // For imports we allow serial numbers
     if (m.serialNumber) {
-      let snInUse = await this.serialNumberInUse(m.serialNumber);
+      let snInUse = await this.repo.serialNumberInUse(m.serialNumber);
       if (snInUse) errors.push(snInUse);
-      snInUse = await this.tgService.serialNumberInUse(m.serialNumber);
+      snInUse = await this.tgRepo.serialNumberInUse(m.serialNumber);
       if (snInUse) errors.push(snInUse);
     }
 
     if (m.nickname) {
-      let nickNameInUse = await this.nickNameInUse(m.nickname);
-      if (nickNameInUse) errors.push(nickNameInUse);
-      nickNameInUse = await this.tgService.nickNameInUse(m.nickname);
+      const nickNameInUse = await this.nickNameInUse(m.nickname);
       if (nickNameInUse) errors.push(nickNameInUse);
     }
 
@@ -196,23 +191,12 @@ export class MutationService extends GenericService {
     }
   }
 
-  async serialNumberInUse(serialNumber: number): Promise<string> {
-    const m: Mutation[] = await this.repo.find({
-      where: {serialNumber}
-    });
-    if (m.length > 0) {
-      return `Serial number "${serialNumber}" is already in use mutation ${m[0].name}`;
-    } else {
-      return null;
-    }
-  }
-
   async nickNameInUse(nickname: string): Promise<string> {
     const m: Mutation[] = await this.repo.find({
       where: {nickname}
     });
     if (m.length > 0) {
-      return `Nickname "${nickname}" is already in use  for mutation ${m[0].name}`;
+      return `Nickname "${nickname}" is already in use for mutation ${m[0].name}`;
     } else {
       return null;
     }

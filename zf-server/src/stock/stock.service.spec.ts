@@ -13,11 +13,10 @@ import {Mutation} from '../mutation/mutation.entity';
 import {classToPlain} from 'class-transformer';
 import {StockFilter} from './stock-filter';
 import * as moment from 'moment';
-import * as winston from "winston";
-import {Logger} from "winston";
-import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
-import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
-import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
+import * as winston from 'winston';
+import {Logger} from 'winston';
+import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from 'nest-winston';
+import {utilities as nestWinstonModuleUtilities} from 'nest-winston/dist/winston.utilities';
 
 describe('Stock Service testing', () => {
   let logger: Logger;
@@ -117,13 +116,11 @@ describe('Stock Service testing', () => {
 
       it('4082281 create (and get and delete) all atomic fields', async () => {
         const s = {
-          description: String(Math.random()),
-          pi: String(Math.random()),
-          researcher: String(Math.random()),
-          externalMatId: String(Math.random()).substr(0, 10),
-          externalMatDescription: String(Math.random()),
-          externalPatId: String(Math.random()).substr(0, 10),
-          externalPatDescription: String(Math.random()),
+          description: 'des' + String(Math.random()),
+          externalMatId: 'x' + String(Math.random()).substr(0, 10),
+          externalMatDescription: 'y' + String(Math.random()),
+          externalPatId: 'z' + String(Math.random()).substr(0, 10),
+          externalPatDescription: 'a' + String(Math.random()),
           comment: '4082281 create (and get and delete) full stock',
           fertilizationDate: '2020-07-31',
         };
@@ -131,8 +128,6 @@ describe('Stock Service testing', () => {
         // retrieve it again
         const retrievedStock: Stock = await stockRepo.mustExist(stock.id);
         expect(retrievedStock.description).toBe(s.description);
-        expect(retrievedStock.pi).toBe(s.pi);
-        expect(retrievedStock.researcher).toBe(s.researcher);
         expect(retrievedStock.externalMatId).toBe(s.externalMatId);
         expect(retrievedStock.externalMatDescription).toBe(s.externalMatDescription);
         expect(retrievedStock.externalPatId).toBe(s.externalPatId);
@@ -268,8 +263,6 @@ describe('Stock Service testing', () => {
         const s = {
           id: initialStock.id,
           description: String(Math.random()),
-          pi: String(Math.random()),
-          researcher: String(Math.random()),
           externalMatId: String(Math.random()).substr(0, 10),
           externalMatDescription: String(Math.random()),
           externalPatId: String(Math.random()).substr(0, 10),
@@ -279,8 +272,6 @@ describe('Stock Service testing', () => {
         };
         const updatedStock: Stock = await stockService.validateAndUpdate(s);
         expect(updatedStock.description).toBe(s.description);
-        expect(updatedStock.pi).toBe(s.pi);
-        expect(updatedStock.researcher).toBe(s.researcher);
         expect(updatedStock.externalMatId).toBe(s.externalMatId);
         expect(updatedStock.externalMatDescription).toBe(s.externalMatDescription);
         expect(updatedStock.externalPatId).toBe(s.externalPatId);
@@ -451,31 +442,26 @@ describe('Stock Service testing', () => {
     const stocksForFilterTests: any[] = [
       {
         description: '8188099 stock11 x',
-        researcher: 'Fred Flintstone',
         fertilizationDate: TEN_DAYS_AGO,
         comment: 'abcdefg',
       },
       {
         description: '8188099 stock21 x',
-        researcher: 'Wilma Flintstone',
         fertilizationDate: ELEVEN_DAYS_AGO,
         comment: 'cdefghi',
       },
       {
         description: '8188099 stock22 y',
-        researcher: 'Fred Flintstone',
         fertilizationDate: ELEVEN_DAYS_AGO,
         comment: 'defghkl',
       },
       {
         description: '8188099 stock23 xy',
-        researcher: 'Barney Rubble',
         fertilizationDate: TEN_DAYS_AGO,
         comment: 'abqp',
       },
       {
         description: '8188099 stock2 x',
-        researcher: 'BamBam',
         fertilizationDate: ELEVEN_DAYS_AGO,
         comment: 'y',
       },
@@ -538,15 +524,6 @@ describe('Stock Service testing', () => {
       expect(reportList.length).toBe(4);
     });
 
-    it('8608440 matches 2 researchers, 3 stocks (case insensitivity tested)', async () => {
-      const filter: StockFilter = new StockFilter();
-      filter.researcher = 'flINtstOne';
-      const list = await stockRepo.findFiltered(filter);
-      expect(list.length).toBe(3);
-      const reportList = await stockRepo.getStocksForReport(filter);
-      expect(reportList.length).toBe(3);
-    });
-
     it('8324381 age test or older', async () => {
       const filter: StockFilter = new StockFilter();
       filter.age = 10;
@@ -584,48 +561,6 @@ describe('Stock Service testing', () => {
 
   describe('876126 Miscellaneous Stock testing', () => {
 
-    it('6844284 Autocomplete options', async () => {
-      // The options is the list of unique researchers in the database.
-      // Test Strategy:
-      // Check what the options are to start.
-      const initialOptions: AutoCompleteOptions = await stockRepo.getAutoCompleteOptions();
-
-      // Add a stock with an almost certainly new researcher and save it.
-      const randomResearcher1: string = String(Math.random());
-      const s1 = {
-        description: '6844284 for stock autocomplete options',
-        researcher: randomResearcher1,
-      };
-      const stock1: Stock = await stockService.validateAndCreate(s1);
-      let options: AutoCompleteOptions = await stockRepo.getAutoCompleteOptions();
-      // There should be one more option than we started and we know what it should be.
-      expect(initialOptions.researcher.length === options.researcher.length + 1 &&
-        options.researcher.includes(randomResearcher1));
-
-      // Add another stocks with the same new researcher.
-      const s2 = {
-        description: '6844284 for stock autocomplete options',
-        researcher: randomResearcher1,
-      };
-      const stock2: Stock = await stockService.validateAndCreate(s2);
-      options = await stockRepo.getAutoCompleteOptions();
-      // There should still only be one more option than we started with.
-      expect(initialOptions.researcher.length === options.researcher.length + 1 &&
-        options.researcher.includes(randomResearcher1));
-
-      // Delete the first stock we added - things should stay the same.
-      await stockRepo.delete(stock1.id);
-      options = await stockRepo.getAutoCompleteOptions();
-      // There should still only be one more option than we started with.
-      expect(initialOptions.researcher.length === options.researcher.length + 1 &&
-        options.researcher.includes(randomResearcher1));
-
-      // Delete the other we added and everything should be back to the the initial state.
-      await stockRepo.delete(stock2.id);
-      options = await stockRepo.getAutoCompleteOptions();
-      expect(initialOptions.researcher.length === options.researcher.length &&
-        !options.researcher.includes(randomResearcher1));
-    });
 
     it('6581267 find a stock by name.', async () => {
       const s = {

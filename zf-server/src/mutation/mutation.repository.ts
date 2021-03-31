@@ -1,7 +1,7 @@
 import {Brackets, EntityRepository, Repository} from 'typeorm';
 import {Mutation} from './mutation.entity';
 import {MutationFilter} from './mutation.filter';
-import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
+import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
 
 @EntityRepository(Mutation)
 export class MutationRepository extends Repository<Mutation> {
@@ -109,11 +109,28 @@ export class MutationRepository extends Repository<Mutation> {
     return list.map((i: any) => i[field]);
   }
 
-  // What is the next available serial number for "owned" mutations
+  // What max serial number in use for "owned" mutations
   async getMaxSerialNumber(): Promise<number> {
     const latest = await this.createQueryBuilder('m')
       .select('MAX(m.serialNumber)', 'max')
       .getRawOne();
-    return  Number(latest.max) + 1;
+    if (!latest) {
+      return 0;
+    } else {
+      return Number(latest.max);
+    }
   }
+
+  async serialNumberInUse(serialNumber: number): Promise<string> {
+    const m: Mutation[] = await this.find({
+      where: {serialNumber}
+    });
+    if (m.length > 0) {
+      return `Serial number "${serialNumber}" is already in use mutation ${m[0].name}`;
+    } else {
+      return null;
+    }
+  }
+
+
 }

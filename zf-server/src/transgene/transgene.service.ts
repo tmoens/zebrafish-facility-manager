@@ -1,4 +1,4 @@
-import {BadRequestException, forwardRef, Inject, Injectable} from '@nestjs/common';
+import {BadRequestException, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ConfigService} from '../config/config.service';
 import {TransgeneRepository} from './transgene.repository';
@@ -11,7 +11,6 @@ import {Logger} from 'winston';
 import {convertEmptyStringToNull} from '../helpers/convertEmptyStringsToNull';
 import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
 import {ZfinService} from '../zfin/zfin.service';
-import {MutationService} from '../mutation/mutation.service';
 
 @Injectable()
 export class TransgeneService extends GenericService {
@@ -21,8 +20,6 @@ export class TransgeneService extends GenericService {
     @InjectRepository(TransgeneRepository) private readonly repo: TransgeneRepository,
     @InjectRepository(MutationRepository) private readonly mutationRepo: MutationRepository,
     private readonly zfinService: ZfinService,
-    @Inject(forwardRef(() => MutationService))
-    private readonly mutationService: MutationService,
   ) {
     super();
   }
@@ -33,8 +30,8 @@ export class TransgeneService extends GenericService {
     const nextMutationNumber = await this.mutationRepo.getMaxSerialNumber();
     const nextTransgeneNumber = await this.repo.getMaxSerialNumber();
     return nextMutationNumber > nextTransgeneNumber
-      ? nextMutationNumber
-      : nextTransgeneNumber;
+      ? nextMutationNumber + 1
+      : nextTransgeneNumber + 1;
   }
 
   // Function to tell find the next available name for an "owned" transgene.
@@ -102,16 +99,14 @@ export class TransgeneService extends GenericService {
 
     // For imports we allow serial numbers
     if (t.serialNumber) {
-      let snInUse = await this.serialNumberInUse(t.serialNumber);
+      let snInUse = await this.repo.serialNumberInUse(t.serialNumber);
       if (snInUse) errors.push(snInUse);
-      snInUse = await this.mutationService.serialNumberInUse(t.serialNumber);
+      snInUse = await this.mutationRepo.serialNumberInUse(t.serialNumber);
       if (snInUse) errors.push(snInUse);
     }
 
     if (t.nickname) {
-      let nickNameInUse = await this.nickNameInUse(t.nickname);
-      if (nickNameInUse) errors.push(nickNameInUse);
-      nickNameInUse = await this.mutationService.nickNameInUse(t.nickname);
+      const nickNameInUse = await this.nickNameInUse(t.nickname);
       if (nickNameInUse) errors.push(nickNameInUse);
     }
 
@@ -190,17 +185,6 @@ export class TransgeneService extends GenericService {
     });
     if (tg.length > 0) {
       return `Transgene name "${allele}" is already in use`;
-    } else {
-      return null;
-    }
-  }
-
-  async serialNumberInUse(serialNumber: number): Promise<string> {
-    const tg: Transgene[] = await this.repo.find({
-      where: {serialNumber}
-    });
-    if (tg.length > 0) {
-      return `Serial number "${serialNumber}" is already in use for transgene ${tg[0].name}`;
     } else {
       return null;
     }

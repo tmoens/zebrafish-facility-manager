@@ -1,4 +1,4 @@
-import { Test } from '@nestjs/testing';
+import {Test} from '@nestjs/testing';
 import {getCustomRepositoryToken, TypeOrmModule} from '@nestjs/typeorm';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
@@ -9,10 +9,12 @@ import {MutationService} from './mutation.service';
 import {TransgeneRepository} from '../transgene/transgene.repository';
 import {Transgene} from '../transgene/transgene.entity';
 import {MutationFilter} from './mutation.filter';
-import * as winston from "winston";
-import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
-import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
-import {Logger} from "winston";
+import * as winston from 'winston';
+import {Logger} from 'winston';
+import {utilities as nestWinstonModuleUtilities} from 'nest-winston/dist/winston.utilities';
+import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from 'nest-winston';
+import {ZfinService} from '../zfin/zfin.service';
+import {ZfinModule} from '../zfin/zfin.module';
 
 describe('MutationService testing', () => {
   let logger: Logger;
@@ -20,6 +22,7 @@ describe('MutationService testing', () => {
   let mutationRepo: MutationRepository;
   let transgeneRepo: TransgeneRepository;
   let configService: ConfigService;
+  let zfinService: ZfinService;
   let connection: Connection;
   const consoleLog = new (winston.transports.Console)({
     format: winston.format.combine(
@@ -31,6 +34,7 @@ describe('MutationService testing', () => {
     const module = await Test.createTestingModule({
       imports: [
         ConfigModule,
+        ZfinModule,
         TypeOrmModule.forRootAsync(
           {
             imports: [ConfigModule],
@@ -52,10 +56,11 @@ describe('MutationService testing', () => {
     }).compile();
     logger = module.get(WINSTON_MODULE_NEST_PROVIDER);
     configService = new ConfigService();
+    zfinService = new ZfinService();
     connection = module.get(Connection);
     mutationRepo = module.get<MutationRepository>(MutationRepository);
     transgeneRepo = module.get<TransgeneRepository>(TransgeneRepository);
-    mutationService = new MutationService(logger, configService, mutationRepo, transgeneRepo);
+    mutationService = new MutationService(logger, configService, mutationRepo, transgeneRepo, zfinService);
 
   });
 

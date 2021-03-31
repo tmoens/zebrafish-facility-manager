@@ -9,11 +9,13 @@ import {MutationRepository} from '../mutation/mutation.repository';
 import {Mutation} from '../mutation/mutation.entity';
 import {TransgeneFilter} from './transgene.filter';
 import {TransgeneRepository} from './transgene.repository';
-import * as winston from "winston";
-import {Logger} from "winston";
-import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
-import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
-import {AutoCompleteOptions} from "../helpers/autoCompleteOptions";
+import * as winston from 'winston';
+import {Logger} from 'winston';
+import {utilities as nestWinstonModuleUtilities} from 'nest-winston/dist/winston.utilities';
+import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from 'nest-winston';
+import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
+import {ZfinModule} from '../zfin/zfin.module';
+import {ZfinService} from '../zfin/zfin.service';
 
 describe('TransgeneService testing', () => {
   let logger: Logger;
@@ -21,6 +23,7 @@ describe('TransgeneService testing', () => {
   let mutationRepo: MutationRepository;
   let transgeneRepo: TransgeneRepository;
   let configService: ConfigService;
+  let zfinService: ZfinService;
   let connection: Connection;
   const consoleLog = new (winston.transports.Console)({
     format: winston.format.combine(
@@ -32,6 +35,7 @@ describe('TransgeneService testing', () => {
     const module = await Test.createTestingModule({
       imports: [
         ConfigModule,
+        ZfinModule,
         TypeOrmModule.forRootAsync({
           imports: [ConfigModule],
           useExisting: ConfigService,
@@ -58,10 +62,11 @@ describe('TransgeneService testing', () => {
     }).compile();
     logger = module.get(WINSTON_MODULE_NEST_PROVIDER);
     configService = new ConfigService();
+    zfinService = new ZfinService();
     connection = module.get(Connection);
     transgeneRepo = module.get<TransgeneRepository>(TransgeneRepository);
     mutationRepo = module.get<MutationRepository>(MutationRepository);
-    service = new TransgeneService(logger, configService, transgeneRepo, mutationRepo);
+    service = new TransgeneService(logger, configService, transgeneRepo, mutationRepo, zfinService);
   });
 
   describe('4974046 creation of "owned" transgenes', () => {
