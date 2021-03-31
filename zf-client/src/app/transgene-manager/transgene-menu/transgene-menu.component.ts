@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {TransgeneService} from '../transgene.service';
 import {ZFTypes} from '../../helpers/zf-types';
+import {ZFTool} from '../../helpers/zf-tool';
 
 @Component({
   selector: 'app-transgene-menu',
@@ -22,19 +23,19 @@ export class TransgeneMenuComponent implements OnInit {
   }
 
   create() {
-    this.router.navigate(['transgene_manager/' + EditMode.CREATE, {
+    this.router.navigate([ZFTool.TRANSGENE_MANAGER.route + '/' + EditMode.CREATE, {
       mode: EditMode.CREATE,
     }]);
   }
 
   createNext() {
-    this.router.navigate(['transgene_manager/' + EditMode.CREATE_NEXT, {
+    this.router.navigate([ZFTool.TRANSGENE_MANAGER.route + '/' + EditMode.CREATE_NEXT, {
       mode: EditMode.CREATE_NEXT,
     }]);
   }
 
   edit() {
-    this.router.navigate(['transgene_manager/' + EditMode.EDIT, {
+    this.router.navigate([ZFTool.TRANSGENE_MANAGER.route + '/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
     }]);

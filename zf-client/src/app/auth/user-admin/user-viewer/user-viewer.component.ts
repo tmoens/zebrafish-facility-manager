@@ -6,6 +6,7 @@ import {UserAdminService} from '../user-admin.service';
 import {UserDTO} from '../../UserDTO';
 import {AuthService} from '../../auth.service';
 import {AppStateService} from '../../../app-state.service';
+import {ZFTool} from '../../../helpers/zf-tool';
 
 @Component({
   selector: 'app-user-viewer',
@@ -59,7 +60,7 @@ export class UserViewerComponent implements OnInit {
       } else {
         // if there is no id in the route, lets see a mutation is already selected and if so, navigate to it.
         if (this.service.selected) {
-          this.router.navigateByUrl('user_admin/view/' + this.service.selected.id, {replaceUrl: true});
+          this.router.navigateByUrl(ZFTool.USER_MANAGER.route + '/view/' + this.service.selected.id, {replaceUrl: true});
         }
       }
     });
@@ -67,7 +68,7 @@ export class UserViewerComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['user_admin/' + EditMode.EDIT, {
+    this.router.navigate([ZFTool.USER_MANAGER.route + '/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
     }]);

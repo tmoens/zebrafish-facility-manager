@@ -12,6 +12,7 @@ import {ScreenSizes} from "../../helpers/screen-sizes";
 import {AppStateService} from "../../app-state.service";
 import {LoaderService} from '../../loader.service';
 import {ZfinMutationDto} from '../../common/zfin/zfin-mutation.dto';
+import {ZFTool} from '../../helpers/zf-tool';
 
 
 @Component({
@@ -154,7 +155,7 @@ export class MutationEditorComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigateByUrl('mutation_manager/view').then();
+    this.router.navigateByUrl(ZFTool.MUTATION_MANAGER.route + '/view').then();
   }
 
   revert() {

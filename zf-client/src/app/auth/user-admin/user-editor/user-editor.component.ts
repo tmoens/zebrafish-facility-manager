@@ -10,6 +10,7 @@ import {map} from 'rxjs/operators';
 import {AppRoles} from '../../app-roles';
 import {AuthService} from '../../auth.service';
 import {AppStateService} from '../../../app-state.service';
+import {ZFTool} from '../../../helpers/zf-tool';
 
 @Component({
   selector: 'app-user-editor',
@@ -106,7 +107,7 @@ export class UserEditorComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['user_admin/view']);
+    this.router.navigate([ZFTool.USER_MANAGER.route + '/view']);
   }
 
   revert() {

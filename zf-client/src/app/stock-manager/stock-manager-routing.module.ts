@@ -13,10 +13,11 @@ import {StockGeneticsEditorComponent} from './stock-genetics-editor/stock-geneti
 import {TankWalkerComponent} from './tank-walker/tank-walker.component';
 import {CrossLabelMakerComponent} from './cross-label-maker/cross-label-maker.component';
 import {TankLabelMakerComponent} from './tank-label-maker/tank-label-maker.component';
+import {ZFTool} from '../helpers/zf-tool';
 
 const stockManagerRoutes: Routes = [
   {
-    path: 'stock_manager',
+    path: ZFTool.STOCK_MANAGER.route,
     component: StockManagerComponent,
     children: [
       {

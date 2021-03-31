@@ -14,6 +14,7 @@ import {ZfGenericDto} from '../../zf-generic/zfgeneric-dto';
 import {ZFTypes} from '../../helpers/zf-types';
 import {UserDTO} from '../../auth/UserDTO';
 import {AuthApiService} from '../../auth/auth-api.service';
+import {ZFTool} from '../../helpers/zf-tool';
 
 /**
  * A two-part component: a filter for stocks and a list of filtered stocks.
@@ -191,7 +192,7 @@ export class StockSelectorComponent implements OnInit {
   // b) navigate to view the selected transgene
   onSelect(instance: ZfGenericDto | null) {
     this.selected.emit(instance as StockDto);
-    this.router.navigate(['stock_manager/view/' + instance.id]).then();
+    this.router.navigate([ZFTool.STOCK_MANAGER.route + '/view/' + instance.id]).then();
   }
 
   onPreselect(id) {

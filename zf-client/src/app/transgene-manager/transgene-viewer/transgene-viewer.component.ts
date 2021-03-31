@@ -6,6 +6,7 @@ import {EditMode} from '../../zf-generic/zf-edit-modes';
 import {TransgeneDto} from "../transgene-dto";
 import {ZFTypes} from "../../helpers/zf-types";
 import {AppStateService, ZFToolStates} from "../../app-state.service";
+import {ZFTool} from '../../helpers/zf-tool';
 
 /**
  * Always view the selected item as held in the service.
@@ -67,14 +68,14 @@ export class TransgeneViewerComponent implements OnInit {
         // (e.g. on restart) and if so, navigate to it.
         const storedId = this.appState.getToolState(ZFTypes.TRANSGENE, ZFToolStates.SELECTED_ID);
         if (storedId) {
-          this.router.navigateByUrl('transgene_manager/view/' + storedId, {replaceUrl: true}).then();
+          this.router.navigateByUrl(ZFTool.TRANSGENE_MANAGER.route + '/view/' + storedId, {replaceUrl: true}).then();
         }
       }
     });
   }
 
   edit() {
-    this.router.navigate(['transgene_manager/' + EditMode.EDIT, {
+    this.router.navigate([ZFTool.TRANSGENE_MANAGER.route + '/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
     }]);

@@ -7,6 +7,7 @@ import {TransgeneDto} from '../../transgene-manager/transgene-dto';
 import {Router} from '@angular/router';
 import {PrintService} from '../../printing/print.service';
 import {TankLabel} from '../../printing/tank-label/tank-label';
+import {ZFTool} from '../../helpers/zf-tool';
 
 @Component({
   selector: 'app-tank-label-maker',
@@ -59,7 +60,7 @@ export class TankLabelMakerComponent implements OnInit {
   }
 
   done() {
-    this.router.navigateByUrl('stock_manager/view').then();
+    this.router.navigateByUrl(ZFTool.STOCK_MANAGER.route + '/view').then();
   };
 
   revert() {

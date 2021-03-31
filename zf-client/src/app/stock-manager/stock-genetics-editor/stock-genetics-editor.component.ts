@@ -14,6 +14,7 @@ import {TransgeneDto} from "../../transgene-manager/transgene-dto";
 import {debounceTime, startWith} from "rxjs/operators";
 import {ScreenSizes} from "../../helpers/screen-sizes";
 import {AppStateService} from "../../app-state.service";
+import {ZFTool} from '../../helpers/zf-tool';
 
 /**
  * This dialog allows the user to indicate which mutations/transgenes (markers) are present
@@ -194,7 +195,7 @@ export class StockGeneticsEditorComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['stock_manager/view']).then();
+    this.router.navigate([ZFTool.STOCK_MANAGER.route + '/view']).then();
   }
 
   hasOwnListChanged(): boolean {

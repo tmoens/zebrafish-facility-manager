@@ -9,6 +9,7 @@ import {Router} from '@angular/router';
 import {PrintService} from '../../printing/print.service';
 import {StockFullDto} from '../dto/stock-full-dto';
 import {CrossLabel} from '../../printing/cross-label/cross-label';
+import {ZFTool} from '../../helpers/zf-tool';
 
 @Component({
   selector: 'app-cross-label-maker',
@@ -132,7 +133,7 @@ export class CrossLabelMakerComponent implements OnInit {
   };
 
   done() {
-    this.router.navigateByUrl('stock_manager/view').then();
+    this.router.navigateByUrl(ZFTool.STOCK_MANAGER.route + '/view').then();
   };
 
   print() {

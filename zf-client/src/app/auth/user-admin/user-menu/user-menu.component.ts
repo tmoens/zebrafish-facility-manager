@@ -5,6 +5,7 @@ import {AppRoles} from '../../app-roles';
 import {UserAdminService} from '../user-admin.service';
 import {UserDTO} from '../../UserDTO';
 import {AuthService} from '../../auth.service';
+import {ZFTool} from '../../../helpers/zf-tool';
 
 @Component({
   selector: 'app-user-menu',
@@ -28,7 +29,7 @@ export class UserMenuComponent implements OnInit {
   }
 
   create() {
-    this.router.navigate(['user_admin/' + EditMode.CREATE, {
+    this.router.navigate([ZFTool.USER_MANAGER.route + '/' + EditMode.CREATE, {
       mode: EditMode.CREATE,
     }]);
   }
@@ -38,7 +39,7 @@ export class UserMenuComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['user_admin/' + EditMode.EDIT, {
+    this.router.navigate([ZFTool.USER_MANAGER.route + '/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
     }]);

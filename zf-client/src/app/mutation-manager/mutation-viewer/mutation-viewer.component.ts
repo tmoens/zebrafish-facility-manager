@@ -7,6 +7,7 @@ import {MutationDto} from "../mutation-dto";
 import {AppStateService, ZFToolStates} from "../../app-state.service";
 import {ScreenSizes} from "../../helpers/screen-sizes";
 import {ZFTypes} from "../../helpers/zf-types";
+import {ZFTool} from '../../helpers/zf-tool';
 
 /**
  * Show the details of the "selected" mutation.
@@ -80,26 +81,26 @@ export class MutationViewerComponent implements OnInit {
         // (e.g. on restart) and if so, navigate to it.
         const storedId = this.appState.getToolState(ZFTypes.MUTATION, ZFToolStates.SELECTED_ID);
         if (storedId) {
-          this.router.navigateByUrl('mutation_manager/view/' + storedId, {replaceUrl: true}).then();
+          this.router.navigateByUrl(ZFTool.MUTATION_MANAGER.route + '/view/' + storedId, {replaceUrl: true}).then();
         }
       }
     });
   }
 
   create() {
-    this.router.navigate(['mutation_manager/' + EditMode.CREATE, {
+    this.router.navigate([ZFTool.MUTATION_MANAGER.route + '/' + EditMode.CREATE, {
       mode: EditMode.CREATE,
     }]).then();
   }
 
   createNext() {
-    this.router.navigate(['mutation_manager/' + EditMode.CREATE_NEXT, {
+    this.router.navigate([ZFTool.MUTATION_MANAGER.route + '/' + EditMode.CREATE_NEXT, {
       mode: EditMode.CREATE_NEXT,
     }]).then();
   }
 
   edit() {
-    this.router.navigate(['mutation_manager/' + EditMode.EDIT, {
+    this.router.navigate([ZFTool.MUTATION_MANAGER.route + '/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
     }]).then();

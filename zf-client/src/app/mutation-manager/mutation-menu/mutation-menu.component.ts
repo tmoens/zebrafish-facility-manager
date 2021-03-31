@@ -34,7 +34,7 @@ export class MutationMenuComponent implements OnInit {
   }
 
   edit() {
-    this.router.navigate(['mutation_manager/' + EditMode.EDIT, {
+    this.router.navigate([ZFTool.MUTATION_MANAGER.route + '/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
     }]);

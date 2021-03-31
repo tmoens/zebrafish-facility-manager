@@ -86,7 +86,7 @@ export class AuthService {
 
           // If the user is just logging in to no path in particular send them to the stock_manager
           if ('/login' === location.pathname) {
-            this.router.navigateByUrl('stock_manager');
+            this.router.navigateByUrl(ZFTool.STOCK_MANAGER.route);
           }
         }
       });

@@ -9,6 +9,7 @@ import {debounceTime} from 'rxjs/operators';
 import {ScreenSizes} from '../../../helpers/screen-sizes';
 import {UserFilter} from '../user-filter';
 import {AppStateService} from '../../../app-state.service';
+import {ZFTool} from '../../../helpers/zf-tool';
 
 @Component({
   selector: 'app-user-selector',
@@ -92,7 +93,7 @@ export class UserSelectorComponent implements OnInit {
   onSelect(instance: UserDTO | null) {
     this.selected.emit(instance);
     this.service.select(instance);
-    this.router.navigateByUrl('user_admin/view/' + instance.id);
+    this.router.navigateByUrl(ZFTool.USER_MANAGER.route + '/view/' + instance.id);
   }
 
 

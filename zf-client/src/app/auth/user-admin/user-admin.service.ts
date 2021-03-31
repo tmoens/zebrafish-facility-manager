@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
 import {UserFilter} from './user-filter';
 import {ZFTypes} from '../../helpers/zf-types';
 import {plainToClass} from 'class-transformer';
+import {ZFTool} from '../../helpers/zf-tool';
 
 @Injectable({
   providedIn: 'root'
@@ -123,7 +124,7 @@ export class UserAdminService {
       this.select(null);
     }
     this.applyFilter(this.filter);
-    this.router.navigateByUrl('user_admin/view' + ((user) ? '/' + user.id : ''));
+    this.router.navigateByUrl(ZFTool.USER_MANAGER.route + '/view' + ((user) ? '/' + user.id : ''));
   }
 
   isEmailInUse(email: string): Observable<boolean> {

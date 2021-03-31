@@ -9,6 +9,7 @@ import {MutationDto} from "../mutation-dto";
 import {AppStateService} from "../../app-state.service";
 import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
 import {ScreenSizes} from "../../helpers/screen-sizes";
+import {ZFTool} from '../../helpers/zf-tool';
 
 @Component({
   selector: 'app-mutation-selector',
@@ -84,7 +85,7 @@ export class MutationSelectorComponent implements OnInit {
   // b) navigate to view the selected mutation
   onSelect(instance: ZfGenericDto | null) {
     this.selected.emit(instance as MutationDto);
-    this.router.navigate(['mutation_manager/view/' + instance.id]).then();
+    this.router.navigate([ZFTool.MUTATION_MANAGER.route + '/view/' + instance.id]).then();
   }
 
   onPreselect(id) {

@@ -6,6 +6,7 @@ import {AppStateService, ZFToolStates} from '../../app-state.service';
 import {ZfGenericDto} from '../../zf-generic/zfgeneric-dto';
 import {ScreenSizes} from '../../helpers/screen-sizes';
 import {ZFTypes} from '../../helpers/zf-types';
+import {ZFTool} from '../../helpers/zf-tool';
 
 @Component({
   selector: 'app-stock-viewer',
@@ -42,38 +43,38 @@ export class StockViewerComponent implements OnInit {
         // (e.g. on restart) and if so, navigate to it.
         const storedId = this.appState.getToolState(ZFTypes.STOCK, ZFToolStates.SELECTED_ID);
         if (storedId) {
-          this.router.navigateByUrl('stock_manager/view/' + storedId, {replaceUrl: true}).then();
+          this.router.navigateByUrl(ZFTool.STOCK_MANAGER.route + '/view/' + storedId, {replaceUrl: true}).then();
         }
       }
     });
   }
 
   goTo(id: number) {
-    this.router.navigate(['stock_manager/view/' + id]).then();
+    this.router.navigate([ZFTool.STOCK_MANAGER.route + '/view/' + id]).then();
   }
 
   goToStock(instance: ZfGenericDto | null) {
     if (instance) {
-      this.router.navigate(['stock_manager/view/' + instance.id]).then();
+      this.router.navigate([ZFTool.STOCK_MANAGER.route + '/view/' + instance.id]).then();
     }
   }
 
   editStock() {
-    this.router.navigate(['stock_manager/' + EditMode.EDIT, {
+    this.router.navigate([ZFTool.STOCK_MANAGER.route + '/' + EditMode.EDIT, {
       id: this.service.selected.id,
       mode: EditMode.EDIT,
     }]).then();
   }
 
   editMutations() {
-    this.router.navigate(['stock_manager/edit/genetics/' + this.service.selected.id]).then();
+    this.router.navigate([ZFTool.STOCK_MANAGER.route + '/edit/genetics/' + this.service.selected.id]).then();
   }
 
   editTransgenes() {
-    this.router.navigate(['stock_manager/edit/genetics/' + this.service.selected.id]).then();
+    this.router.navigate([ZFTool.STOCK_MANAGER.route + '/edit/genetics/' + this.service.selected.id]).then();
   }
 
   editSwimmers() {
-    this.router.navigate(['stock_manager/' + EditMode.EDIT + '/swimmers/' + this.service.selected.id]).then();
+    this.router.navigate([ZFTool.STOCK_MANAGER.route + '/' + EditMode.EDIT + '/swimmers/' + this.service.selected.id]).then();
   }
 }

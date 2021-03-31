@@ -10,6 +10,7 @@ import {DialogService} from '../../dialog.service';
 import {TransgeneDto} from "../transgene-dto";
 import {LoaderService} from '../../loader.service';
 import {ZfinTransgeneDto} from '../../common/zfin/zfin-transgene.dto';
+import {ZFTool} from '../../helpers/zf-tool';
 
 @Component({
   selector: 'app-transgene-editor',
@@ -131,7 +132,7 @@ export class TransgeneEditorComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['transgene_manager/view']).then();
+    this.router.navigate([ZFTool.TRANSGENE_MANAGER.route + '/view']).then();
   }
   revert() {
     this.initialize();

@@ -7,10 +7,11 @@ import {CanDeactivateGuard} from "../../guards/can-deactivate-guard";
 import {NgModule} from "@angular/core";
 import {RoleGuardService as RoleGuard} from "../guards/role-guard.service";
 import {ADMIN_ROLE} from "../app-roles";
+import {ZFTool} from '../../helpers/zf-tool';
 
 const userAdminRoutes: Routes = [
   {
-    path: 'user_admin',
+    path: ZFTool.USER_MANAGER.route,
     component: UserAdminComponent,
     children: [
       {

@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {TransgeneDto} from "../transgene-dto";
 import {AppStateService} from "../../app-state.service";
 import {ZfGenericDto} from "../../zf-generic/zfgeneric-dto";
+import {ZFTool} from '../../helpers/zf-tool';
 
 @Component({
   selector: 'app-transgene-selector',
@@ -51,7 +52,7 @@ export class TransgeneSelectorComponent implements OnInit {
   onSelect(instance: ZfGenericDto | null) {
     this.focusId = instance.id;
     this.selected.emit(instance as TransgeneDto);
-    this.router.navigate(['transgene_manager/view/' + instance.id]).then();
+    this.router.navigate([ZFTool.TRANSGENE_MANAGER.route + '/view/' + instance.id]).then();
   }
 
   onPreselect(id) {

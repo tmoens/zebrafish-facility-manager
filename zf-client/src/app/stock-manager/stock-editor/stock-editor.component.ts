@@ -13,6 +13,7 @@ import {StockFullDto} from '../dto/stock-full-dto';
 import {ScreenSizes} from '../../helpers/screen-sizes';
 import {UserDTO} from '../../auth/UserDTO';
 import {AuthApiService} from '../../auth/auth-api.service';
+import {ZFTool} from '../../helpers/zf-tool';
 
 @Component({
   selector: 'app-stock-editor',
@@ -260,7 +261,7 @@ export class StockEditorComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigateByUrl('stock_manager/view').then();
+    this.router.navigateByUrl(ZFTool.STOCK_MANAGER.route + '/view').then();
   }
 
   revert() {
