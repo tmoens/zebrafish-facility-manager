@@ -132,7 +132,7 @@ export class MutationService extends GenericService {
   async mustExist(id: number): Promise<Mutation> {
     const candidate: Mutation = await this.repo.findOne(id);
     if (!candidate) {
-      this.logAndThrowException('7684423 update a non-existent mutation.');
+      this.logAndThrowException(`7684423 Mutation id: ${id} does not exist.`);
     }
     return candidate;
   }
@@ -142,7 +142,7 @@ export class MutationService extends GenericService {
       where: {name}
     });
     if (m.length > 0) {
-      this.logAndThrowException('9893064 attempt to create a transgene with a name that already exists.');
+      this.logAndThrowException(`9893064  mutation ${name} already exists.`);
     } else {
       return true;
     }
@@ -237,6 +237,6 @@ export class MutationService extends GenericService {
   }
 
   async findByName(name: string): Promise<Mutation> {
-    return await this.repo.findByName(name);
+    return await this.repo.findByName(name.trim());
   }
 }

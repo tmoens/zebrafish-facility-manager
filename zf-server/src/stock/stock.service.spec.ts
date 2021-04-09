@@ -17,10 +17,20 @@ import * as winston from 'winston';
 import {Logger} from 'winston';
 import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from 'nest-winston';
 import {utilities as nestWinstonModuleUtilities} from 'nest-winston/dist/winston.utilities';
+import {TransgeneService} from '../transgene/transgene.service';
+import {MutationService} from '../mutation/mutation.service';
+import {ZfinService} from '../zfin/zfin.service';
+import {UserService} from '../user/user.service';
 
 describe('Stock Service testing', () => {
   let logger: Logger;
   let stockService: StockService;
+  let userService: UserService;
+  let mutationRepo: MutationRepository;
+  let mutationService: MutationService;
+  let transgeneRepo: TransgeneRepository;
+  let transgeneService: TransgeneService;
+  let zfinService: ZfinService;
   let stockRepo: StockRepository;
   let configService: ConfigService;
   let connection: Connection;
@@ -57,7 +67,9 @@ describe('Stock Service testing', () => {
     configService = new ConfigService();
     connection = module.get(Connection);
     stockRepo = module.get<StockRepository>(StockRepository);
-    stockService = new StockService(logger, configService, stockRepo);
+    mutationService = new MutationService(logger, configService, mutationRepo, transgeneRepo, zfinService);
+    transgeneService = new TransgeneService(logger, configService, transgeneRepo, mutationRepo, zfinService);
+    stockService = new StockService(logger, configService, stockRepo, userService, mutationService, transgeneService);
   });
 
   describe('3019202 CRUD Stock', () => {
@@ -70,7 +82,7 @@ describe('Stock Service testing', () => {
         };
         const stock: Stock = await stockService.validateAndCreate(s);
         // retrieve it again
-        const retrievedStock: Stock = await stockRepo.mustExist(stock.id);
+        const retrievedStock: Stock = await stockService.mustExist(stock.id);
         expect(retrievedStock.description).toBe(s.description);
         await stockService.validateAndRemove(retrievedStock.id);
       });
@@ -126,7 +138,7 @@ describe('Stock Service testing', () => {
         };
         const stock: Stock = await stockService.validateAndCreate(s);
         // retrieve it again
-        const retrievedStock: Stock = await stockRepo.mustExist(stock.id);
+        const retrievedStock: Stock = await stockService.mustExist(stock.id);
         expect(retrievedStock.description).toBe(s.description);
         expect(retrievedStock.externalMatId).toBe(s.externalMatId);
         expect(retrievedStock.externalMatDescription).toBe(s.externalMatDescription);
@@ -567,7 +579,7 @@ describe('Stock Service testing', () => {
         description: '6581267 find a stock by name.',
       };
       const stock1 = await stockService.validateAndCreate(s);
-      const lookupStock1 = await stockRepo.findByName(stock1.name);
+      const lookupStock1 = await stockService.findByName(stock1.name);
       expect(lookupStock1.id === 2388769);
       await stockService.validateAndRemove(stock1.id);
     });

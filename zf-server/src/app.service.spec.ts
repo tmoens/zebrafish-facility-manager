@@ -1,8 +1,8 @@
-import { Test } from '@nestjs/testing';
-import { getCustomRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { StockService } from './stock/stock.service';
-import { StockRepository } from './stock/stock.repository';
-import { ConfigService } from './config/config.service';
+import {Test} from '@nestjs/testing';
+import {getCustomRepositoryToken, TypeOrmModule} from '@nestjs/typeorm';
+import {StockService} from './stock/stock.service';
+import {StockRepository} from './stock/stock.repository';
+import {ConfigService} from './config/config.service';
 import {Connection} from 'typeorm';
 import {ConfigModule} from './config/config.module';
 import {Stock} from './stock/stock.entity';
@@ -12,11 +12,13 @@ import {Transgene} from './transgene/transgene.entity';
 import {TransgeneRepository} from './transgene/transgene.repository';
 import {MutationService} from './mutation/mutation.service';
 import {TransgeneService} from './transgene/transgene.service';
-import {classToClass, classToPlain} from 'class-transformer';
-import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from "nest-winston";
-import * as winston from "winston";
-import {utilities as nestWinstonModuleUtilities} from "nest-winston/dist/winston.utilities";
-import {Logger} from "winston";
+import {classToPlain} from 'class-transformer';
+import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from 'nest-winston';
+import * as winston from 'winston';
+import {Logger} from 'winston';
+import {utilities as nestWinstonModuleUtilities} from 'nest-winston/dist/winston.utilities';
+import {UserService} from './user/user.service';
+import {ZfinService} from './zfin/zfin.service';
 
 /**
  * This is testing that involves the relationships between the various objects
@@ -26,11 +28,13 @@ import {Logger} from "winston";
 describe('App Level testing', () => {
   let logger: Logger;
   let stockService: StockService;
-  let stockRepo: StockRepository;
-  let mutationService: MutationService;
+  let userService: UserService;
   let mutationRepo: MutationRepository;
-  let transgeneService: TransgeneService;
+  let mutationService: MutationService;
   let transgeneRepo: TransgeneRepository;
+  let transgeneService: TransgeneService;
+  let zfinService: ZfinService;
+  let stockRepo: StockRepository;
   let configService: ConfigService;
   let connection: Connection;
   const consoleLog = new (winston.transports.Console)({
@@ -66,13 +70,14 @@ describe('App Level testing', () => {
 
     logger = module.get(WINSTON_MODULE_NEST_PROVIDER);
     configService = new ConfigService();
+    zfinService = new ZfinService();
     connection = module.get(Connection);
     stockRepo = module.get<StockRepository>(StockRepository);
     mutationRepo = module.get<MutationRepository>(MutationRepository);
     transgeneRepo = module.get<TransgeneRepository>(TransgeneRepository);
-    stockService = new StockService(logger, configService, stockRepo);
-    mutationService = new MutationService(logger, configService, mutationRepo, transgeneRepo);
-    transgeneService = new TransgeneService(logger, configService, transgeneRepo, mutationRepo);
+    mutationService = new MutationService(logger, configService, mutationRepo, transgeneRepo, zfinService);
+    transgeneService = new TransgeneService(logger, configService, transgeneRepo, mutationRepo, zfinService);
+    stockService = new StockService(logger, configService, stockRepo, userService, mutationService, transgeneService);
   });
 
   describe('6790799 Stock with relations', () => {

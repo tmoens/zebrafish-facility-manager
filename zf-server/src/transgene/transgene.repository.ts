@@ -70,7 +70,7 @@ export class TransgeneRepository extends Repository<Transgene> {
     return !x;
   }
 
-  // What max serial number in use for "owned" transgenes
+  // What is the max serial number in use for "owned" transgenes
   async getMaxSerialNumber(): Promise<number> {
     const latest = await this.createQueryBuilder('m')
       .select('MAX(m.serialNumber)', 'max')

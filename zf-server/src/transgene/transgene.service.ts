@@ -93,6 +93,10 @@ export class TransgeneService extends GenericService {
       this.logAndThrowException('Cannot create transgene without an allele name.');
     }
 
+    if (!t.descriptor) {
+      this.logAndThrowException('Cannot create transgene without a descriptor.');
+    }
+
     const errors: string[] = [];
     const nameInUse = await this.nameInUse(t.allele);
     if (nameInUse) errors.push(nameInUse);
@@ -230,7 +234,7 @@ export class TransgeneService extends GenericService {
   }
 
   async findByName(name: string): Promise<Transgene> {
-    return await this.repo.findByName(name);
+    return await this.repo.findByName(name.trim());
   }
 
 }

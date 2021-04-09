@@ -37,8 +37,11 @@ export class UserService extends GenericService {
     if (!await this.findByUserName(this.configService.defaultAdminUserName)) {
       const admin: User = await this.create({
         username: this.configService.defaultAdminUserName,
+        name: this.configService.defaultAdminUserName,
+        initials: 'ZFM',
         role: ADMIN_ROLE,
-        email: this.configService.defaultAdminUserEmail});
+        email: this.configService.defaultAdminUserEmail
+      });
       admin.setPassword(this.configService.defaultAdminUserPassword);
       admin.passwordChangeRequired = true;
       await this.repo.save(admin);
@@ -279,18 +282,14 @@ export class UserService extends GenericService {
   }
 
   async activate(dto: UserDTO): Promise<User> {
-    if (!dto.id) {
-      this.logAndThrowException("Received a user update without a user id!");
-    }
+    this.mustHaveAttribute(dto, 'id');
     const u: User = await this.repo.findOneOrFail(dto.id);
     u.isActive = true;
     return this.repo.save(u);
   }
 
   async deactivate(dto: UserDTO): Promise<User> {
-    if (!dto.id) {
-      this.logAndThrowException("Received a user update without a user id!");
-    }
+    this.mustHaveAttribute(dto, 'id');
     const u: User = await this.repo.findOneOrFail(dto.id);
     u.isActive = false;
     u.isLoggedIn = false;
@@ -298,9 +297,7 @@ export class UserService extends GenericService {
   }
 
   async forceLogout(dto: UserDTO): Promise<User> {
-    if (!dto.id) {
-      this.logAndThrowException("Received a user update without a user id!");
-    }
+    this.mustHaveAttribute(dto, 'id');
     const u: User = await this.repo.findOneOrFail(dto.id);
     u.isLoggedIn = false;
     return this.repo.save(u);
@@ -319,8 +316,9 @@ export class UserService extends GenericService {
   //========================== Delete ==================
   async delete(id: string): Promise<any> {
     const u: User = await this.findOne(id);
-    if (!u || !u.isDeletable) {
-      this.logAndThrowException("Tried to delete a user you shouldn't have been able to!");
+
+    if (!u || !(await this.isDeletable(u))) {
+      this.logAndThrowException('Tried to delete a user you shouldn\'t have been able to!');
     }
     return await this.repo.remove(u);
   }

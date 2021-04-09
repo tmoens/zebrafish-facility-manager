@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { ZfinMutationEntity, ZfinMutationSearchFilter, ZfinMutationSearchResult } from './entities/zfin-mutation.entity';
-import { ZfinSearchConfidence } from './entities/zfin.entity';
-import { ZfinTransgeneEntity, ZfinTransgeneSearchFilter, ZfinTransgeneSearchResult } from './entities/zfin-transgene.entity';
+import {Injectable} from '@nestjs/common';
+import {ZfinMutationEntity, ZfinMutationSearchFilter, ZfinMutationSearchResult} from './entities/zfin-mutation.entity';
+import {ZfinSearchConfidence} from './entities/zfin.entity';
+import {
+  ZfinTransgeneEntity,
+  ZfinTransgeneSearchFilter,
+  ZfinTransgeneSearchResult
+} from './entities/zfin-transgene.entity';
 import {Mutation} from '../mutation/mutation.entity';
 import {Transgene} from '../transgene/transgene.entity';
 
@@ -189,7 +193,7 @@ export class ZfinService {
         },
       ],
     };
-    console.log(`Mutation: ${JSON.stringify(where)}`);
+    // console.log(`Mutation: ${JSON.stringify(where)}`);
     const records: ZfinMutationEntity[] = await this.mine.records(query);
 
     // For some reason, the query to ZFIN for SequenceAlteration returns some transgenes
@@ -326,10 +330,7 @@ export class ZfinService {
         },
       ],
     };
-    console.log(`Tansgene: ${JSON.stringify(where)}`);
-    const records = await this.mine.records(query);
-    console.log('Number of matches: ' + records.length);
-    return records;
+    return await this.mine.records(query);
   }
 
   findOne(id: number) {

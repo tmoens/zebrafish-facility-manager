@@ -65,7 +65,7 @@ export class Stock {
   })
   fertilizationDate: string;
 
-  // No longer in use as the PI is now a reference to a User object.
+  // Vestigial: the PI is now a reference to a User object.
   @Exclude()
   @Column({
     nullable: true,
@@ -80,7 +80,12 @@ export class Stock {
   })
   piUser: User;
 
-  // No longer in use as the PI is now a reference to a User object.
+  // Expose the id of the PI without having to join the tables.
+  // Allows efficient import of existing stocks
+  @Column({nullable: true})
+  piId: string;
+
+  // Vestigial: the researcher is now a reference to a User object.
   @Exclude()
   @Column({
     nullable: true,
@@ -94,6 +99,11 @@ export class Stock {
     name: 'researcherId',
   })
   researcherUser: User;
+
+  // Expose the internal id of the researcher without having to join the tables.
+  // Allows efficient import of existing stocks
+  @Column({nullable: true})
+  researcherId: string;
 
 
   // Expose the internal id of the mother without having to join the tables.
@@ -242,4 +252,16 @@ export class Stock {
     return this.name + ' ' + this.description;
   }
 
+  static convertNameToNumbers(stockName: string): { stockNumber: number, substockNumber: number } {
+    const x: string = String(stockName);
+    // stock name has the form nnnn or nnnn.mm  where the nnnn part forms the
+    // stock's number and the mm part forms the stock's subnumber
+    const simpleStock = x.match(/^(\d*)$/);
+    if (simpleStock) return {stockNumber: Number(simpleStock[1]), substockNumber: 0};
+
+    const substock = x.match(/^(\d*)\.(\d\d)$/);
+    if (substock) return {stockNumber: Number(substock[1]), substockNumber: Number(substock[2])}
+
+    return null;
+  }
 }

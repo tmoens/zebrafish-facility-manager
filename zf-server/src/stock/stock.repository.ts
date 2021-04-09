@@ -19,25 +19,6 @@ export class StockRepository extends Repository<Stock> {
     super();
   }
 
-  async mustExist(stockId: number): Promise<Stock> {
-    const stock: Stock = await this.findOne(stockId);
-    if (stock) {
-      return stock;
-    } else {
-      const message: string = 'Stock does not exist. id: ' + stockId;
-      this.logger.error(message,);
-      throw new BadRequestException(message);
-    }
-  }
-
-  async getById(id: number): Promise<Stock> {
-    return this.mustExist(id);
-  }
-
-  async findByName(name: string): Promise<Stock> {
-    return await this.findOne({where: {name}});
-  }
-
   async getStockWithRelations(id: number): Promise<Stock> {
     const stock: Stock = await super.findOne(id, {
       relations: [

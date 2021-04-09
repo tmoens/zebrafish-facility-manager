@@ -24,6 +24,11 @@ import {AuthService} from '../../auth/auth.service';
     </div>
     <mat-menu #importMenu="matMenu">
 
+      <button mat-menu-item zfmHideUnauthorized="admin" (click)="typeToUpload(ZFTypes.STOCK)">
+        <mat-icon>upload</mat-icon>
+        <span>Upload Stocks</span>
+      </button>
+
       <button mat-menu-item zfmHideUnauthorized="admin" (click)="typeToUpload(ZFTypes.MUTATION)">
         <mat-icon>upload</mat-icon>
         <span>Upload Mutations</span>

@@ -18,10 +18,11 @@ import {Stock} from './stock.entity';
 import {StockService} from './stock.service';
 import {StockFilter} from './stock-filter';
 import {plainToClass} from 'class-transformer';
-import {JwtAuthGuard} from "../guards/jwt-auth.guard";
-import {ADMIN_ROLE, USER_ROLE} from "../common/auth/zf-roles";
-import {RoleGuard} from "../guards/role-guard.service";
-import {Role} from "../guards/role.decorator";
+import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {ADMIN_ROLE, USER_ROLE} from '../common/auth/zf-roles';
+import {RoleGuard} from '../guards/role-guard.service';
+import {Role} from '../guards/role.decorator';
+import {StockImportDto} from './stock-import-dto';
 
 // ToDo several of these go straight to the repo bypassing the service. Should fix - low priority.
 // The following interceptor converts classes to plain objects for all responses.
@@ -43,7 +44,7 @@ export class StockController {
   // Get a stock with no relationships fetched.
   @Get('brief/:id')
   async getById(@Param('id', new ParseIntPipe())  id: number): Promise<any> {
-    return await this.repo.getById(id);
+    return await this.service.getById(id);
   }
 
   @Role(ADMIN_ROLE)
@@ -53,6 +54,13 @@ export class StockController {
     return await this.service.validateAndRemove(id);
   }
 
+
+  @Role(USER_ROLE)
+  @UseGuards(RoleGuard)
+  @Post('import')
+  async import(@Body() dto: StockImportDto): Promise<Stock> {
+    return await this.service.import(dto);
+  }
 
   @Role(USER_ROLE)
   @UseGuards(RoleGuard)
@@ -92,7 +100,7 @@ export class StockController {
 
   @Get('name/:name')
   async getByName(@Param() params): Promise<any> {
-    const stock = await this.repo.findByName(params.name);
+    const stock = await this.service.findByName(params.name);
     if (stock) {
       stock.alleleSummary = await this.repo.getAlleleSummaryForId(stock.id);
     }
