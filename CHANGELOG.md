@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.2.2...v2.3.0) (2021-04-10)
+
+
+### Features
+
+* **import:** Configure visibility of new Importer feature ([59b6682](https://github.com/tmoens/zebrafish-facility-manager/commit/59b66820e63363a5271e205485c7edfcf1b96ae1))
+
 ### [2.2.2](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.2.1...v2.2.2) (2021-04-10)
 
 
