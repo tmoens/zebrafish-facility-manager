@@ -1,6 +1,6 @@
 {
   "name": "zebrafish-facility-manager",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "scripts": {
     "release": "standard-version"
   },

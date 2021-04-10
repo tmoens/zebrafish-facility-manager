@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.2](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.2.1...v2.2.2) (2021-04-10)
+
+
+### Bug Fixes
+
+* **import:** fixes to the new importer tool ([c6e3b1a](https://github.com/tmoens/zebrafish-facility-manager/commit/c6e3b1a10ae212aa76b40d4b4309a9b401f3e11e))
+* **sql:** code for dropping a database deals with new tables. ([2889ddf](https://github.com/tmoens/zebrafish-facility-manager/commit/2889ddfdb932c99309d08d25b6a0db525eeaa3b3))
+* **test:** bring automated tests for server back into working condition. ([a649202](https://github.com/tmoens/zebrafish-facility-manager/commit/a6492023fe4ea5a3857979cdef6aa9e251c0dde2))
+
 ### [2.2.1](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.2.0...v2.2.1) (2021-03-16)
 
 ## [2.2.0](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.1.3...v2.2.0) (2021-03-03)
