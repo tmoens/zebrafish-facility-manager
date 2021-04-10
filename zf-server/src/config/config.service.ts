@@ -126,6 +126,7 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
       BEST_PRACTICES_SITE: Joi.string().default('https://zebrafishfacilitymanager.com'),
 
       HIDE_PRIMARY_INVESTIGATOR: Joi.boolean().default(false),
+      HIDE_IMPORT_TOOL: Joi.boolean().default(true),
       TANK_NUMBERING_HINT: Joi.string().default('Tank numbering hint not configured'),
       LABEL_FONT_SIZE: Joi.number().default(11),
       LABEL_FONT_FAMILY: Joi.string().default('Helvetica'),
@@ -203,6 +204,7 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
     c.facilityName = this.envConfig.FACILITY_NAME;
     c.facilityAbbrv = this.envConfig.FACILITY_SHORT_NAME;
     c.hidePI = Boolean(this.envConfig.HIDE_PRIMARY_INVESTIGATOR);
+    c.hideImportTool = Boolean(this.envConfig.HIDE_IMPORT_TOOL);
     c.tankNumberingHint = this.envConfig.TANK_NUMBERING_HINT;
     c.labelPrinting.fontPointSize = Number(this.envConfig.LABEL_FONT_SIZE);
     c.labelPrinting.fontFamily = this.envConfig.LABEL_FONT_FAMILY;
@@ -223,4 +225,5 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
     c.allowExcelImports = Boolean(this.envConfig.ALLOW_EXCEL_IMPORTS);
     return c;
   }
+
 }

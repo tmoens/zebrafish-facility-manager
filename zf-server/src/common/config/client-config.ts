@@ -8,7 +8,7 @@ export class ClientConfig {
   allowExcelImports = false;
 
   hidePI = false;
-
+  hideImportTool = true;
   tankNumberingHint: string = 'Tank numbering hint not configured'
 
   labelPrinting: LabelPrintingConfig = new LabelPrintingConfig();

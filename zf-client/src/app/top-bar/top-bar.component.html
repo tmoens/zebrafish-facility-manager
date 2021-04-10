@@ -23,7 +23,7 @@
                 [routerLink]="zfTool.USER_MANAGER.route" color="primary">
           {{zfTool.USER_MANAGER.display_name}}
         </button>
-        <button mat-button zfmHideUnauthorized="admin" [disabled]="appState.activeTool === zfTool.IMPORT_TOOL"
+        <button *ngIf="!appState.facilityConfig.hideImportTool" mat-button zfmHideUnauthorized="admin" [disabled]="appState.activeTool === zfTool.IMPORT_TOOL"
                 [routerLink]="zfTool.IMPORT_TOOL.route" color="primary">
           {{zfTool.IMPORT_TOOL.display_name}}
         </button>
