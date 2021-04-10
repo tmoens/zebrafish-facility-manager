@@ -129,6 +129,22 @@ describe('Import testing', () => {
         await stockService.validateAndRemove(retrievedStock.id);
       });
 
+      testName = '4321544 import and delete minimal stock with nonsense field';
+      it(testName, async () => {
+        const s: any = {
+          name: String(4445),
+          description: String(Math.random()),
+          comment: testName,
+          fertilizationDate: '2019-01-01',
+          gnerp: 'gnerp',
+        };
+        const stock: Stock = await stockService.import(s);
+        // retrieve it again
+        const retrievedStock: Stock = await stockService.mustExist(stock.id);
+        expect(retrievedStock.description).toBe(s.description);
+        // await stockService.validateAndRemove(retrievedStock.id);
+      });
+
       testName = '4831332 import a stock with no name';
       it(testName, async () => {
         const s: StockImportDto = {

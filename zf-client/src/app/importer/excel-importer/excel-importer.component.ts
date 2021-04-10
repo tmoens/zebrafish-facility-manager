@@ -52,7 +52,7 @@ export class ExcelImporterComponent implements OnInit {
     this._zfType = (zfType);
   }
 
-  // The dtos that we are trying to import
+  // The dtos that we are trying to import. One line on the sheet is one dto.
   dtos: any[];
 
   // Can't select a file while one is being processed
@@ -62,6 +62,7 @@ export class ExcelImporterComponent implements OnInit {
   done: number;
   progress: number;
   filename: string;
+  problem: string;
 
   selectedFileName: string;
 
@@ -72,6 +73,7 @@ export class ExcelImporterComponent implements OnInit {
 
   ngOnInit(): void {
     this.dtos = [];
+    this.problem = null;
   }
 
   /* Note to future self that cost me about three hours 2018-10-05.
@@ -97,6 +99,11 @@ export class ExcelImporterComponent implements OnInit {
     const fileContent = await readFileAsArrayBuffer(selectedFile);
     const options: ParsingOptions = {type: "array"};
     const wb = XLSX.read(fileContent, options);
+    if (!wb) {
+      this.problem = "Could not read workbook.";
+      this.canSelectFile = true;
+      return;
+    }
 
     // hand off stockbook migration task
     if (this.zfType === ZFTypes.STOCKBOOK_MIGRATION) {
@@ -105,8 +112,12 @@ export class ExcelImporterComponent implements OnInit {
       return;
     }
 
-
-    const ws = wb.Sheets[wb.SheetNames[0]];
+    const ws = wb.Sheets[this.zfType + 's'];
+    if (!ws) {
+      this.problem = `Could not find worksheet: ${this.zfType}s.`;
+      this.canSelectFile = true;
+      return;
+    }
     this.dtos = XLSX.utils.sheet_to_json(ws);
     this.toDo = this.dtos.length;
     this.done = 0;

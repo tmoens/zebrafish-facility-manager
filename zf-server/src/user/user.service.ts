@@ -202,8 +202,8 @@ export class UserService extends GenericService {
   //========================== Creation ==================
   async create(dto: UserDTO): Promise<User> {
     convertEmptyStringToNull(dto);
-    this.ignoreAttribute(dto, 'id');
     const candidate: User = plainToClass(User, dto);
+    delete candidate.id;
     await this.validateForCreate(candidate);
     const newPassword = candidate.setRandomPassword();
     console.log('Setting random password for ' + candidate.username + ': ' + newPassword);

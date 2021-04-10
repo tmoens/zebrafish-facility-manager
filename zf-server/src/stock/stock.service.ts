@@ -202,7 +202,7 @@ export class StockService extends GenericService {
       'externalMatDescription', 'externalPatDescription', 'fertilizationDate'];
     atts.map((attribute: string) => {
       if (sub[attribute]) {
-        if (sub[attribute] !== base[attribute]) {
+        if (String(sub[attribute]) !== base[attribute]) {
           problems.push(`Substock ${sub.name} has different ${attribute} than its base stock.`);
         }
       } else {
