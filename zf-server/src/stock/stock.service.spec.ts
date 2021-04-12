@@ -21,6 +21,12 @@ import {TransgeneService} from '../transgene/transgene.service';
 import {MutationService} from '../mutation/mutation.service';
 import {ZfinService} from '../zfin/zfin.service';
 import {UserService} from '../user/user.service';
+import {TankService} from '../tank/tank.service';
+import {Stock2tankService} from '../stock2tank/stock2tank.service';
+import {Tank} from '../tank/tank.entity';
+import {TankRepository} from '../tank/tank.repository';
+import {Stock2tank} from '../stock2tank/stock-to-tank.entity';
+import {Stock2tankRepository} from '../stock2tank/stock2tank.repository';
 
 describe('Stock Service testing', () => {
   let logger: Logger;
@@ -30,6 +36,10 @@ describe('Stock Service testing', () => {
   let mutationService: MutationService;
   let transgeneRepo: TransgeneRepository;
   let transgeneService: TransgeneService;
+  let tankRepo: TankRepository;
+  let tankSerice: TankService;
+  let swimmerRepo: Stock2tankRepository;
+  let swimmerService: Stock2tankService;
   let zfinService: ZfinService;
   let stockRepo: StockRepository;
   let configService: ConfigService;
@@ -49,7 +59,13 @@ describe('Stock Service testing', () => {
             imports: [ConfigModule],
             useExisting: ConfigService,
           }),
-        TypeOrmModule.forFeature([Stock, StockRepository, Mutation, MutationRepository, Transgene, TransgeneRepository]),
+        TypeOrmModule.forFeature([
+          Stock, StockRepository,
+          Mutation, MutationRepository,
+          Transgene, TransgeneRepository,
+          Tank, TankRepository,
+          Stock2tank, Stock2tankRepository,
+        ]),
         WinstonModule.forRoot({
           transports: [
             consoleLog,
@@ -69,7 +85,9 @@ describe('Stock Service testing', () => {
     stockRepo = module.get<StockRepository>(StockRepository);
     mutationService = new MutationService(logger, configService, mutationRepo, transgeneRepo, zfinService);
     transgeneService = new TransgeneService(logger, configService, transgeneRepo, mutationRepo, zfinService);
-    stockService = new StockService(logger, configService, stockRepo, userService, mutationService, transgeneService);
+    swimmerService = new Stock2tankService(configService, swimmerRepo);
+    tankSerice = new TankService(logger, tankRepo);
+    stockService = new StockService(logger, configService, stockRepo, userService, mutationService, transgeneService, tankSerice, swimmerService);
   });
 
   describe('3019202 CRUD Stock', () => {

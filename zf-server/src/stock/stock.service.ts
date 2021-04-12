@@ -13,7 +13,11 @@ import {TransgeneService} from '../transgene/transgene.service';
 import {Transgene} from '../transgene/transgene.entity';
 import {User} from '../user/user.entity';
 import {Mutation} from '../mutation/mutation.entity';
-import {StockImportDto} from './stock-import-dto';
+import {StockImportDto, SwimmerImportDto} from './stock-import-dto';
+import {Stock2tankService} from '../stock2tank/stock2tank.service';
+import {TankService} from '../tank/tank.service';
+import {Tank} from '../tank/tank.entity';
+import {Stock2tank} from '../stock2tank/stock-to-tank.entity';
 
 @Injectable()
 export class StockService extends GenericService {
@@ -25,6 +29,8 @@ export class StockService extends GenericService {
     private readonly userService: UserService,
     private readonly mutationService: MutationService,
     private readonly transgeneService: TransgeneService,
+    private readonly tankService: TankService,
+    private readonly swimmerService: Stock2tankService,
   ) {
     super(logger);
   }
@@ -187,8 +193,33 @@ export class StockService extends GenericService {
 
 
     // await this.validateAges(candidate);
-    return await this.repo.save(candidate);
+    const newStock =  await this.repo.save(candidate);
+
+    // now if there are swimmers...
+    await this.createSwimmer(newStock, dto.tank1Name, dto.tank1Count);
+    await this.createSwimmer(newStock, dto.tank2Name, dto.tank2Count);
+    await this.createSwimmer(newStock, dto.tank3Name, dto.tank3Count);
+    await this.createSwimmer(newStock, dto.tank4Name, dto.tank4Count);
+    await this.createSwimmer(newStock, dto.tank5Name, dto.tank5Count);
+    await this.createSwimmer(newStock, dto.tank6Name, dto.tank6Count);
+
+    return newStock;
   }
+
+  async createSwimmer(stock: Stock, tankName: string, howMany: number): Promise<Stock2tank> {
+    if (tankName && howMany) {
+      const tank: Tank = await this.tankService.findTankByName(tankName);
+      if (tank) {
+        const swimmerDto = new SwimmerImportDto();
+        swimmerDto.number = howMany;
+        swimmerDto.stockId = stock.id;
+        swimmerDto.tankId = tank.id;
+        return this.swimmerService.createSwimmer(swimmerDto);
+      }
+    }
+    return null;
+  }
+
 
   // When importing a substock, if you are given data about the substock,
   // it must match the data about the base stock.  More concretely a substock must

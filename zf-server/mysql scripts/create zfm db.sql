@@ -1,0 +1,9 @@
+CREATE USER zf_umaine@localhost IDENTIFIED BY 'zf_umaine';
+GRANT USAGE ON *.* TO zf_umaine@localhost
+    REQUIRE NONE
+    WITH MAX_QUERIES_PER_HOUR 0
+    MAX_CONNECTIONS_PER_HOUR 0
+    MAX_UPDATES_PER_HOUR 0
+    MAX_USER_CONNECTIONS 0;
+CREATE DATABASE IF NOT EXISTS zf_umaine;
+GRANT ALL PRIVILEGES ON zf_umaine.* TO zf_umaine@localhost;

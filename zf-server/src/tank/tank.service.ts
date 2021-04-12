@@ -49,4 +49,8 @@ export class TankService extends GenericService{
     return true;
   }
 
+  async findTankByName(tankName: string): Promise<Tank> {
+    // tank name must be unique
+    return this.repo.findOne({where: {name: tankName}});
+  }
 }

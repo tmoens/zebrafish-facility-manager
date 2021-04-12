@@ -13,4 +13,24 @@ export class StockImportDto {
   externalMomDescription?: string;
   externalDadName?: string;
   externalDadDescription?: string;
+  tank1Name?:string;
+  tank1Count?:number;
+  tank2Name?:string;
+  tank2Count?:number;
+  tank3Name?:string;
+  tank3Count?:number;
+  tank4Name?:string;
+  tank4Count?:number;
+  tank5Name?:string;
+  tank5Count?:number;
+  tank6Name?:string;
+  tank6Count?:number;
 }
+
+export class SwimmerImportDto {
+  stockId: number;
+  tankId: number;
+  number: number;
+  comment?: string;
+}
+

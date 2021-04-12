@@ -27,15 +27,6 @@ export class Stock2tankRepository extends Repository<Stock2tank> {
       .getMany();
   }
 
-  // For creation, create a fresh swimmer, merge in the DTO and save.
-  // No validation performed.
-  // TODO think about checking the dto for related objects - and delete them
-  async createSwimmer(dto: any): Promise<any> {
-    let candidate: Stock2tank = new Stock2tank();
-    candidate = plainToClassFromExist(candidate, dto);
-    return await this.saveOrFail(candidate);
-  }
-
   // For update, lookup the swimmer, merge in the DTO and save.
   // No validation performed.
   // TODO think about checking the dto for related objects - and delete them
@@ -43,18 +34,6 @@ export class Stock2tankRepository extends Repository<Stock2tank> {
     let candidate: Stock2tank = await this.findOrFail( dto.stockId, dto.tankId);
     candidate = plainToClassFromExist(candidate, dto);
     return await this.saveOrFail(candidate);
-  }
-
-  // There are no constraints on swimmer removal
-  async removeSwimmer(stockId: number, tankId: number): Promise<any> {
-    // When you use remove, it seems that TypeORM returns the object you deleted with the
-    // id set to undefined.  Which makes some sense.
-    // However the client wants to see the id of the deleted object, so we stuff
-    // it back in.
-    const deleted = await super.remove( await this.findOrFail(stockId, tankId));
-    deleted.stockId = stockId;
-    deleted.tankId = tankId;
-    return deleted;
   }
 
   async findOrFail(stockId: number, tankId: number): Promise<Stock2tank> {

@@ -38,7 +38,7 @@ export class Stock2tankController {
   @UseGuards(RoleGuard)
   @Post()
   async create(@Body() newObj: Stock2tank): Promise<any> {
-    return await this.repo.createSwimmer(newObj);
+    return await this.service.createSwimmer(newObj);
   }
 
   @Role(USER_ROLE)
@@ -52,6 +52,6 @@ export class Stock2tankController {
   @UseGuards(RoleGuard)
   @Delete(':stockId/:tankId')
   async delete(@Param() params): Promise<Stock> {
-    return await this.repo.removeSwimmer(params.stockId, params.tankId);
+    return await this.service.removeSwimmerByIds(params.stockId, params.tankId);
   }
 }
