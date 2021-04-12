@@ -5,12 +5,12 @@ import {FieldOptions} from '../helpers/field-options';
 import {ZFGenericService} from '../zf-generic/zfgeneric-service';
 import * as XLSX from 'xlsx';
 import {AppStateService, ZFToolStates} from '../app-state.service';
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {plainToClass} from "class-transformer";
-import {ZFTypes} from "../helpers/zf-types";
-import {Router} from "@angular/router";
-import {AuthService} from "../auth/auth.service";
-import {TransgeneDto} from "./transgene-dto";
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {plainToClass} from 'class-transformer';
+import {ZFTypes} from '../helpers/zf-types';
+import {Router} from '@angular/router';
+import {AuthService} from '../auth/auth.service';
+import {TransgeneDto} from './transgene-dto';
 
 /**
  * This is the model for transgene information displayed in the GUI.
@@ -98,7 +98,8 @@ export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDt
   toExcel() {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(this.all.map((m: TransgeneDto) => {
-      return {id: m.id, descriptor: m.descriptor, allele: m.allele, nickName: m.nickname, source: m.source,
+      return {
+        id: m.id, descriptor: m.descriptor, allele: m.allele, nickname: m.nickname, source: m.source,
         plasmid: m.plasmid, comment: m.comment, serialNumber: m.serialNumber, zfinId: m.zfinId,
         spermFreezePlan: m.spermFreezePlan, vialsFrozen: m.vialsFrozen,
       };

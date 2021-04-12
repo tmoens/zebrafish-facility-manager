@@ -29,7 +29,7 @@ import {of} from 'rxjs';
       <div *ngFor="let dto of dtos; let i = index" fxLayout="row">
         <div fxFlex="10">row: {{i + 2}}</div>
         <div fxFlex="15">id: {{dto.id}}</div>
-        <div fxFlex="20" *ngIf="zfType === ZFTypes.TRANSGENE">{{dto.allele}}^{{dto.descriptor}}</div>
+        <div fxFlex="20" *ngIf="zfType === ZFTypes.TRANSGENE">{{dto.descriptor}}^{{dto.allele}}</div>
         <div fxFlex="15" *ngIf="zfType === ZFTypes.MUTATION">{{dto.gene}}^{{dto.name}}</div>
         <div fxFlex>{{dto.importResult}}</div>
       </div>
