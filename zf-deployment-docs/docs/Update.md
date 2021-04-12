@@ -74,8 +74,8 @@ Assuming the databases zfm_staging and zfm_test are in use:
 cd ~
 mkdir whatever_you_want
 cd whatever_you_want
-mysqldump -u admin -p zfm_staging > zfm_staging.sql
-mysqldump -u admin -p zfm_test > zfm_test.sql
+mysqldump -u admin -p zf_staging > zf_staging.sql
+mysqldump -u admin -p zf_test > zf_test.sql
 ```
 
 ### Clone the Github repository
