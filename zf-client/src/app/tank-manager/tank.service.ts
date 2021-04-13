@@ -5,8 +5,8 @@ import {Tank} from './tank';
 import {TankDto} from './tank-dto';
 import {SwimmerFullDto} from './swimmer-full-dto';
 import {StockSwimmerDto} from './stock-swimmer-dto';
-import {plainToClass} from "class-transformer";
-import {ZFTypes} from "../helpers/zf-types";
+import {plainToClass} from 'class-transformer';
+import {ZFTypes} from '../helpers/zf-types';
 
 /**
  * This is a cache of all the known tanks.
@@ -33,14 +33,14 @@ export class TankService {
     this.loader.getFilteredList(ZFTypes.TANK, {}).subscribe((data: TankDto[]) => {
       this.indexedAll = {};
       for (const tank of data) {
-        this.indexedAll[tank.name] = plainToClass(Tank, tank);
+        this.indexedAll[tank.name.toLowerCase()] = plainToClass(Tank, tank);
       }
     });
   }
 
   getTankByName(putativeName: string): Tank | null {
-    if (this.indexedAll[putativeName]) {
-      return this.indexedAll[putativeName];
+    if (this.indexedAll[putativeName.toLowerCase()]) {
+      return this.indexedAll[putativeName.toLowerCase()];
     } else {
       return null;
     }
