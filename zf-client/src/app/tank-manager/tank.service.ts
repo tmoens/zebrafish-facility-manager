@@ -47,7 +47,7 @@ export class TankService {
   }
 
   isValidName(tankName: string): boolean {
-    return !!(this.indexedAll[tankName]);
+    return !!(this.indexedAll[tankName.toLowerCase()]);
   }
 
   // find out which stocks are currently in a given tank.

@@ -15,6 +15,10 @@ import { TankRepository } from './tank.repository';
   controllers: [
     TankController,
   ],
+  exports: [
+    TankService,
+  ],
+
 })
 
 export class TankModule {}

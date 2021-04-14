@@ -7,6 +7,8 @@ import {StockRepository} from './stock.repository';
 import {UserModule} from '../user/user.module';
 import {MutationModule} from '../mutation/mutation.module';
 import {TransgeneModule} from '../transgene/transgene.module';
+import {TankModule} from '../tank/tank.module';
+import {Stock2tankModule} from '../stock2tank/stock2tank.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import {TransgeneModule} from '../transgene/transgene.module';
     UserModule,
     TransgeneModule,
     MutationModule,
+    TankModule,
+    Stock2tankModule,
   ],
   providers: [
     StockService,
