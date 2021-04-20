@@ -33,9 +33,11 @@ import {Stock2tankService} from './stock2tank/stock2tank.service';
 import {Tank} from './tank/tank.entity';
 import {Stock2tank} from './stock2tank/stock-to-tank.entity';
 import {TankDto} from './tank/tank.dto';
+import {HttpModule, HttpService} from '@nestjs/common';
 
 describe('Import testing', () => {
   let logger: Logger;
+  let httpService: HttpService;
   let testName: string;
   let stockService: StockService;
   let userRepo: UserRepository;
@@ -64,6 +66,7 @@ describe('Import testing', () => {
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
+        HttpModule,
         ConfigModule,
         TypeOrmModule.forRootAsync(
           {
@@ -106,8 +109,9 @@ describe('Import testing', () => {
         }],
     }).compile();
     logger = module.get(WINSTON_MODULE_NEST_PROVIDER);
+    httpService = module.get(HttpService);
     configService = new ConfigService();
-    zfinService = new ZfinService();
+    zfinService = new ZfinService(httpService, configService);
     connection = module.get(Connection);
     stockRepo = module.get<StockRepository>(StockRepository);
     mutationRepo = module.get<MutationRepository>(MutationRepository);

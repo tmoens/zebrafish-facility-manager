@@ -226,8 +226,6 @@ export class MutationEditorComponent implements OnInit {
   }
 
   /* To support deactivation check  */
-
-  /* Contrary to tsLint's perspective, this function *is* invoked by the deactivation guard */
   canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
     if (this.saved) {
       return true;
@@ -255,17 +253,13 @@ export class MutationEditorComponent implements OnInit {
         return;
       } else {
         this.zfinMutation = zm;
-        if (this.getControlValue('gene') !== zm.genes[0].symbol) {
+        if (this.getControlValue('gene') !== zm.geneName) {
           this.canUpdateFromZfin = true;
-          this.zfinGeneNameHint = `ZFIN gene name is ${zm.genes[0].symbol}`
+          this.zfinGeneNameHint = `ZFIN gene name is ${zm.geneName}`
         }
-        if (zm.mutagen && this.getControlValue('screenType') !== zm.mutagen) {
+        if (this.getControlValue('zfinId') !== zm.zfinId) {
           this.canUpdateFromZfin = true;
-          this.zfinScreenTypeHint = `ZFIN screen type is ${zm.mutagen}`
-        }
-        if (this.getControlValue('zfinId') !== zm.featureId) {
-          this.canUpdateFromZfin = true;
-          this.zfinIdHint = `ZFIN Id is ${zm.featureId}`
+          this.zfinIdHint = `ZFIN Id is ${zm.zfinId}`
         }
       }
     })
@@ -274,13 +268,10 @@ export class MutationEditorComponent implements OnInit {
   updateFromZfin() {
     this.mfForm.markAsDirty();
     const zm = this.zfinMutation;
-    if (zm.genes[0].symbol) {
-      this.setControlValue('gene', zm.genes[0].symbol);
+    if (zm.geneName) {
+      this.setControlValue('gene', zm.geneName);
     }
-    if (zm.mutagen) {
-      this.setControlValue('screenType', zm.mutagen);
-    }
-    this.setControlValue('zfinId', zm.featureId);
+    this.setControlValue('zfinId', zm.zfinId);
     this.checkZfin();
   }
 }

@@ -91,6 +91,11 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
     return this.envConfig.GMAIL_SENDER;
   }
 
+  get zfinAlleleLookupUrl(): string {
+    return this.envConfig.ZFIN_ALLELE_LOOKUP_URL;
+  }
+
+
   /**
    * Ensures all needed variables are set, and returns the validated JavaScript object
    * including the applied default values.
@@ -124,6 +129,8 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
       DEFAULT_ADMIN_USER_PASSWORD: Joi.string().required(),
 
       BEST_PRACTICES_SITE: Joi.string().default('https://zebrafishfacilitymanager.com'),
+
+      ZFIN_ALLELE_LOOKUP_URL: Joi.string().default('http://zfin.zebrafishfacilitymanager.com'),
 
       HIDE_PRIMARY_INVESTIGATOR: Joi.boolean().default(false),
       HIDE_IMPORT_TOOL: Joi.boolean().default(true),
@@ -223,6 +230,7 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
     c.tankLabel.showAdditionalNote = Boolean(this.envConfig.LABEL_SHOW_ADDITIONAL_NOTES);
     c.backgroundColor = this.envConfig.GUI_BACKGROUND;
     c.allowExcelImports = Boolean(this.envConfig.ALLOW_EXCEL_IMPORTS);
+    c.zfinAlleleLookupUrl = this.envConfig.ZFIN_ALLELE_LOOKUP_URL;
     return c;
   }
 

@@ -1,4 +1,4 @@
-import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
+import {HttpModule, MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
@@ -61,6 +61,7 @@ const consoleLog = new (winston.transports.Console)({
     UserModule,
     ZfinModule,
     PassportModule,
+    HttpModule,
     TypeOrmModule.forRootAsync(
       {
         imports: [ConfigModule],

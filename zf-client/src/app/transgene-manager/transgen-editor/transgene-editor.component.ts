@@ -241,17 +241,17 @@ export class TransgeneEditorComponent implements OnInit {
         return;
       } else {
         this.zfinTg = zt;
-        if (this.getControlValue('allele') !== zt.symbol) {
+        if (this.getControlValue('allele') !== zt.alleleName) {
           this.canUpdateFromZfin = true;
-          this.zfinAlleleHint = `ZFIN name is ${zt.symbol}`
+          this.zfinAlleleHint = `ZFIN name is ${zt.alleleName}`
         }
-        if (this.getControlValue('descriptor') !== zt.constructs[0].symbol) {
+        if (this.getControlValue('descriptor') !== zt.zfinConstructName) {
           this.canUpdateFromZfin = true;
-          this.zfinConstructNameHint = `ZFIN construct name is ${zt.constructs[0].symbol}`
+          this.zfinConstructNameHint = `ZFIN construct name is ${zt.zfinConstructName}`
         }
-        if (this.getControlValue('zfinId') !== zt.featureId) {
+        if (this.getControlValue('zfinId') !== zt.zfinId) {
           this.canUpdateFromZfin = true;
-          this.zfinIdHint = `ZFIN Id is ${zt.featureId}`
+          this.zfinIdHint = `ZFIN Id is ${zt.zfinId}`
         }
       }
     })
@@ -260,14 +260,14 @@ export class TransgeneEditorComponent implements OnInit {
   updateFromZfin() {
     const zt = this.zfinTg;
     this.mfForm.markAsDirty();
-    this.setControlValue('allele', zt.symbol);
-    if (zt.constructs[0].symbol !== this.getControlValue('descriptor')) {
+    this.setControlValue('allele', zt.alleleName);
+    if (zt.zfinConstructName !== this.getControlValue('descriptor')) {
       if (! this.getControlValue('nickname')) {
         this.setControlValue('nickname', this.getControlValue('descriptor'));
       }
-      this.setControlValue('descriptor', zt.constructs[0].symbol);
+      this.setControlValue('descriptor', zt.zfinConstructName);
     }
-    this.setControlValue('zfinId', zt.featureId);
+    this.setControlValue('zfinId', zt.zfinId);
     this.checkZfin();
   }
 

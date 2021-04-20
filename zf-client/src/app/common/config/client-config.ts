@@ -16,4 +16,6 @@ export class ClientConfig {
   tankLabel: TankLabelConfig = new TankLabelConfig();
 
   backgroundColor: string = null;
+
+  zfinAlleleLookupUrl: string;
 }

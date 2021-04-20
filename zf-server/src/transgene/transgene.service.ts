@@ -78,7 +78,7 @@ export class TransgeneService extends GenericService {
     convertEmptyStringToNull(dto);
     this.ignoreAttribute(dto, 'id');
 
-    // create a mutation from the dto we received
+    // create a transgne from the dto we received
     let candidate: Transgene = new Transgene();
     candidate = plainToClassFromExist(candidate, dto);
 

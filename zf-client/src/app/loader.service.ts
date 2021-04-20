@@ -191,14 +191,14 @@ export class LoaderService {
   // =========== ZFIN Specific requests ===============
 
   getZfinMutationByName(alleleName: string): Observable<ZfinMutationDto> {
-    return this.http.get(this.serverURL + '/zfin/mutationByName/' + alleleName)
+    return this.http.get( this.appState.facilityConfig.zfinAlleleLookupUrl +'/mutation/allele/' + alleleName)
       .pipe(
         catchError(this.handleError('Looking for Zfin Mutation for allele: ' + alleleName, null))
       );
   }
 
   getZfinTransgeneByName(alleleName: string): Observable<ZfinTransgeneDto> {
-    return this.http.get(this.serverURL + '/zfin/transgeneByName/' + alleleName)
+    return this.http.get( this.appState.facilityConfig.zfinAlleleLookupUrl +'/transgene/allele/' + alleleName)
       .pipe(
         catchError(this.handleError('Looking for Zfin Transgene for allele: ' + alleleName, null))
       );
