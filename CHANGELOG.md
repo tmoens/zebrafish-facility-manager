@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.3.0...v2.4.0) (2021-04-23)
+
+
+### Features
+
+* **audit:** add Facility Audit feature ([1d20e2b](https://github.com/tmoens/zebrafish-facility-manager/commit/1d20e2bc46a3a4d24c543005c3439b203d00c133))
+
+
+### Bug Fixes
+
+* **importer:** include ability to import swimmers for stock ([87dc783](https://github.com/tmoens/zebrafish-facility-manager/commit/87dc783cff7cc29268557f5bc34eac3a0cbb1fc2))
+* **tank:** allow user to use case insensitive tank names. ([3cce110](https://github.com/tmoens/zebrafish-facility-manager/commit/3cce11079665f333cc443e423b946385f037b750))
+* **tank:** never commit before testing ([57b1661](https://github.com/tmoens/zebrafish-facility-manager/commit/57b16618d624ec9079752b4e472da285bc4dd74b))
+* **tg:** Reorder allele/descriptor in transgene report. ([abbee5a](https://github.com/tmoens/zebrafish-facility-manager/commit/abbee5afa453b6a42e07d3f40108449f2d7feaf3))
+
 ## [2.3.0](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.2.2...v2.3.0) (2021-04-10)
 
 
