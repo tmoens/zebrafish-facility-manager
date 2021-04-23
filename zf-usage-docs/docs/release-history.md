@@ -12,6 +12,12 @@ fish counts in tanks as you go from tank to tank.
 When adding a mutation or transgene to the system, any alleles that are "known to
 ZFIN" are recognized and user can import ZFIN information with a single click.
 
+## Nursery census
+
+The system now supports fish counts for a stock entering and leaving the nursery.
+This will support nursery mortality reports and other animal
+husbandry reports in the future.
+
 ## Data Importer
 
 An importer feature was added to simplify the process of migrating existing

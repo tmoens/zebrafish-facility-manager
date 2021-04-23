@@ -163,6 +163,12 @@ to do useful searches on the description.
 
 Often the "comment" field is a better place to write detailed stock-specific information.
 
+### Use of the nursery counts
+
+It is good practice to enter the counts of fish entering and leaving the nursery.
+By doing so you provide data for nursery mortality rates and for
+animal husbandry reports in the future.
+
 ### Informal "To-do"
 
 The system does not have a "To-do" list capability, but it does support an informal approach.
