@@ -85,6 +85,8 @@ export class StockService extends GenericService {
     const candidate = new Stock();
     candidate.description = dto.description;
     candidate.comment = dto.comment;
+    candidate.countEnteringNursery = dto.countEnteringNursery;
+    candidate.countLeavingNursery = dto.countLeavingNursery
 
     // The stock we are importing must have a name, the name must be valid,
     // and the name can not already exist.

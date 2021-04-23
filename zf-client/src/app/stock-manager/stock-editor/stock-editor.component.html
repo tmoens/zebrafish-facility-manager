@@ -51,6 +51,18 @@
           </mat-form-field>
           <mat-form-field>
             <label>
+              <input [(ngModel)]="stock.countEnteringNursery" matInput name="entering" placeholder="Count entering nursery"
+                     type="number" min="1">
+            </label>
+          </mat-form-field>
+          <mat-form-field>
+            <label>
+              <input [(ngModel)]="stock.countLeavingNursery" matInput maxlength="100" name="leaving" placeholder="Count leaving nursery"
+                     type="number" min="1">
+            </label>
+          </mat-form-field>
+          <mat-form-field>
+            <label>
               <textarea [(ngModel)]="stock.comment" cdkAutosizeMaxRows="7" cdkTextareaAutosize="true"
                         matInput maxlength="4000"
                         name="comment" placeholder="Comment"></textarea>

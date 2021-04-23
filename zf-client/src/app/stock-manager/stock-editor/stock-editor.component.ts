@@ -294,7 +294,10 @@ export class StockEditorComponent implements OnInit {
         if (
           this.stock.description !== this.initialStock.description ||
           this.stock.fertilizationDate !== this.initialStock.fertilizationDate ||
-          this.stock.comment !== this.initialStock.comment) {
+          this.stock.comment !== this.initialStock.comment ||
+          this.stock.countEnteringNursery !== this.initialStock.countEnteringNursery ||
+          this.stock.countLeavingNursery !== this.initialStock.countLeavingNursery
+        ) {
           return false;
         }
         if (this.momInternal) {

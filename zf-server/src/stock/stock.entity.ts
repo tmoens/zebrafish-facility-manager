@@ -51,6 +51,7 @@ export class Stock {
   })
   description: string;
 
+  // Not used for stocks, but keeping it for consistency with Mutations and Transgenes
   @Column({
     nullable: true,
     unique: true,
@@ -182,6 +183,20 @@ export class Stock {
     length: 5000,
   })
   comment: string;
+
+  @Column({
+    nullable: true,
+    type: 'int',
+    comment: 'How many fish there were when this stock entered the nursery',
+  })
+  countEnteringNursery: number;
+
+  @Column({
+    nullable: true,
+    type: 'int',
+    comment: 'How many fish there were when this stock left the nursery',
+  })
+  countLeavingNursery: number;
 
   @CreateDateColumn({
     type: 'timestamp',

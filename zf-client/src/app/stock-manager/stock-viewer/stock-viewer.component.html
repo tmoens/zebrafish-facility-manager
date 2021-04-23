@@ -44,6 +44,20 @@
                    matInput placeholder="Researcher">
           </label>
         </mat-form-field>
+        <div fxLayout="row" fxLayoutGap="10px">
+          <mat-form-field *ngIf="service.selected.countEnteringNursery" fxFlex="45%">
+            <label>
+              <input [value]="service.selected.countEnteringNursery" disabled
+                     matInput placeholder="Count entering nursery">
+            </label>
+          </mat-form-field>
+          <mat-form-field *ngIf="service.selected.countLeavingNursery" fxFlex="45%">
+            <label>
+              <input [value]="service.selected.countLeavingNursery" disabled
+                     matInput placeholder="Count leaving nursery">
+            </label>
+          </mat-form-field>
+        </div>
         <mat-form-field *ngIf="service.selected.comment">
           <label>
             <textarea [value]="service.selected.comment" cdkAutosizeMaxRows="7"
@@ -85,7 +99,7 @@
         <div *ngIf="!service.selected.patStock">
           <div class="zf-sub-title">Dad (External)</div>
           <mat-list dense>
-            <mat-list-item style="height: fit-content" *ngIf="service.selected.externalPatId" style="height: fit-content" >
+            <mat-list-item style="height: fit-content" *ngIf="service.selected.externalPatId">
               Id: {{service.selected.externalPatId}}
             </mat-list-item>
             <mat-list-item *ngIf="service.selected.externalPatDescription" style="height: fit-content" >

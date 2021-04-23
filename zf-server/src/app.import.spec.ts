@@ -36,26 +36,34 @@ import {TankDto} from './common/tank.dto';
 import {HttpModule, HttpService} from '@nestjs/common';
 
 describe('Import testing', () => {
-  let logger: Logger;
-  let httpService: HttpService;
   let testName: string;
-  let stockService: StockService;
-  let userRepo: UserRepository;
-  let userService: UserService;
+  let logger: Logger;
+  let configService: ConfigService;
+
+  let httpService: HttpService;
+  let zfinService: ZfinService;
+
   let jwtService: JwtService;
   let mailerService: MailerService;
   let zfMailer: ZFMailerService;
+  let userRepo: UserRepository;
+  let userService: UserService;
+
   let mutationRepo: MutationRepository;
   let mutationService: MutationService;
+
   let transgeneRepo: TransgeneRepository;
   let transgeneService: TransgeneService;
+
   let tankRepo: TankRepository;
-  let tankSerice: TankService;
+  let tankService: TankService;
+
   let swimmerRepo: Stock2tankRepository;
   let swimmerService: Stock2tankService;
-  let zfinService: ZfinService;
+
   let stockRepo: StockRepository;
-  let configService: ConfigService;
+  let stockService: StockService;
+
   let connection: Connection;
   const consoleLog = new (winston.transports.Console)({
     format: winston.format.combine(
@@ -109,24 +117,33 @@ describe('Import testing', () => {
         }],
     }).compile();
     logger = module.get(WINSTON_MODULE_NEST_PROVIDER);
-    httpService = module.get(HttpService);
     configService = new ConfigService();
+
+    httpService = module.get(HttpService);
     zfinService = new ZfinService(httpService, configService);
-    connection = module.get(Connection);
+
     stockRepo = module.get<StockRepository>(StockRepository);
+    userRepo = module.get<UserRepository>(UserRepository);
     mutationRepo = module.get<MutationRepository>(MutationRepository);
     transgeneRepo = module.get<TransgeneRepository>(TransgeneRepository);
-    userRepo = module.get<UserRepository>(UserRepository);
-    mutationService = new MutationService(logger, configService, mutationRepo, transgeneRepo, zfinService);
-    transgeneService = new TransgeneService(logger, configService, transgeneRepo, mutationRepo, zfinService);
+    tankRepo = module.get<TankRepository>(TankRepository);
+    swimmerRepo = module.get<Stock2tankRepository>(Stock2tankRepository);
+
     jwtService = module.get(JwtService);
     mailerService = module.get(MailerService);
     userService = new UserService(userRepo, stockRepo, logger, jwtService, zfMailer, configService);
-    swimmerRepo = module.get<Stock2tankRepository>(Stock2tankRepository);
+
+    mutationService = new MutationService(logger, configService, mutationRepo, transgeneRepo, zfinService);
+
+    transgeneService = new TransgeneService(logger, configService, transgeneRepo, mutationRepo, zfinService);
+
     swimmerService = new Stock2tankService(configService, swimmerRepo);
-    tankRepo = module.get<TankRepository>(TankRepository);
-    tankSerice = new TankService(logger, tankRepo);
-    stockService = new StockService(logger, configService, stockRepo, userService, mutationService, transgeneService, tankSerice, swimmerService);
+
+    tankService = new TankService(logger, tankRepo);
+
+    stockService = new StockService(logger, configService, stockRepo, userService, mutationService, transgeneService, tankService, swimmerService);
+
+    connection = module.get(Connection);
 
   });
 
@@ -142,11 +159,14 @@ describe('Import testing', () => {
           description: String(Math.random()),
           comment: testName,
           fertilizationDate: '2019-01-01',
+          countEnteringNursery: 42,
+          countLeavingNursery: 43,
         };
         const stock: Stock = await stockService.import(s);
         // retrieve it again
         const retrievedStock: Stock = await stockService.mustExist(stock.id);
         expect(retrievedStock.description).toBe(s.description);
+        expect(retrievedStock.countEnteringNursery).toBe(s.countEnteringNursery);
         await stockService.validateAndRemove(retrievedStock.id);
       });
 
@@ -891,12 +911,12 @@ describe('Import testing', () => {
       researcher2 = await userService.import(researcher2Dto);
       guest1 = await userService.import(guestDto);
       baseStock = await stockService.import(baseStockDto);
-      tank1 = await tankSerice.import(tank1Dto);
-      tank2 = await tankSerice.import(tank2Dto);
-      tank3 = await tankSerice.import(tank3Dto);
-      tank4 = await tankSerice.import(tank4Dto);
-      tank5 = await tankSerice.import(tank5Dto);
-      tank6 = await tankSerice.import(tank6Dto);
+      tank1 = await tankService.import(tank1Dto);
+      tank2 = await tankService.import(tank2Dto);
+      tank3 = await tankService.import(tank3Dto);
+      tank4 = await tankService.import(tank4Dto);
+      tank5 = await tankService.import(tank5Dto);
+      tank6 = await tankService.import(tank6Dto);
     });
 
     testName = '2488606 import stock with parents';
@@ -1126,12 +1146,12 @@ describe('Import testing', () => {
       await userService.deactivate(guest1);
       await userService.delete(guest1.id);
       await stockService.validateAndRemove(baseStock.id);
-      await tankSerice.validateAndRemove(tank1.id);
-      await tankSerice.validateAndRemove(tank2.id);
-      await tankSerice.validateAndRemove(tank3.id);
-      await tankSerice.validateAndRemove(tank4.id);
-      await tankSerice.validateAndRemove(tank5.id);
-      await tankSerice.validateAndRemove(tank6.id);
+      await tankService.validateAndRemove(tank1.id);
+      await tankService.validateAndRemove(tank2.id);
+      await tankService.validateAndRemove(tank3.id);
+      await tankService.validateAndRemove(tank4.id);
+      await tankService.validateAndRemove(tank5.id);
+      await tankService.validateAndRemove(tank6.id);
 
     });
 

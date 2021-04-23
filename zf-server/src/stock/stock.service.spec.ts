@@ -153,6 +153,8 @@ describe('Stock Service testing', () => {
           externalPatDescription: 'a' + String(Math.random()),
           comment: '4082281 create (and get and delete) full stock',
           fertilizationDate: '2020-07-31',
+          countEnteringNursery: 42,
+          countLeavingNursery: 42,
         };
         const stock: Stock = await stockService.validateAndCreate(s);
         // retrieve it again
@@ -164,6 +166,8 @@ describe('Stock Service testing', () => {
         expect(retrievedStock.externalPatDescription).toBe(s.externalPatDescription);
         expect(retrievedStock.comment).toBe(s.comment);
         expect(retrievedStock.fertilizationDate).toBe(s.fertilizationDate);
+        expect(retrievedStock.countEnteringNursery).toBe(s.countEnteringNursery);
+        expect(retrievedStock.countLeavingNursery).toBe(s.countLeavingNursery);
         await stockService.validateAndRemove(retrievedStock.id);
       });
     });

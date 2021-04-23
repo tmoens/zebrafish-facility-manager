@@ -8,6 +8,8 @@ export class StockImportDto {
   researcherUsername?: string;
   piUsername?: string;
   fertilizationDate?: string;
+  countEnteringNursery?: number;
+  countLeavingNursery?: number;
   alleles?: string;
   externalMomName?: string;
   externalMomDescription?: string;

@@ -20,6 +20,8 @@ export class StockFullDto extends ZfGenericDto {
   externalPatId: string = null;
   externalPatDescription: string = null;
   comment: string = null;
+  countEnteringNursery: number = null;
+  countLeavingNursery: number = null;
   @Type(() => StockDto)
   matStock: StockDto = null;
   @Type(() => StockDto)

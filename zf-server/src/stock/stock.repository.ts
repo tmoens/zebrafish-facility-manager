@@ -216,7 +216,7 @@ export class StockRepository extends Repository<Stock> {
   // I know that the server should be agnostic to what a particular function
   // is used for on the client side, but this filtered list is used in the
   // Tank Walker. Sue me.
-  async getStocksForTankWalk(filter: StockFilter): Promise<StockMiniDto[]> {
+  async getStocksForTankWalk(filter: StockFilter): Promise<any[]> {
     // We are only interested in stocks that are in tanks.
     filter.liveStocksOnly = true;
 

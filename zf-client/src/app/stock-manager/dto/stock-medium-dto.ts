@@ -24,6 +24,8 @@ export class StockMediumDto extends ZfGenericDto {
   comment: string = null;
   matStock: StockDto = null;
   patStock: StockDto = null;
+  countEnteringNursery: number = null;
+  countLeavingNursery: number = null;
   transgenes: TransgeneDto[] = [];
   mutations: MutationDto[] = [];
   offspringCount: number = null;

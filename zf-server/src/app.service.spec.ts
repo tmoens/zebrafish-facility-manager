@@ -19,6 +19,19 @@ import {Logger} from 'winston';
 import {utilities as nestWinstonModuleUtilities} from 'nest-winston/dist/winston.utilities';
 import {UserService} from './user/user.service';
 import {ZfinService} from './zfin/zfin.service';
+import {HttpModule, HttpService} from '@nestjs/common';
+import {TankRepository} from './tank/tank.repository';
+import {TankService} from './tank/tank.service';
+import {Stock2tankRepository} from './stock2tank/stock2tank.repository';
+import {Stock2tankService} from './stock2tank/stock2tank.service';
+import {User} from './user/user.entity';
+import {UserRepository} from './user/user.repository';
+import {Tank} from './tank/tank.entity';
+import {Stock2tank} from './stock2tank/stock-to-tank.entity';
+import {JwtModule, JwtService} from '@nestjs/jwt';
+import {MailerModule, MailerService} from '@nestjs-modules/mailer';
+import {ZFMailerService} from './mailer/mailer-service';
+import {PassportModule} from '@nestjs/passport';
 
 /**
  * This is testing that involves the relationships between the various objects
@@ -27,37 +40,77 @@ import {ZfinService} from './zfin/zfin.service';
 
 describe('App Level testing', () => {
   let logger: Logger;
-  let stockService: StockService;
+  let configService: ConfigService;
+
+  let httpService: HttpService;
+  let zfinService: ZfinService;
+
+  let jwtService: JwtService;
+  let mailerService: MailerService;
+  let zfMailer: ZFMailerService;
+  let userRepo: UserRepository;
   let userService: UserService;
+
   let mutationRepo: MutationRepository;
   let mutationService: MutationService;
+
   let transgeneRepo: TransgeneRepository;
   let transgeneService: TransgeneService;
-  let zfinService: ZfinService;
+
+  let tankRepo: TankRepository;
+  let tankService: TankService;
+
+  let swimmerRepo: Stock2tankRepository;
+  let swimmerService: Stock2tankService;
+
   let stockRepo: StockRepository;
-  let configService: ConfigService;
+  let stockService: StockService;
+
   let connection: Connection;
+
   const consoleLog = new (winston.transports.Console)({
     format: winston.format.combine(
       winston.format.timestamp(),
       nestWinstonModuleUtilities.format.nestLike(),
     ),
   });
+
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
+        HttpModule,
         ConfigModule,
         TypeOrmModule.forRootAsync(
           {
             imports: [ConfigModule],
             useExisting: ConfigService,
           }),
-        TypeOrmModule.forFeature(
-          [Stock, StockRepository, Mutation, MutationRepository, Transgene, TransgeneRepository]),
+        TypeOrmModule.forFeature([
+          Stock, StockRepository,
+          Mutation, MutationRepository,
+          Transgene, TransgeneRepository,
+          User, UserRepository,
+          Tank, TankRepository,
+          Stock2tank, Stock2tankRepository,
+        ]),
         WinstonModule.forRoot({
           transports: [
             consoleLog,
           ],
+        }),
+        MailerModule.forRootAsync(
+          {
+            imports: [ConfigModule],
+            useExisting: ConfigService,
+          }),
+        PassportModule,
+        JwtModule.registerAsync({
+          imports: [ConfigModule],
+          useFactory: (configService: ConfigService) => ({
+            secret: configService.jwtSecret,
+            signOptions: {expiresIn: configService.jwtDuration},
+          }),
+          inject: [ConfigService],
         }),
       ],
       providers: [
@@ -67,17 +120,34 @@ describe('App Level testing', () => {
           useExisting: StockRepository,
         }],
     }).compile();
-
     logger = module.get(WINSTON_MODULE_NEST_PROVIDER);
     configService = new ConfigService();
-    zfinService = new ZfinService();
-    connection = module.get(Connection);
+
+    httpService = module.get(HttpService);
+    zfinService = new ZfinService(httpService, configService);
+
     stockRepo = module.get<StockRepository>(StockRepository);
+    userRepo = module.get<UserRepository>(UserRepository);
     mutationRepo = module.get<MutationRepository>(MutationRepository);
     transgeneRepo = module.get<TransgeneRepository>(TransgeneRepository);
+    tankRepo = module.get<TankRepository>(TankRepository);
+    swimmerRepo = module.get<Stock2tankRepository>(Stock2tankRepository);
+
+    jwtService = module.get(JwtService);
+    mailerService = module.get(MailerService);
+    userService = new UserService(userRepo, stockRepo, logger, jwtService, zfMailer, configService);
+
     mutationService = new MutationService(logger, configService, mutationRepo, transgeneRepo, zfinService);
+
     transgeneService = new TransgeneService(logger, configService, transgeneRepo, mutationRepo, zfinService);
-    stockService = new StockService(logger, configService, stockRepo, userService, mutationService, transgeneService);
+
+    swimmerService = new Stock2tankService(configService, swimmerRepo);
+
+    tankService = new TankService(logger, tankRepo);
+
+    stockService = new StockService(logger, configService, stockRepo, userService, mutationService, transgeneService, tankService, swimmerService);
+
+    connection = module.get(Connection);
   });
 
   describe('6790799 Stock with relations', () => {

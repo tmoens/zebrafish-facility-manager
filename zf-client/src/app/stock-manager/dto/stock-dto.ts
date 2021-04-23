@@ -15,6 +15,8 @@ export class StockDto extends ZfGenericDto {
   externalPatId: string = null;
   externalPatDescription: string = null;
   comment: string = null;
+  countEnteringNursery: number = null;
+  countLeavingNursery: number = null;
   transgenes: TransgeneDto[] = [];
   mutations: MutationDto[] = [];
   alleleSummary: string = null;
