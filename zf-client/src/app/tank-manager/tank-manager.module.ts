@@ -55,7 +55,6 @@ import {CommonModule} from '@angular/common';
     FormsModule,
   ],
   exports: [
-
   ]
 })
 

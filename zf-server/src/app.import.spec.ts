@@ -32,7 +32,7 @@ import {Stock2tankRepository} from './stock2tank/stock2tank.repository';
 import {Stock2tankService} from './stock2tank/stock2tank.service';
 import {Tank} from './tank/tank.entity';
 import {Stock2tank} from './stock2tank/stock-to-tank.entity';
-import {TankDto} from './tank/tank.dto';
+import {TankDto} from './common/tank.dto';
 import {HttpModule, HttpService} from '@nestjs/common';
 
 describe('Import testing', () => {
@@ -163,7 +163,7 @@ describe('Import testing', () => {
         // retrieve it again
         const retrievedStock: Stock = await stockService.mustExist(stock.id);
         expect(retrievedStock.description).toBe(s.description);
-        // await stockService.validateAndRemove(retrievedStock.id);
+        await stockService.validateAndRemove(retrievedStock.id);
       });
 
       testName = '4831332 import a stock with no name';
@@ -829,26 +829,38 @@ describe('Import testing', () => {
     const tank1Dto: TankDto = {
       id: 1,
       name: `Tank1`,
+      sortOrder: '1',
+      isMultiTank: true,
     };
     const tank2Dto: TankDto = {
       id: 2,
       name: `Tank2`,
+      sortOrder: '2',
+      isMultiTank: false,
     };
     const tank3Dto: TankDto = {
       id: 3,
       name: `Tank3`,
+      sortOrder: '3',
+      isMultiTank: false,
     };
     const tank4Dto: TankDto = {
       id: 4,
       name: `Tank4`,
+      sortOrder: '4',
+      isMultiTank: true,
     };
     const tank5Dto: TankDto = {
       id: 5,
       name: `Tank5`,
+      sortOrder: '5',
+      isMultiTank: false,
     };
     const tank6Dto: TankDto = {
       id: 6,
       name: `Tank6`,
+      isMultiTank: false,
+      sortOrder: '6',
     };
 
 
@@ -1114,6 +1126,13 @@ describe('Import testing', () => {
       await userService.deactivate(guest1);
       await userService.delete(guest1.id);
       await stockService.validateAndRemove(baseStock.id);
+      await tankSerice.validateAndRemove(tank1.id);
+      await tankSerice.validateAndRemove(tank2.id);
+      await tankSerice.validateAndRemove(tank3.id);
+      await tankSerice.validateAndRemove(tank4.id);
+      await tankSerice.validateAndRemove(tank5.id);
+      await tankSerice.validateAndRemove(tank6.id);
+
     });
 
   });

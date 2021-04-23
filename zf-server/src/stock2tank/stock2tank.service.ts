@@ -18,7 +18,13 @@ export class Stock2tankService {
   ) {}
 
   async findSwimmersInTank(tankId): Promise<Stock2tank[]> {
-    return this.repo.findSwimmersInTank(tankId);
+    return this.repo.createQueryBuilder('i')
+      .leftJoinAndSelect('i.stock', 's')
+      .leftJoinAndSelect('s.transgenes', 'tgs')
+      .leftJoinAndSelect('s.mutations', 'mutations')
+      .leftJoinAndSelect('i.tank', 't')
+      .where('t.id = :tankId', {tankId})
+      .getMany();
   }
 
   // For creation, create a fresh swimmer, merge in the DTO and save.

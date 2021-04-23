@@ -19,22 +19,40 @@
                 [routerLink]="zfTool.TRANSGENE_MANAGER.route" color="primary">
           {{zfTool.TRANSGENE_MANAGER.display_name}}
         </button>
-        <button mat-button zfmHideUnauthorized="admin" [disabled]="appState.activeTool === zfTool.USER_MANAGER"
-                [routerLink]="zfTool.USER_MANAGER.route" color="primary">
-          {{zfTool.USER_MANAGER.display_name}}
+        <button mat-button [matMenuTriggerFor]="moreMenu" color="primary">
+          <mat-icon>more_vert</mat-icon>
         </button>
-        <button *ngIf="!appState.facilityConfig.hideImportTool" mat-button zfmHideUnauthorized="admin" [disabled]="appState.activeTool === zfTool.IMPORT_TOOL"
-                [routerLink]="zfTool.IMPORT_TOOL.route" color="primary">
-          {{zfTool.IMPORT_TOOL.display_name}}
-        </button>
-        <button mat-button *ngIf="authService.loggedIn$ | async"
-                routerLink="change_password" color="primary">
-          Change Password
-        </button>
-        <button mat-button (click)="logout()"
-                [matTooltip]="authService.getLoggedInUserName()">
-          Logout
-        </button>
+        <mat-menu #moreMenu="matMenu">
+          <button mat-menu-item zfmHideUnauthorized="admin"
+                  [disabled]="appState.activeTool === zfTool.FACILITY_AUDIT"
+                  [routerLink]="zfTool.FACILITY_AUDIT.route" color="primary">
+            <mat-icon>assignment</mat-icon>
+            {{zfTool.FACILITY_AUDIT.display_name}}
+          </button>
+          <button mat-menu-item zfmHideUnauthorized="admin"
+                  [disabled]="appState.activeTool === zfTool.USER_MANAGER"
+                  [routerLink]="zfTool.USER_MANAGER.route" color="primary">
+            <mat-icon>people</mat-icon>
+            {{zfTool.USER_MANAGER.display_name}}
+          </button>
+          <button mat-menu-item *ngIf="!appState.facilityConfig.hideImportTool" zfmHideUnauthorized="admin"
+                  [disabled]="appState.activeTool === zfTool.IMPORT_TOOL"
+                  [routerLink]="zfTool.IMPORT_TOOL.route" color="primary">
+            <mat-icon>file_upload</mat-icon>
+            {{zfTool.IMPORT_TOOL.display_name}}
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item *ngIf="authService.loggedIn$ | async"
+                  routerLink="change_password" color="primary">
+            <mat-icon>password</mat-icon>
+            Change Password
+          </button>
+          <button mat-menu-item (click)="logout()"
+                  [matTooltip]="authService.getLoggedInUserName()">
+            <mat-icon>logout</mat-icon>
+            Logout
+          </button>
+        </mat-menu>
       </mat-toolbar>
       <mat-toolbar *ngIf="!(authService.loggedIn$ | async)">
         <span>Zebrafish Facility Manager for {{appState.facilityConfig.facilityName}}</span>
@@ -50,38 +68,55 @@
         <span class="fill-remaining-space"></span>
         <button mat-button [matMenuTriggerFor]="toolMenu" color="primary">
           <mat-icon>more_vert</mat-icon>
-          {{appState.activeTool.display_name}}
         </button>
         <mat-menu #toolMenu="matMenu">
           <button mat-menu-item [disabled]="appState.activeTool === zfTool.STOCK_MANAGER"
                   [routerLink]="zfTool.STOCK_MANAGER.route">
+            <mat-icon>launch</mat-icon>
             {{zfTool.STOCK_MANAGER.display_name}}
           </button>
           <button mat-menu-item [disabled]="appState.activeTool === zfTool.MUTATION_MANAGER"
                   [routerLink]="zfTool.MUTATION_MANAGER.route">
+            <mat-icon>launch</mat-icon>
             {{zfTool.MUTATION_MANAGER.display_name}}
           </button>
           <button mat-menu-item [disabled]="appState.activeTool === zfTool.TRANSGENE_MANAGER"
                   [routerLink]="zfTool.TRANSGENE_MANAGER.route">
+            <mat-icon>launch</mat-icon>
             {{zfTool.TRANSGENE_MANAGER.display_name}}
           </button>
-          <button mat-button zfmHideUnauthorized="admin" [disabled]="appState.activeTool === zfTool.USER_MANAGER"
+          <button mat-menu-item zfmHideUnauthorized="admin"
+                  [disabled]="appState.activeTool === zfTool.FACILITY_AUDIT"
+                  [routerLink]="zfTool.FACILITY_AUDIT.route" color="primary">
+            <mat-icon>assignment</mat-icon>
+            {{zfTool.FACILITY_AUDIT.display_name}}
+          </button>
+          <button mat-menu-item zfmHideUnauthorized="admin" [disabled]="appState.activeTool === zfTool.USER_MANAGER"
                   [routerLink]="zfTool.USER_MANAGER.route" color="primary">
+            <mat-icon>people</mat-icon>
             {{zfTool.USER_MANAGER.display_name}}
           </button>
-          <button mat-button zfmHideUnauthorized="admin" [disabled]="appState.activeTool === zfTool.IMPORT_TOOL"
+          <button mat-menu-item zfmHideUnauthorized="admin" [disabled]="appState.activeTool === zfTool.IMPORT_TOOL"
                   [routerLink]="zfTool.IMPORT_TOOL.route" color="primary">
+            <mat-icon>upload</mat-icon>
             {{zfTool.IMPORT_TOOL.display_name}}
+          </button>
+          <button (click)="goToBestPractices()" mat-menu-item
+                  matTooltip="For information on best practices.">
+            <mat-icon>info</mat-icon>
+            Best Practices
           </button>
           <mat-divider></mat-divider>
           <button mat-menu-item routerLink="change_password" color="primary">
+            <mat-icon>password</mat-icon>
             Change Password
           </button>
+          <button mat-menu-item (click)="logout()"
+                  [matTooltip]="authService.getLoggedInUserName()">
+            <mat-icon>logout</mat-icon>
+            Logout
+          </button>
         </mat-menu>
-        <button mat-button (click)="logout()"
-                [matTooltip]="authService.getLoggedInUserName()">
-          Logout
-        </button>
       </mat-toolbar>
       <mat-toolbar *ngIf="!(authService.loggedIn$ | async)">
         <span>Facility Manager for {{appState.facilityConfig.facilityAbbrv}}</span>

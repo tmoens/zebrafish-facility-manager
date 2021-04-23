@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {TankService} from '../../tank-manager/tank.service';
 import {StockService} from '../stock.service';
 import {FormBuilder, Validators} from '@angular/forms';
-import {StockSwimmerDto} from '../../tank-manager/stock-swimmer-dto';
-import {SwimmerFullDto} from '../../tank-manager/swimmer-full-dto';
+import {SwimmerDto} from '../../common/swimmer.dto';
+import {SwimmerFullDto} from '../../common/swimmer-full.dto';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {forkJoin, Observable} from 'rxjs';
@@ -30,8 +30,8 @@ enum SwimmerState {
 export class StockSwimmersEditorComponent implements OnInit {
   stockId: number;
   SwimmerState = SwimmerState; // this makes the enum available in templates.
-  originalSwimmers: StockSwimmerDto[];
-  swimmers: {[tankid: number]: {swimmer: StockSwimmerDto, originalSwimmer: StockSwimmerDto, state: SwimmerState}};
+  originalSwimmers: SwimmerDto[];
+  swimmers: {[tankid: number]: {swimmer: SwimmerDto, originalSwimmer: SwimmerDto, state: SwimmerState}};
 
   needsSaving: boolean;
 
@@ -98,8 +98,11 @@ export class StockSwimmersEditorComponent implements OnInit {
     // make a copy of the swimmers in the selected stock (we do not operate on them directly).
     this.originalSwimmers = this.stockService.selected.swimmers.map(s => ({...s}));
     this.swimmers = {};
-    this.stockService.selected.swimmers.map((s: StockSwimmerDto) => {
-      this.swimmers[s.tankId] = {swimmer: Object.assign(new StockSwimmerDto(), s), originalSwimmer: s, state: SwimmerState.UNCHANGED};
+    this.stockService.selected.swimmers.map((s: SwimmerDto) => {
+      this.swimmers[s.tankId] = {
+        swimmer: Object.assign(new SwimmerDto(), s),
+        originalSwimmer: s,
+        state: SwimmerState.UNCHANGED};
     });
     this.cohabitants = [];
     this.clearNewSwimmer();
@@ -111,7 +114,7 @@ export class StockSwimmersEditorComponent implements OnInit {
   }
 
   addNewSwimmer() {
-    const newSwimmer = new StockSwimmerDto();
+    const newSwimmer = new SwimmerDto();
     newSwimmer.stockId = this.stockService.selected.id;
     newSwimmer.tank = this.tankService.getTankByName(this.tankNameFC.value);
     newSwimmer.tankId = newSwimmer.tank.id;
@@ -160,7 +163,7 @@ export class StockSwimmersEditorComponent implements OnInit {
     this.checkState();
   }
 
-  compareSwimmers(s1: StockSwimmerDto, s2: StockSwimmerDto) {
+  compareSwimmers(s1: SwimmerDto, s2: SwimmerDto) {
     return !!(s1.tankId === s2.tankId && s1.stockId === s2.stockId &&
       s1.comment === s2.comment && s1.number === s2.number);
   }

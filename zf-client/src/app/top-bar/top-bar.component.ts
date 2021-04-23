@@ -29,6 +29,10 @@ export class TopBarComponent implements OnInit {
   async ngOnInit() {
   }
 
+  goToBestPractices(): void {
+    window.open('https://zebrafishfacilitymanager.com/stocks');
+  }
+
   login() {
     this.router.navigateByUrl('/login').then();
   }

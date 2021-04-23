@@ -1,0 +1,47 @@
+<div fxLayout="row" fxLayoutAlign="center" *ngIf="authService.loggedIn$ | async">
+  <div class="zf-full-width">
+    <mat-toolbar  color="primary">
+      Facility Audit
+    </mat-toolbar>
+
+    <mat-card>
+      <div fxLayout="column" fxLayoutGap="20px">
+        <!-- Forward/Backward Navigator -->
+        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center" style="background: inherit">
+          <button mat-mini-fab (click)="previousTank()" [disabled]="!neighbors || !neighbors.previous"
+                  color="primary" >
+            <mat-icon>navigate_before</mat-icon>
+          </button>
+
+          <div *ngIf="currentTank" fxFlex class="zf-title" >
+            Tank {{currentTank.name}}{{(currentSwimmers.length <2) ? ' (Empty)' : ''}}
+          </div>
+
+          <button mat-mini-fab (click)="nextTank()" [disabled]="!neighbors || !neighbors.next"
+                  color="primary" >
+            <mat-icon>navigate_next</mat-icon>
+          </button>
+        </div>
+
+        <!-- List of existing swimmers -->
+        <div *ngFor="let s of currentSwimmers">
+          <app-swimmer-editor [swimmer]="s"
+                              (fred)="onStockChange(s, $event)"
+                              (delete)="onDelete(s)"></app-swimmer-editor>
+        </div>
+        <div>
+          <mat-divider></mat-divider>
+        </div>
+        <form [formGroup]="tankJumpForm" fxLayout="row" fxLayoutGap="10px">
+          <button mat-icon-button [disabled]="!jumpTank" color="primary">
+          <mat-icon (click)="jumpToTank()">fast_forward</mat-icon>
+        </button>
+        <mat-form-field fxFlex>
+          <input matInput type="text" placeholder="Jump to tank" formControlName="tankName">
+          <mat-hint>{{tankHint}}</mat-hint>
+        </mat-form-field>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+</div>

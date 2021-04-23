@@ -38,6 +38,7 @@ import {ZfGenericModule} from '../zf-generic/zf-generic.module';
 import {CrossLabelMakerComponent} from './cross-label-maker/cross-label-maker.component';
 import {TankLabelMakerComponent} from './tank-label-maker/tank-label-maker.component';
 import {QRCodeModule} from 'angularx-qrcode';
+import {TankManagerModule} from '../tank-manager/tank-manager.module';
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import {QRCodeModule} from 'angularx-qrcode';
     TransgeneManagerModule,
     ZfGenericModule,
     QRCodeModule,
+    TankManagerModule,
   ],
   exports: [
     StockMenuComponent

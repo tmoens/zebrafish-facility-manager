@@ -3,6 +3,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {TankLabelComponent} from './printing/tank-label/tank-label.component';
 import {SplashComponent} from './splash/splash.component';
 import {CrossLabelComponent} from './printing/cross-label/cross-label.component';
+import {ZFTool} from './helpers/zf-tool';
+import {FacilityAuditComponent} from './facility-audit/facility-audit.component';
 
 const routes: Routes = [
   {
@@ -12,6 +14,10 @@ const routes: Routes = [
   {
     path: 'splash',
     component: SplashComponent,
+  },
+  {
+    path: ZFTool.FACILITY_AUDIT.route,
+    component: FacilityAuditComponent,
   },
   {
     path: 'print/tankLabel',

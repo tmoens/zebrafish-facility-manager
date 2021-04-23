@@ -22,7 +22,7 @@ export class StockNameCheckValidator implements AsyncValidator {
     ctrl: AbstractControl
   ): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
     return this.stockService.getByName(ctrl.value).pipe(
-      map(stock => (stock ? null : { noSuchStock: 'No such selected' } )),
+      map(stock => (stock ? null : { noSuchStock: 'No such stock' } )),
       catchError(() => null)
     );
   }

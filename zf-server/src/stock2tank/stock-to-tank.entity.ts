@@ -1,11 +1,11 @@
-import { Entity, Column, ManyToOne, JoinColumn, OneToOne, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, UpdateDateColumn } from 'typeorm';
 import { Stock } from '../stock/stock.entity';
 import { Exclude } from 'class-transformer';
 import { Tank } from '../tank/tank.entity';
 
 /**
- * This models the relationship between a given tank and the stock that is
- * swimming in the tank.
+ * This models the relationship between a given tank and the stock(s)
+ * that is (are) swimming in the tank.
  *
  * It is not modeled like normal TypeORM relationships because the relationship
  * not only has references to a stock and a tank but also ancillary data that

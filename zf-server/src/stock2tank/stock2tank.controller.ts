@@ -1,4 +1,15 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Stock2tankRepository} from './stock2tank.repository';
 import {Stock2tank} from './stock-to-tank.entity';
@@ -9,6 +20,7 @@ import {Role} from "../guards/role.decorator";
 import {USER_ROLE} from "../common/auth/zf-roles";
 import {RoleGuard} from "../guards/role-guard.service";
 
+@UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
 @Controller('swimmer')
 export class Stock2tankController {

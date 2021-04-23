@@ -6,8 +6,6 @@ import {StockFilter} from './stock-filter';
 import {StockMiniDto} from '../common/Stock/stockMiniDto';
 import {Logger} from 'winston';
 import {AutoCompleteOptions} from '../helpers/autoCompleteOptions';
-import {Transgene} from '../transgene/transgene.entity';
-import {Mutation} from '../mutation/mutation.entity';
 import moment = require('moment');
 
 
@@ -55,7 +53,7 @@ export class StockRepository extends Repository<Stock> {
     return stock;
   }
 
-  async getStockGenetics(id: number): Promise<Stock> {
+  async getStockWithGenetics(id: number): Promise<Stock> {
     const stock: Stock = await super.findOne(id, {relations: [
         'transgenes', 'mutations',
       ]});
@@ -77,13 +75,6 @@ export class StockRepository extends Repository<Stock> {
     stock.nextSubStockNumber = await this.getNextSubStockNumber(stock.number);
     stock.isDeletable = this.isDeletable(stock);
     stock.parentsEditable = this.parentsEditable(stock);
-    stock.alleleSummary = this.getAlleleSummary(stock);
-    if (stock.matStock) {
-      stock.matStock.alleleSummary = await this.getAlleleSummaryForId(stock.matIdInternal);
-    }
-    if (stock.patStock) {
-      stock.patStock.alleleSummary = await this.getAlleleSummaryForId(stock.patIdInternal);
-    }
     return;
   }
 
@@ -115,21 +106,6 @@ export class StockRepository extends Repository<Stock> {
     return stock.nextSubStockNumber <= 1;
   }
 
-  // Users are terrible at writing descriptions that summarize the genetic traits
-  // of a stock.  So we do it for them in the hope that they will stop writing
-  // all kinds of crap in the stock's description
-  getAlleleSummary(stock: Stock): string | null {
-    const tgSummary: string[] = stock.transgenes.map((t: Transgene) => t.fullName);
-    const mutSummary: string[] = stock.mutations.map((m: Mutation) => m.fullName);
-    return mutSummary.concat(tgSummary).join("; ");
-  }
-
-  // Get a summary of all the mutations and transgenes for a stock.
-  async getAlleleSummaryForId(id: number): Promise<string> {
-    const stock: Stock = await this.getStockGenetics(id);
-    return this.getAlleleSummary(stock);
-  }
-
   // What is the next available number for the stock?
   async getNextStockNumber(): Promise<number> {
     const latest = await this.createQueryBuilder('m')
@@ -153,24 +129,11 @@ export class StockRepository extends Repository<Stock> {
 
   // values that can be used to auto-complete various fields in the GUI
   async getAutoCompleteOptions(): Promise<AutoCompleteOptions> {
-    // once upon a time when researchers and PIs were just strings, we
+    // once upon a time when stock researchers and PIs were just strings, we
     // used to fetch all the strings for researchers and PI strings
     // that were extant in the database.
     // Nowadays this researchers and pis are references to users.
-    // const options: any = {};
-    // options.researcher = await this.getAutocompleteOption('researcher');
-    // options.pi = await this.getAutocompleteOption('pi');
-    // return options;
     return {};
-  }
-
-  async getAutocompleteOption(field: string): Promise<string[]> {
-    const list = await this.createQueryBuilder('i')
-      .select(`DISTINCT i.${field}`, field)
-      .where(`i.${field} IS NOT NULL`)
-      .orderBy(`i.${field}`)
-      .getRawMany();
-    return list.map((i: any) => i[field]);
   }
 
   // We want to get a list of offspring including the mutation and transgene summary,
@@ -178,7 +141,7 @@ export class StockRepository extends Repository<Stock> {
   // So we join the mutations and transgenes, build the summary, and then delete the detail.
   async getOffspring(id: number): Promise<Stock[]> {
     if (id === null) return [];
-    const offspring: Stock[] = await super.find({
+    return await super.find({
         relations: ['transgenes', 'mutations'],
         where: [
           {matIdInternal: id},
@@ -186,12 +149,6 @@ export class StockRepository extends Repository<Stock> {
         ]
       }
     );
-    return offspring.map((o: Stock) => {
-      o.alleleSummary = this.getAlleleSummary(o);
-      delete o.mutations;
-      delete o.transgenes;
-      return o;
-    });
   }
 
   async countOffspring(id: number): Promise<number> {
@@ -240,7 +197,7 @@ export class StockRepository extends Repository<Stock> {
     // Please look the other way now for a minute
     const stockMinis: StockMiniDto[] = [];
     for (const s of stocks) {
-      const alleleSummary = await this.getAlleleSummaryForId(s.id)
+      const stockWithGenetics: Stock = await this.getStockWithGenetics(s.id);
       stockMinis.push({
         id: s.id,
         name: s.name,
@@ -248,7 +205,7 @@ export class StockRepository extends Repository<Stock> {
         researcher: s.researcher,
         comment: (s.comment) ? s.comment.substr(0, 45) : '',
         fertilizationDate: s.fertilizationDate,
-        alleleSummary: alleleSummary,
+        alleleSummary: stockWithGenetics.alleleSummary,
       });
     }
     return stockMinis;
@@ -337,7 +294,7 @@ export class StockRepository extends Repository<Stock> {
   // BEWARE this function assumes that the stock has been joined to all the necessary
   // relationships to be able to apply where conditions on those relationships.
   // It also assumes no aliasing on the relationships.
-  // It really just avoids duplicated cod. But the fact that the SelectQueryBuilder talks about
+  // It really just avoids duplicated code. But the fact that the SelectQueryBuilder talks about
   // object fields inside quotes makes it so that this function and the calling
   // function need to agree on the names of the fields in the quoted strings.
   buildWhereConditions(q: SelectQueryBuilder<any>, filter: StockFilter): SelectQueryBuilder<any> {

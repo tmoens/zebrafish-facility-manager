@@ -1,4 +1,4 @@
-import { TankDto } from '../tank/tank.dto';
+import { TankDto } from '../common/tank.dto';
 import { Stock } from '../stock/stock.entity';
 
 export class SwimmerFullDto {

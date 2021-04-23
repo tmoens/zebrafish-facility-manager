@@ -56,6 +56,9 @@ import {UserAdminService} from './auth/user-admin/user-admin.service';
 import {CrossLabelComponent} from './printing/cross-label/cross-label.component';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {ImporterModule} from './importer/importer.module';
+import {TankManagerModule} from './tank-manager/tank-manager.module';
+import {FacilityAuditModule} from './facility-audit/facility-audit.module';
+import {FacilityAuditComponent} from './facility-audit/facility-audit.component';
 
 export function appStateProviderFactory(provider: AppStateService) {
   return () => provider.initialize();
@@ -85,6 +88,7 @@ export function authServiceProviderFactory(provider: AppStateService) {
     TankLabelComponent,
     SplashComponent,
     CrossLabelComponent,
+    FacilityAuditComponent,
   ],
   imports: [
     AuthModule,
@@ -92,6 +96,8 @@ export function authServiceProviderFactory(provider: AppStateService) {
     ZfGenericModule,
     MutationManagerModule,
     StockManagerModule,
+    TankManagerModule,
+    FacilityAuditModule,
     TransgeneManagerModule,
     UserAdminModule,
     ImporterModule,

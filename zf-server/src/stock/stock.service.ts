@@ -296,12 +296,12 @@ export class StockService extends GenericService {
       candidate.mutations = [];
       candidate.transgenes = [];
       if (candidate.matIdInternal) {
-        const ms: Stock = await this.repo.getStockGenetics(candidate.matIdInternal);
+        const ms: Stock = await this.repo.getStockWithGenetics(candidate.matIdInternal);
         candidate.transgenes = ms.transgenes;
         candidate.mutations = ms.mutations;
       }
       if (candidate.patIdInternal) {
-        const ps: Stock = await this.repo.getStockGenetics(candidate.patIdInternal);
+        const ps: Stock = await this.repo.getStockWithGenetics(candidate.patIdInternal);
         for (const mut of ps.mutations) {
           if (candidate.mutations.filter(m => mut.id === m.id).length === 0) {
             candidate.mutations.push(mut);

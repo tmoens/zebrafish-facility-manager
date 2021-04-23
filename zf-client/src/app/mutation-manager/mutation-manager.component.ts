@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
 import {ZFTool} from "../helpers/zf-tool";
 import {AppStateService} from "../app-state.service";
 import {MutationService} from "./mutation.service";
@@ -12,8 +11,6 @@ import {AuthService} from "../auth/auth.service";
 })
 export class MutationManagerComponent {
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
     public appState: AppStateService,
     public authService: AuthService,
     public service: MutationService,

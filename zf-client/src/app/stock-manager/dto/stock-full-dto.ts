@@ -2,7 +2,7 @@ import {MutationDto} from '../../mutation-manager/mutation-dto';
 import {TransgeneDto} from '../../transgene-manager/transgene-dto';
 import {StockDto} from './stock-dto';
 import {ZfGenericDto} from '../../zf-generic/zfgeneric-dto';
-import {StockSwimmerDto} from '../../tank-manager/stock-swimmer-dto';
+import {SwimmerDto} from '../../common/swimmer.dto';
 import {Type} from 'class-transformer';
 import 'reflect-metadata';
 import {UserDTO} from '../../auth/UserDTO';
@@ -24,7 +24,7 @@ export class StockFullDto extends ZfGenericDto {
   matStock: StockDto = null;
   @Type(() => StockDto)
   patStock: StockDto = null;
-  swimmers: StockSwimmerDto[] = [];
+  swimmers: SwimmerDto[] = [];
   @Type(() => TransgeneDto)
   transgenes: TransgeneDto[] = [];
   @Type(() => MutationDto)

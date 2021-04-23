@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, Query, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Query, UseGuards} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TankService } from './tank.service';
 import { TankRepository } from './tank.repository';
@@ -7,7 +7,8 @@ import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {Role} from '../guards/role.decorator';
 import {ADMIN_ROLE} from '../common/auth/zf-roles';
 import {RoleGuard} from '../guards/role-guard.service';
-import {TankDto} from './tank.dto';
+import {TankDto} from '../common/tank.dto';
+import {TankNeighborsDto} from '../common/tankNeighborsDto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('tank')
@@ -24,6 +25,21 @@ export class TankController {
     return await this.repo.findFiltered(params);
   }
 
+  @Get('name/:name')
+  async getByName(@Param() params): Promise<TankDto> {
+    return this.service.findTankByName(params.name);
+  }
+
+  @Get('getNeighbors/:sortOrder')
+  async getNeighbors(@Param() params): Promise<TankNeighborsDto> {
+    return this.service.getNeighbors(params.sortOrder);
+  }
+
+  @Get('getFirst')
+  async getfirst(): Promise<TankDto> {
+    return this.service.findTankAfter('');
+  }
+
   // TODO get the next free tanks (after a given tank name or partial name)
 
   // TODO use the service, not the repo
@@ -31,6 +47,7 @@ export class TankController {
   async getReport(): Promise<any[]> {
     return await this.repo.getAuditReport();
   }
+
   @Role(ADMIN_ROLE)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Post('import')
@@ -39,6 +56,6 @@ export class TankController {
   }
 
   // For now, there are no CRUD operations for tanks.
-  // The only way to get more is to "import"  them and the
-  // only way to remove them is with a direct database query.
+  // Add new tanks using "import" or direct database access.
+  // Remove or update them with direct database access.
 }

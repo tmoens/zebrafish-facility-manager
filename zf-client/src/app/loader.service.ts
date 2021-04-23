@@ -12,6 +12,8 @@ import {StockFullDto} from './stock-manager/dto/stock-full-dto';
 import {ClientConfig} from './common/config/client-config';
 import {ZfinMutationDto} from './common/zfin/zfin-mutation.dto';
 import {ZfinTransgeneDto} from './common/zfin/zfin-transgene.dto';
+import {TankDto} from './common/tank.dto';
+import {SwimmerDto} from './common/swimmer.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +43,7 @@ export class LoaderService {
       );
   }
 
+  // ===============  Generic Calls (used for multiple object types) ========
   getFilteredList(type: ZFTypes, filter: any): Observable<any> {
     if (!filter) {
       filter = {};
@@ -61,14 +64,6 @@ export class LoaderService {
       .pipe(
         catchError(this.handleError('get report ' + type + '.', []))
       );
-  }
-
-  getAuditReport(): Observable<any> {
-    return this.http.get(this.serverURL + '/tank/auditReport/')
-      .pipe(
-        catchError(this.handleError('get audit report' + '.', []))
-      );
-
   }
 
   getInstance(type: ZFTypes, id: any): Observable<any> {
@@ -92,15 +87,6 @@ export class LoaderService {
     return this.http.delete(this.serverURL + '/' + type + '/' + id)
       .pipe(
         catchError(this.handleError('Delete ' + type + '.', null))
-      );
-  }
-
-  // Swimmers are a bit different - they have two ids, the stock that is swimming
-  // and the tank it is swimming in.  So it does not fit the generic delete operation
-  deleteSwimmer(stockId: number, tankId: number) {
-    return this.http.delete(this.serverURL + '/swimmer/' + stockId + '/' + tankId)
-      .pipe(
-        catchError(this.handleError('Delete swimmer failed' + '.', {}))
       );
   }
 
@@ -188,8 +174,46 @@ export class LoaderService {
       );
   }
 
-  // =========== ZFIN Specific requests ===============
+  // ======================  Tank Specific Requests ==========================
+  getAuditReport(): Observable<any> {
+    return this.http.get(this.serverURL + '/tank/auditReport/')
+      .pipe(
+        catchError(this.handleError('get audit report' + '.', []))
+      );
+  }
 
+  getFirstTank(): Observable<any> {
+    return this.http.get(this.serverURL + '/tank/getFirst')
+      .pipe(
+        catchError(this.handleError('getFirstTank' + '.', []))
+      );
+  }
+
+  getTankByName(tankName:string): Observable<any> {
+    return this.http.get(this.serverURL + '/tank/name/' + tankName)
+      .pipe(
+        catchError(this.handleError('get tank by name' + '.', []))
+      );
+  }
+
+  getTankNeighbors(tank: TankDto): Observable<any> {
+    return this.http.get(this.serverURL + '/tank/getNeighbors/' + tank.sortOrder)
+      .pipe(
+        catchError(this.handleError('getTankNeighbors' + '.', []))
+      );
+  }
+
+  // ======================  Swimmer Specific Requests ==========================
+  // Swimmers are a bit different - they have two ids, the stock that is swimming
+  // and the tank it is swimming in.  So it does not fit the generic delete operation
+  deleteSwimmer(swimmer: SwimmerDto) {
+    return this.http.delete(this.serverURL + '/swimmer/' + swimmer.stockId + '/' + swimmer.tankId)
+      .pipe(
+        catchError(this.handleError('Delete swimmer failed' + '.', {}))
+      );
+  }
+
+  // ==================== ZFIN Specific requests ===============
   getZfinMutationByName(alleleName: string): Observable<ZfinMutationDto> {
     return this.http.get( this.appState.facilityConfig.zfinAlleleLookupUrl +'/mutation/allele/' + alleleName)
       .pipe(
@@ -204,15 +228,6 @@ export class LoaderService {
       );
   }
 
-  /**
-   * Get label(s) for a particular tank.
-   */
-  getTankLabels(tankIds: string[]): Observable<any> {
-    return this.http.get(this.serverURL + '/swimmer/label/' + tankIds.join(','))
-      .pipe(
-        catchError(this.handleError('Get labels for tanks ' + tankIds.join(', '), []))
-      );
-  }
 
   /**
    * Get all the mutation types

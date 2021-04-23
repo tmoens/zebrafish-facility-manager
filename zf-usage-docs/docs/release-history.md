@@ -1,3 +1,22 @@
+# Releases 2.1 - 2.4 April 2021
+
+## Audit Tool
+
+Using a phone only, make sure that the data in your system is in sync with
+your fish facility.
+Very fast and efficient update of the stocks and 
+fish counts in tanks as you go from tank to tank.
+
+## ZFIN Integration
+
+When adding a mutation or transgene to the system, any alleles that are "known to
+ZFIN" are recognized and user can import ZFIN information with a single click.
+
+## Data Importer
+
+An importer feature was added to simplify the process of migrating existing
+stockbooks to the Zebrafish Facility Manager system.
+
 # Release 2.0. February 2021
 
 ## Stock Researchers and Primary Investigators Improved

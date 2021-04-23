@@ -2,18 +2,20 @@ import {Injectable} from '@angular/core';
 import {LoaderService} from '../loader.service';
 import {Observable, of} from 'rxjs';
 import {Tank} from './tank';
-import {TankDto} from './tank-dto';
-import {SwimmerFullDto} from './swimmer-full-dto';
-import {StockSwimmerDto} from './stock-swimmer-dto';
+import {TankDto} from '../common/tank.dto';
+import {SwimmerFullDto} from '../common/swimmer-full.dto';
+import {SwimmerDto} from '../common/swimmer.dto';
 import {plainToClass} from 'class-transformer';
 import {ZFTypes} from '../helpers/zf-types';
 
 /**
- * This is a cache of all the known tanks.
+ * This is mostly just a cache of all the known tanks at the facility.
+ *
  * Its only purpose is to help the GUI respond relatively quickly when the user
  * is typing a tank name, no round trips to the server.
+ *
  * Since tanks in a facility do not change (well, almost never), it does not have
- * to be refreshed.
+ * to be refreshed automatically.
  */
 
 
@@ -39,6 +41,7 @@ export class TankService {
   }
 
   getTankByName(putativeName: string): Tank | null {
+    if (!putativeName) return null;
     if (this.indexedAll[putativeName.toLowerCase()]) {
       return this.indexedAll[putativeName.toLowerCase()];
     } else {
@@ -57,15 +60,15 @@ export class TankService {
     return this.loader.getStocksInTank(tank.id);
   }
 
-  addSwimmer(swimmer: StockSwimmerDto) {
+  addSwimmer(swimmer: SwimmerDto) {
     return this.loader.create(ZFTypes.SWIMMER, swimmer);
   }
 
-  deleteSwimmer(swimmer: StockSwimmerDto) {
-    return this.loader.deleteSwimmer(swimmer.stockId, swimmer.tankId);
+  deleteSwimmer(swimmer: SwimmerDto) {
+    return this.loader.deleteSwimmer(swimmer);
   }
 
-  updateSwimmer(swimmer: StockSwimmerDto) {
+  updateSwimmer(swimmer: SwimmerDto) {
     return this.loader.update(ZFTypes.SWIMMER, swimmer);
   }
 }

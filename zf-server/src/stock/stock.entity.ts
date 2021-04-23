@@ -234,7 +234,6 @@ export class Stock {
   offspring: Stock[];
   isDeletable: boolean;
   parentsEditable: boolean;
-  alleleSummary: string;
 
   setName() {
     this.name = String(this.number);
@@ -245,6 +244,21 @@ export class Stock {
     if (this.subNumber > 0) {
       this.name = this.name.concat('.0', String(this.subNumber));
     }
+  }
+
+  // Users are terrible at writing descriptions that summarize the genetic traits
+  // of a stock.  So we do it for them in the hope that they will stop writing
+  // all kinds of crap in the stock's description
+  @Expose()
+  get alleleSummary(): string | null {
+    let alleleSummary: string[] = [];
+    if (this.transgenes && this.transgenes.length > 0) {
+      alleleSummary = this.transgenes.map((t: Transgene) => t.fullName);
+    }
+    if (this.mutations && this.mutations.length > 0) {
+      alleleSummary = alleleSummary.concat(this.mutations.map((m: Mutation) => m.fullName));
+    }
+    return alleleSummary.join("; ");
   }
 
   @Expose()

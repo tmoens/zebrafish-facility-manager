@@ -19,13 +19,6 @@ export class Stock2tankRepository extends Repository<Stock2tank> {
     return classToPlain(items);
   }
 
-  async findSwimmersInTank(tankId: number) {
-    return await this.createQueryBuilder('i')
-      .leftJoinAndSelect('i.stock', 's')
-      .leftJoinAndSelect('i.tank', 't')
-      .where('t.id = :tankId', {tankId})
-      .getMany();
-  }
 
   // For update, lookup the swimmer, merge in the DTO and save.
   // No validation performed.

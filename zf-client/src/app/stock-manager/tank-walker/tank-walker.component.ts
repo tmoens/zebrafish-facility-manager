@@ -7,7 +7,7 @@ import {Location} from "@angular/common";
 import {FormControl} from "@angular/forms";
 import {LoaderService} from "../../loader.service";
 import {TankService} from "../../tank-manager/tank.service";
-import {StockSwimmerDto} from "../../tank-manager/stock-swimmer-dto";
+import {SwimmerDto} from "../../common/swimmer.dto";
 
 @Component({
   selector: 'app-stock-walker',
@@ -74,7 +74,7 @@ export class TankWalkerComponent implements OnInit {
 
 
   save() {
-    const swimmerDto: StockSwimmerDto = {
+    const swimmerDto: SwimmerDto = {
       stockId: Number(this.tankList[this.inFocusIndex].stockId),
       tankId: Number(this.tankList[this.inFocusIndex].tankId),
       number: this.countFC.value,

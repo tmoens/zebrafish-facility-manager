@@ -5,6 +5,8 @@ export class Tank {
   rack?: string;
   shelf?: string;
   slot?: string;
+  sortOrder: string;
+  isMultiTank: boolean;
 
   containsString(searchString: string): boolean {
     return false;

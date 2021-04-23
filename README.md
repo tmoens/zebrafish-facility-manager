@@ -34,7 +34,8 @@ It also provides reports to support things like auditing a zebrafish facility.
 
 ## Deployment Documentation
 
-The deployment documentation is written in markdown. You can use it as is.
+The deployment documentation is written in markdown.
+You can use it as is in your IDE.
 Alternately you use [MkDocs](https://mkdocs.org) to build a static doc site
 complete with nice navigation.
 

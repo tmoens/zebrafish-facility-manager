@@ -27,6 +27,10 @@ export class ZFTool {
     'importer',
     ZFTypes.MUTATION,
     'Import Tool');
+  static readonly FACILITY_AUDIT  = new ZFTool(
+    'facility_audit',
+    null,
+    'Facility Audit');
 
   // private to disallow creating other instances than the static ones above.
   private constructor(
