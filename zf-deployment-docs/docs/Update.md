@@ -30,7 +30,7 @@ These directories will be in place:
 
 Every existing facility will have:
 
-1. A sub-domain named in your Apache certificate
+1. A sub-domain named in your SSL certificate
 1. An enabled Apache vhost
 1. A database
 1. A service config file like /etc/systemd/system/zfm-staging.service so systemd can run it

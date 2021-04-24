@@ -57,7 +57,7 @@
       <mat-toolbar *ngIf="!(authService.loggedIn$ | async)">
         <span>Zebrafish Facility Manager for {{appState.facilityConfig.facilityName}}</span>
         <span class="fill-remaining-space"></span>
-        <button mat-button (click)="login()">Login</button>
+        <button mat-button (click)="login()" color="primary"><mat-icon>login</mat-icon> Login</button>
       </mat-toolbar>
     </div>
 
@@ -121,7 +121,8 @@
       <mat-toolbar *ngIf="!(authService.loggedIn$ | async)">
         <span>Facility Manager for {{appState.facilityConfig.facilityAbbrv}}</span>
         <span class="fill-remaining-space"></span>
-        <button mat-button (click)="login()">Login</button>
+        <button mat-button (click)="login()" color="priary">
+          <mat-icon>login</mat-icon>Login</button>
       </mat-toolbar>
     </div>
   </div>

@@ -130,7 +130,7 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
 
       BEST_PRACTICES_SITE: Joi.string().default('https://zebrafishfacilitymanager.com'),
 
-      ZFIN_ALLELE_LOOKUP_URL: Joi.string().default('http://zfin.zebrafishfacilitymanager.com'),
+      ZFIN_ALLELE_LOOKUP_URL: Joi.string().default('https://zfin.zebrafishfacilitymanager.com'),
 
       HIDE_PRIMARY_INVESTIGATOR: Joi.boolean().default(false),
       HIDE_IMPORT_TOOL: Joi.boolean().default(true),
