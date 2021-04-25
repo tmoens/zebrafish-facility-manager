@@ -151,7 +151,6 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
       LABEL_SHOW_TRANSGENES: Joi.boolean().default(true),
       LABEL_SHOW_ADDITIONAL_NOTES: Joi.boolean().default(true),
       GUI_BACKGROUND: Joi.string().default(null),
-      ALLOW_EXCEL_IMPORTS: Joi.boolean().default(false),
     });
 
     const {error, value: validatedEnvConfig} = envVarsSchema.validate(
@@ -229,7 +228,6 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
     c.tankLabel.showTransgenes = Boolean(this.envConfig.LABEL_SHOW_TRANSGENES);
     c.tankLabel.showAdditionalNote = Boolean(this.envConfig.LABEL_SHOW_ADDITIONAL_NOTES);
     c.backgroundColor = this.envConfig.GUI_BACKGROUND;
-    c.allowExcelImports = Boolean(this.envConfig.ALLOW_EXCEL_IMPORTS);
     c.zfinAlleleLookupUrl = this.envConfig.ZFIN_ALLELE_LOOKUP_URL;
     return c;
   }
