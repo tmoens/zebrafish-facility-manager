@@ -6,7 +6,7 @@ A software package for maintaining information about a zebrafish facility
 used in genetics labs.
 
 It has two parts.  The zf_client part runs in any web browser and
-presents a user interface for managing the the stocks in a facility.
+presents a user interface for managing the stocks in a facility.
 The zf_client uses Angular.
 
 The zf_server part runs on a computer with a database and is responsible
