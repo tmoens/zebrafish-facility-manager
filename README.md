@@ -78,5 +78,5 @@ for each facility.
 
 - [Nest](https://github.com/nestjs/nest) provides the zf_server application framework.
 - [TypeORM](https://typeorm.delightful.studio/) provides the orm
-- [MariaDB](https://mariadb.com/) is used by default
-
+- [MariaDB](https://mariadb.com/) is used by defaul
+- [MkDocs](https://mkdocs.org)
