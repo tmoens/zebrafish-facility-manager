@@ -17,4 +17,6 @@ export class ClientConfig {
   backgroundColor: string = null;
 
   zfinAlleleLookupUrl: string;
+
+  allowStockNumberOverride: boolean;
 }

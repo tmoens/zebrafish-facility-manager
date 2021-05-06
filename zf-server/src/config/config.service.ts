@@ -95,6 +95,9 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
     return this.envConfig.ZFIN_ALLELE_LOOKUP_URL;
   }
 
+  get allowStockNumberOverride(): boolean {
+    return Boolean(this.envConfig.ALLOW_STOCK_NUMBER_OVERRIDE);
+  }
 
   /**
    * Ensures all needed variables are set, and returns the validated JavaScript object
@@ -151,6 +154,7 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
       LABEL_SHOW_TRANSGENES: Joi.boolean().default(true),
       LABEL_SHOW_ADDITIONAL_NOTES: Joi.boolean().default(true),
       GUI_BACKGROUND: Joi.string().default(null),
+      ALLOW_STOCK_NUMBER_OVERRIDE: Joi.boolean().default(false),
     });
 
     const {error, value: validatedEnvConfig} = envVarsSchema.validate(
@@ -229,6 +233,7 @@ export class ConfigService implements MailerOptionsFactory, TypeOrmOptionsFactor
     c.tankLabel.showAdditionalNote = Boolean(this.envConfig.LABEL_SHOW_ADDITIONAL_NOTES);
     c.backgroundColor = this.envConfig.GUI_BACKGROUND;
     c.zfinAlleleLookupUrl = this.envConfig.ZFIN_ALLELE_LOOKUP_URL;
+    c.allowStockNumberOverride = Boolean(this.envConfig.ALLOW_STOCK_NUMBER_OVERRIDE);
     return c;
   }
 

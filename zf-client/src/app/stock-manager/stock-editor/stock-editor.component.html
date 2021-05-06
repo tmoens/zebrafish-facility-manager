@@ -13,7 +13,9 @@
         <div fxFlex="50" fxLayout="column">
           <mat-form-field>
             <label>
-              <input [(ngModel)]="stock.name" disabled matInput name="sn" placeholder="Stock Number" type="text">
+              <input [(ngModel)]="stock.name"
+                     [disabled]="!appState.facilityConfig.allowStockNumberOverride || stock.nextSubStockNumber > 1"
+                     matInput name="sn" placeholder="Stock Number" type="text">
             </label>
           </mat-form-field>
           <mat-form-field>
