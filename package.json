@@ -7,6 +7,6 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
-    "standard-version": "^9.1.1"
+    "standard-version": "^9.3.0"
   }
 }
