@@ -64,6 +64,7 @@ _staging.examplezfm.com_ to be 3199.
 
 The process of setting up a database for your a facility is covered [here](MariaDB.md).
 Once you have configured the db, in keeping with the running example, you will have:
+
 1. database: _zf_eue_
 1. db user: _zf_eue_
 1. db password: _some_very_good_eue_password_
