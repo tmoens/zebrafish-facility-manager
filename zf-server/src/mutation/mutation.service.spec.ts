@@ -15,6 +15,7 @@ import {utilities as nestWinstonModuleUtilities} from 'nest-winston/dist/winston
 import {WINSTON_MODULE_NEST_PROVIDER, WinstonModule} from 'nest-winston';
 import {ZfinService} from '../zfin/zfin.service';
 import {ZfinModule} from '../zfin/zfin.module';
+import {HttpService} from '@nestjs/common';
 
 describe('MutationService testing', () => {
   let logger: Logger;
@@ -24,6 +25,7 @@ describe('MutationService testing', () => {
   let configService: ConfigService;
   let zfinService: ZfinService;
   let connection: Connection;
+  let httpService: HttpService;
   const consoleLog = new (winston.transports.Console)({
     format: winston.format.combine(
       winston.format.timestamp(),
@@ -56,7 +58,8 @@ describe('MutationService testing', () => {
     }).compile();
     logger = module.get(WINSTON_MODULE_NEST_PROVIDER);
     configService = new ConfigService();
-    zfinService = new ZfinService();
+    httpService = new HttpService();
+    zfinService = new ZfinService(httpService, configService);
     connection = module.get(Connection);
     mutationRepo = module.get<MutationRepository>(MutationRepository);
     transgeneRepo = module.get<TransgeneRepository>(TransgeneRepository);

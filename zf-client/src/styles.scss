@@ -1,8 +1,9 @@
-@import '~@angular/material/theming';
-@include mat-core();
+@use '~@angular/material' as mat;
+
+@include mat.core();
 @import "zf-theme.scss";
 
-@include angular-material-theme($zf-app-theme);
+@include mat.all-component-themes($zf-app-theme);
 
 // push everything after this in flexLayout to the end of the layout
 // So, use this in a toolbar to push the login button to the right.
@@ -93,11 +94,11 @@
 .zf-selection-item {
 
   &:hover, &:active, &:focus {
-    background-color: mat-color(map-get($zf-app-theme, background), hover);
+    background-color: mat.get-color-from-palette(map-get($zf-app-theme, background), hover);
   }
 
   &.selected {
-    background-color: mat-color(map-get($zf-app-theme, primary), lighter, 0.5);
+    background-color: mat.get-color-from-palette(map-get($zf-app-theme, primary), lighter, 0.5);
   }
 }
 
@@ -116,7 +117,7 @@
 }
 
 .zf-clickable {
-  color: mat-color(map-get($zf-app-theme, primary));
+  color: mat.get-color-from-palette(map-get($zf-app-theme, primary));
 }
 // I really should build a typography configuration for the app and then base this
 // size relative to some existing typography style, but I is lazy.
