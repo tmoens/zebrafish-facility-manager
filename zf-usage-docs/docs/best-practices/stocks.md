@@ -1,4 +1,4 @@
-# Stocks and Substocks
+# Best Practice for Stocks and Substocks
 
 The Zebrafish Facility Manager tracks three main things about your stocks:
 

@@ -1,13 +1,18 @@
 site_name: Zebrafish Facility Manager
 
 nav:
-  - User Documentation: index.md
-  - Stocks and Substocks: stocks.md
-  - Mutations and Transgenes: mutations.md
+  - What is the ZFM?: index.md
+  - Who Uses the ZFM?: who-uses-zfm.md
+  - Why Use the ZFM?: why-zfm.md
+  - Best Practices:
+    - Stocks and Substocks: best-practices/stocks.md
+    - Mutations and Transgenes: best-practices/mutations.md
   - Release Notes: release-history.md
-  - Why use ZFM: why-zfm.md
+  - Contact Information: contact.md
 
 theme:
   name: material
+  favicon: assets/images/favicon.png
+  logo: assets/images/favicon.png
   features:
     - navigation.instant
