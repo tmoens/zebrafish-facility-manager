@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.4.1...v2.5.0) (2021-06-06)
+
+
+### Features
+
+* **export:** add feature for exporting whole stockbook ([1ed995d](https://github.com/tmoens/zebrafish-facility-manager/commit/1ed995d442af40214600923c84f3fe8ea3e53103))
+
+
+### Bug Fixes
+
+* **config:** remove duplicate config option ([b62031b](https://github.com/tmoens/zebrafish-facility-manager/commit/b62031b1a02dea5eeb38db90026e44d8fa13250b))
+* change default zfin-data-api url to https ([31b952a](https://github.com/tmoens/zebrafish-facility-manager/commit/31b952aa07571710eaac8eabad5ddf265bad09aa))
+
 ### [2.4.1](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.4.0...v2.4.1) (2021-04-23)
 
 ## [2.4.0](https://github.com/tmoens/zebrafish-facility-manager/compare/v2.3.0...v2.4.0) (2021-04-23)
