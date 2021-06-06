@@ -16,7 +16,7 @@
     <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
       <div fxFlex="4%"><mat-icon>female</mat-icon></div>
       <div fxFlex="14%">{{crossLabel.momName}}</div>
-      <div fxFlex>{{crossLabel.momLabelDescription}}</div>
+      <div fxFlex>{{crossLabel.momAlleleSummary}}</div>
       <div *ngIf="crossLabel.momTank" fxFlex="15%">T:{{crossLabel.momTank}}</div>
     </div>
 
@@ -24,7 +24,7 @@
     <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
       <div fxFlex="4%"><mat-icon>male</mat-icon></div>
       <div fxFlex="14%">{{crossLabel.dadName}}</div>
-      <div fxFlex>{{crossLabel.dadLabelDescription}}</div>
+      <div fxFlex>{{crossLabel.dadAlleleSummary}}</div>
       <div *ngIf="crossLabel.dadTank" fxFlex="15%">T:{{crossLabel.dadTank}}</div>
     </div>
 

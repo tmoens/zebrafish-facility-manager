@@ -86,7 +86,8 @@ export class CrossLabelMakerComponent implements OnInit {
     this.service.getByName(this.crossLabel.momName).subscribe((s: StockDto) => {
       if (s && s.id) {
         this.mom = s;
-        this.crossLabel.momLabelDescription = this.mom.description;
+        this.crossLabel.momAlleleSummary = this.mom.alleleSummary;
+        this.crossLabel.momDescription = this.mom.description;
         // Because we need to know the tanks the stock lives in, we need to go get the "full" stock
         this.service.getById(this.mom.id).subscribe((sf: StockFullDto) => {
           this.momFull = sf;
@@ -98,7 +99,8 @@ export class CrossLabelMakerComponent implements OnInit {
         this.mom = null;
         this.momFull = null;
         this.crossLabel.momTank = null;
-        this.crossLabel.momLabelDescription = '';
+        this.crossLabel.momDescription = '';
+        this.crossLabel.momAlleleSummary = '';
       }
     });
   }
@@ -107,7 +109,8 @@ export class CrossLabelMakerComponent implements OnInit {
     this.service.getByName(this.crossLabel.dadName).subscribe((s: StockDto) => {
       if (s && s.id) {
         this.dad = s;
-        this.crossLabel.dadLabelDescription = this.dad.description;
+        this.crossLabel.dadDescription = this.dad.description;
+        this.crossLabel.dadAlleleSummary = this.dad.alleleSummary;
         // Because we need to know the tanks the stock lives in, we need to go get the "full" stock
         this.service.getById(this.dad.id).subscribe((sf: StockFullDto) => {
           this.dadFull = sf;
@@ -119,7 +122,8 @@ export class CrossLabelMakerComponent implements OnInit {
         this.dad = null;
         this.dadFull = null;
         this.crossLabel.dadTank = null;
-        this.crossLabel.dadLabelDescription = '';
+        this.crossLabel.dadDescription = '';
+        this.crossLabel.dadAlleleSummary = '';
       }
     });
   }

@@ -26,53 +26,72 @@
     </mat-form-field>
 
     <!--  Mother --------------------------------------->
-    <mat-form-field>
-      <label>
-        <input #matStockNameF="ngModel" (keyup)="onSetMatStock()"
-               [(ngModel)]="crossLabel.momName" matInput name="matStockNameF"
-               placeholder="Mom stock number" required stockNameCheck>
-      </label>
-      <mat-error *ngIf="matStockNameF.errors">Stock name does not exist</mat-error>
-    </mat-form-field>
-    <mat-form-field>
-      <label>
-        <input [(ngModel)]="crossLabel.momLabelDescription" matInput name="msd"
-               placeholder="Mom description" required type="text">
-      </label>
-    </mat-form-field>
-    <mat-form-field *ngIf="momFull && momFull.swimmers.length > 0">
-      <mat-select [(ngModel)]="crossLabel.momTank" name="momTank" placeholder="Mom from tank...">
-        <mat-option [value]=null>--None--</mat-option>
-        <mat-option *ngFor="let option of momFull.swimmers" [value]="option.tank.name">
-          <div>{{option.tank.name}}</div>
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div fxLayout="Row" fxLayoutGap="20px">
+      <mat-form-field fxFlex="30%">
+        <label>
+          <input #matStockNameF="ngModel" (keyup)="onSetMatStock()"
+                 [(ngModel)]="crossLabel.momName" matInput name="matStockNameF"
+                 placeholder="Mom stock number" required stockNameCheck>
+        </label>
+        <mat-error *ngIf="matStockNameF.errors">Stock name does not exist</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <label>
+          <input [(ngModel)]="crossLabel.momDescription" matInput name="msd"
+                 placeholder="Mom description" required type="text" disabled>
+        </label>
+      </mat-form-field>
+    </div>
+    <div fxLayout="Row" fxLayoutGap="20px">
+      <mat-form-field fxFlex="30%" *ngIf="momFull && momFull.swimmers.length > 0">
+        <mat-select [(ngModel)]="crossLabel.momTank" name="momTank" placeholder="Mom from tank...">
+          <mat-option [value]=null>--None--</mat-option>
+          <mat-option *ngFor="let option of momFull.swimmers" [value]="option.tank.name">
+            <div>{{option.tank.name}}</div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <label>
+          <input [(ngModel)]="crossLabel.momAlleleSummary" matInput name="mas"
+                 placeholder="Mom allele summary" type="text">
+        </label>
+      </mat-form-field>
+    </div>
 
     <!--  Father --------------------------------------->
-    <mat-form-field>
-      <label>
-        <input #patStockNameF="ngModel" (keyup)="onSetPatStock()"
-               [(ngModel)]="crossLabel.dadName" matInput name="patStockNameF"
-               placeholder="Dad stock number" required stockNameCheck>
-      </label>
-      <mat-error *ngIf="patStockNameF.errors">Stock name does not exist</mat-error>
-    </mat-form-field>
-    <mat-form-field *ngIf="dad">
-      <label>
-        <input [(ngModel)]="crossLabel.dadLabelDescription" matInput
-               name="psd" placeholder="Dad description for Label" required>
-      </label>
-    </mat-form-field>
-    <mat-form-field *ngIf="dadFull && dadFull.swimmers.length > 0">
-      <mat-select [(ngModel)]="crossLabel.dadTank" name="dadTank" placeholder="Dad from tank...">
-        <mat-option [value]=null>--None--</mat-option>
-        <mat-option *ngFor="let option of dadFull.swimmers" [value]="option.tank.name">
-          <div>{{option.tank.name}}</div>
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
+    <div fxLayout="Row" fxLayoutGap="20px">
+      <mat-form-field fxFlex="30%">
+        <label>
+          <input #patStockNameF="ngModel" (keyup)="onSetPatStock()"
+                 [(ngModel)]="crossLabel.dadName" matInput name="patStockNameF"
+                 placeholder="Dad stock number" required stockNameCheck>
+        </label>
+        <mat-error *ngIf="patStockNameF.errors">Stock name does not exist</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <label>
+          <input [(ngModel)]="crossLabel.dadDescription" matInput name="msd"
+                 placeholder="Dad description" type="text" disabled>
+        </label>
+      </mat-form-field>
+    </div>
+    <div fxLayout="Row" fxLayoutGap="20px">
+      <mat-form-field fxFlex="30%" *ngIf="dadFull && dadFull.swimmers.length > 0">
+        <mat-select [(ngModel)]="crossLabel.dadTank" name="dadTank" placeholder="Dad from tank...">
+          <mat-option [value]=null>--None--</mat-option>
+          <mat-option *ngFor="let option of dadFull.swimmers" [value]="option.tank.name">
+            <div>{{option.tank.name}}</div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <label>
+          <input [(ngModel)]="crossLabel.dadAlleleSummary" matInput
+                 name="das" placeholder="Dad allele summary">
+        </label>
+      </mat-form-field>
+    </div>
     <!-- Label Note -->
     <mat-form-field>
       <label>
@@ -112,7 +131,7 @@
           <div *ngIf="mom" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
             <div fxFlex="4%"><mat-icon>female</mat-icon></div>
             <div fxFlex="14%">{{crossLabel.momName}}</div>
-            <div fxFlex>{{crossLabel.momLabelDescription}}</div>
+            <div fxFlex>{{crossLabel.momAlleleSummary}}</div>
             <div *ngIf="crossLabel.momTank" fxFlex="15%">T:{{crossLabel.momTank}}</div>
           </div>
 
@@ -120,7 +139,7 @@
           <div *ngIf="dad" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
             <div fxFlex="4%"><mat-icon>male</mat-icon></div>
             <div fxFlex="14%">{{crossLabel.dadName}}</div>
-            <div fxFlex>{{crossLabel.dadLabelDescription}}</div>
+            <div fxFlex>{{crossLabel.dadAlleleSummary}}</div>
             <div *ngIf="crossLabel.dadTank" fxFlex="15%">T:{{crossLabel.dadTank}}</div>
           </div>
 

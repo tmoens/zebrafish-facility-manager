@@ -9,8 +9,10 @@ export class CrossLabel {
   dadName: string = null;
   momTank: string = null;
   dadTank: string = null;
-  momLabelDescription: string = null;
-  dadLabelDescription: string = null;
+  momDescription: string = null;
+  momAlleleSummary: string = null;
+  dadDescription: string = null;
+  dadAlleleSummary: string = null;
   dateString: string = null;
   note: string = null;
   fontFamily: string = 'Arial';
