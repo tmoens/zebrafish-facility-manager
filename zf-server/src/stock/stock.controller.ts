@@ -105,7 +105,7 @@ export class StockController {
   }
 
   @Get('name/:name')
-  async getByName(@Param() params): Promise<any> {
+  async getByName(@Param() params): Promise<Stock> {
     const stock = await this.service.findByName(params.name);
     return stock;
   }

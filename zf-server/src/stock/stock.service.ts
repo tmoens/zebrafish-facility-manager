@@ -37,7 +37,8 @@ export class StockService extends GenericService {
 
   //========================= Searches =======================
   async findByName(name: string): Promise<Stock> {
-    return await this.repo.findOne({where: {name: name}});
+    return await this.repo.findOne({where: {name: name}, relations: [
+        'transgenes', 'mutations']});
   }
 
 

@@ -1,3 +1,13 @@
+# Release 2.5 - June 2021
+
+## Stockbook Exporter
+
+Allow users to export an entire stockbook to Excel.
+
+## Documentation Upgrades
+
+Add a description of the features and benefits of the system.
+
 # Releases 2.1 - 2.4 April 2021
 
 ## Audit Tool
