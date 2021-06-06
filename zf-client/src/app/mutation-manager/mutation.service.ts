@@ -13,6 +13,7 @@ import {AuthService} from "../auth/auth.service";
 import {MutationDto} from "./mutation-dto";
 import {MutationTypeDto} from "./mutation-types/mutation-type-dto";
 import {ScreenTypeDto} from "./screen-types/screen-type-dto";
+import {WorkSheet} from 'xlsx';
 
 /**
  * This is the model for mutation information displayed in the GUI.
@@ -101,7 +102,6 @@ export class MutationService extends ZFGenericService<MutationDto, MutationDto, 
     });
   }
 
-
   toExcel() {
     const wb = XLSX.utils.book_new();
     const mutationSheet = XLSX.utils.json_to_sheet(this.filteredList.map((m: MutationDto) => {
@@ -137,6 +137,30 @@ export class MutationService extends ZFGenericService<MutationDto, MutationDto, 
     // const now = moment().('YYYY-MM-DD-HH-mm-ss');
     const now = new Date().toISOString();
     XLSX.writeFile(wb, 'Mutations-' + now + '.xlsx');
+  }
+
+  getExportWorksheet(): WorkSheet {
+    const mutationSheet = XLSX.utils.json_to_sheet(this.all.map((m: MutationDto) => {
+      return {
+        id: m.id, "Serial#": m.serialNumber,
+        Allele: m.name, Nickname: m.nickname,
+        Gene: m.gene, 'Alt Gene': m.alternateGeneName,
+        'ZFIN Id': m.zfinId, Source: m.researcher,
+        Comment: m.comment, 'Mutation Type': m.mutationType, 'ScreenType': m.screenType,
+        'aaChange': m.aaChange, 'actgChange': m.actgChange, 'Sperm Freeze Plan': m.spermFreezePlan, 'Vials Frozen': m.vialsFrozen,
+        Phenotype: m.phenotype, 'Morphant Phenotype': m.morphantPhenotype,
+      };
+    }));
+    mutationSheet['!cols'] = [
+      {wch: 4}, {wch: 8},
+      {wch: 10}, {wch: 12},
+      {wch: 12}, {wch: 12},
+      {wch: 24}, {wch: 12},
+      {wch: 50}, {wch: 12}, {wch: 12},
+      {wch: 8}, {wch: 8}, {wch: 8}, {wch: 8},
+      {wch: 8}, {wch: 8},
+    ];
+    return mutationSheet;
   }
 
   dataCleanlinessReport() {

@@ -135,6 +135,13 @@ export class LoaderService {
   /** =========== Stock Specific requests ===============
    *
    */
+  getExportData(): Observable<any> {
+    return this.http.get(this.serverURL + '/stock/export')
+      .pipe(
+        catchError(this.handleError('Get /stock/export.', []))
+      );
+  }
+
   getTankWalkerList(filter: any): Observable<any> {
     if (!filter) {
       filter = {};

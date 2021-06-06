@@ -16,6 +16,7 @@ import {StockDto} from './dto/stock-dto';
 import {StockFullDto} from './dto/stock-full-dto';
 import {MutationDto} from '../mutation-manager/mutation-dto';
 import {TransgeneDto} from '../transgene-manager/transgene-dto';
+import {WorkBook, WorkSheet} from 'xlsx';
 
 /**
  * This is the model for stock information displayed in the GUI.
@@ -167,5 +168,82 @@ export class StockService extends ZFGenericService<
 
   getStockWalkerList(): Observable<any> {
     return this.loader.getTankWalkerList(this.filter)
+  }
+
+  async getExportWorkbook(): Promise<WorkBook> {
+    const wb = XLSX.utils.book_new();
+    const stockJSON = [];
+    const swimmerJSON = [];
+
+    const stockExportData: StockExportData[] = await this.loader.getExportData().toPromise();
+    stockExportData.map((s: StockExportData) => {
+      stockJSON.push({
+        "Stock Number": s.name,
+        "Description": s.description,
+        "Allele Summary": s.alleleSummary,
+        "Fertilization Date": s.fertilizationDate,
+        Mom: (s.matStock) ? s.matStock.name : null,
+        Dad: (s.patStock) ? s.patStock.name : null,
+        "Into Nursery": s.countEnteringNursery,
+        "Out of Nursery": s.countLeavingNursery,
+        "Researcher": (s.researcherUser) ? s.researcherUser.username : null,
+        "PI:": (s.piUser) ? s.piUser.username: null,
+        Comment: s.comment,
+      });
+      s.swimmers.map((swimmer) => {
+        swimmerJSON.push({
+          "Stock Number": s.name,
+          Tank: swimmer.tank.name,
+          Count: swimmer.number,
+          Comment: swimmer.comment,
+        });
+      })
+    })
+
+    const stockWS: WorkSheet = XLSX.utils.json_to_sheet(stockJSON);
+    stockWS['!cols'] = [
+      {wch: 12}, {wch: 35}, {wch: 40}, {wch: 10}, {wch: 8}, {wch: 8},
+      {wch: 12}, {wch: 12}, {wch: 20}, {wch: 20},
+      {wch: 40}];
+    const swimmerWS: WorkSheet = XLSX.utils.json_to_sheet(swimmerJSON);
+    swimmerWS['!cols'] = [ {wch: 12}, {wch: 8}, {wch: 8}, {wch: 40}];
+    XLSX.utils.book_append_sheet(wb,stockWS, 'Stocks');
+    XLSX.utils.book_append_sheet(wb,swimmerWS, 'Swimmers');
+    console.log(JSON.stringify(stockExportData));
+    return wb;
+  }
+
+}
+
+class StockExportData {
+  id: number;
+  name: string;
+  description?: string;
+  fertilizationDate: string;
+  comment: string;
+  alleleSummary: string;
+  countEnteringNursery: number;
+  countLeavingNursery: number;
+  matStock: {
+    name: string;
+  };
+  patStock: {
+    name: string;
+  };
+  swimmers: [
+    {
+      tankId: number;
+      number: number;
+      comment: string;
+      tank: {
+        name: string;
+      }
+    }
+  ];
+  researcherUser: {
+    username: string;
+  }
+  piUser: {
+    username: string;
   }
 }

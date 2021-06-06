@@ -2,14 +2,13 @@
   <mat-icon>more_vert</mat-icon>
 </button>
 <mat-menu #stockMenu="matMenu" >
+  <!--  Create a new stock-->
+  <button zfmHideUnauthorized="user" mat-menu-item (click)="onCreate()">
+    <mat-icon>add</mat-icon>
+    <span>Create Stock {{service.likelyNextStockNumber}}</span>
+  </button>
 
   <div *ngIf="service.selected">
-    <!--  Create a new stock-->
-    <button zfmHideUnauthorized="user" mat-menu-item (click)="onCreate()">
-      <mat-icon>add</mat-icon>
-      <span>Create Stock {{service.likelyNextStockNumber}}</span>
-    </button>
-
     <!--  Create a sub-stock of the currently selected stock -->
     <button mat-menu-item zfmHideUnauthorized="user" (click)="createSubStock()">
       <mat-icon>add</mat-icon>
@@ -31,7 +30,7 @@
 
     <mat-divider></mat-divider>
 
-    <!--  Print labels for this stock-->
+    <!--  Print label for this stock-->
     <button (click)="printLabel()" mat-menu-item>
       <mat-icon>print</mat-icon>
       <span>Print Label</span>
@@ -42,26 +41,30 @@
       <mat-icon>print</mat-icon>
       <span>Print Cross Label</span>
     </button>
-
-    <button mat-menu-item (click)="goToTankWalker()"
-            matTooltip="Leads you through the selected stocks in tank order in the facility.">
-      <mat-icon>assignment</mat-icon>
-      <span>Tank Walker</span>
-    </button>
-
-
-    <!--  Download Stock Report-->
-    <button zfmHideUnauthorized="user" mat-menu-item (click)="onStockReport()"
-            matTooltip="A spreadsheet containing stocks meeting the current filter.">
-      <mat-icon>cloud_download</mat-icon>
-      <span>Stock Report</span>
-    </button>
-
-    <!-- Download a facility audit report -->
-    <button zfmHideUnauthorized="user" mat-menu-item (click)="onFacilityAudit()"
-            matTooltip="A spreadsheet ordered by tank name to enable a facility audit.">
-      <mat-icon>cloud_download</mat-icon>
-      <span>Audit Report</span>
-    </button>
   </div>
+
+  <button mat-menu-item (click)="goToTankWalker()"
+          [disabled]="service.filteredList && service.filteredList.length < 1"
+          matTooltip="Leads you through the fish facility tank order to the stocks that meet the current filter.">
+    <mat-icon>assignment</mat-icon>
+    <span>Stock Walker</span>
+  </button>
+
+
+  <!--  Download Stock Report-->
+  <button zfmHideUnauthorized="user" mat-menu-item (click)="onStockReport()"
+          [disabled]="service.filteredList && service.filteredList.length < 1"
+          matTooltip="A spreadsheet containing stocks meeting the current filter.">
+    <mat-icon>cloud_download</mat-icon>
+    <span>Stock Report</span>
+  </button>
+
+  <mat-divider></mat-divider>
+
+  <button (click)="goToBestPractices()" mat-menu-item
+          matTooltip="For information on best practices.">
+    <mat-icon>info</mat-icon>
+    <span>Best Practices</span>
+  </button>
+
 </mat-menu>

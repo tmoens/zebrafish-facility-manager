@@ -30,7 +30,7 @@ export class TopBarComponent implements OnInit {
   }
 
   goToBestPractices(): void {
-    window.open('https://zebrafishfacilitymanager.com/stocks');
+    window.open('https://zebrafishfacilitymanager.com/best-practices/stocks');
   }
 
   login() {

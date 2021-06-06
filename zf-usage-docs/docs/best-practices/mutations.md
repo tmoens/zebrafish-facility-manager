@@ -34,7 +34,7 @@ The simple answer: as soon as possible.
 Let's say you receive a stock from another lab, and it is known to carry smo^hi229Tg: Tg(F5).
 Add it to the system now.
 As soon as it or its offspring are in a tank in your facility - make sure you assign Tg(F5) to that stock
-and after that the system will take care of moving the stock forward through its progeny.
+and after that the system will take care of moving the transgene forward through the stock's progeny.
 
 Of course, if Tg(F5) is not inherited of a particular line of progeny, the system allows you to mark it accordingly.
 
@@ -57,7 +57,7 @@ keep track of exactly what is going on.
 Some transgenes names are getting pretty long. Take, for example, Tg(8xgli-Xla.Cryaa:NLS-d1mCherry)^st1002.
 This name does not lend itself to printing on a 3" by 1" tank label, especially if the stock has several
 other transgenes and mutations that need to go on there.
-Equally, it is hard to read on a screen or a phone.
+Equally, it is hard to read on a screen on a phone.
 
 This is where **nicknames** come in.
 You can give a transgene (or a mutation) a nickname and that nickname will be used in place of all the long
@@ -68,8 +68,8 @@ When you choose a nickname it should be:
 1. still be descriptive. Using the allele name like st1002 is a bad idea because.
 many users will not know immediately what that is.
 But maybe gli:dsmCherryNLS is good enough?
-1. unambiguous.  If you have Tg(mpeg1.1:mScarlet-CAAX-CG2)^co62, Tg(mpeg1.1:GCaMP6s-CAAX-CR2)^65, 
-and Tg(mbpa:EGFP-Caax-polyA-CG2)^co58, choosing nice, short, unambiguous nicknames might be hard.
+1. unambiguous.  If you have Tg(mpeg1.1:mScarlet-CAAX-CG2)^co62, Tg(mpeg1.1:GCaMP6s-CAAX-CR2)^co65, 
+and Tg(mbpa:EGFP-Caax-polyA-CG2)^co58, choosing nice, short and unambiguous nicknames might be hard.
 
 The great thing about nicknames is that you can change them.
 So if you made a choice early on and later it turns out to ambiguous, no problem - change it to disambiguate.
@@ -100,14 +100,18 @@ all other users have a way of knowing you have "taken one."
 ### What information should you track?
 
 The Mutation Manager allows you to track many aspects of a mutation including the phenotype, the base pair change, 
-the amino acid change, the method used to create it,
-and even a url for the mutation in ZFIN - if the mutation is known there.
+the amino acid change, the method used to create it.
+If the mutation is "known to" ZFIN, the system will help you add its ZFIN Id
+and it the user interface will then present the user with links to the appropriate page in ZFIN.
 
-It is up to you, and the users of your facility, to decide on how much information to track in the system.
-But it will be very accessible to all users than tracking this information in shared spreadsheets.
+It is up to you and the users of your facility, to decide on how much information to track in the system.
+The information will be accessible to all users and easier to navigate through than
+shared spreadsheets.
 
 ### Informal Wild-Type Mutation Hack
 
 Some facilities track each of their wild-types as separate (fake) mutations that are only ever used for
 wild-type stocks.  This allows them to gain all the advantages of mutation tracking for wild-type stocks.
+However, the "wild-type mutation" then shows up in all offspring and is generally removed if there are
+non wild-type mutations and transgenes present.
 

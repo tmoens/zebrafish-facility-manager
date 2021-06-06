@@ -4,20 +4,19 @@
 </button>
 
 <mat-menu #mutationMenu="matMenu" >
+  <!-- Create Mutation-->
+  <button mat-menu-item zfmHideUnauthorized="user" (click)="create()">
+    <mat-icon>add</mat-icon>
+    <span>Create Mutation</span>
+  </button>
+
+  <!-- Create Owned Mutation-->
+  <button mat-menu-item zfmHideUnauthorized="user" (click)="createNext()">
+    <mat-icon>add</mat-icon>
+    <span>Create Owned Mutation {{service.likelyNextName}}</span>
+  </button>
+
   <div *ngIf="service.selected">
-
-    <!-- Create Mutation-->
-    <button mat-menu-item zfmHideUnauthorized="user" (click)="create()">
-      <mat-icon>add</mat-icon>
-      <span>Create Mutation</span>
-    </button>
-
-    <!-- Create Owned Mutation-->
-    <button mat-menu-item zfmHideUnauthorized="user" (click)="createNext()">
-      <mat-icon>add</mat-icon>
-      <span>Create Owned Mutation {{service.likelyNextName}}</span>
-    </button>
-
     <!--  Edit a mutation-->
     <button mat-menu-item zfmHideUnauthorized="user" (click)="edit()">
       <mat-icon>edit</mat-icon>
@@ -29,21 +28,6 @@
             [disabled]="!service.selected.isDeletable">
       <mat-icon>delete</mat-icon>
       <span>Delete {{service.selected.fullName}}</span>
-    </button>
-
-    <mat-divider></mat-divider>
-
-    <button mat-menu-item zfmHideUnauthorized="user" (click)="service.toExcel()"
-            matTooltip="A spreadsheet containing mutations meeting the current filter.">
-      <mat-icon>cloud_download</mat-icon>
-      <span>Mutation Report</span>
-    </button>
-
-    <button (click)="service.dataCleanlinessReport()" mat-menu-item
-            matTooltip="So you can audit mutation data for inconsistencies."
-            zfmHideUnauthorized="user">
-      <mat-icon>cloud_download</mat-icon>
-      <span>Mutation Data Audit</span>
     </button>
   </div>
 

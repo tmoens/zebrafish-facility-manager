@@ -9,6 +9,8 @@ import {UserFilter} from './user-filter';
 import {ZFTypes} from '../../helpers/zf-types';
 import {plainToClass} from 'class-transformer';
 import {ZFTool} from '../../helpers/zf-tool';
+import {WorkSheet} from 'xlsx';
+import * as XLSX from 'xlsx';
 
 @Injectable({
   providedIn: 'root'
@@ -150,4 +152,25 @@ export class UserAdminService {
     this.inEditMode = false;
   }
 
+  async getExportWorkSheet(): Promise<WorkSheet> {
+    const users = await this.authApiService.getUsers(new UserFilter({})).toPromise();
+    const ws = XLSX.utils.json_to_sheet(users.map((u: UserDTO) => {
+      return {
+        Username: u.username,
+        Email: u.email,
+        Name: u.name,
+        Initials: u.initials,
+        Role: u.role,
+        'Is Active': u.isActive,
+        'Is Researcher': u.isResearcher,
+        'Is PI': u.isPrimaryInvestigator,
+        'Internal Id': u.id,
+      }
+    }));
+    ws['!cols'] = [
+      {wch: 12}, {wch: 24}, {wch: 24}, {wch: 8}, {wch: 8},
+      {wch: 14}, {wch: 14}, {wch: 14}, {wch: 50},
+    ];
+    return ws;
+  }
 }

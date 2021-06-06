@@ -47,12 +47,11 @@ In ZFM, when a user wants to identify that
 a particular stock has a particular transgene, the system assists them
 in selecting the transgene from a set of known transgenes.
 Since transgenes are generally inherited, the system offers
-the parental transgenes as choices.
+the parental transgenes as automatic choices for any new stock or sub-stock.
 
 The system then stores the relationship between the stock and the transgene.
-Even if the nomenclature for that transgene were to change later, all stocks
-having that transgene would automatically be kept up to date because they all
-refer to a single copy of the transgene.
+So, name of the transgene can be changed without affecting any of the
+stocks that have that transgene.
 
 The system uses this same technique for all the relationships in the system
 ensuring data consistency.
@@ -67,24 +66,24 @@ simple user interface.
 
 ### Focus Through Filtering
 
-Users can filter stocks allow them to focus on a task:
+Users can filter stocks which allows them to focus on a task:
 
 1. A researcher can focus on their own stocks, focusing on those with a particular allele
 1. A researcher can focus on only those of their stocks that are currently in the nursery
-1. A researcher can look for any living stock in the facility that carries a particular allele
+1. A researcher can look for any living stock in the facility
 1. A user can very quickly navigate to a particular known stock number
 1. A facility manager can filter for stocks over a given age. 
    A normal husbandry practice is to refresh aging stocks.
 1. Users may leave "ToDo" notes in their comments and find
-   those or other test patterns in the stock comments
+   those or other strings in the stock comments
    
 ### Adding/Updating Stock Information
 
 The system makes it easy to add a new stock to the facility -
 whether the stock is from an external source or from a
 cross done at the facility.
-Stock numbering is handled automatically but so too is the inheritance of traits
-from internal parents.
+The system automatically handles stock numbering and the inheritance of genetic markers
+to new stocks.
 It's also easy to tell the system which tank(s) the stock is in and how many fish are
 in the tank(s).
 Users can come back and fill in details and comments at will.
@@ -99,9 +98,9 @@ same base stock.
 
 ### Lineage Navigation
 
-The system allows users to trace backwards and forwards through the stock lineage.
-Sufficient information is presented in the interface to let the user choose
-the parent or offspring that carries a particular trait.
+When viewing a stock, the user also sees the parents and offspring of that stock, including
+a summary of the transgenes and mutations of the parents and offspring.
+So, users can navigate within the lineage keeping a particular transgene or mutation in focus. 
 
 ### Tank Label Printing (With QR Code)
 

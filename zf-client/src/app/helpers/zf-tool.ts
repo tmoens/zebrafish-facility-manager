@@ -27,6 +27,10 @@ export class ZFTool {
     'importer',
     ZFTypes.MUTATION,
     'Import Tool');
+  static readonly EXPORT_TOOL  = new ZFTool(
+    'exporter',
+    ZFTypes.MUTATION,
+    'Export Tool');
   static readonly FACILITY_AUDIT  = new ZFTool(
     'facility_audit',
     null,

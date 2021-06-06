@@ -41,6 +41,12 @@ export class StockController {
     return await this.repo.getNextStockName();
   }
 
+  // Get stocks for export
+  @Get('export')
+  async getStocksForExport(): Promise<any[]> {
+    return await this.service.getStocksForExport();
+  }
+
   // Get a stock with no relationships fetched.
   @Get('brief/:id')
   async getById(@Param('id', new ParseIntPipe())  id: number): Promise<any> {

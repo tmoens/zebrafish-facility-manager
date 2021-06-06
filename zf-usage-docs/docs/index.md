@@ -15,7 +15,7 @@ ZFM tracks zebrafish stocks in a research facility including:
 - the lineage of those markers
 - where the stocks are physically located in the fish facility
 - various notes and data associated with the stock (age, researchers, research notes...)
-- the various transgenes and mutation in use at the facility
+- the various transgenes and mutations in use at the facility
   
 ## Operational Features
 
@@ -29,7 +29,7 @@ ZFM supports normal research processes including:
 
 ## Additional Features
 
-ZFM maintains is integrated with ZFIN so that detailed information about
+ZFM is integrated with ZFIN so that detailed information about
 mutations and transgenes is always accessible with a quick click.
 
 The system provides reporting and auditing tools that are particularly useful for animal

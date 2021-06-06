@@ -11,6 +11,7 @@ import {ZFTypes} from '../helpers/zf-types';
 import {Router} from '@angular/router';
 import {AuthService} from '../auth/auth.service';
 import {TransgeneDto} from './transgene-dto';
+import {WorkSheet} from 'xlsx';
 
 /**
  * This is the model for transgene information displayed in the GUI.
@@ -95,38 +96,26 @@ export class TransgeneService extends ZFGenericService<TransgeneDto, TransgeneDt
     return false;
   }
 
-  toExcel() {
-    const wb = XLSX.utils.book_new();
+  getExportWorksheet(): WorkSheet {
     const ws = XLSX.utils.json_to_sheet(this.all.map((m: TransgeneDto) => {
       return {
-        id: m.id, descriptor: m.descriptor, allele: m.allele, nickname: m.nickname, source: m.source,
-        plasmid: m.plasmid, comment: m.comment, serialNumber: m.serialNumber, zfinId: m.zfinId,
-        spermFreezePlan: m.spermFreezePlan, vialsFrozen: m.vialsFrozen,
+        id: m.id,
+        "Serial#": m.serialNumber,
+        Allele: m.allele,
+        Nickname: m.nickname,
+        Construct: m.descriptor,
+        "ZFIN Id": m.zfinId,
+        Source: m.source,
+        Plasmid: m.plasmid,
+        'Sperm Freeze Plan': m.spermFreezePlan,
+        'Vials Frozen': m.vialsFrozen,
+        Comment: m.comment,
       };
     }));
-    XLSX.utils.book_append_sheet(wb, ws, 'Transgenes');
-    ws['!cols'] = [ {wch: 4}, {wch: 35}, {wch: 8}, {wch: 20}, {wch: 24},
-      {wch: 20}, {wch: 50}, {wch: 8}, {wch: 15},
-      {wch: 8}, {wch: 8}];
-
-    let data: string [][];
-    if (!this.filter || this.filter.isEmpty()) {
-      data = [
-        ['This workbook lists all transgenes.']
-      ];
-    } else {
-      data = [
-        ['This book lists any transgene containing the string: "' + this.filter.text +
-        '" in the allele, descriptor, source, plasmid or comment.'],
-      ];
-    }
-    const filterSheet = XLSX.utils.aoa_to_sheet(data);
-    filterSheet['!cols'] = [{wch: 100}];
-    XLSX.utils.book_append_sheet(wb, filterSheet, 'Filter');
-
-    // const now = moment().format('YYYY-MM-DD-HH-mm-ss');
-    const now = Date().toString();
-    XLSX.writeFile(wb, 'Transgenes-' + now + '.xlsx');
+    ws['!cols'] = [ {wch: 4}, {wch: 8}, {wch: 12}, {wch: 25}, {wch: 25},
+      {wch: 20}, {wch: 20}, {wch: 8}, {wch: 8},
+      {wch: 8}, {wch: 40}];
+    return ws;
   }
 
   dataCleanlinessReport() {

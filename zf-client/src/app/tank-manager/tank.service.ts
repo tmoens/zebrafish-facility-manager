@@ -7,6 +7,8 @@ import {SwimmerFullDto} from '../common/swimmer-full.dto';
 import {SwimmerDto} from '../common/swimmer.dto';
 import {plainToClass} from 'class-transformer';
 import {ZFTypes} from '../helpers/zf-types';
+import {WorkSheet} from 'xlsx';
+import * as XLSX from 'xlsx';
 
 /**
  * This is mostly just a cache of all the known tanks at the facility.
@@ -70,5 +72,13 @@ export class TankService {
 
   updateSwimmer(swimmer: SwimmerDto) {
     return this.loader.update(ZFTypes.SWIMMER, swimmer);
+  }
+
+  async getExportWorksheet(): Promise<WorkSheet> {
+    const tanks: any[] = await this.loader.getAuditReport().toPromise();
+    const ws = XLSX.utils.json_to_sheet(tanks);
+    ws['!cols'] = [ {wch: 8}, {wch: 8}, {wch: 8}, {wch: 8}, {wch: 8},
+      {wch: 8}, {wch: 40}];
+    return ws;
   }
 }

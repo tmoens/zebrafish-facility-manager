@@ -15,11 +15,11 @@ export class TankRepository extends Repository<Tank> {
     // Had I don that I could have use the standard .leftJoin operation with QueryBuilder.
     // The above is all wrong you can join relations back to stock via stock2Tank, Ted
     const items: any[] = await this.query('SELECT t.name Tank, t.rack Rack, t.shelf Shelf, t.slot Spigot,' +
-      's.name Stock, s2t.num FishCount, t.comment Comment ' +
+      's.name Stock, s2t.num FishCount, s2t.comment Comment ' +
       'FROM tank t ' +
       'LEFT JOIN stock2tank s2t on t.id = s2t.tankId ' +
       'LEFT JOIN stock s on s2t.stockId = s.id ' +
-      'ORDER BY t.name');
+      'ORDER BY t.sortOrder');
     return items;
   }
 

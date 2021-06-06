@@ -59,6 +59,7 @@ import {ImporterModule} from './importer/importer.module';
 import {TankManagerModule} from './tank-manager/tank-manager.module';
 import {FacilityAuditModule} from './facility-audit/facility-audit.module';
 import {FacilityAuditComponent} from './facility-audit/facility-audit.component';
+import {ExporterModule} from './exporter/exporter.module';
 
 export function appStateProviderFactory(provider: AppStateService) {
   return () => provider.initialize();
@@ -101,6 +102,7 @@ export function authServiceProviderFactory(provider: AppStateService) {
     TransgeneManagerModule,
     UserAdminModule,
     ImporterModule,
+    ExporterModule,
     BrowserAnimationsModule,
     BrowserModule,
     FlexLayoutModule,

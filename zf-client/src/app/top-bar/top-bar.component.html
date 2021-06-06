@@ -35,6 +35,12 @@
             <mat-icon>people</mat-icon>
             {{zfTool.USER_MANAGER.display_name}}
           </button>
+          <button mat-menu-item zfmHideUnauthorized="admin"
+                  [disabled]="appState.activeTool === zfTool.EXPORT_TOOL"
+                  [routerLink]="zfTool.EXPORT_TOOL.route" color="primary">
+            <mat-icon>cloud_download</mat-icon>
+            {{zfTool.EXPORT_TOOL.display_name}}
+          </button>
           <button mat-menu-item *ngIf="!appState.facilityConfig.hideImportTool" zfmHideUnauthorized="admin"
                   [disabled]="appState.activeTool === zfTool.IMPORT_TOOL"
                   [routerLink]="zfTool.IMPORT_TOOL.route" color="primary">

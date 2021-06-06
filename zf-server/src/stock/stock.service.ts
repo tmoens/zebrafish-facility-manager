@@ -393,4 +393,27 @@ export class StockService extends GenericService {
     }
     return await this.repo.remove(stock);
   }
+
+  async getStocksForExport(): Promise<any[]> {
+    return await this.repo.createQueryBuilder('s')
+      .select([
+        's.id', 's.name', 's.description', 's.fertilizationDate', 's.comment',
+        's.countEnteringNursery', 's.countLeavingNursery',
+        'm.id', 'm.name', 'm.gene', 'm.gene', 'm.nickname',
+        't.id', 't.allele', 't.descriptor', 't.nickname',
+        'mom.name', 'dad.name',
+        'researcher.username', 'pi.username',
+        'swimmers.tankId', 'swimmers.number', 'swimmers.comment',
+        'tank.name'
+      ])
+      .leftJoin('s.matStock', 'mom')
+      .leftJoin('s.patStock', 'dad')
+      .leftJoin('s.mutations', 'm')
+      .leftJoin('s.transgenes', 't')
+      .leftJoin('s.swimmers', 'swimmers')
+      .leftJoin('swimmers.tank', 'tank')
+      .leftJoin('s.researcherUser', 'researcher')
+      .leftJoin('s.piUser', 'pi')
+      .getMany();
+  }
 }

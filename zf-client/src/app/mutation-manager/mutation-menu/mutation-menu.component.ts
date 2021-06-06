@@ -46,9 +46,6 @@ export class MutationMenuComponent implements OnInit {
 
 
   goToBestPractices(): void {
-    window.open('https://zebrafishfacilitymanager.com/mutations');
+    window.open('https://zebrafishfacilitymanager.com/best-practices/mutations');
   }
-
 }
-
-
